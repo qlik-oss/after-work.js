@@ -1,0 +1,8 @@
+general:
+  artifacts:
+    - "coverage/"
+
+test:
+  override:
+    - npm run test:coverage
+    - npm run lint

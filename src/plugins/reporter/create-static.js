@@ -1,0 +1,93 @@
+import Handlebars from "handlebars";
+import Promise from "bluebird";
+import fs from "fs";
+import path from "path";
+import moment from "moment";
+
+let template = fs.readFileSync( path.resolve( __dirname, "templates/main.handlebars" ), {
+	encoding: "utf8"
+} );
+template = Handlebars.compile( template );
+
+function getDurationObj( durationInMilliseconds ) {
+	let dur = moment.duration( durationInMilliseconds, "ms" );
+	return {
+		duration: dur,
+		hrs: dur.get( "h" ),
+		min: dur.get( "m" ),
+		sec: dur.get( "s" ),
+		ms: dur.get( "ms" )
+	};
+}
+
+Handlebars.registerHelper( "addLocalCSS", function ( cssPath ) {
+	return ( fs.readFileSync( path.resolve( __dirname, cssPath ), {
+		encoding: "utf8"
+	} ) );
+} );
+
+Handlebars.registerHelper( "formatSummaryDuration", function ( context ) {
+	let dur = getDurationObj( context );
+	if ( dur.hrs < 1 ) {
+		if ( dur.min < 1 ) {
+			if ( dur.sec < 1 ) {
+				return context;
+			}
+			return dur.sec + "." + dur.ms;
+		}
+		return dur.min + ":" + ( dur.sec < 10 ? ( "0" + dur.sec ) : dur.sec );
+	}
+	return dur.hrs + ":" + ( dur.min < 10 ? ( "0" + dur.min ) : dur.min );
+} );
+
+Handlebars.registerHelper( "getSummaryDurationUnits", function ( context ) {
+	let dur = getDurationObj( context );
+	if ( dur.hrs < 1 ) {
+		if ( dur.min < 1 ) {
+			if ( dur.sec < 1 ) {
+				return "ms";
+			}
+			return "s";
+		}
+		return "m";
+	}
+	return "h";
+} );
+
+Handlebars.registerHelper( "formatDuration", function ( context ) {
+	let dur = getDurationObj( context );
+	if ( dur.hrs < 1 ) {
+		if ( dur.min < 1 ) {
+			if ( dur.sec < 1 ) {
+				return context + " ms";
+			}
+			return dur.sec + "." + dur.ms + " s";
+		}
+		return dur.min + ":" + ( dur.sec < 10 ? ( "0" + dur.sec ) : dur.sec ) + "." + dur.ms + " m";
+	}
+	return dur.hrs + ":" + ( dur.min < 10 ? ( "0" + dur.min ) : dur.min ) + ":" + ( dur.sec < 10 ? ( "0" + dur.sec ) : dur.sec ) + "." + dur.ms + " h";
+} );
+
+Handlebars.registerHelper( "dateFormat", function( context, format ) {
+	// if (format === "fromNow") {
+	// 	return moment(context).fromNow();
+	// } else {
+		return moment( context ).format( format );
+	// }
+} );
+
+let report = {
+	generate( jsonFileName ){
+		return new Promise( ( resolve ) => {
+			let data = JSON.parse( fs.readFileSync( jsonFileName ), {
+				encoding: "utf8"
+			} );
+			let filename = jsonFileName.replace( ".json", ".html" );
+			let html = template( data );
+			fs.writeFileSync( path.resolve( __dirname, filename ), html );
+			resolve();
+		} );
+	}
+};
+
+export default report;

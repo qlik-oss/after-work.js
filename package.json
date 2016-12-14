@@ -1,0 +1,66 @@
+{
+  "name": "after-work.js",
+  "version": "1.0.0",
+  "description": "Unified testing framework",
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "scripts": {
+    "build": "babel src --out-dir ./dist --copy-files",
+    "build:watch": "babel src --out-dir ./dist --copy-files -w",
+    "lint": "eslint src test",
+    "lint:fix": "eslint src test --fix",
+    "test": "node bin/aw-test-runner ./test",
+    "test:unit": "node bin/aw-test-runner ./test/unit",
+    "test:unit:watch": "node bin/aw-test-runner ./test/unit -w",
+    "test:coverage": "node bin/aw-test-coverage -x dist",
+    "test:component": "node bin/aw-test-runner ./test/component"
+  },
+  "bin": {
+    "aw-test-coverage": "bin/aw-test-coverage.js",
+    "aw-test-runner": "bin/aw-test-runner.js",
+    "aw-browser-test-runner": "bin/aw-browser-test-runner.js",
+    "aw-web-server": "bin/aw-web-server.js",
+    "aw-webdriver-test-runner": "bin/aw-webdriver-test-runner.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:qlik-oss/after-work.js.git"
+  },
+  "files": [
+    "/bin",
+    "/dist",
+    "/docs"
+  ],
+  "dependencies": {
+    "babel": "^5.8.23",
+    "babel-core": "^6.9.1",
+    "bluebird": "^2.9.34",
+    "browser-sync": "^2.10.0",
+    "chai": "^3.2.0",
+    "chai-as-promised": "^5.1.0",
+    "commander": "^2.9.0",
+    "extend": "^3.0.0",
+    "globby": "^4.0.0",
+    "handlebars": "^4.0.3",
+    "highlight.js": "^8.8.0",
+    "istanbul": "^1.0.0-alpha.2",
+    "jimp": "^0.2.19",
+    "mkdirp": "^0.5.1",
+    "mocha": "^2.3.3",
+    "moment": "^2.10.6",
+    "object.assign": "^4.0.1",
+    "protractor": "^4.0.11",
+    "request": "^2.70.0",
+    "sinon": "^1.16.1",
+    "sinon-chai": "^2.8.0",
+    "systemjs": "^0.19.8",
+    "util": "^0.10.3"
+  },
+  "optionalDependencies": {
+    "phantomjs-prebuilt": "2.1.7"
+  },
+  "devDependencies": {
+    "babel-eslint": "^4.1.1",
+    "eslint": "^2.0.0"
+  }
+}

@@ -1,0 +1,56 @@
+{
+	"consumer": "Hub UI",
+	"provider": "Hub Service",
+	"request": {
+		"method": "GET",
+		"url": "http://localhost:9028/apps"
+	},
+	"response": {
+		"statusCode": 200,
+		"body": {
+			"links": {
+				"self": null
+			},
+			"data": [ {
+					"type": null,
+					"id": null,
+					"attributes": {
+						"createdDate": null,
+						"modifiedDate": null,
+						"modifiedByUserName": null,
+						"customProperties": [],
+						"name": null,
+						"appId": null,
+						"publishTime": null,
+						"published": null,
+						"tags": null,
+						"description": null,
+						"fileSize": null,
+						"lastReloadTime": null,
+						"thumbnail": null,
+						"savedInProductVersion": null,
+						"migrationHash": null,
+						"FAAAAAIIIIILLL": "",
+						"dynamicColor": null,
+						"availabilityStatus": null,
+						"privileges": [],
+						"schemaPath": null
+					},
+					"relationships": {
+						"owner": {
+							"data": {
+								"type": null,
+								"id": null
+							}
+						},
+					"stream": {
+						"data": {
+							"type": null,
+							"id": null
+						}
+					}
+				}
+			} ]
+		}
+	}
+}

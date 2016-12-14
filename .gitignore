@@ -1,0 +1,7 @@
+*.rej
+*.tmp
+node_modules/
+dist/
+coverage/
+.idea/
+*.log
