@@ -1,6 +1,14 @@
+machine:
+  node:
+    version: 4.4.5
+
 general:
   artifacts:
     - "coverage/"
+
+dependencies:
+  post:
+    - npm run build
 
 test:
   override:
