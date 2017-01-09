@@ -23,4 +23,4 @@ after-work.js is designed to be used as a dependency while developing your code.
 
 ## Contributing
 
-Please follow the instructions in [CONTRIBUTING.md](CONTRIBUTING.md).
+Please follow the instructions in [CONTRIBUTING.md](.github/CONTRIBUTING.md).
