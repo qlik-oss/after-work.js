@@ -1,7 +1,5 @@
 # Changelog
 
-
-
 ## 0.12.16
 - Chore: Update protractor to 4.0.11
 
