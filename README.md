@@ -21,7 +21,7 @@ after-work.js is designed to be used as a dependency while developing your code.
 }
 ```
 
-You can also accomplish this by running `npm install --save-dev after-work`
+You can also accomplish this by running `npm install --save-dev after-work.js`
 
 ## Contributing
 
