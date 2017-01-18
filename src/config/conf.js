@@ -5,6 +5,7 @@ import "./global";
 import program from "commander";
 import { getIPaddress } from "../utils";
 import { httpServer } from "../utils";
+import { logSeleniumNodeInfo } from "../utils";
 
 program
 	.option( "--aw-artifacts-path <path>", "Artifacts path", "test/component/artifacts" )
@@ -248,6 +249,12 @@ export const config = {
 			startTime: new Date().toISOString().replace( /T/, "_" ).replace( /:/g, "-" ).replace( /\..+/, "" ) //Used to get the same date on logsfilename
 		};
 
+		browser.getProcessedConfig().then( processedConfig => {
+			if ( processedConfig.logSeleniumInfo ) {
+				logSeleniumNodeInfo( processedConfig );
+			}
+		} );
+
 		return getIPaddress().then( ip => {
 			browser.baseUrl = "http://" + ip + ":9000";
 		} ).then( () => {
@@ -301,6 +308,9 @@ export const config = {
 	// If true, protractor will restart the browser between each test.
 	// CAUTION: This will cause your tests to slow down drastically.
 	restartBrowserBetweenTests: false,
+
+	//Logging selenium details
+	logSeleniumInfo: false,
 
 	// ---------------------------------------------------------------------------
 	// ----- The test framework --------------------------------------------------
