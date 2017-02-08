@@ -5,6 +5,7 @@ import util from "util";
 import Highlight from "highlight.js";
 
 Highlight.configure( {
+  tabReplace: "    ",
   useBR: true,
   languages: ["javascript"]
 } );

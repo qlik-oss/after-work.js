@@ -14,7 +14,6 @@ import report from "./create-static";
 
 let Base = mocha.reporters.Base;
 
-
 export default function uiReport( runner, options ) {
 	let tests = [];
 	let pending = 0;

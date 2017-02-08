@@ -66,29 +66,30 @@ describe( "Reporter index", () => {
 		// } );
 
 		it( "should call pass correctly", () => {
-			const test = {
+			let test = {
 				fullTitle: sandbox.stub().returns( "Title" ),
 				duration: sandbox.stub().returns( "Duration" ),
 				slow: () => {}
 			};
 			const log = sandbox.stub( console, "log" );
+			// runner.on.withArgs( "pass" ).callsArgOnWith( 1, {}, test );
 			runner.on.withArgs( "pass" ).callsArgWith( 1, test );
-			uiReport( runner, options );
+			uiReport.call( uiReport, runner, options );
 			expect( runner.on ).to.be.calledWith( "pass", sinon.match.func );
 			expect( console.log ).to.be.calledWith( sinon.match( " √ PASSED:" ) );	//eslint-disable-line no-console
 			log.restore();
 		} );
 
 		it( "should call pending correctly", () => {
-			const test = null;
+			let test = null;
 
 			runner.on.withArgs( "pending" ).callsArgWith( 1, test );
-			uiReport( runner, options );
+			uiReport.call( uiReport, runner, options );
 			expect( runner.on ).to.be.calledWith( "pending", sinon.match.func );
 		} );
 
 		it( "should call fail correctly", () => {
-			const test = {
+			let test = {
 				fullTitle: sandbox.stub().returns( "Title" ),
 				duration: sandbox.stub().returns( "Duration" ),
 				file: sandbox.stub()
@@ -100,7 +101,7 @@ describe( "Reporter index", () => {
 
 			const log = sandbox.stub( console, "log" );
 			runner.on.withArgs( "fail" ).callsArgWith( 1, test, err );
-			uiReport( runner, options );
+			uiReport.call( uiReport, runner, options );
 			expect( runner.on ).to.be.calledWith( "fail", sinon.match.func );
 			expect( console.log ).to.be.calledWith( sinon.match( " X FAILED:" ) );	//eslint-disable-line no-console
 			log.restore();
@@ -109,7 +110,7 @@ describe( "Reporter index", () => {
 		it( "should call end correctly", () => {
 			const log = sandbox.stub( console, "log" );
 			runner.on.withArgs( "end" ).callsArgOn( 1, runner );
-			uiReport( runner, options );
+			uiReport.call( uiReport, runner, options );
 			expect( runner.on ).to.be.calledWith( "end", sinon.match.func );
 			expect( console.log ).to.be.calledWith( sinon.match( " Σ SUMMARY:" ) );	//eslint-disable-line no-console
 			log.restore();
