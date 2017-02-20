@@ -1,28 +1,28 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<link rel="stylesheet" href="/mocha.css">
-	</head>
-	<body>
-		<div id="mocha" style="position: absolute;"></div>
-		<script type="text/javascript" src="/mocha.js"></script>
-		<script type="text/javascript" src="/chai.js"></script>
-		<script type="text/javascript" src="/browser-test-runner-setup.js"></script>
-		<script type="text/javascript" src="/system.js"></script>
-		%insert-files%
-		<script>
-			System.config( {
-				defaultJSExtensions: true,
-				transpiler: "babel",
-				babelOptions: {
-					sourceMaps: "inline"
-				},
-				map: {
-					babel: "browser.js"
-				}
-			} );
-			System.import( "systemjs-bootstrapper.js" )
-		</script>
-	</body>
+    <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/mocha.css">
+    </head>
+    <body>
+    <div id="mocha" style="position: absolute;"></div>
+    <script type="text/javascript" src="/mocha.js"></script>
+    <script type="text/javascript" src="/chai.js"></script>
+    <script type="text/javascript" src="/browser-test-runner-setup.js"></script>
+    <script type="text/javascript" src="/system.js"></script>
+    %insert-files%
+    <script>
+    System.config( {
+    defaultJSExtensions: true,
+    transpiler: "babel",
+    babelOptions: {
+    sourceMaps: "inline"
+    },
+    map: {
+    babel: "browser.js"
+    }
+    } );
+    System.import( "systemjs-bootstrapper.js" )
+    </script>
+    </body>
 </html>

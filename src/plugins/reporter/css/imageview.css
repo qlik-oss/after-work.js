@@ -1,67 +1,67 @@
 .image-viewer-container {
-	color: #666;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(51, 51, 51, 0.8);
-	z-index: 100;
-	display: none;
-	justify-content: center;
-	align-items: center;
-	opacity: 0;
-	transition: opacity 0.2s ease;
+    color: #666;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(51, 51, 51, 0.8);
+    z-index: 100;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 .image-viewer {
-	background: white;
-	box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.1);
-	border-radius: 4px;
-	position: relative;
-	transform: scale(0.8);
-	transition: transform 0.4s ease;
+    background: white;
+    box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    position: relative;
+    transform: scale(0.8);
+    transition: transform 0.4s ease;
 }
 .image-viewer-container.visible {
-	opacity: 1;
+    opacity: 1;
 }
 .image-viewer-container.visible .image-viewer {
-	transform: scale(1);
+    transform: scale(1);
 }
 .image-viewer img,
 .image-viewer h4 {
-	padding: 1em;
-	margin: 0;
+    padding: 1em;
+    margin: 0;
 }
 .image-viewer h4 {
-	background: #fafafa;
-	border-radius: 4px 4px 0 0;
+    background: #fafafa;
+    border-radius: 4px 4px 0 0;
 }
 .image-viewer .baseline,
 .image-viewer .diff {
-	display: none;
+    display: none;
 }
 .image-viewer .content:hover .baseline {
-	display: block;
+    display: block;
 }
 .image-viewer .content:hover .regression {
-	display: none;
+    display: none;
 }
 .image-viewer .content:active .diff {
-	display: block;
+    display: block;
 }
 .image-viewer .content:active .regression,
 .image-viewer .content:active .baseline {
-	display: none;
+    display: none;
 }
 .close {
-	position: absolute;
-	top: -1.5em;
-	right: -1.5em;
-	cursor: pointer;
-	border-radius: 50%;
-	color: white;
-	background: #666;
-	border: 2px solid white;
-	padding: 0.3em 0.5em;
-	line-height: 1em;
+    position: absolute;
+    top: -1.5em;
+    right: -1.5em;
+    cursor: pointer;
+    border-radius: 50%;
+    color: white;
+    background: #666;
+    border: 2px solid white;
+    padding: 0.3em 0.5em;
+    line-height: 1em;
 }
