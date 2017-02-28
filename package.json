@@ -34,33 +34,37 @@
   "dependencies": {
     "babel": "^5.8.23",
     "babel-core": "^6.9.1",
-    "bluebird": "^2.9.34",
-    "browser-sync": "^2.10.0",
-    "chai": "^3.2.0",
-    "chai-as-promised": "^5.1.0",
+    "bluebird": "^3.4.7",
+    "browser-sync": "^2.18.7",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "commander": "^2.9.0",
     "extend": "^3.0.0",
-    "globby": "^4.0.0",
-    "handlebars": "^4.0.3",
-    "highlight.js": "^8.8.0",
-    "istanbul": "^1.0.0-alpha.2",
-    "jimp": "^0.2.19",
+    "globby": "^6.1.0",
+    "handlebars": "^4.0.6",
+    "highlight.js": "^9.9.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "jimp": "^0.2.27",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.3.3",
-    "moment": "^2.10.6",
-    "object.assign": "^4.0.1",
-    "protractor": "^4.0.11",
-    "request": "^2.70.0",
-    "sinon": "^1.16.1",
+    "mocha": "^3.2.0",
+    "moment": "^2.17.1",
+    "object.assign": "^4.0.4",
+    "protractor": "^4.0.14",
+    "request": "^2.79.0",
+    "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0",
-    "systemjs": "^0.19.8",
+    "systemjs": "^0.20.5",
     "util": "^0.10.3"
   },
   "optionalDependencies": {
-    "phantomjs-prebuilt": "2.1.7"
+    "phantomjs-prebuilt": "2.1.14"
   },
   "devDependencies": {
-    "babel-eslint": "^4.1.1",
-    "eslint": "^2.0.0"
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.9.0"
   }
 }

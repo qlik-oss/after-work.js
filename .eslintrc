@@ -1,79 +1,19 @@
 {
-	"env": {
-		"browser": true,
-		"es6": true,
-		"node": true,
-		"mocha": true
-	},
-	"parserOptions": {
-		"ecmaVersion": 6,
-		"sourceType": "module"
-	},
-	"globals": {
-		"chai": true,
-		"sinon": true,
-		"expect": true
-	},
-	"extends": "eslint:recommended",
-	"rules": {
-		"no-alert": "error",
-		"no-array-constructor": "error",
-		"no-caller": "error",
-		"no-catch-shadow": "error",
-		"no-eval": "error",
-		"no-extend-native": "error",
-		"no-extra-bind": "error",
-		"no-implied-eval": "error",
-		"no-iterator": "error",
-		"no-label-var": "error",
-		"no-labels": "error",
-		"no-lone-blocks": "error",
-		"no-loop-func": "error",
-		"no-multi-spaces": "error",
-		"no-multi-str": "error",
-		"no-native-reassign": "error",
-		"no-new": "error",
-		"no-new-func": "error",
-		"no-new-object": "error",
-		"no-new-wrappers": "error",
-		"no-octal-escape": "error",
-		"no-process-exit": "warn",
-		"no-proto": "error",
-		"no-return-assign": "error",
-		"no-script-url": "error",
-		"no-sequences": "error",
-		"no-shadow": "error",
-		"no-shadow-restricted-names": "error",
-		"no-spaced-func": "error",
-		"no-trailing-spaces": "error",
-		"no-undef": "error",
-		"no-undef-init": "error",
-		"no-underscore-dangle": "error",
-		"no-unused-expressions": "error",
-		"no-use-before-define": "error",
-		"no-with": "error",
-		"no-var": "error",
-		"camelcase": "error",
-		"comma-spacing": "error",
-		"consistent-return": "error",
-		"curly": ["error", "all"],
-		"dot-notation": ["error", { "allowKeywords": true	}],
-		"eol-last": "error",
-		"no-extra-parens": ["error", "functions"],
-		"eqeqeq": "error",
-		"key-spacing": ["error", { "beforeColon": false, "afterColon": true, "mode": strict }],
-		"keyword-spacing": ["error", { "before": true, "after": true }],
-		"new-cap": "error",
-		"new-parens": "error",
-		"quotes": ["error", "double"],
-		"semi": "error",
-		"semi-spacing": ["error", { "before": false, "after": true }],
-		"space-infix-ops": "error",
-		"space-unary-ops": ["error", { "words": true,	"nonwords": false }],
-		"strict": ["error", "function"],
-		"yoda": ["error", "never"],
-		"space-in-parens": ["error", "always"],
-		"object-curly-spacing": ["error", "always"],
-		"no-mixed-spaces-and-tabs": ["error", "smart-tabs"]
-	}
+  "env": {
+    "node": true,
+    "mocha": true,
+    "protractor": true,
+    "phantomjs": true
+  },
+  "globals": {
+    "sinon": true,
+    "expect": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+      "no-param-reassign": 0
+  },
+  "extends": "airbnb/base"
 }
