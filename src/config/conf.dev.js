@@ -285,8 +285,8 @@ const config = {
     reporter: 'spec',
     enableTimeouts: false,
     reporterOptions: {
-      html: true
-    }
+      html: true,
+    },
   },
 
   plugins: [{
