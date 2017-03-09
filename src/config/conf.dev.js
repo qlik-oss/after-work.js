@@ -284,7 +284,9 @@ const config = {
     ui: 'bdd',
     reporter: 'spec',
     enableTimeouts: false,
-        // ,bail: true,
+    reporterOptions: {
+      html: true
+    }
   },
 
   plugins: [{

@@ -335,6 +335,9 @@ const config = {
     reporter: path.resolve(__dirname, '../../dist/plugins/reporter/index.js'),
     reporterPlugin,
     enableTimeouts: false,
+    reporterOptions: {
+      html: true
+    }
   },
 
   plugins: [{
