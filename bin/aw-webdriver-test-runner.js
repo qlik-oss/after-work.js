@@ -19,4 +19,15 @@ if ( ix !== -1 ) {
 		args[ix + 1] = files.join( "," );
 	}
 }
-runner.execute( spawnArgs );
+try{
+    runner.execute( spawnArgs );
+}
+catch(e){
+		var missingProtractor = "Cannot find module '.bin/protractor'";
+		if ( e.message == missingProtractor ){
+			console.log("Protractor couldn't be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json");
+		}
+		else {
+			console.log(e);
+		}
+}

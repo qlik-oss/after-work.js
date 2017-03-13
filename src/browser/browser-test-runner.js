@@ -66,7 +66,19 @@ export function getBrowserSyncConfig(paths, files, options) {
 
 export function runPhantom(url, singleRun) {
   const phantomFile = relativeFromDirToCwd('../phantomjs-runner.js');
-  const phantomBin = require.resolve('phantomjs-prebuilt/bin/phantomjs');
+  let phantomBin;
+
+  try {
+    phantomBin = require.resolve('phantomjs-prebuilt/bin/phantomjs');
+  } catch (e) {
+    const missingPhantom = "Cannot find module 'phantomjs-prebuilt/bin/phantomjs'";
+    if (e.message === missingPhantom) {
+      console.log("phantomjs-prebuilt couldn't be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json");
+    } else {
+      console.log(e);
+    }
+  }
+
   const proc = child_process.fork(phantomBin, [phantomFile, '--pageUrl', url, '--single-run', singleRun], {
     env: process.env,
     cwd: process.cwd(),
