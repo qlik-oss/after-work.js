@@ -17,7 +17,7 @@ after-work.js is designed to be used as a dependency while developing your code.
 
 ```js
 "devDependencies": {
-  "after-work.js": "^1.0.0"
+  "after-work.js": "^2.0.0"
 }
 ```
 
