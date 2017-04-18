@@ -19,11 +19,11 @@
 ### Environment
 
 ##### Operating system
-
-* [ ] Windows
-* [ ] OSX
-* [ ] Linux
-
+```
+[ ] Windows
+[ ] OSX
+[ ] Linux
+```
 ### Versions
 
 * Node.js: 
