@@ -12,7 +12,7 @@ Highlight.configure({
 
 export const utils = {
   getRepoInfo() {
-    const packageJSON = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), {encoding: 'utf8'}));
+    const packageJSON = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), { encoding: 'utf8' }));
     const repoInfo = {};
 
     repoInfo.name = packageJSON.name || 'No repository name found (please add to package.json)';
@@ -94,9 +94,9 @@ export const utils = {
     mkdirp.sync(path.resolve(browser.artifactsPath, 'screenshots'));
 
     return browser.takeScreenshot().then((png) => {
-      fs.writeFileSync(screenshot, png, {encoding: 'base64'});
+      fs.writeFileSync(screenshot, png, { encoding: 'base64' });
     });
   },
 };
 
-export default {utils};
+export default { utils };
