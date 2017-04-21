@@ -12,7 +12,7 @@ Highlight.configure({
 
 export const utils = {
   getRepoInfo() {
-    const packageJSON = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), { encoding: 'utf8' }));
+    const packageJSON = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), {encoding: 'utf8'}));
     const repoInfo = {};
 
     repoInfo.name = packageJSON.name || 'No repository name found (please add to package.json)';
@@ -23,10 +23,10 @@ export const utils = {
   },
   cleanCode(str) {
     str = str
-        .replace(/\r\n?|[\n\u2028\u2029]/g, '\n')
-        .replace(/^\uFEFF/, '')
-        .replace(/^function *\(.*\) *{|\(.*\) *=> *{?/, '')
-        .replace(/\s+\}$/, '');
+      .replace(/\r\n?|[\n\u2028\u2029]/g, '\n')
+      .replace(/^\uFEFF/, '')
+      .replace(/^function *\(.*\) *{|\(.*\) *=> *{?/, '')
+      .replace(/\s+\}$/, '');
 
     const spaces = str.match(/^\n?( *)/)[1].length;
     const tabs = str.match(/^\n?(\t*)/)[1].length;
@@ -94,9 +94,9 @@ export const utils = {
     mkdirp.sync(path.resolve(browser.artifactsPath, 'screenshots'));
 
     return browser.takeScreenshot().then((png) => {
-      fs.writeFileSync(screenshot, png, { encoding: 'base64' });
+      fs.writeFileSync(screenshot, png, {encoding: 'base64'});
     });
   },
 };
 
-export default { utils };
+export default {utils};

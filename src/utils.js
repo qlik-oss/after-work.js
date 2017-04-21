@@ -83,8 +83,6 @@ export function logSeleniumNodeInfo(config) {
       return;
     }
 
-    console.log(`SeleniumAddress: ${config.seleniumAddress}`); // eslint-disable-line no-console
-
     const url = config.seleniumAddress.replace('wd/hub', `grid/api/testsession?session=${sessionId}`);
 
     http.get(url, (res) => {
@@ -99,12 +97,20 @@ export function logSeleniumNodeInfo(config) {
           if (result) {
             console.error(result); // eslint-disable-line no-console
           }
-        } else {
-          if (result.length > 0) {
-            result = JSON.parse(result);
-          }
-          console.log(`Selenium Node (Proxy): ${result.proxyId}`); // eslint-disable-line no-console
+          return;
+        }
+
+        if (result.length > 0) {
+          result = JSON.parse(result);
+          const nodeUrl = result.proxyId.replace(/:\d+$/g, '');
+          browser.params.grid = {};
+          browser.params.grid.node = nodeUrl;
+          browser.params.grid.extraUrl = `${nodeUrl}:3000`;
+          browser.params.grid.extraVideo = `${nodeUrl}:3000/download_video/${sessionId}.mp4`;
+
           console.log(`Selenium Node Console: ${result.proxyId}/wd/hub/static/resource/hub.html`); // eslint-disable-line no-console
+          console.log(`Grid Extra Node: ${browser.params.grid.extraUrl}`); // eslint-disable-line no-console
+          console.log(`Grid Extra Video: ${browser.params.grid.extraVideo}`); // eslint-disable-line no-console
         }
       });
     }).on('error', (e) => {
