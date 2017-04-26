@@ -48,5 +48,5 @@ export default function aggregateReports(reportName, artifactsPath) {
       });
     }).then(() => report.generate(fileName));
   }
-  return undefined;
+  return sumTests;
 }

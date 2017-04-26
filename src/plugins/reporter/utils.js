@@ -23,10 +23,10 @@ export const utils = {
   },
   cleanCode(str) {
     str = str
-        .replace(/\r\n?|[\n\u2028\u2029]/g, '\n')
-        .replace(/^\uFEFF/, '')
-        .replace(/^function *\(.*\) *{|\(.*\) *=> *{?/, '')
-        .replace(/\s+\}$/, '');
+      .replace(/\r\n?|[\n\u2028\u2029]/g, '\n')
+      .replace(/^\uFEFF/, '')
+      .replace(/^function *\(.*\) *{|\(.*\) *=> *{?/, '')
+      .replace(/\s+\}$/, '');
 
     const spaces = str.match(/^\n?( *)/)[1].length;
     const tabs = str.match(/^\n?(\t*)/)[1].length;
