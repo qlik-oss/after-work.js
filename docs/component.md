@@ -86,7 +86,7 @@ node-debug aw-webdriver-test-runner
 Install WebDriver to be able connect directly to chrome (using the WebDriver version specified by Protractor):
 
 ```sh
-./node_modules/after-work.js/node_modules/.bin/webdriver-manager update
+./node_modules/.bin/webdriver-manager update
 ```
 
 1. Start a local web-server to host your web-files by using the runner **aw-web-server.js**. Default it will serve files from ./test/fixtures
