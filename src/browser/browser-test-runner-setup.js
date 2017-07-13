@@ -10,7 +10,7 @@ if (typeof callPhantom === 'function') {
   console.log = function () {
     callPhantom({ args: [].slice.call(arguments) });
   };
-  mocha.reporter('spec');
+  mocha.reporter('min');
 }
 
 mocha.ui('bdd');
