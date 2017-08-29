@@ -1,4 +1,4 @@
-/* eslint camelcase:0, no-process-exit: 0, no-console: 0*/
+/* eslint camelcase:0, no-process-exit: 0, no-console: 0 */
 import path from 'path';
 import globby from 'globby';
 import Promise from 'bluebird';

@@ -31,7 +31,7 @@
  */
 
 
- // eslint-disable-line strict
+// eslint-disable-line strict
 
 import request from 'request';
 import globby from 'globby';
@@ -183,7 +183,7 @@ function runContract(contract, response) {
   try {
     responseBody = JSON.parse(response.body);
   } catch (error) {
-        // if request has failed body is a string not an object
+    // if request has failed body is a string not an object
     if (response.body !== contract.response.body) {
       result.status = 'fail';
       result.text.push(`Unable to parse response body ${error}`);
@@ -240,10 +240,10 @@ function buildFailedString(results) {
  * @returns {String} String status code  [ 0 | -1 ] depending on the success
  */
 function parseResults(results) {
-    // sort the result so that potential errors are pushed last
+  // sort the result so that potential errors are pushed last
   results = results.sort((a, b) => a === 'fail' ? -1 : b === 'fail' ? 0 : 1); // eslint-disable-line
 
-    // assume everything went ok before we actually parse the result...
+  // assume everything went ok before we actually parse the result...
   let processExitCode = EXIT_CODES.ok;
   const hasFailed = results.filter(elem => elem.status === 'fail').length > 0;
 
@@ -265,7 +265,7 @@ function parseResults(results) {
 }
 
 export default {
-    /**
+  /**
      * Main entry point for testing contracts
      */
   start(contractsPath) {
@@ -279,7 +279,7 @@ export default {
       });
   },
 
-    // Export this for cases when we already got the response and what to verify it
+  // Export this for cases when we already got the response and what to verify it
   verifyContract,
   runContract,
 };

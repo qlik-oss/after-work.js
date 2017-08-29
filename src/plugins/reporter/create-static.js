@@ -67,7 +67,7 @@ Handlebars.registerHelper('formatDuration', (context) => {
 });
 
 Handlebars.registerHelper('dateFormat', (context, format) =>
-   moment(context).format(format),
+  moment(context).format(format),
 );
 
 const report = {

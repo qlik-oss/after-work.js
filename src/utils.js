@@ -1,4 +1,4 @@
-/* global browser*/
+/* global browser */
 import Promise from 'bluebird';
 import dns from 'dns';
 import os from 'os';
@@ -51,7 +51,7 @@ export function httpServer(config = {}) {
     middleware: [{
       route: '/favicon.ico',
       handle(req, res, next) {
-        res.statusCode = 200;   // eslint-disable-line no-param-reassign
+        res.statusCode = 200; // eslint-disable-line no-param-reassign
         res.setHeader('Content-Length', '0');
         res.end();
         next();
@@ -59,7 +59,7 @@ export function httpServer(config = {}) {
     }],
   };
 
-  config = Object.assign(defaultConfig, config);    // eslint-disable-line no-param-reassign
+  config = Object.assign(defaultConfig, config); // eslint-disable-line no-param-reassign
 
   return new Promise((resolve, reject) => {
     bs.pause();
