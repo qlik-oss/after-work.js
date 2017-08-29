@@ -52,7 +52,7 @@ const runner = {
       }
 
       if (info.commandArgs.indexOf('--compilers') === -1) {
-        info.commandArgs.push('--compilers', 'js:babel/register');
+        info.commandArgs.push('--compilers', 'js:babel-core/register');
       }
     }
   },
@@ -128,6 +128,7 @@ const runner = {
     const command = info.commandArgs.shift();
 
     this.addDefaultMochaArgs(command, info);
+    console.log('The following command will be spawn: ', command, info.commandArgs.join(' '));
     this.spawn(command, info.commandArgs);
   },
 };

@@ -5,8 +5,8 @@
   "author": "QlikTech International AB",
   "license": "MIT",
   "scripts": {
-    "build": "babel src --out-dir ./dist --copy-files --presets=es2015",
-    "build:watch": "babel src --out-dir ./dist --copy-files --presets=es2015 -w",
+    "build": "babel src --out-dir ./dist --copy-files",
+    "build:watch": "babel src --out-dir ./dist --copy-files -w",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
     "test": "node bin/aw-test-runner ./test",

@@ -26,7 +26,7 @@ describe('bin', () => {
     '--opts',
     './config/mocha.opts',
     '--compilers',
-    'js:babel/register'];
+    'js:babel-core/register'];
   let processExit;
 
   beforeEach(() => {

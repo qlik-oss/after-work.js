@@ -2,7 +2,7 @@
 var path = require( "path" );
 var globby = require( "globby" );
 var cwd = process.cwd();
-var runner = require( "../dist/runner" ).runner;
+var runner = require( "../dist/runner" ).default.runner;
 var spawnArgs = ["resolve=.bin/protractor"];
 var args = process.argv.slice( 2 );
 
