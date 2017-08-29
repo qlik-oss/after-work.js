@@ -1,6 +1,6 @@
 /* global browser */
 import path from 'path';
-import 'babel/register';
+import 'babel-register';
 import './global';
 // Reference Configuration File
 //

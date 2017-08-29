@@ -1,7 +1,7 @@
 /* global browser */
 import path from 'path';
 import program from 'commander';
-import 'babel/register';
+import 'babel-register';
 import './global';
 import { getIPaddress, httpServer, logSeleniumNodeInfo } from '../utils';
 
