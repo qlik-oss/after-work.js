@@ -5,8 +5,8 @@
   "author": "QlikTech International AB",
   "license": "MIT",
   "scripts": {
-    "build": "babel src --out-dir ./dist --copy-files",
-    "build:watch": "babel src --out-dir ./dist --copy-files -w",
+    "build": "babel src --out-dir ./dist --copy-files --presets=es2015",
+    "build:watch": "babel src --out-dir ./dist --copy-files --presets=es2015 -w",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
     "test": "node bin/aw-test-runner ./test",
@@ -35,6 +35,7 @@
     "babel": "6.23.0",
     "babel-cli": "^6.26.0",
     "babel-core": "6.26.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-register": "6.26.0",
     "bluebird": "3.5.0",
     "browser-sync": "2.18.13",
