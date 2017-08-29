@@ -12,7 +12,7 @@ export default {
     });
 
     child.on('message', (data) => {
-            /* eslint no-process-exit:0*/
+      /* eslint no-process-exit:0 */
       if (data.status === 'running') {
         contracter.start(program.dir).then((code) => {
           process.exit(code);

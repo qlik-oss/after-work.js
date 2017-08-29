@@ -15,17 +15,17 @@ describe('Reporter index', () => {
       version: 'x.y.z',
     });
 
-        // const reporters = sandbox.stub( mocha, "reporters" ).returs( { XUnit: function(){} } );
-        // const XUnit = sandbox.stub( reporters, "XUnit" );
+    // const reporters = sandbox.stub( mocha, "reporters" ).returs( { XUnit: function(){} } );
+    // const XUnit = sandbox.stub( reporters, "XUnit" );
 
-        // let mochaMethods = {
-        //     reporters: function(){},
-        //     XUnit: function(){}
-        // };
-        // sandbox.stub( mochaMethods, "reporters" ).returns( mochaMethods );
-        // sandbox.stub( mochaMethods, "XUnit" ).returns( mochaMethods );
-        //
-        // sandbox.stub( global, "mocha" ).returns( mochaMethods );
+    // let mochaMethods = {
+    //     reporters: function(){},
+    //     XUnit: function(){}
+    // };
+    // sandbox.stub( mochaMethods, "reporters" ).returns( mochaMethods );
+    // sandbox.stub( mochaMethods, "XUnit" ).returns( mochaMethods );
+    //
+    // sandbox.stub( global, "mocha" ).returns( mochaMethods );
   });
 
   afterEach(() => {
@@ -59,10 +59,10 @@ describe('Reporter index', () => {
       delete global.utils;
     });
 
-        // it( "should enable xunit correctly", () => {
-        //     uiReport( runner, options );
-        //     expect( mocha ).to.be.calledOnce();
-        // } );
+    // it( "should enable xunit correctly", () => {
+    //     uiReport( runner, options );
+    //     expect( mocha ).to.be.calledOnce();
+    // } );
 
     it('should call pass correctly', () => {
       const test = {
@@ -71,11 +71,11 @@ describe('Reporter index', () => {
         slow: () => {},
       };
       const log = sandbox.stub(console, 'log');
-            // runner.on.withArgs( "pass" ).callsArgOnWith( 1, {}, test );
+      // runner.on.withArgs( "pass" ).callsArgOnWith( 1, {}, test );
       runner.on.withArgs('pass').callsArgWith(1, test);
       uiReport.call(uiReport, runner, options);
       expect(runner.on).to.be.calledWith('pass', sinon.match.func);
-      expect(console.log).to.be.calledWith(sinon.match(' √ PASSED:'));    // eslint-disable-line no-console
+      expect(console.log).to.be.calledWith(sinon.match(' √ PASSED:')); // eslint-disable-line no-console
       log.restore();
     });
 
@@ -102,7 +102,7 @@ describe('Reporter index', () => {
       runner.on.withArgs('fail').callsArgWith(1, test, err);
       uiReport.call(uiReport, runner, options);
       expect(runner.on).to.be.calledWith('fail', sinon.match.func);
-      expect(console.log).to.be.calledWith(sinon.match(' X FAILED:'));    // eslint-disable-line no-console
+      expect(console.log).to.be.calledWith(sinon.match(' X FAILED:')); // eslint-disable-line no-console
       log.restore();
     });
 
@@ -111,7 +111,7 @@ describe('Reporter index', () => {
       runner.on.withArgs('end').callsArgOn(1, runner);
       uiReport.call(uiReport, runner, options);
       expect(runner.on).to.be.calledWith('end', sinon.match.func);
-      expect(console.log).to.be.calledWith(sinon.match(' Σ SUMMARY:'));    // eslint-disable-line no-console
+      expect(console.log).to.be.calledWith(sinon.match(' Σ SUMMARY:')); // eslint-disable-line no-console
       log.restore();
     });
   });

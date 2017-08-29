@@ -37,7 +37,7 @@ const runner = {
   */
   addDefaultMochaArgs(command, info) {
     const { cwd } = this.getEnvConfig();
-        // Add default `mocha` arguments
+    // Add default `mocha` arguments
     if (info.addMochaArgs) {
       if (command.indexOf('istanbul') !== -1 && !info.hasArgumentsSeparator) {
         info.commandArgs.push('--');

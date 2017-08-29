@@ -1,4 +1,4 @@
-/* eslint no-undef: 0 no-console: 0, func-names: 0, prefer-rest-params: 0*/
+/* eslint no-undef: 0 no-console: 0, func-names: 0, prefer-rest-params: 0 */
 mocha.delay(true); // Adds a global `run` function
 // mocha.bail( true );
 mocha.fullTrace(true);

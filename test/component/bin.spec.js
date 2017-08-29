@@ -63,7 +63,7 @@ describe('bin', () => {
         envConfig.args = ['./bar'];
         runner.execute(spawnArgs);
         expect(spawn).to.have.been.calledWith(command + commandExt,
-            envConfig.args.concat(defaultArgs), spawnOptions);
+          envConfig.args.concat(defaultArgs), spawnOptions);
       });
 
       it('should run mocha with custom args', () => {
