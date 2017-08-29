@@ -1,5 +1,7 @@
 ![after-work.js](aw.png)
 
+[![CircleCI](https://circleci.com/gh/qlik-oss/after-work.js.svg?style=shield)](https://circleci.com/gh/qlik-oss/after-work.js)
+
 after-work.js is designed to be your preferred choice when it comes to testing. It acts as an unified testing framework from the lowest level up to the system level.
 
 [![Testing Pyramid](./docs/Pyramid.png)](http://martinfowler.com/bliki/TestPyramid.html)
