@@ -105,7 +105,7 @@ export const utils = {
       const regression = path.resolve(meta.artifactsPath, 'regression', folder, imageName);
       const diff = path.resolve(meta.artifactsPath, 'diff', folder, imageName);
 
-            // Injecting images into assert
+      // Injecting images into assert
       const expected = {
         baseline: path.join('baseline', folder, imageName).replace(/\\/g, '/'),
         diff: path.join('diff', folder, imageName).replace(/\\/g, '/'),
@@ -118,12 +118,12 @@ export const utils = {
         if (!exists) {
           return utils.writeImage(meta.img, baseline).then(() => {
             this.assert(
-                            false,
-                            `No baseline found! New baseline generated at ${`${meta.artifactsPath}/${expected.baseline}`}`,
-                            `No baseline found! New baseline generated at ${`${meta.artifactsPath}/${expected.baseline}`}`,
-                            expected,
-                            actual,
-                        );
+              false,
+              `No baseline found! New baseline generated at ${`${meta.artifactsPath}/${expected.baseline}`}`,
+              `No baseline found! New baseline generated at ${`${meta.artifactsPath}/${expected.baseline}`}`,
+              expected,
+              actual,
+            );
           });
         }
         return utils.compare(baseline, meta.img, tolerance).then((comparison) => {
@@ -133,14 +133,14 @@ export const utils = {
           return Promise.all([
             utils.writeImage(meta.img, regression),
             utils.writeImage(comparison.diffImg, diff)]).then(() => {
-              this.assert(
-                comparison.isEqual === true,
-                `expected ${id} equality to be less than ${tolerance}, but was ${comparison.equality}`,
-                `expected ${id} equality to be greater than ${tolerance}, but was ${comparison.equality}`,
-                expected,
-                actual);
-              return comparison;
-            });
+            this.assert(
+              comparison.isEqual === true,
+              `expected ${id} equality to be less than ${tolerance}, but was ${comparison.equality}`,
+              `expected ${id} equality to be greater than ${tolerance}, but was ${comparison.equality}`,
+              expected,
+              actual);
+            return comparison;
+          });
         });
       });
     });

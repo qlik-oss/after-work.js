@@ -26,8 +26,8 @@ export default function aggregateReports(reportName, artifactsPath) {
   const files = fs.readdirSync(artifactsPath);
 
   const allTests = files.filter(name => path.extname(name) === '.json')
-        .map(name => path.resolve(artifactsPath, name))
-        .map(filepath => JSON.parse(fs.readFileSync(filepath, 'utf8')));
+    .map(name => path.resolve(artifactsPath, name))
+    .map(filepath => JSON.parse(fs.readFileSync(filepath, 'utf8')));
 
   if (allTests.length === 0) {
     return undefined;
