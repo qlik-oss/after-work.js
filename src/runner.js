@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 
 /* eslint no-process-exit:0, no-cond-assign: 0 */
 import path from 'path';
@@ -128,9 +127,9 @@ const runner = {
     const command = info.commandArgs.shift();
 
     this.addDefaultMochaArgs(command, info);
-    console.log('The following command will be spawn: ', command, info.commandArgs.join(' '));
+    console.log('The following command will be spawn: ', command, info.commandArgs.join(' ')); // eslint-disable-line no-console
     this.spawn(command, info.commandArgs);
   },
 };
 
-export default { runner };
+export { runner }; // eslint-disable-line import/prefer-default-export

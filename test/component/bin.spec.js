@@ -1,6 +1,6 @@
 import path from 'path';
 import child_process from 'child_process'; // eslint-disable-line camelcase
-import { runner } from '../../src/runner';
+import runner from '../../src/runner';
 
 describe('bin', () => {
   let sandbox;
