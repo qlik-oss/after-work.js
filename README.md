@@ -1,6 +1,7 @@
 ![after-work.js](aw.png)
 
 [![CircleCI](https://circleci.com/gh/qlik-oss/after-work.js.svg?style=shield)](https://circleci.com/gh/qlik-oss/after-work.js)
+[![Greenkeeper badge](https://badges.greenkeeper.io/qlik-oss/after-work.js.svg)](https://greenkeeper.io/)
 
 after-work.js is designed to be your preferred choice when it comes to testing. It acts as an unified testing framework from the lowest level up to the system level.
 
@@ -16,7 +17,6 @@ Or you can go directly to the different test levels:
 
 ## Get started
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/qlik-oss/after-work.js.svg)](https://greenkeeper.io/)
 after-work.js is designed to be used as a dependency while developing your code. Just add it as a `devDependencies` to your `package.json`:
 
 ```js
