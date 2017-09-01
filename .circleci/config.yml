@@ -21,7 +21,7 @@ jobs:
           command:
             npm run lint
       - run:
-          name: Run Unit Tests
+          name: Run unit and component tests
           command:
             npm run test:coverage
       - store_artifacts:
