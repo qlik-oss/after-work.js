@@ -1,6 +1,6 @@
 import path from 'path';
 import child_process from 'child_process'; // eslint-disable-line camelcase
-import runner from '../../src/runner';
+import { runner } from '../../src/runner';
 
 describe('bin', () => {
   let sandbox;
@@ -31,8 +31,8 @@ describe('bin', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(path, 'resolve', (arg1, arg2) => arg2);
-    sandbox.stub(path, 'relative', (arg1, arg2) => arg2);
+    sandbox.stub(path, 'resolve').returnsArg(1);
+    sandbox.stub(path, 'relative').returnsArg(1);
     on = sandbox.stub();
     spawn = sandbox.stub(child_process, 'spawn').returns({
       on,

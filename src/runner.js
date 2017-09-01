@@ -127,7 +127,7 @@ const runner = {
     const command = info.commandArgs.shift();
 
     this.addDefaultMochaArgs(command, info);
-    console.log('The following command will be spawn: ', command, info.commandArgs.join(' ')); // eslint-disable-line no-console
+    // console.log('The following command will be spawn: ', command, info.commandArgs.join(' '));
     this.spawn(command, info.commandArgs);
   },
 };
