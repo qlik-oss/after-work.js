@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node:8
+    working_directory: ~/after-work.js
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies
+          command:
+            npm install --quiet
+      - run:
+          name: Build
+          command:
+            npm run build
+      - run:
+          name: Run ESLint
+          command:
+            npm run lint
+      - run:
+          name: Run unit and component tests
+          command:
+            npm run test:coverage
+      - store_artifacts:
+          path: ./coverage
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
