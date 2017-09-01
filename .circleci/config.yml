@@ -12,7 +12,7 @@ jobs:
           name: Install dependencies
           command:
             npm install --quiet
-       - run:
+      - run:
           name: Build
           command:
             npm run build
