@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 
 /* eslint no-process-exit:0, no-cond-assign: 0 */
 import path from 'path';
@@ -37,7 +36,7 @@ const runner = {
   */
   addDefaultMochaArgs(command, info) {
     const { cwd } = this.getEnvConfig();
-        // Add default `mocha` arguments
+    // Add default `mocha` arguments
     if (info.addMochaArgs) {
       if (command.indexOf('istanbul') !== -1 && !info.hasArgumentsSeparator) {
         info.commandArgs.push('--');
@@ -52,7 +51,7 @@ const runner = {
       }
 
       if (info.commandArgs.indexOf('--compilers') === -1) {
-        info.commandArgs.push('--compilers', 'js:babel/register');
+        info.commandArgs.push('--compilers', 'js:babel-core/register');
       }
     }
   },
@@ -128,8 +127,9 @@ const runner = {
     const command = info.commandArgs.shift();
 
     this.addDefaultMochaArgs(command, info);
+    // console.log('The following command will be spawn: ', command, info.commandArgs.join(' '));
     this.spawn(command, info.commandArgs);
   },
 };
 
-export default { runner };
+export { runner }; // eslint-disable-line import/prefer-default-export

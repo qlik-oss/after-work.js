@@ -13,6 +13,8 @@ Or you can go directly to the different test levels:
 * [system / end to end](./docs/e2e.md): used for testing a flow scenario of the whole product.
 
 ## Get started
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/qlik-oss/after-work.js.svg)](https://greenkeeper.io/)
 after-work.js is designed to be used as a dependency while developing your code. Just add it as a `devDependencies` to your `package.json`:
 
 ```js

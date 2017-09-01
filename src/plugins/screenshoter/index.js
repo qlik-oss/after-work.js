@@ -1,10 +1,10 @@
-/* global browser*/
+/* global browser */
 import { utils } from './utils';
 
 global.chai.Assertion.addMethod('matchImageOf', utils.matchImageOf);
 
 export default {
-    /**
+  /**
      * Sets up plugins before tests are run. This is called after the WebDriver
      * session has been started, but before the test framework has been set up.
      *
@@ -20,7 +20,7 @@ export default {
   setup() {
     browser.takeImageOf = utils.takeImageOf.bind(utils, browser);
   },
-    /**
+  /**
      * This is called after the tests have been run, but before the WebDriver
      * session has been terminated.
      *
@@ -33,9 +33,9 @@ export default {
      *     for the promise to resolve before continuing.  If the promise is
      *     rejected, a failed assertion is added to the test results.
      */
-    // teardown() {},
+  // teardown() {},
 
-    /**
+  /**
      * Called after the test results have been finalized and any jobs have been
      * updated (if applicable).
      *
@@ -47,9 +47,9 @@ export default {
      *     for the promise to resolve before continuing.  If the promise is
      *     rejected, an error is logged to the console.
      */
-    // postResults() {},
+  // postResults() {},
 
-    /**
+  /**
      * Called after each test block (in Jasmine, this means an `it` block)
      * completes.
      *
@@ -66,9 +66,9 @@ export default {
      *     will *not* wait before executing the next test, however.  If the promise
      *     is rejected, a failed assertion is added to the test results.
      */
-    // postTest( passed, testInfo ) { console.log( passed, testInfo ); },
+  // postTest( passed, testInfo ) { console.log( passed, testInfo ); },
 
-    /**
+  /**
      * This is called inside browser.get() directly after the page loads, and before
      * angular bootstraps.
      *
@@ -81,9 +81,9 @@ export default {
      *     for the promise to resolve before continuing.  If the promise is
      *     rejected, a failed assertion is added to the test results.
      */
-    // onPageLoad() {},
+  // onPageLoad() {},
 
-    /**
+  /**
      * This is called inside browser.get() directly after angular is done
      * bootstrapping/synchronizing.  If browser.ignoreSynchronization is true, this
      * will not be called.
@@ -97,9 +97,9 @@ export default {
      *     for the promise to resolve before continuing.  If the promise is
      *     rejected, a failed assertion is added to the test results.
      */
-    // onPageStable() {},
+  // onPageStable() {},
 
-    /**
+  /**
      * Between every webdriver action, Protractor calls browser.waitForAngular() to
      * make sure that Angular has no outstanding $http or $timeout calls.
      * You can use waitForPromise() to have Protractor additionally wait for your
@@ -117,9 +117,9 @@ export default {
      *     other than a promise is returned, protractor will continue onto the next
      *     command.
      */
-    // waitForPromise() {},
+  // waitForPromise() {},
 
-    /**
+  /**
      * Between every webdriver action, Protractor calls browser.waitForAngular() to
      * make sure that Angular has no outstanding $http or $timeout calls.
      * You can use waitForCondition() to have Protractor additionally wait for your
@@ -136,9 +136,9 @@ export default {
      *     assertion is added to the test results, and protractor will continue onto
      *     the next command.
      */
-    // waitForCondition() {},
+  // waitForCondition() {},
 
-    /**
+  /**
      * Used when reporting results.
      *
      * If you do not specify this property, it will be filled in with something

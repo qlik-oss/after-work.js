@@ -4,12 +4,12 @@ describe('Runner', () => {
   let sandbox;
 
   describe('getEnvConfig', () => {
-    const env = {};
     let cwd;
 
     beforeEach(() => {
       sandbox = sinon.sandbox.create();
-      sandbox.stub(process, 'env', env);
+      sandbox.stub(process, 'env').get(() => 'env');
+
       cwd = sandbox.stub(process, 'cwd');
     });
 
@@ -24,7 +24,7 @@ describe('Runner', () => {
     });
 
     it('should get environment', () => {
-      expect(runner.getEnvConfig().env).to.equal(env);
+      expect(runner.getEnvConfig().env).to.equal('env');
     });
 
     it('should get current working directory', () => {

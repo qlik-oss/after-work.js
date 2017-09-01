@@ -1,4 +1,4 @@
-/* eslint-disable no-plusplus*/
+/* eslint-disable no-plusplus */
 
 /* Acknowledgements:
  This reporter is highly influenced by mochawesome (http://adamgruber.github.io/mochawesome) but
@@ -37,12 +37,12 @@ export default function uiReport(runner, options) {
 
   Base.call(this, runner);
 
-    // Since we can't extract the information from
-    // protractor we need to hook up own reporter and
-    // therefor we must make sure we have finished
-    // generating the report before the process is shutdown
-    // This is handled by a inline dummy plugins
-    // and hooking into the `teardown` function
+  // Since we can't extract the information from
+  // protractor we need to hook up own reporter and
+  // therefor we must make sure we have finished
+  // generating the report before the process is shutdown
+  // This is handled by a inline dummy plugins
+  // and hooking into the `teardown` function
   options.reporterPlugin.teardown = function teardown() {
     return Promise.all(waitForPromises);
   };

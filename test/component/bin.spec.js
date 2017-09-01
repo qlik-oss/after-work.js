@@ -26,13 +26,13 @@ describe('bin', () => {
     '--opts',
     './config/mocha.opts',
     '--compilers',
-    'js:babel/register'];
+    'js:babel-core/register'];
   let processExit;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(path, 'resolve', (arg1, arg2) => arg2);
-    sandbox.stub(path, 'relative', (arg1, arg2) => arg2);
+    sandbox.stub(path, 'resolve').returnsArg(1);
+    sandbox.stub(path, 'relative').returnsArg(1);
     on = sandbox.stub();
     spawn = sandbox.stub(child_process, 'spawn').returns({
       on,
@@ -63,7 +63,7 @@ describe('bin', () => {
         envConfig.args = ['./bar'];
         runner.execute(spawnArgs);
         expect(spawn).to.have.been.calledWith(command + commandExt,
-            envConfig.args.concat(defaultArgs), spawnOptions);
+          envConfig.args.concat(defaultArgs), spawnOptions);
       });
 
       it('should run mocha with custom args', () => {

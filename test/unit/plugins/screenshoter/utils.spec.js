@@ -185,10 +185,8 @@ describe('Screenshoter Utils', () => {
         takeScreenshot: sandbox.stub().returns(Promise.resolve('foo')),
         getCapabilities: sandbox.stub().returns(Promise.resolve(Capabilities)),
       };
-      sandbox.stub(jimp, 'read', () => {
-        crop = sandbox.stub();
-        return Promise.resolve({ crop });
-      });
+      crop = sandbox.stub();
+      sandbox.stub(jimp, 'read').returns(Promise.resolve({ crop }));
     });
 
     it('should resolve if it was possible to take an image with selector', () => utils.takeImageOf(browser, { selector: 'my-selector' }).then((result) => {
@@ -226,7 +224,7 @@ describe('Screenshoter Utils', () => {
     const img = {};
 
     beforeEach(() => {
-      sandbox.stub(path, 'resolve', (...args) => args.join('/').replace('//', '/'));
+      sandbox.stub(path, 'resolve').callsFake((...args) => args.join('/').replace('//', '/'));
       fileExists = sandbox.stub(utils, 'fileExists');
       writeImage = sandbox.stub(utils, 'writeImage');
       compare = sandbox.stub(utils, 'compare');
