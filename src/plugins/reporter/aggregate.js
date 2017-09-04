@@ -7,7 +7,7 @@ import report from './create-static';
 
 function reduceTestObject(accumulator, currentValue) {
   accumulator.tests = accumulator.tests.concat(currentValue.tests);
-  const stats = accumulator.stats;
+  const { stats } = accumulator;
   const currentStats = currentValue.stats;
 
   stats.suites += currentStats.suites;

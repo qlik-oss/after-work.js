@@ -47,8 +47,9 @@ describe('Screenshoter Utils', () => {
     });
 
     it('should reject if not all files were removed', () => {
-      sandbox.stub(utils, 'removeFile').returns(Promise.reject('error'));
-      return expect(utils.removeFiles('foo', 'bar', 'baz')).to.eventually.be.rejectedWith('error');
+      const error = new Error('error');
+      sandbox.stub(utils, 'removeFile').returns(Promise.reject(error));
+      return expect(utils.removeFiles('foo', 'bar', 'baz')).to.eventually.be.rejectedWith(error);
     });
   });
 
@@ -135,7 +136,7 @@ describe('Screenshoter Utils', () => {
   describe('getBoundingClientRect', () => {
     let querySelector;
     let getBoundingClientRect;
-    const Element = () => {};
+    const Element = () => { };
 
     beforeEach(() => {
       querySelector = sandbox.stub();
@@ -156,12 +157,18 @@ describe('Screenshoter Utils', () => {
     });
 
     it('should return rect for valid selector', () => {
-      const rect = { left: 10, top: 20, width: 30, height: 40 };
-      const cbRect = { left: 10, top: 20, width: 30, height: 40, ratio: 2 };
+      const rect = {
+        left: 10, top: 20, width: 30, height: 40,
+      };
+      const cbRect = {
+        left: 10, top: 20, width: 30, height: 40, ratio: 2,
+      };
       const cb = sandbox.stub();
       getBoundingClientRect.returns(rect);
-      querySelector.returns(Object.create(Element.prototype, {
-        getBoundingClientRect: { value: getBoundingClientRect } }));
+      querySelector.returns(Object.create(
+        Element.prototype,
+        { getBoundingClientRect: { value: getBoundingClientRect } },
+      ));
       utils.getBoundingClientRect('foo', cb);
       expect(cb).to.have.been.calledWithExactly(cbRect);
     });
@@ -181,7 +188,8 @@ describe('Screenshoter Utils', () => {
           left: 200,
           top: 100,
           width: 200,
-          height: 100 })),
+          height: 100,
+        })),
         takeScreenshot: sandbox.stub().returns(Promise.resolve('foo')),
         getCapabilities: sandbox.stub().returns(Promise.resolve(Capabilities)),
       };
@@ -191,19 +199,27 @@ describe('Screenshoter Utils', () => {
 
     it('should resolve if it was possible to take an image with selector', () => utils.takeImageOf(browser, { selector: 'my-selector' }).then((result) => {
       expect(crop).to.have.been.calledWith(200, 100, 200, 100);
-      expect(result.rect).to.deep.equal({ top: 100, left: 200, width: 200, height: 100 });
+      expect(result.rect).to.deep.equal({
+        top: 100, left: 200, width: 200, height: 100,
+      });
       expect(result.browserName).to.equal('chrome');
     }));
 
     it('should resolve if it was possible to take an image with default selector', () => utils.takeImageOf(browser, {}).then((result) => {
-      expect(result.rect).to.deep.equal({ top: 100, left: 200, width: 200, height: 100 });
+      expect(result.rect).to.deep.equal({
+        top: 100, left: 200, width: 200, height: 100,
+      });
       expect(result.browserName).to.equal('chrome');
       expect(result.platform).to.equal('windows-nt');
     }));
 
-    it('should add offset to the rect used for cropping', () => utils.takeImageOf(browser, { selector: 'my-selector', offsetX: -5, offsetY: -5, offsetWidth: 5, offsetHeight: 5 }).then((result) => {
+    it('should add offset to the rect used for cropping', () => utils.takeImageOf(browser, {
+      selector: 'my-selector', offsetX: -5, offsetY: -5, offsetWidth: 5, offsetHeight: 5,
+    }).then((result) => {
       expect(crop).to.have.been.calledWith(195, 95, 205, 105);
-      expect(result.rect).to.deep.equal({ top: 95, left: 195, width: 205, height: 105 });
+      expect(result.rect).to.deep.equal({
+        top: 95, left: 195, width: 205, height: 105,
+      });
       expect(result.browserName).to.equal('chrome');
     }));
   });
@@ -228,7 +244,12 @@ describe('Screenshoter Utils', () => {
       fileExists = sandbox.stub(utils, 'fileExists');
       writeImage = sandbox.stub(utils, 'writeImage');
       compare = sandbox.stub(utils, 'compare');
-      chaiCtx = { _obj: Promise.resolve({ img, browserName: 'chrome', artifactsPath: 'artifacts', platform: 'windows-nt' }), assert: sinon.stub() };
+      chaiCtx = {
+        _obj: Promise.resolve({
+          img, browserName: 'chrome', artifactsPath: 'artifacts', platform: 'windows-nt',
+        }),
+        assert: sinon.stub(),
+      };
       matchImageOf = utils.matchImageOf.bind(chaiCtx);
       sandbox.stub(process, 'cwd').returns('foo');
       mkdir = sandbox.stub(mkdirp, 'sync');

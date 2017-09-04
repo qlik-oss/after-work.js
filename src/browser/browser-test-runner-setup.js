@@ -23,7 +23,7 @@ runner.on('end', () => {
 });
 
 if (typeof callPhantom === 'function') {
-  onerror = function () {
+  onerror = function () { // eslint-disable-line no-restricted-globals
     const args = [].slice.call(arguments);
     console.error(...args);
     callPhantom({ exit: true, failures: runner.failures });
