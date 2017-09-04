@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import fs from 'fs';
+import mkdirp from 'mkdirp';
 import uiReport from '../../../../src/plugins/reporter/index';
 import { utils } from '../../../../src/plugins/reporter/utils';
 
@@ -9,6 +10,7 @@ describe('Reporter index', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     sandbox.stub(fs, 'writeFile');
+    sandbox.stub(mkdirp, 'sync');
     sandbox.stub(utils, 'getRepoInfo').returns({
       name: 'name',
       description: 'description',
