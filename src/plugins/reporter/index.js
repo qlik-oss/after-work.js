@@ -14,7 +14,7 @@ import path from 'path';
 import { utils } from './utils';
 import report from './create-static';
 
-const Base = mocha.reporters.Base;
+const { Base } = mocha.reporters;
 
 export default function uiReport(runner, options) {
   const tests = [];
@@ -22,7 +22,7 @@ export default function uiReport(runner, options) {
   let failures = 0;
   let passes = 0;
   const browser = options.reporterPlugin.getBrowser();
-  const artifactsPath = browser.artifactsPath;
+  const { artifactsPath } = browser;
   const info = browser.reporterInfo;
   const waitForPromises = [];
 

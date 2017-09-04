@@ -18,7 +18,8 @@ describe('Reporter Utils', () => {
     const repoInfo = {
       name: 'repo name',
       version: 'x.y.z',
-      description: 'Descriptive text' };
+      description: 'Descriptive text',
+    };
 
     beforeEach(() => {
       sandbox.stub(path, 'resolve').returns('./package.json');
@@ -56,7 +57,8 @@ describe('Reporter Utils', () => {
       expected: {
         baseline: 'baseline/variant.png',
         diff: 'diff/variant.png',
-        regression: 'regression/variant.png' },
+        regression: 'regression/variant.png',
+      },
       stack: 'AssertionError: No baseline found! New baseline generated at ...)',
     };
 
@@ -83,7 +85,8 @@ describe('Reporter Utils', () => {
       ctx: '#<Context>',
       duration: 572,
       state: 'passed',
-      speed: 'slow' };
+      speed: 'slow',
+    };
 
     const result = {
       title: 'should something',
@@ -98,7 +101,8 @@ describe('Reporter Utils', () => {
       file: 'F:\\git\\after-workJS\\components.spec.js',
       screenshot: '',
       err: {},
-      consoleEntries: [] };
+      consoleEntries: [],
+    };
 
     beforeEach(() => {
       sandbox.stub(test.fn, 'toString').returns('function () {return expect(browser.takeImageOf(settings)).to.eventually.matchImageOf(fixture);');

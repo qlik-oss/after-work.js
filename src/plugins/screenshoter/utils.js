@@ -69,13 +69,15 @@ export const utils = {
       ratio,
     });
   },
-  takeImageOf(browser, { selector = 'body', offsetX = 0, offsetY = 0, offsetWidth = 0, offsetHeight = 0 } = {}) {
+  takeImageOf(browser, {
+    selector = 'body', offsetX = 0, offsetY = 0, offsetWidth = 0, offsetHeight = 0,
+  } = {}) {
     return browser.executeAsyncScript(this.getBoundingClientRect, selector).then((rect) => {
       rect.left += offsetX;
       rect.top += offsetY;
       rect.width += offsetWidth;
       rect.height += offsetHeight;
-      return browser.takeScreenshot().then(base64 => jimp.read(new Buffer(base64, 'base64')).then((img) => {
+      return browser.takeScreenshot().then(base64 => jimp.read(new Buffer(base64, 'base64')).then((img) => { // eslint-disable-line no-buffer-constructor
         if (rect.ratio > 1) {
           img.scale(1 / rect.ratio);
         }
@@ -138,7 +140,8 @@ export const utils = {
               `expected ${id} equality to be less than ${tolerance}, but was ${comparison.equality}`,
               `expected ${id} equality to be greater than ${tolerance}, but was ${comparison.equality}`,
               expected,
-              actual);
+              actual,
+            );
             return comparison;
           });
         });
