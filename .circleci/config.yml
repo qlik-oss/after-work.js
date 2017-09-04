@@ -20,6 +20,10 @@ jobs:
       - run:
           name: greenkeeper - Upload
           command: greenkeeper-lockfile-upload
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
       - run:
           name: Build
           command:
@@ -34,7 +38,3 @@ jobs:
             npm run test:coverage
       - store_artifacts:
           path: ./coverage
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
