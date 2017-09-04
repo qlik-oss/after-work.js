@@ -6,7 +6,7 @@ jobs:
     working_directory: ~/after-work.js
     steps:
       - checkout
-       - run:
+      - run:
           name: greenkeeper - Update
           command: |
             sudo npm install -g greenkeeper-lockfile@1
@@ -17,7 +17,7 @@ jobs:
           name: Install dependencies
           command:
             npm install --quiet
-       - run:
+      - run:
           name: greenkeeper - Upload
           command: greenkeeper-lockfile-upload
       - run:
