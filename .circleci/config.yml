@@ -2,16 +2,24 @@ version: 2
 jobs:
   build:
     docker:
-      - image: node:8
+      - image: circleci/node:8.4.0
     working_directory: ~/after-work.js
     steps:
       - checkout
+       - run:
+          name: greenkeeper - Update
+          command: |
+            sudo npm install -g greenkeeper-lockfile@1
+            greenkeeper-lockfile-update
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
           command:
             npm install --quiet
+       - run:
+          name: greenkeeper - Upload
+          command: greenkeeper-lockfile-upload
       - run:
           name: Build
           command:
