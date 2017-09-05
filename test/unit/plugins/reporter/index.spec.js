@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import fs from 'fs';
+import mocha from 'mocha';
 import mkdirp from 'mkdirp';
 import uiReport from '../../../../src/plugins/reporter/index';
 import { utils } from '../../../../src/plugins/reporter/utils';
@@ -10,24 +11,13 @@ describe('Reporter index', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     sandbox.stub(fs, 'writeFile');
+    sandbox.stub(mocha.reporters, 'XUnit');
     sandbox.stub(mkdirp, 'sync');
     sandbox.stub(utils, 'getRepoInfo').returns({
       name: 'name',
       description: 'description',
       version: 'x.y.z',
     });
-
-    // const reporters = sandbox.stub( mocha, "reporters" ).returs( { XUnit: function(){} } );
-    // const XUnit = sandbox.stub( reporters, "XUnit" );
-
-    // let mochaMethods = {
-    //     reporters: function(){},
-    //     XUnit: function(){}
-    // };
-    // sandbox.stub( mochaMethods, "reporters" ).returns( mochaMethods );
-    // sandbox.stub( mochaMethods, "XUnit" ).returns( mochaMethods );
-    //
-    // sandbox.stub( global, "mocha" ).returns( mochaMethods );
   });
 
   afterEach(() => {
@@ -60,11 +50,6 @@ describe('Reporter index', () => {
     afterEach(() => {
       delete global.utils;
     });
-
-    // it( "should enable xunit correctly", () => {
-    //     uiReport( runner, options );
-    //     expect( mocha ).to.be.calledOnce();
-    // } );
 
     it('should call pass correctly', () => {
       const test = {
