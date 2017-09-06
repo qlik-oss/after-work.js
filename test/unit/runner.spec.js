@@ -19,7 +19,7 @@ describe('Runner', () => {
 
     it('should call `process.argv.slice`', () => {
       const argv = sandbox.stub(process.argv, 'slice');
-      const args = runner.getEnvConfig().args; // eslint-disable-line no-unused-vars
+      const { args } = runner.getEnvConfig(); // eslint-disable-line no-unused-vars
       expect(argv).to.have.been.calledWithExactly(2);
     });
 

@@ -3,7 +3,7 @@ import util from 'util';
 import system from 'system';  //eslint-disable-line
 
 const page = webpage.create();
-const args = system.args;
+const { args } = system;
 const url = args[args.indexOf('--pageUrl') + 1];
 const singleRun = args[args.indexOf('--single-run') + 1] === 'true';
 
