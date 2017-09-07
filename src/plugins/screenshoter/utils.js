@@ -6,7 +6,7 @@ import jimp from 'jimp';
 import util from 'util';
 import mkdirp from 'mkdirp';
 
-export const utils = {
+const utils = {
   getBrowserName(browser) {
     return browser.getCapabilities();
   },
@@ -150,4 +150,4 @@ export const utils = {
   },
 };
 
-export default { utils };
+module.exports = { utils };

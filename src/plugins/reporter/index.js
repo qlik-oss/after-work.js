@@ -16,7 +16,7 @@ import report from './create-static';
 
 const { Base } = mocha.reporters;
 
-export default function uiReport(runner, options) {
+function uiReport(runner, options) {
   const tests = [];
   let pending = 0;
   let failures = 0;
@@ -124,3 +124,5 @@ export default function uiReport(runner, options) {
     });
   });
 }
+
+module.exports = uiReport;
