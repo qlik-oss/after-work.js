@@ -3,7 +3,7 @@ import { utils } from './utils';
 
 global.chai.Assertion.addMethod('matchImageOf', utils.matchImageOf);
 
-export default {
+const screenshoter = {
   /**
      * Sets up plugins before tests are run. This is called after the WebDriver
      * session has been started, but before the test framework has been set up.
@@ -149,3 +149,5 @@ export default {
   name: 'screenshoter',
 
 };
+
+module.exports = screenshoter;
