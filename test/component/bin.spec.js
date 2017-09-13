@@ -92,38 +92,6 @@ describe('bin', () => {
     });
   });
 
-  describe('`aw-test-coverage`', () => {
-    const spawnArgs = ['resolve=.bin/istanbul', 'cover', 'resolve=mocha/bin/_mocha'];
-    const command = '.bin/istanbul';
-    const commandExt = '.cmd';
-    const defaultCommandArgs = ['cover', 'mocha/bin/_mocha'];
-
-
-    describe('win32', () => {
-      const envConfig = Object.create(defaultEnvConfig, {
-        platform: { value: 'win32' },
-      });
-
-      beforeEach(() => {
-        getEnvConfig.returns(envConfig);
-      });
-
-      it('should run istanbul cover with mocha default args', () => {
-        envConfig.args = ['./bar'];
-        const commandArgs = defaultCommandArgs.concat(envConfig.args, ['--'], defaultArgs);
-        runner.execute(spawnArgs);
-        expect(spawn).to.have.been.calledWith(command + commandExt, commandArgs, spawnOptions);
-      });
-
-      it('should run istanbul with mocha custom args', () => {
-        envConfig.args = ['./foo', '--', '--recursive', '-b', '--timeout', 3000];
-        const commandArgs = defaultCommandArgs.concat(envConfig.args, defaultArgs);
-        runner.execute(spawnArgs);
-        expect(spawn).to.have.been.calledWith(command + commandExt, commandArgs, spawnOptions);
-      });
-    });
-  });
-
   describe('`aw-browser-test-runner`', () => {
     const spawnArgs = ['resolve=.bin/protractor'];
     const command = '.bin/protractor';

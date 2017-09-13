@@ -38,21 +38,21 @@ const runner = {
     const { cwd } = this.getEnvConfig();
     // Add default `mocha` arguments
     if (info.addMochaArgs) {
-      if (command.indexOf('istanbul') !== -1 && !info.hasArgumentsSeparator) {
-        info.commandArgs.push('--');
-      }
+      // if (command.indexOf('istanbul') !== -1 && !info.hasArgumentsSeparator) {
+      //   info.commandArgs.push('--');
+      // }
 
-      if (info.commandArgs.indexOf('--require') === -1) {
-        info.commandArgs.push('--require', path.relative(cwd, path.resolve(__dirname, './config/global.js')));
-      }
+      // if (info.commandArgs.indexOf('--require') === -1) {
+      //   info.commandArgs.push('--require', path.relative(cwd, path.resolve(__dirname, './config/global.js')));
+      // }
 
-      if (info.commandArgs.indexOf('--opts') === -1) {
-        info.commandArgs.push('--opts', path.relative(cwd, path.resolve(__dirname, './config/mocha.opts')));
-      }
+      // if (info.commandArgs.indexOf('--opts') === -1) {
+      //   info.commandArgs.push('--opts', path.relative(cwd, path.resolve(__dirname, './config/mocha.opts')));
+      // }
 
-      if (info.commandArgs.indexOf('--compilers') === -1) {
-        info.commandArgs.push('--compilers', 'js:babel-core/register');
-      }
+      // if (info.commandArgs.indexOf('--compilers') === -1) {
+      //   info.commandArgs.push('--compilers', 'js:babel-core/register');
+      // }
     }
   },
 
