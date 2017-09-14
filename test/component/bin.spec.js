@@ -15,6 +15,7 @@ describe('bin', () => {
   };
   let spawn;
   let on;
+  let log;
   const spawnOptions = {
     cwd: '',
     env: {},
@@ -60,17 +61,18 @@ describe('bin', () => {
       });
 
       it('should run mocha with default args', () => {
+        log = sinon.stub(console, 'log');
         envConfig.args = ['./bar'];
         runner.execute(spawnArgs);
-        expect(spawn).to.have.been.calledWith(
-          command + commandExt,
-          envConfig.args.concat(defaultArgs), spawnOptions,
-        );
+        log.restore();
+        expect(spawn).to.have.been.calledWith(command + commandExt, envConfig.args, spawnOptions);
       });
 
       it('should run mocha with custom args', () => {
+        log = sinon.stub(console, 'log');
         envConfig.args = ['./foo', '--require', './foo', '--opts', './bar.opts', '--recursive', '-b', '--timeout', 3000, '--compilers', 'js:babel-core/register'];
         runner.execute(spawnArgs);
+        log.restore();
         expect(spawn).to.have.been.calledWith(command + commandExt, envConfig.args, spawnOptions);
       });
     });
@@ -85,8 +87,10 @@ describe('bin', () => {
       });
 
       it('should run mocha', () => {
+        log = sinon.stub(console, 'log');
         envConfig.args = ['./bar'];
         runner.execute(spawnArgs);
+        log.restore();
         expect(spawn).to.have.been.calledWith(command);
       });
     });
@@ -107,8 +111,10 @@ describe('bin', () => {
       });
 
       it('should run protractor with default args', () => {
-        envConfig.args = ['./node_modules/sensei-e2e/lib/browser/conf.js --specs ./test/e2e/*.spec.js --browser-sync=test/e2e/conf.browsersync'];
+        log = sinon.stub(console, 'log');
+        envConfig.args = ['./node_modules/after-work.js/dist/browser/conf.js --specs ./test/e2e/*.spec.js --browser-sync=test/e2e/conf.browsersync'];
         runner.execute(spawnArgs);
+        log.restore();
         expect(spawn).to.have.been.calledWith(command + commandExt, envConfig.args, spawnOptions);
       });
     });
@@ -118,8 +124,10 @@ describe('bin', () => {
     describe('on', () => {
       describe('exit', () => {
         it('should exit with code', () => {
+          log = sinon.stub(console, 'log');
           on.callsArgWith(1, 9).onFirstCall();
           runner.execute([]);
+          log.restore();
           expect(processExit).to.have.been.calledWithExactly(9);
           expect(on.callCount).to.equal(2);
         });
@@ -127,8 +135,10 @@ describe('bin', () => {
 
       describe('error', () => {
         it('should exit with -1', () => {
+          log = sinon.stub(console, 'log');
           on.callsArg(1).onSecondCall();
           runner.execute([]);
+          log.restore();
           expect(processExit).to.have.been.calledWithExactly(-1);
           expect(on.callCount).to.equal(2);
         });
