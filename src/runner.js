@@ -45,6 +45,13 @@ const runner = {
     if (fs.existsSync(path.resolve(cwd, '.nycrc'))) { nycSettingsProvided = true; }
     if (packageJSON.nyc) { nycSettingsProvided = true; }
 
+    if (!info.addMochaArgs) {
+      info.commandArgs.unshift('mocha');
+      // info.commandArgs.unshift('../after-work.js/node_modules/.bin/mocha');
+      // info.commandArgs.push(path.relative(__dirname, resolve('mocha')));
+      // info.commandArgs.push(path.relative(cwd, resolve('/.bin/mocha')));
+    }
+
     if (info.addNycArgs) {
       // Remove cover argument
       info.commandArgs.splice(info.commandArgs.indexOf('cover'), 1);
@@ -52,17 +59,14 @@ const runner = {
         console.log('Found nyc options for the repository, no defaults will be used'); // eslint-disable-line no-console
       } else {
         console.log('Adding default nyc options'); // eslint-disable-line no-console
-        info.commandArgs.push(
+        info.commandArgs.unshift(
           '--reporter=text',
           '--reporter=lcov',
           '--all',
-          '--include', 'src/**',
+          '--include', 'src',
           '--require', 'babel-register',
         );
       }
-
-      info.commandArgs.push(path.relative(cwd, resolve('mocha')));
-      info.addMochaArgs = true;
     }
   },
 
@@ -78,13 +82,13 @@ const runner = {
     const mochaOptsFile = fs.existsSync(path.resolve(cwd, 'test/mocha.opts'));
 
     // Add default `mocha` arguments
-    if (info.addMochaArgs && !mochaOpts && !mochaOptsFile) {
+    if ((info.addMochaArgs || info.addNycArgs) && !mochaOpts && !mochaOptsFile) {
       console.log('Adding default mocha options'); // eslint-disable-line no-console
-      info.commandArgs.push('--require', path.relative(cwd, path.resolve(__dirname, './config/global.js')));
-      info.commandArgs.push('--opts', path.relative(cwd, path.resolve(__dirname, './config/mocha.opts')));
+      info.commandArgs.unshift('--require', path.relative(cwd, path.resolve(__dirname, './config/global.js')));
+      info.commandArgs.unshift('--opts', path.relative(cwd, path.resolve(__dirname, './config/mocha.opts')));
 
       if (!info.addNycArgs) {
-        info.commandArgs.push('--compilers', 'js:babel-core/register');
+        info.commandArgs.unshift('--compilers', 'js:babel-core/register');
       }
     } else {
       console.log('Found mocha options for the repository, no defaults will be used'); // eslint-disable-line no-console
@@ -187,8 +191,8 @@ const runner = {
     const info = this.parseArgs(spawnArgs);
     const command = info.commandArgs.shift();
 
-    this.addDefaultNycArgs(command, info);
     this.addDefaultMochaArgs(command, info);
+    this.addDefaultNycArgs(command, info);
     this.addDebugArgs(command, info);
 
     if (info.addDebugArgs) { console.log('The following command will be spawn: ', command, info.commandArgs.join(' ')); } // eslint-disable-line no-console
