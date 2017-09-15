@@ -36,7 +36,7 @@ const runner = {
   * @param  {Object} info    The parsing info Object
   */
   addDefaultNycArgs(command, info) {
-    const { cwd, resolve } = this.getEnvConfig();
+    const { cwd } = this.getEnvConfig();
 
     // Check for nyc options in repo
     let nycSettingsProvided = false;
@@ -46,10 +46,7 @@ const runner = {
     if (packageJSON.nyc) { nycSettingsProvided = true; }
 
     if (!info.addMochaArgs) {
-      info.commandArgs.unshift('mocha');
-      // info.commandArgs.unshift('../after-work.js/node_modules/.bin/mocha');
-      // info.commandArgs.push(path.relative(__dirname, resolve('mocha')));
-      // info.commandArgs.push(path.relative(cwd, resolve('/.bin/mocha')));
+      info.commandArgs.unshift(info.mocha);
     }
 
     if (info.addNycArgs) {
@@ -132,7 +129,7 @@ const runner = {
       if (typeof arg === 'string' && arg.indexOf('nyc') !== -1) {
         addNycArgs = true;
       }
-      if (typeof arg === 'string' && arg.indexOf('mocha') !== -1) {
+      if (typeof arg === 'string' && arg.indexOf('mocha') !== -1 && addNycArgs === false) {
         addMochaArgs = true;
       }
       if (typeof arg === 'string' && arg.indexOf('--debug') !== -1) {
@@ -190,6 +187,8 @@ const runner = {
     spawnArgs = spawnArgs.concat(args);
     const info = this.parseArgs(spawnArgs);
     const command = info.commandArgs.shift();
+
+    if (info.addNycArgs) { info.mocha = info.commandArgs.shift(); }
 
     this.addDefaultMochaArgs(command, info);
     this.addDefaultNycArgs(command, info);
