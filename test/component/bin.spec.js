@@ -21,13 +21,13 @@ describe('bin', () => {
     env: {},
     stdio: 'inherit',
   };
-  const defaultArgs = [
-    '--require',
-    './config/global.js',
-    '--opts',
-    './config/mocha.opts',
-    '--compilers',
-    'js:babel-core/register'];
+  // const defaultArgs = [
+  //   '--require',
+  //   './config/global.js',
+  //   '--opts',
+  //   './config/mocha.opts',
+  //   '--compilers',
+  //   'js:babel-core/register'];
   let processExit;
 
   beforeEach(() => {
