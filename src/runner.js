@@ -45,7 +45,7 @@ const runner = {
     if (fs.existsSync(path.resolve(cwd, '.nycrc'))) { nycSettingsProvided = true; }
     if (packageJSON.nyc) { nycSettingsProvided = true; }
 
-    if (!info.addMochaArgs) {
+    if (!info.addMochaArgs && !info.isWebdriver) {
       info.commandArgs.unshift(info.mocha);
     }
 
@@ -118,6 +118,7 @@ const runner = {
     let addNycArgs = false;
     let addMochaArgs = false;
     let addDebugArgs = false;
+    let isWebdriver = false;
     // let hasArgumentsSeparator = false;
     const resolveStr = 'resolve=';
 
@@ -132,6 +133,9 @@ const runner = {
       if (typeof arg === 'string' && arg.indexOf('mocha') !== -1 && addNycArgs === false) {
         addMochaArgs = true;
       }
+      if (typeof arg === 'string' && arg.indexOf('protractor') !== -1) {
+        isWebdriver = true;
+      }
       if (typeof arg === 'string' && arg.indexOf('--debug') !== -1) {
         addDebugArgs = true;
       }
@@ -145,6 +149,7 @@ const runner = {
       commandArgs,
       addNycArgs,
       addMochaArgs,
+      isWebdriver,
       addDebugArgs,
       // hasArgumentsSeparator,
     };
