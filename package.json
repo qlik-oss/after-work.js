@@ -9,11 +9,11 @@
     "build:watch": "babel src --out-dir ./dist --copy-files -w",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "test": "aw-test-runner ./test",
-    "test:unit": "aw-test-runner ./test/unit",
-    "test:unit:watch": "aw-test-runner ./test/unit -w",
-    "test:coverage": "aw-test-runner cover ./test",
-    "test:component": "aw-test-runner ./test/component"
+    "test": "node bin/aw-test-runner ./test",
+    "test:unit": "node bin/aw-test-runner ./test/unit",
+    "test:unit:watch": "node bin/aw-test-runner ./test/unit -w",
+    "test:coverage": "node bin/aw-test-runner cover ./test",
+    "test:component": "node bin/aw-test-runner ./test/component"
   },
   "bin": {
     "aw-test-coverage": "bin/aw-test-coverage.js",
