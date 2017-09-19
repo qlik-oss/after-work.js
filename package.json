@@ -9,11 +9,11 @@
     "build:watch": "babel src --out-dir ./dist --copy-files -w",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "test": "node bin/aw-test-runner ./test",
-    "test:unit": "node bin/aw-test-runner ./test/unit",
-    "test:unit:watch": "node bin/aw-test-runner ./test/unit -w",
-    "test:coverage": "node bin/aw-test-runner cover ./test",
-    "test:component": "node bin/aw-test-runner ./test/component"
+    "test": "aw-test-runner ./test",
+    "test:unit": "aw-test-runner ./test/unit",
+    "test:unit:watch": "aw-test-runner ./test/unit -w",
+    "test:coverage": "aw-test-runner cover ./test",
+    "test:component": "aw-test-runner ./test/component"
   },
   "bin": {
     "aw-test-coverage": "bin/aw-test-coverage.js",
@@ -35,7 +35,6 @@
     "babel": "6.23.0",
     "babel-cli": "^6.26.0",
     "babel-core": "6.26.0",
-    "babel-plugin-istanbul": "^4.1.4",
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "6.26.0",
     "bluebird": "3.5.0",
