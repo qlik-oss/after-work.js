@@ -60,6 +60,7 @@ const runner = {
           '--reporter=text',
           '--reporter=lcov',
           '--all',
+          '--include', 'bin',
           '--include', 'src',
           '--require', 'babel-register',
         );
@@ -126,7 +127,6 @@ const runner = {
     let addMochaArgs = false;
     let addDebugArgs = false;
     let isWebdriver = false;
-    // let hasArgumentsSeparator = false;
     const resolveStr = 'resolve=';
 
     const commandArgs = args.map((arg) => {
@@ -146,9 +146,6 @@ const runner = {
       if (typeof arg === 'string' && arg.indexOf('--debug') !== -1) {
         addDebugArgs = true;
       }
-      // if (arg === '--') {
-      //   hasArgumentsSeparator = true;
-      // }
       return arg;
     });
 
@@ -158,7 +155,6 @@ const runner = {
       addMochaArgs,
       isWebdriver,
       addDebugArgs,
-      // hasArgumentsSeparator,
     };
   },
 
