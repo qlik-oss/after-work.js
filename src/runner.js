@@ -63,6 +63,13 @@ const runner = {
           '--include', 'src',
           '--require', 'babel-register',
         );
+        if (packageJSON.devDependencies['babel-plugin-istanbul']) {
+          console.log('babel-plugin-istanbul installed, source-maps and instrument set to false'); // eslint-disable-line no-console
+          info.commandArgs.unshift(
+            '--source-map', 'false',
+            '--instrument', 'false',
+          );
+        }
       }
     }
   },
