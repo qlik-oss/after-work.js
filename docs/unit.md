@@ -13,7 +13,7 @@ aw-test-runner [cover] ./test/unit
 ##### Arguments
   * `cover`: Instruments the code and reports the test coverage
   * `-w`: Watch files for changes which triggers a re-run. (not suitable to use with `cover` since coverage will only be reported on test end.)
-  * `--opts <file>`: path for mocha options file
+  * `--opts <file>`: path for Mocha options file
   * `--debug`: The script 'breaks' on the very first line. The debug session is attached with URL: chrome://inspect. Also shows the exact command, including all arguments, that is executed.
 
 #### Usage recommendations for nyc together with babel
@@ -66,8 +66,8 @@ The runner appends some default arguments:
 If you want to adjust the arguments for [nyc](https://github.com/istanbuljs/nyc#configuring-nyc) you are recommended to create a .nycrc or add a 'nyc object' in package.json.
 
 
-#### Override mocha options
-Create the file /test/mocha.opts, or use the --opts argument to aw-test-runner for adjusting the [mocha](https://mochajs.org/#mochaopts) arguments.
+#### Override Mocha options
+Create the file /test/mocha.opts, or use the --opts argument to aw-test-runner for adjusting the [Mocha](https://mochajs.org/#mochaopts) arguments.
 
 ### aw-browser-test-runner (browser)
 `aw-browser-test-runner` runs the unit tests inside a browser.
