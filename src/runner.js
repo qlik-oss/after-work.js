@@ -5,7 +5,6 @@ import child_process from 'child_process'; // eslint-disable-line camelcase
 import fs from 'fs';
 
 const runner = {
-
   /**
   * Gets the current environment configuration.
   * @return {Object}
@@ -60,7 +59,6 @@ const runner = {
           '--reporter=text',
           '--reporter=lcov',
           '--all',
-          '--include', 'bin',
           '--include', 'src',
           '--require', 'babel-register',
         );
@@ -160,7 +158,7 @@ const runner = {
 
   /**
   * Spawns a child
-  * @param  {string} command     The commandExt
+  * @param  {string} command    The commandExt
   * @param  {Array} commandArgs The command arguments
   */
   spawn(command, commandArgs) {
