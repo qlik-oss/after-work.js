@@ -16,7 +16,7 @@ aw-test-runner [cover] ./test/unit
   * `--opts <file>`: path for mocha options file
   * `--debug`: The script 'breaks' on the very first line. The debug session is attached with URL: chrome://inspect. Also shows the exact command, including all arguments, that is executed.
 
-#### Usage recommendations for Nyc together with babel
+#### Usage recommendations for nyc together with babel
 If you are using babel as transpiler it's recommended to [set up the project](https://github.com/istanbuljs/nyc#use-with-babel-plugin-istanbul-for-babel-support) with the `babel-plugin-istanbul` and the `cross-env` npm modules.
 
 .babelrc
@@ -50,7 +50,7 @@ The runner appends some default arguments:
     * --require dist/config/global.js
 
 **Cover:**
-  * Nyc:
+  * nyc:
     * --source-map false (if `babel-plugin-istanbul` is used)
     * --instrument false (if `babel-plugin-istanbul` is used)
     * --reporter=text
