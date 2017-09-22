@@ -16,7 +16,6 @@
     "test:component": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/component"
   },
   "bin": {
-    "aw-test-coverage": "bin/aw-test-coverage.js",
     "aw-test-runner": "bin/aw-test-runner.js",
     "aw-browser-test-runner": "bin/aw-browser-test-runner.js",
     "aw-web-server": "bin/aw-web-server.js",
