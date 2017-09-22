@@ -3,7 +3,8 @@
 ## 3.0.0
 - Breaking: removal of contract test runner
 - Breaking: update of sinon.js from 1.7.x to 3.x with deprecated methods
-- Now using --inspect-brk for debugging requiring Chrome DevTools 55+
+- Breaking: removal of aw-test-coverage runner (use aw-test-runner cover instead)
+- Using nyc for test coverage
 
 ## 2.2.0
 - Minimize the console output then running unit tests headless
