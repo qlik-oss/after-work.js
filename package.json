@@ -52,7 +52,7 @@
     "moment": "2.18.1",
     "nyc": "11.2.1",
     "object.assign": "4.0.4",
-    "request": "2.81.0",
+    "request": "2.82.0",
     "sinon": "3.3.0",
     "sinon-chai": "2.13.0",
     "systemjs": "0.20.19",
