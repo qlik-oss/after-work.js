@@ -81,15 +81,16 @@ const runner = {
   addDefaultMochaArgs(command, info) {
     const { cwd } = this.getEnvConfig();
     // Check for mocha options in repo
-    const mochaOpts = process.argv.indexOf('--opts') !== -1;
+    const mochaOptsArg = process.argv.indexOf('--opts') !== -1;
     const mochaOptsFile = fs.existsSync(path.resolve(cwd, 'test/mocha.opts'));
 
-    // Add default `mocha` arguments
-    if ((info.addMochaArgs || info.addNycArgs) && !mochaOpts && !mochaOptsFile) {
+    // Add default `mocha` arguments if no repo options found
+    if (!mochaOptsArg && !mochaOptsFile) {
       console.log('Adding default mocha options'); // eslint-disable-line no-console
       info.commandArgs.unshift('--require', path.relative(cwd, path.resolve(__dirname, './config/global.js')));
       info.commandArgs.unshift('--opts', path.relative(cwd, path.resolve(__dirname, './config/mocha.opts')));
 
+      // If nyc is used the code will be transpiled before running mocha
       if (!info.addNycArgs) {
         info.commandArgs.unshift('--compilers', 'js:babel-core/register');
       }
@@ -194,6 +195,7 @@ const runner = {
     const info = this.parseArgs(spawnArgs);
     const command = info.commandArgs.shift();
 
+    // 'Saved' to be used later when creating nyc spawn arguments
     if (info.addNycArgs) { info.mocha = info.commandArgs.shift(); }
 
     this.addDefaultMochaArgs(command, info);
