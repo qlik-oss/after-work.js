@@ -62,7 +62,9 @@ export function getBrowserSyncConfig(paths, files, options) {
         // console.log(isTestFile, url);
         if (!isTestFile && url.indexOf('.js', url.length - 3) !== -1 &&
           url.indexOf('require.js') === -1 &&
-          url.indexOf('requirejs-main.js') &&
+          url.indexOf(requirejsStartPath) === -1 &&
+          url.indexOf('system.js') === -1 &&
+          url.indexOf(systemjsStartPath) === -1 &&
           url.indexOf('mocha.js') === -1 &&
           url.indexOf('chai.js') === -1 &&
           url.indexOf('browser-test-runner') === -1) {
