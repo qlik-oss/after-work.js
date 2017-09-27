@@ -146,15 +146,15 @@ export function run(files, options) {
 
   let coveragePromise = Promise.resolve();
   if (options.coverage) {
-    const startPath = 'coverage/lcov-report/index.html';
     coveragePromise = new Promise((resolve) => {
       coverageRunner.init({
         open: false,
         notify: false,
         port: 9677,
         ui: false,
-        server: options.coverage,
-        startPath,
+        server: {
+          baseDir: ['./coverage/lcov-report'],
+        },
       }, (err) => {
         if (err) {
           console.log(err);
@@ -174,6 +174,10 @@ export function run(files, options) {
       const local = bs.options.get('urls').get('local');
       testRunner.sockets.on('connection', (client) => {
         console.log('Connected on', local);
+        client.on('runner-start', () => {
+          console.log('Runner start');
+          nyc.reset();
+        });
         client.on('runner-end', (o) => {
           console.log('Runner ended');
           const { stats, coverageObj } = o;

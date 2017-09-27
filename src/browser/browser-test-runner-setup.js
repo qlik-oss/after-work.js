@@ -42,6 +42,11 @@ if (typeof callPhantom === 'function') {
 //   browserLog.apply(console, msg);
 // };
 
+// eslint-disable-next-line
+runner.on('start', function() {
+  window.___browserSync___.socket.emit('runner-start'); // eslint-disable-line
+});
+
 runner.on('end', function () {
   var coverage = window.__coverage__; //eslint-disable-line
   if (coverage) {
