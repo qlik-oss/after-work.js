@@ -34,7 +34,7 @@ export function getFolder(f) {
 export function getBrowserSyncConfig(paths, files, options) {
   const {
     dirs, phantomjs, requirejs, requirejsMain, requirejsStartPath,
-    systemjs, systemjsStartPath, coverage,
+    systemjs, systemjsStartPath, coverage, coverageBlackList,
   } = options;
   const startPath = requirejs ? requirejsStartPath : systemjs ? systemjsStartPath : options.startPath; //eslint-disable-line
   const rjs = [];
@@ -61,6 +61,7 @@ export function getBrowserSyncConfig(paths, files, options) {
         const isTestFile = files.indexOf(url) !== -1;
         // console.log(isTestFile, url);
         if (!isTestFile && url.indexOf('.js', url.length - 3) !== -1 &&
+          coverageBlackList.filter(f => url.indexOf(f) !== -1).length === 0 &&
           url.indexOf('require.js') === -1 &&
           requirejsMain.indexOf(url) === -1 &&
           url.indexOf('system.js') === -1 &&
@@ -225,6 +226,7 @@ export function runProgram() {
   program
     .arguments('<paths>', 'Paths to spec files')
     .option('--coverage [coverage]', 'Generate coverage', false)
+    .option('--coverage-black-list [black list]', 'Black list', arg => arg.split(','), [])
     .option('-s, --start-path [path]', 'Path to start page', 'browser-test-runner.html')
     .option('-p, --phantomjs [phantomjs]', 'Run in phantomjs', false)
     .option('--requirejs [path]', 'Path to requirejs', '')
