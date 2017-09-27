@@ -1,13 +1,22 @@
 /* eslint camelcase:0, no-process-exit: 0, no-console: 0 */
 import path from 'path';
+import fs from 'fs';
+import util from 'util';
 import globby from 'globby';
 import Promise from 'bluebird';
 import { create } from 'browser-sync';
 import child_process from 'child_process';
 import program from 'commander';
+import NYC from 'nyc';
+import disableCache from './disable-cache';
+
+const nyc = new NYC({
+  reporter: ['text', 'lcov', 'text-summary'],
+});
+const instrumenter = nyc.instrumenter();
 
 function srcFiles(files) {
-  return files.map(f => `<script src="${f}"></script>`).join('\n');
+  return files.map(f => `<script src='${f}'></script>`).join('\n');
 }
 
 export function relativeFromDirToCwd(p) {
@@ -23,8 +32,11 @@ export function getFolder(f) {
 }
 
 export function getBrowserSyncConfig(paths, files, options) {
-  const { dirs, phantomjs, startPath, requirejs, requirejsMain, requirejsStartPath, systemjs, systemjsStartPath } = options; //eslint-disable-line
-  const url = requirejs ? requirejsStartPath : systemjs ? systemjsStartPath : startPath; //eslint-disable-line
+  const {
+    dirs, phantomjs, requirejs, requirejsMain, requirejsStartPath,
+    systemjs, systemjsStartPath, coverage,
+  } = options;
+  const startPath = requirejs ? requirejsStartPath : systemjs ? systemjsStartPath : options.startPath; //eslint-disable-line
   const rjs = [];
   if (requirejs) {
     rjs.push(relativeToCwd(getFolder(requirejs)));
@@ -40,14 +52,30 @@ export function getBrowserSyncConfig(paths, files, options) {
     server: {
       baseDir: ['./'].concat(paths).concat(rjs).concat(dirs),
       directory: true,
-      middleware: (req, res, next) => {
-        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-        res.setHeader('Pragma', 'no-cache');
-        res.setHeader('Expires', '0');
-        next();
-      },
+      middleware: [disableCache, (req, res, next) => {
+        if (!coverage) {
+          next();
+          return;
+        }
+        const url = req.url.substring(1);
+        const isTestFile = files.indexOf(url) !== -1;
+        // console.log(isTestFile, url);
+        if (!isTestFile && url.indexOf('.js', url.length - 3) !== -1 &&
+          url.indexOf('require.js') === -1 &&
+          url.indexOf('requirejs-main.js') &&
+          url.indexOf('mocha.js') === -1 &&
+          url.indexOf('chai.js') === -1 &&
+          url.indexOf('browser-test-runner') === -1) {
+          const filePath = path.relative(process.cwd(), url);
+          const file = fs.readFileSync(filePath, 'utf-8');
+          // console.log('Instrumenting ', url);
+          res.end(instrumenter.instrumentSync(file, filePath));
+        } else {
+          next();
+        }
+      }],
     },
-    startPath: url,
+    startPath,
     rewriteRules: [{
       match: /%insert-files%/g,
       fn: () => srcFiles(files),
@@ -71,9 +99,9 @@ export function runPhantom(url, singleRun) {
   try {
     phantomBin = require.resolve('phantomjs-prebuilt/bin/phantomjs');
   } catch (e) {
-    const missingPhantom = "Cannot find module 'phantomjs-prebuilt/bin/phantomjs'";
+    const missingPhantom = 'Cannot find module "phantomjs-prebuilt/bin/phantomjs"';
     if (e.message === missingPhantom) {
-      console.log("phantomjs-prebuilt couldn't be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json");
+      console.log('phantomjs-prebuilt could not be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json');
     } else {
       console.log(e);
     }
@@ -94,8 +122,10 @@ export function runPhantom(url, singleRun) {
   });
 }
 
-export function runBrowserSync(files, options) {
-  const browserSync = create();
+export function run(files, options) {
+  const testRunner = create('test-runner');
+  const coverageRunner = create('coverage-runner');
+
   const paths = [
     relativeFromDirToCwd('./'),
     path.dirname(require.resolve('mocha')),
@@ -106,33 +136,78 @@ export function runBrowserSync(files, options) {
     paths.push(path.join(path.dirname(require.resolve('systemjs')), 'dist'));
     paths.push(path.dirname(require.resolve('babel-core')));
   }
+  testRunner.pause();
+  coverageRunner.pause();
 
-  return new Promise((resolve, reject) => {
-    browserSync.pause();
+  testRunner.watch(files).on('change', (event, file) => {
+    testRunner.reload(file);
+  });
 
-    browserSync.watch(files).on('change', (event, file) => {
-      browserSync.reload(file);
+  let coveragePromise = Promise.resolve();
+  if (options.coverage) {
+    coveragePromise = new Promise((resolve) => {
+      coverageRunner.init({
+        open: true,
+        notify: false,
+        port: 9677,
+        ui: false,
+        server: options.coverage,
+      }, (err) => {
+        if (err) {
+          console.log(err);
+          process.exit(1);
+          return;
+        }
+        resolve();
+      });
     });
-
-    browserSync.init(getBrowserSyncConfig(paths, files, options), (err, bs) => {
+  }
+  return Promise.all([coveragePromise, new Promise((resolve, reject) => {
+    testRunner.init(getBrowserSyncConfig(paths, files, options), (err, bs) => {
       if (err) {
         reject(err);
         return;
       }
       const local = bs.options.get('urls').get('local');
+      testRunner.sockets.on('connection', (client) => {
+        console.log('Connected on', local);
+        client.on('runner-end', (o) => {
+          console.log('Runner ended');
+          const { stats, coverageObj } = o;
+          if (coverageObj) {
+            global.__coverage__ = coverageObj; //eslint-disable-line
+            nyc.writeCoverageFile();
+            nyc.report();
+            coverageRunner.reload();
+          }
+          if (options.singleRun) {
+            testRunner.exit();
+            coverageRunner.exit();
+            process.exit(stats.failures.length);
+          }
+        });
+        client.on('runner-log', (args) => {
+          console.log(util.format(...args));
+        });
+        client.on('window-error', () => {
+          testRunner.exit();
+          coverageRunner.exit();
+          process.exit(-1);
+        });
+      });
       resolve(local);
     });
-  });
+  })]);
 }
 
-export function run(args, options) {
+export function init(args, options) {
   const files = globby.sync(args);
   if (!files.length) {
     console.log('No files found for:', args);
     process.exit(0);
   }
 
-  runBrowserSync(files, options).then((url) => {
+  run(files, options).then((url) => {
     if (options.phantomjs) {
       runPhantom(url, options.phantomjsSingleRun);
     }
@@ -142,6 +217,7 @@ export function run(args, options) {
 export function runProgram() {
   program
     .arguments('<paths>', 'Paths to spec files')
+    .option('--coverage [coverage]', 'Generate coverage', false)
     .option('-s, --start-path [path]', 'Path to start page', 'browser-test-runner.html')
     .option('-p, --phantomjs [phantomjs]', 'Run in phantomjs', false)
     .option('--requirejs [path]', 'Path to requirejs', '')
@@ -157,5 +233,5 @@ export function runProgram() {
     program.outputHelp();
     process.exit(0);
   }
-  run(program.args, program);
+  init(program.args, program);
 }
