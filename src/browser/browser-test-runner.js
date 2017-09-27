@@ -62,9 +62,8 @@ export function getBrowserSyncConfig(paths, files, options) {
         // console.log(isTestFile, url);
         if (!isTestFile && url.indexOf('.js', url.length - 3) !== -1 &&
           url.indexOf('require.js') === -1 &&
-          url.indexOf(requirejsStartPath) === -1 &&
+          requirejsMain.indexOf(url) === -1 &&
           url.indexOf('system.js') === -1 &&
-          url.indexOf(systemjsStartPath) === -1 &&
           url.indexOf('mocha.js') === -1 &&
           url.indexOf('chai.js') === -1 &&
           url.indexOf('browser-test-runner') === -1) {
@@ -147,13 +146,15 @@ export function run(files, options) {
 
   let coveragePromise = Promise.resolve();
   if (options.coverage) {
+    const startPath = 'coverage/lcov-report/index.html';
     coveragePromise = new Promise((resolve) => {
       coverageRunner.init({
-        open: true,
+        open: false,
         notify: false,
         port: 9677,
         ui: false,
         server: options.coverage,
+        startPath,
       }, (err) => {
         if (err) {
           console.log(err);
