@@ -7,7 +7,12 @@ const { args } = system;
 const url = args[args.indexOf('--pageUrl') + 1];
 const singleRun = args[args.indexOf('--single-run') + 1] === 'true';
 
-page.open(url, () => {
+page.open(url, (status) => {
+  if (status === 'fail') {
+    console.log(`The url '${url}' could not be opened.\nphantomjs will shut down!`); // eslint-disable-line no-console
+    phantom.exit(1); // eslint-disable-line no-undef
+  }
+
   page.onCallback = (data) => {
     if (data.exit && singleRun) {
       const exitCode = data.failures > 0 ? 1 : 0;

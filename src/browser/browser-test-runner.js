@@ -215,7 +215,7 @@ export function init(args, options) {
     process.exit(0);
   }
 
-  run(files, options).then((url) => {
+  run(files, options).then(([, url]) => {
     if (options.phantomjs) {
       runPhantom(url, options.phantomjsSingleRun);
     }
