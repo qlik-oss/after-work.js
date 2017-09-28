@@ -3,7 +3,7 @@
 
 var path = require('path');
 var globby = require('globby');
-var runner = require('../dist/runner').runner;
+var { runner } = require('../dist/runner');
 
 var cwd = process.cwd();
 var spawnArgs = ['resolve=.bin/protractor'];
@@ -17,6 +17,8 @@ if (addConfigArgs) {
 var ix = args.indexOf('--specs');
 if (ix !== -1) {
   var glob = args[ix + 1];
+  // Convert comma seperated string to array if several glob are used
+  glob = glob.split(', ');
   var files = globby.sync(glob);
   if (files.length) {
     args[ix + 1] = files.join(',');
