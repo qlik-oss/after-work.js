@@ -4,8 +4,8 @@ mocha.delay(true); // Adds a global `run` function
 mocha.fullTrace(true);
 mocha.timeout(0);
 mocha.ui('bdd');
-Mocha.reporters.Base.useColors = true; // To be able to get colors on the server
-Mocha.process.stdout.write = () => { }; // Remove `stdout`
+// Mocha.reporters.Base.useColors = true; // To be able to get colors on the server
+// Mocha.process.stdout.write = () => { }; // Remove `stdout`
 
 // Handle `phantomjs`
 if (typeof callPhantom === 'function') {
