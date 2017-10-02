@@ -78,7 +78,7 @@ aw-browser-test-runner ./test/unit
 ##### Arguments
   * `spec`: Paths to spec files (glob pattern).
   * `-s`|`--start-path`: Path to start path.
-  * `-p`|`--phantomjs`: Run in PhantomJS.
+  * `-p`|`--phantomjs`: Run in PhantomJS. (Requires phantomjs-prebuilt to be installed)
   * `--requirejs`: Path to RequireJS.
   * `--requirejs-main`: Path to RequireJS main.
   * `--requirejs-start-path`: Path to RequireJS start path.
@@ -86,6 +86,8 @@ aw-browser-test-runner ./test/unit
   * `--systemjs`: Run test files in an `systemjs` with babel as transpiler environment.
   * `-d`|`--dirs`: Paths to directories to serve.
   * `--phantomjs-single-run`: Run once.
+  * `--coverage`: Instruments the code and reorts code coverage after test run
+  * `--coverage-black-list`: Folders to skip instrumentation of
 
 #### Debugging Browser context
 This driver runs the tests inside Chrome by default. Bring up **Chrome DevTools**, set the break points, and re-run the tests after you have run the tests once.

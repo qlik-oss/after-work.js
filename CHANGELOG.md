@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.0
+- Adding possibility to get code coverage for browser tests
+
+## 3.0.2
+- Adding possibility to use several grep pattern for aw-webdriver-test-runner
+
+## 3.0.1
+- Removing bin that didn't resolve to script
+
 ## 3.0.0
 - Breaking: removal of contract test runner
 - Breaking: update of sinon.js from 1.7.x to 3.x with deprecated methods
