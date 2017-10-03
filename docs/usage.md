@@ -6,7 +6,7 @@ The following tools are bundled into after-work.js:
 * **Chai**: an assertion library used together with a JavaScript testing framework.
 * **Sinon**: a framework for standalone test spies, stubs and mocks for JavaScript.
 * **Protractor**: a framework that utilizes Selenium for GUI tests in all major browsers.
-* **Nyc**: the Istanbul command line interface 
+* **Nyc**: the Istanbul command line interface
 * **Istanbul**: a JavaScript code coverage tool written in JavaScript.
 
 ## Test on the right "level"
