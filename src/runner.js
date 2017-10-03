@@ -61,6 +61,7 @@ const runner = {
           '--all',
           '--include', 'src',
           '--require', 'babel-register',
+          '--temp-directory', './coverage/.nyc_output',
         );
         if (packageJSON.devDependencies['babel-plugin-istanbul']) {
           console.log('babel-plugin-istanbul installed, source-maps and instrument set to false'); // eslint-disable-line no-console
