@@ -32,7 +32,6 @@ describe('bin', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(path, 'resolve').returnsArg(1);
     sandbox.stub(path, 'relative').returnsArg(1);
     on = sandbox.stub();
     spawn = sandbox.stub(child_process, 'spawn').returns({
