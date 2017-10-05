@@ -13,7 +13,8 @@
     "test:unit": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/unit",
     "test:unit:watch": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/unit -w",
     "test:coverage": "cross-env NODE_ENV=test node bin/aw-test-runner cover ./test",
-    "test:component": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/component"
+    "test:component": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/component",
+    "test:coveralls" : "npm run test:coverage && cat coverage/lcov.info | coveralls"
   },
   "bin": {
     "aw-test-runner": "bin/aw-test-runner.js",
@@ -55,7 +56,8 @@
     "sinon": "4.0.0",
     "sinon-chai": "2.14.0",
     "systemjs": "0.20.19",
-    "util": "0.10.3"
+    "util": "0.10.3",
+    "coveralls": "3.0.0"
   },
   "devDependencies": {
     "babel-eslint": "8.0.1",

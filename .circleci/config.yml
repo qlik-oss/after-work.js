@@ -35,6 +35,6 @@ jobs:
       - run:
           name: Run unit and component tests
           command:
-            npm run test:coverage
+            npm run test:coveralls
       - store_artifacts:
           path: ./coverage
