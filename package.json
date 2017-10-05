@@ -14,7 +14,7 @@
     "test:unit:watch": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/unit -w",
     "test:coverage": "cross-env NODE_ENV=test node bin/aw-test-runner cover ./test",
     "test:component": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/component",
-    "test:coveralls" : "npm run test:coverage && cat coverage/lcov.info | coveralls"
+    "test:coveralls": "npm run test:coverage && cat coverage/lcov.info | coveralls"
   },
   "bin": {
     "aw-test-runner": "bin/aw-test-runner.js",
@@ -36,7 +36,7 @@
     "babel-core": "6.26.0",
     "babel-preset-env": "1.6.0",
     "babel-register": "6.26.0",
-    "bluebird": "3.5.0",
+    "bluebird": "3.5.1",
     "browser-sync": "2.18.13",
     "chai": "4.1.1",
     "chai-as-promised": "7.1.1",
@@ -53,7 +53,7 @@
     "nyc": "11.2.1",
     "object.assign": "4.0.4",
     "request": "2.83.0",
-    "sinon": "4.0.0",
+    "sinon": "4.0.1",
     "sinon-chai": "2.14.0",
     "systemjs": "0.20.19",
     "util": "0.10.3",
@@ -64,7 +64,7 @@
     "babel-plugin-istanbul": "4.1.4",
     "cross-env": "5.0.5",
     "eslint": "4.8.0",
-    "eslint-config-airbnb-base": "12.0.1",
+    "eslint-config-airbnb-base": "12.0.2",
     "eslint-plugin-import": "2.7.0"
   }
 }
