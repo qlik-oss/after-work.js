@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/qlik-oss/after-work.js.svg?style=shield)](https://circleci.com/gh/qlik-oss/after-work.js)
 [![Greenkeeper badge](https://badges.greenkeeper.io/qlik-oss/after-work.js.svg)](https://greenkeeper.io/)
-[![Coverage Status](https://coveralls.io/repos/github/qlik-oss/after-work.js/badge.svg?branch=master)](https://coveralls.io/github/qlik-oss/after-work.js?branch=master)
+[![Coverage Status](https://img.shields.io/coveralls/qlik-oss/after-work.js/master.svg)](https://coveralls.io/github/qlik-oss/after-work.js)
 
 after-work.js is designed to be your preferred choice when it comes to testing. It acts as an unified testing framework from the lowest level up to the system level.
 
