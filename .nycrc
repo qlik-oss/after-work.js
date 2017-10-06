@@ -14,5 +14,6 @@
   ],
   "temp-directory": "./coverage/.nyc_output",
   "all": true,
-  "instrument": false
+  "instrument": false,
+  "sourceMap": false
 }
