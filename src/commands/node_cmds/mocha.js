@@ -17,6 +17,10 @@ const mocha = {
         description: 'Require path',
         default: [],
         type: 'array',
+      })
+      .option('watch', {
+        description: 'Watch for changes',
+        default: false,
       });
   },
   handler(argv) {
@@ -28,6 +32,9 @@ const mocha = {
       args.push(val);
       return args;
     }, []));
+    if (argv.watch) {
+      mochaArgs.push('--watch');
+    }
     spawn(mochaBin, mochaArgs);
   },
 };

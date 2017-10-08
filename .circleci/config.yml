@@ -25,10 +25,6 @@ jobs:
           paths:
             - node_modules
       - run:
-          name: Build
-          command:
-            npm run build
-      - run:
           name: Run ESLint
           command:
             npm run lint

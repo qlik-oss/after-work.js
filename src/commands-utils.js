@@ -16,7 +16,8 @@ const defaultConfig = {
       // require: 'babel-register',
       all: true,
       include: 'src',
-      reporter: ['text-summary'], // ['text', 'lcov', 'html'],
+      reporter: ['text', 'lcov', 'text-summary'],
+      'temp-directory': './coverage/.nyc_output',
     },
     mocha: {
       recursive: true,
@@ -113,6 +114,7 @@ const utils = {
   onCoverageRunnerInit(resolve, reject) {
     const nyc = new NYC(extend({
       reporter: ['text', 'lcov', 'text-summary'],
+      'temp-directory': './coverage/.nyc_output',
     }));
     const runner = this.createRunner('coverage-runner');
     runner.pause();

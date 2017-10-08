@@ -7,11 +7,8 @@
   "scripts": {
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "test": "cross-env NODE_ENV=test node bin/aw-test-runner ./test",
-    "test:unit": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/unit",
-    "test:unit:watch": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/unit -w",
-    "test:coverage": "cross-env NODE_ENV=test node bin/aw-test-runner cover ./test",
-    "test:component": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/component",
+    "test": "cross-env NODE_ENV=test ./src/cli.js node cover",
+    "test:coverage": "cross-env NODE_ENV=test ./src/cli.js node cover",
     "aw": "./src/cli.js"
   },
   "bin": {
