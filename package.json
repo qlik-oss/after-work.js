@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "test": "cross-env NODE_ENV=test ./src/cli.js node cover",
+    "test": "cross-env NODE_ENV=test ./src/cli.js node mocha",
     "test:coverage": "cross-env NODE_ENV=test ./src/cli.js node cover",
     "aw": "./src/cli.js"
   },
