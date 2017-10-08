@@ -1,4 +1,4 @@
-import plugin from '../../../../src/plugins/screenshoter/index';
+const plugin = require('../../../../src/plugins/screenshoter/index');
 
 describe('Screenshoter Index', () => {
   let sandbox;

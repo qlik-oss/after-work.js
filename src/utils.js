@@ -1,120 +1,120 @@
 /* global browser */
-import Promise from 'bluebird';
-import dns from 'dns';
-import os from 'os';
-import { create } from 'browser-sync';
-import http from 'http';
+const Promise = require('bluebird');
+const dns = require('dns');
+const os = require('os');
+const { create } = require('browser-sync');
+const http = require('http');
 
-export const getFullQualifiedDNSName = function getFullQualifiedDNSName() {
-  return new Promise((resolve, reject) => {
-    dns.lookup(os.hostname(), (lookupErr, add) => {
-      if (lookupErr) {
-        reject(lookupErr);
-        return;
-      }
-      dns.reverse(add, (reverseErr, fqdn) => {
-        if (reverseErr) {
-          reject(reverseErr);
+module.exports = {
+  getFullQualifiedDNSName() {
+    return new Promise((resolve, reject) => {
+      dns.lookup(os.hostname(), (lookupErr, add) => {
+        if (lookupErr) {
+          reject(lookupErr);
           return;
         }
-        resolve(fqdn[0]);
-      });
-    });
-  });
-};
-
-export const getIPaddress = function getIPaddress() {
-  return new Promise((resolve, reject) => {
-    dns.lookup(os.hostname(), (lookupErr, add) => {
-      if (lookupErr) {
-        reject(lookupErr);
-        return;
-      }
-      resolve(add);
-    });
-  });
-};
-
-export function httpServer(config = {}) {
-  const bs = create();
-  const defaultConfig = {
-    logLevel: 'silent',
-    notify: false,
-    port: 9000,
-    open: false,
-    directory: true,
-    ui: false,
-    server: {
-      baseDir: './test/fixtures',
-    },
-    // Middleware to swallow error for missing favicon
-    middleware: [{
-      route: '/favicon.ico',
-      handle(req, res, next) {
-        res.statusCode = 200; // eslint-disable-line no-param-reassign
-        res.setHeader('Content-Length', '0');
-        res.end();
-        next();
-      },
-    }],
-  };
-
-  config = Object.assign(defaultConfig, config); // eslint-disable-line no-param-reassign
-
-  return new Promise((resolve, reject) => {
-    bs.pause();
-
-    bs.init(config, (err) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve();
-    });
-  });
-}
-
-export function logSeleniumNodeInfo(config) {
-  browser.getSession().then((session) => {
-    const sessionId = session.getId();
-    console.log(`WebDriverSessionID: ${sessionId}`); // eslint-disable-line no-console
-
-    if (!config.seleniumAddress || config.seleniumAddress.trim() === '') {
-      return;
-    }
-
-    const url = config.seleniumAddress.replace('wd/hub', `grid/api/testsession?session=${sessionId}`);
-
-    http.get(url, (res) => {
-      let result = '';
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => {
-        result += chunk;
-      });
-      res.on('end', () => {
-        if (res.statusCode >= 300) {
-          result = result[0].errorText;
-          if (result) {
-            console.error(result); // eslint-disable-line no-console
+        dns.reverse(add, (reverseErr, fqdn) => {
+          if (reverseErr) {
+            reject(reverseErr);
+            return;
           }
+          resolve(fqdn[0]);
+        });
+      });
+    });
+  },
+  getIPaddress() {
+    return new Promise((resolve, reject) => {
+      dns.lookup(os.hostname(), (lookupErr, add) => {
+        if (lookupErr) {
+          reject(lookupErr);
           return;
         }
-
-        if (result.length > 0) {
-          result = JSON.parse(result);
-          const nodeUrl = result.proxyId.replace(/:\d+$/g, '');
-          browser.params.grid = {};
-          browser.params.grid.node = nodeUrl;
-          browser.params.grid.extraUrl = `${nodeUrl}:3000`;
-          browser.params.grid.extraVideo = `${nodeUrl}:3000/download_video/${sessionId}.mp4`;
-
-          console.log(`Selenium Node Console: ${result.proxyId}/wd/hub/static/resource/hub.html`); // eslint-disable-line no-console
-          console.log(`Grid Extra Node: ${browser.params.grid.extraUrl}`); // eslint-disable-line no-console
-          console.log(`Grid Extra Video: ${browser.params.grid.extraVideo}`); // eslint-disable-line no-console
-        }
+        resolve(add);
       });
-    }).on('error', (e) => {
-      console.error(e); // eslint-disable-line no-console
     });
-  });
-}
+  },
+  httpServer(config = {}) {
+    const bs = create();
+    const defaultConfig = {
+      logLevel: 'silent',
+      notify: false,
+      port: 9000,
+      open: false,
+      directory: true,
+      ui: false,
+      server: {
+        baseDir: './test/fixtures',
+      },
+      // Middleware to swallow error for missing favicon
+      middleware: [{
+        route: '/favicon.ico',
+        handle(req, res, next) {
+          res.statusCode = 200; // eslint-disable-line no-param-reassign
+          res.setHeader('Content-Length', '0');
+          res.end();
+          next();
+        },
+      }],
+    };
+
+    config = Object.assign(defaultConfig, config); // eslint-disable-line no-param-reassign
+
+    return new Promise((resolve, reject) => {
+      bs.pause();
+
+      bs.init(config, (err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  },
+  logSeleniumNodeInfo(config) {
+    browser.getSession().then((session) => {
+      const sessionId = session.getId();
+      console.log(`WebDriverSessionID: ${sessionId}`); // eslint-disable-line no-console
+
+      if (!config.seleniumAddress || config.seleniumAddress.trim() === '') {
+        return;
+      }
+
+      const url = config.seleniumAddress.replace('wd/hub', `grid/api/testsession?session=${sessionId}`);
+
+      http.get(url, (res) => {
+        let result = '';
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+          result += chunk;
+        });
+        res.on('end', () => {
+          if (res.statusCode >= 300) {
+            result = result[0].errorText;
+            if (result) {
+              console.error(result); // eslint-disable-line no-console
+            }
+            return;
+          }
+
+          if (result.length > 0) {
+            result = JSON.parse(result);
+            const nodeUrl = result.proxyId.replace(/:\d+$/g, '');
+            browser.params.grid = {};
+            browser.params.grid.node = nodeUrl;
+            browser.params.grid.extraUrl = `${nodeUrl}:3000`;
+            browser.params.grid.extraVideo = `${nodeUrl}:3000/download_video/${sessionId}.mp4`;
+
+            console.log(`Selenium Node Console: ${result.proxyId}/wd/hub/static/resource/hub.html`); // eslint-disable-line no-console
+            console.log(`Grid Extra Node: ${browser.params.grid.extraUrl}`); // eslint-disable-line no-console
+            console.log(`Grid Extra Video: ${browser.params.grid.extraVideo}`); // eslint-disable-line no-console
+          }
+        });
+      }).on('error', (e) => {
+        console.error(e); // eslint-disable-line no-console
+      });
+    });
+  },
+};
+

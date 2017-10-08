@@ -5,8 +5,6 @@
   "author": "QlikTech International AB",
   "license": "MIT",
   "scripts": {
-    "build": "babel src --out-dir ./dist --copy-files",
-    "build:watch": "babel src --out-dir ./dist --copy-files -w",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
     "test": "cross-env NODE_ENV=test node bin/aw-test-runner ./test",
@@ -14,34 +12,25 @@
     "test:unit:watch": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/unit -w",
     "test:coverage": "cross-env NODE_ENV=test node bin/aw-test-runner cover ./test",
     "test:component": "cross-env NODE_ENV=test node bin/aw-test-runner ./test/component",
-    "test:coveralls": "npm run test:coverage && cat coverage/lcov.info | coveralls"
+    "aw": "./src/cli.js"
   },
   "bin": {
-    "aw-test-runner": "bin/aw-test-runner.js",
-    "aw-browser-test-runner": "bin/aw-browser-test-runner.js",
-    "aw-web-server": "bin/aw-web-server.js",
-    "aw-webdriver-test-runner": "bin/aw-webdriver-test-runner.js"
+    "aw": "./src/cli.js"
   },
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com:qlik-oss/after-work.js.git"
   },
   "files": [
-    "/bin",
-    "/dist",
+    "/src",
     "/docs"
   ],
   "dependencies": {
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.0",
-    "babel-preset-env": "1.6.0",
-    "babel-register": "6.26.0",
     "bluebird": "3.5.1",
     "browser-sync": "2.18.13",
     "chai": "4.1.1",
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
-    "commander": "2.11.0",
     "extend": "3.0.1",
     "globby": "6.1.0",
     "handlebars": "4.0.10",
@@ -57,11 +46,9 @@
     "sinon-chai": "2.14.0",
     "systemjs": "0.20.19",
     "util": "0.10.3",
-    "coveralls": "3.0.0"
+    "yargs": "^9.0.1"
   },
   "devDependencies": {
-    "babel-eslint": "8.0.1",
-    "babel-plugin-istanbul": "4.1.4",
     "cross-env": "5.0.5",
     "eslint": "4.8.0",
     "eslint-config-airbnb-base": "12.0.2",

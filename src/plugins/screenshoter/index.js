@@ -1,5 +1,5 @@
 /* global browser */
-import { utils } from './utils';
+const utils = require('./utils');
 
 global.chai.Assertion.addMethod('matchImageOf', utils.matchImageOf);
 

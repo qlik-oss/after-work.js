@@ -1,9 +1,9 @@
-import Promise from 'bluebird';
-import fs from 'fs';
-import mocha from 'mocha';
-import mkdirp from 'mkdirp';
-import uiReport from '../../../../src/plugins/reporter/index';
-import { utils } from '../../../../src/plugins/reporter/utils';
+const Promise = require('bluebird');
+const fs = require('fs');
+const mocha = require('mocha');
+const mkdirp = require('mkdirp');
+const uiReport = require('../../../../src/plugins/reporter/index');
+const utils = require('../../../../src/plugins/reporter/utils');
 
 describe('Reporter index', () => {
   let sandbox;

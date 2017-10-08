@@ -1,5 +1,5 @@
-import fs from 'fs';
-import report from '../../../../src/plugins/reporter/create-static';
+const fs = require('fs');
+const report = require('../../../../src/plugins/reporter/create-static');
 
 describe('Reporter create-static', () => {
   let sandbox;

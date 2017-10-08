@@ -1,9 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import mkdirp from 'mkdirp';
-import Promise from 'bluebird';
-import jimp from 'jimp';
-import { utils } from '../../../../src/plugins/screenshoter/utils';
+const path = require('path');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const Promise = require('bluebird');
+const jimp = require('jimp');
+const utils = require('../../../../src/plugins/screenshoter/utils');
 
 describe('Screenshoter Utils', () => {
   let sandbox;
@@ -136,7 +136,7 @@ describe('Screenshoter Utils', () => {
   describe('getBoundingClientRect', () => {
     let querySelector;
     let getBoundingClientRect;
-    const Element = () => { };
+    const Element = function Element() { };
 
     beforeEach(() => {
       querySelector = sandbox.stub();

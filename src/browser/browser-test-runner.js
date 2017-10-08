@@ -12,7 +12,6 @@ import disableCache from './disable-cache';
 
 const nyc = new NYC({
   reporter: ['text', 'lcov', 'text-summary'],
-  'temp-directory': './coverage/.nyc_output',
 });
 const instrumenter = nyc.instrumenter();
 

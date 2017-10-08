@@ -1,8 +1,8 @@
-import Handlebars from 'handlebars';
-import Promise from 'bluebird';
-import fs from 'fs';
-import path from 'path';
-import moment from 'moment';
+const Handlebars = require('handlebars');
+const Promise = require('bluebird');
+const fs = require('fs');
+const path = require('path');
+const moment = require('moment');
 
 let template = fs.readFileSync(path.resolve(__dirname, 'templates/main.handlebars'), {
   encoding: 'utf8',
@@ -83,4 +83,4 @@ const report = {
   },
 };
 
-export default report;
+module.exports = report;

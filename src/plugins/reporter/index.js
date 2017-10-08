@@ -7,12 +7,12 @@
  For a more generic reporter checkout the work of Adam Gruber (https://github.com/adamgruber)
  */
 
-import Promise from 'bluebird';
-import mocha from 'mocha';
-import fs from 'fs';
-import path from 'path';
-import { utils } from './utils';
-import report from './create-static';
+const Promise = require('bluebird');
+const mocha = require('mocha');
+const fs = require('fs');
+const path = require('path');
+const utils = require('./utils');
+const report = require('./create-static');
 
 const { Base } = mocha.reporters;
 

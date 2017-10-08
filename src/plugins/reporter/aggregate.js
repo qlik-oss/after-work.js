@@ -1,9 +1,9 @@
 /**
  * Created by BEZ on 15/02/2017.
  */
-import path from 'path';
-import fs from 'fs';
-import report from './create-static';
+const path = require('path');
+const fs = require('fs');
+const report = require('./create-static');
 
 function reduceTestObject(accumulator, currentValue) {
   accumulator.tests = accumulator.tests.concat(currentValue.tests);
@@ -22,7 +22,7 @@ function reduceTestObject(accumulator, currentValue) {
   return accumulator;
 }
 
-export default function aggregateReports(reportName, artifactsPath) {
+module.exports = function aggregateReports(reportName, artifactsPath) {
   const files = fs.readdirSync(artifactsPath);
 
   const allTests = files.filter(name => path.extname(name) === '.json')

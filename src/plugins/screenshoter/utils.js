@@ -1,10 +1,10 @@
 /* globals document, Element, window */
-import path from 'path';
-import fs from 'fs';
-import Promise from 'bluebird';
-import jimp from 'jimp';
-import util from 'util';
-import mkdirp from 'mkdirp';
+const path = require('path');
+const fs = require('fs');
+const Promise = require('bluebird');
+const jimp = require('jimp');
+const util = require('util');
+const mkdirp = require('mkdirp');
 
 const utils = {
   getBrowserName(browser) {
@@ -150,4 +150,4 @@ const utils = {
   },
 };
 
-module.exports = { utils };
+module.exports = utils;

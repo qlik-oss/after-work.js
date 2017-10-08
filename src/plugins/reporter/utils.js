@@ -1,8 +1,8 @@
-import path from 'path';
-import fs from 'fs';
-import mkdirp from 'mkdirp';
-import util from 'util';
-import Highlight from 'highlight.js';
+const path = require('path');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const util = require('util');
+const Highlight = require('highlight.js');
 
 Highlight.configure({
   tabReplace: '    ',
@@ -10,7 +10,7 @@ Highlight.configure({
   languages: ['javascript'],
 });
 
-export const utils = {
+module.exports = {
   getRepoInfo() {
     const packageJSON = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), { encoding: 'utf8' }));
     const repoInfo = {};
@@ -53,12 +53,12 @@ export const utils = {
     let body;
 
     if (test.fn) {
-      code = utils.cleanCode(test.fn.toString());
+      code = this.cleanCode(test.fn.toString());
       code = Highlight.fixMarkup(Highlight.highlightAuto(code).value);
     }
 
     if (test.body) {
-      body = utils.cleanCode(test.body);
+      body = this.cleanCode(test.body);
       body = Highlight.fixMarkup(Highlight.highlightAuto(body).value);
     }
 
@@ -74,7 +74,7 @@ export const utils = {
       duration: test.duration,
       file: test.file,
       screenshot: test.screenshot || '',
-      err: utils.errorJSON(test.err || {}),
+      err: this.errorJSON(test.err || {}),
       consoleEntries: test.consoleEntries || [],
     };
   },
@@ -85,11 +85,11 @@ export const utils = {
     return title.replace(/[^a-z0-9().]/gi, '_').toLowerCase();
   },
   screenshotName(title, browserName, startTime) {
-    const safeFileName = utils.safeFileName(title);
+    const safeFileName = this.safeFileName(title);
     return util.format('%s-%s-%s.png', safeFileName, browserName, startTime);
   },
   saveScreenshot(browser, title) {
-    const screenshot = path.resolve(browser.artifactsPath, 'screenshots', utils.screenshotName(title, browser.reporterInfo.browserName, browser.reporterInfo.startTime));
+    const screenshot = path.resolve(browser.artifactsPath, 'screenshots', this.screenshotName(title, browser.reporterInfo.browserName, browser.reporterInfo.startTime));
 
     mkdirp.sync(path.resolve(browser.artifactsPath, 'screenshots'));
 
@@ -98,5 +98,3 @@ export const utils = {
     });
   },
 };
-
-export default { utils };

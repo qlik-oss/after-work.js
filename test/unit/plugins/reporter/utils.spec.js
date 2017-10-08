@@ -1,7 +1,7 @@
-import path from 'path';
-import fs from 'fs';
-import mkdirp from 'mkdirp';
-import { utils } from '../../../../src/plugins/reporter/utils';
+const path = require('path');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const utils = require('../../../../src/plugins/reporter/utils');
 
 describe('Reporter Utils', () => {
   let sandbox;

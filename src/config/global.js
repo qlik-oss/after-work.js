@@ -1,8 +1,8 @@
-import sinon from 'sinon';
-import chai from 'chai';
-import sinonChai from 'sinon-chai';
-import chaiAsPromised from 'chai-as-promised';
-import chaiSubset from 'chai-subset';
+const sinon = require('sinon');
+const chai = require('chai');
+const sinonChai = require('sinon-chai');
+const chaiAsPromised = require('chai-as-promised');
+const chaiSubset = require('chai-subset');
 
 global.sinon = sinon;
 global.chai = chai;
