@@ -1,13 +1,13 @@
 /* global browser */
 import path from 'path';
-import program from 'commander';
-import 'babel-register';
+// import program from 'commander';
+// import 'babel-register';
 import './global';
 import { getIPaddress, httpServer, logSeleniumNodeInfo } from '../utils';
 
-program
-  .option('--aw-artifacts-path <path>', 'Artifacts path', 'test/component/artifacts')
-  .parse(process.argv);
+// program
+//   .option('--aw-artifacts-path <path>', 'Artifacts path', 'test/component/artifacts')
+//   .parse(process.argv);
 // Reference Configuration File
 //
 // This file shows all of the configuration options that may be passed
@@ -241,7 +241,7 @@ const config = {
     const height = 768;
 
     reporterPlugin.getBrowser = () => browser;
-    browser.artifactsPath = program.awArtifactsPath;
+    // browser.artifactsPath = program.awArtifactsPath;
     browser.reporterInfo = {
       mainTime: new Date(), // Unformated date used inside report
       startTime: new Date().toISOString().replace(/T/, '_').replace(/:/g, '-').replace(/\..+/, ''), // eslint-disable-line

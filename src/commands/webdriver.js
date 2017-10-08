@@ -1,4 +1,4 @@
-/* eslint global-require: 0, import/no-unresolved: 0, import/no-extraneous-dependencies: 0, import/no-dynamic-require: 0, max-len: 0 */
+/* eslint global-require: 0, no-console: 0, import/no-unresolved: 0, import/no-extraneous-dependencies: 0, import/no-dynamic-require: 0, max-len: 0 */
 const path = require('path');
 const utils = require('../commands-utils');
 const initConfig = require('../config/webdriver-config');
@@ -13,7 +13,7 @@ const webdriver = {
       .option('glob', {
         description: 'Glob pattern',
         type: 'string',
-        default: []
+        default: [],
       })
       .option('coverage', {
         description: 'Generate coverage',

@@ -1,3 +1,4 @@
+/* eslint no-console: 0, max-len: 0 */
 const path = require('path');
 const extend = require('extend');
 const Promise = require('bluebird');

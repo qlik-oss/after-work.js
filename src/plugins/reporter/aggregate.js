@@ -49,4 +49,4 @@ module.exports = function aggregateReports(reportName, artifactsPath) {
     }).then(() => report.generate(fileName));
   }
   return sumTests;
-}
+};
