@@ -20,7 +20,7 @@ const defaultConfig = {
       'temp-directory': './coverage/.nyc_output',
     },
     mocha: {
-      recursive: true,
+      // recursive: true,
       // compilers: 'js:babel-core/register',
     },
   },
@@ -210,7 +210,7 @@ const utils = {
     return arr;
   },
   getArgs(argv, prefix) {
-    const keys = Object.keys(argv[prefix]);
+    const keys = Object.keys(argv[prefix] || {});
     const args = this.addKeys(argv, keys, prefix);
     return args;
   },

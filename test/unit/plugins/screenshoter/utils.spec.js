@@ -165,10 +165,9 @@ describe('Screenshoter Utils', () => {
       };
       const cb = sandbox.stub();
       getBoundingClientRect.returns(rect);
-      querySelector.returns(Object.create(
-        Element.prototype,
-        { getBoundingClientRect: { value: getBoundingClientRect } },
-      ));
+      const o = { getBoundingClientRect: { value: getBoundingClientRect } };
+      const elem = Object.create(Element.prototype, o);
+      querySelector.returns(elem);
       utils.getBoundingClientRect('foo', cb);
       expect(cb).to.have.been.calledWithExactly(cbRect);
     });

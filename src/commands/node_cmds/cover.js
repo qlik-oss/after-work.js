@@ -14,6 +14,11 @@ const cover = {
       .command(['*', 'mocha'], 'Run mocha test', (yMocha) => {
         const coverArgv = yMocha
           .config(utils.config.cover)
+          .option('glob', {
+            description: 'Glob pattern',
+            default: ['test/**/*.spec.js'],
+            type: 'array',
+          })
           .argv;
 
         const nycBin = require.resolve('.bin/nyc');
@@ -38,6 +43,7 @@ const cover = {
         }
         const mochaArgs = utils.getArgs(coverArgv, 'mocha');
         const args = nycArgs.concat(mochaBin).concat(mochaArgs.concat('--require', utils.globalMochaRequire));
+        args.push(coverArgv.glob);
         // console.log(args);
         spawn(nycBin, args);
       })
