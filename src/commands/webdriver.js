@@ -48,7 +48,7 @@ const webdriver = {
       console.log('No files found for:', argv.glob);
       process.exit(0);
     }
-    config.specs = [files[0]];
+    config.specs = files;
     launcher.init('', config);
   },
 };
