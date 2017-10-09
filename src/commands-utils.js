@@ -10,23 +10,63 @@ const disableCache = require('./disable-cache');
 
 const globalMochaRequire = path.resolve(__dirname, './config/global.js');
 
-const defaultConfig = {
+const config = {
   cover: {
-    nyc: {
-      // require: 'babel-register',
-      all: true,
-      include: 'src',
-      reporter: ['text', 'lcov', 'text-summary'],
-      'temp-directory': './coverage/.nyc_output',
+    'nyc.require': {
+      description: 'Require file',
+      default: [],
+      type: 'array',
     },
-    mocha: {
-      // recursive: true,
-      // compilers: 'js:babel-core/register',
+    'nyc.all': {
+      description: 'Instrument all files',
+      default: true,
+      type: 'boolean',
+    },
+    'nyc.include': {
+      description: 'Include specific files',
+      default: 'src',
+      type: 'array',
+    },
+    'nyc.reporter': {
+      description: 'coverage reporter(s) to use',
+      default: ['text', 'lcov', 'text-summary'],
+      type: 'array',
+    },
+    'nyc.temp-directory': {
+      description: 'directory to output raw coverage to',
+      default: './coverage/.nyc_output',
+      type: 'string',
+    },
+    'mocha.glob': {
+      description: 'Glob pattern',
+      default: ['test/**/*.spec.js'],
+      type: 'array',
+    },
+    'mocha.require': {
+      description: 'Require path',
+      default: [],
+      type: 'array',
+    },
+    'mocha.watch': {
+      description: 'Watch for changes',
+      default: false,
     },
   },
   mocha: {
-    // recursive: true,
-    // compilers: 'js:babel-core/register',
+    'mocha.glob': {
+      description: 'Glob pattern',
+      default: ['test/**/*.spec.js'],
+      type: 'array',
+    },
+    'mocha.require': {
+      description: 'Require path',
+      default: [],
+      type: 'array',
+    },
+    'mocha.watch': {
+      description: 'Watch for changes',
+      default: false,
+    },
   },
   requirejs: {
     glob: undefined,
@@ -53,7 +93,7 @@ const coverageConfig = {
 
 const utils = {
   globalMochaRequire,
-  config: defaultConfig,
+  config,
   getRunnerConfig(cmd, argv, files, instrumenter) {
     const baseDir = this.getBrowserDefaultPaths(cmd);
     const requirejsDir = this.relativeToCwd(path.dirname(argv.path));
@@ -90,7 +130,7 @@ const utils = {
         return insert;
       },
     }];
-    const config = {
+    const bsConfig = {
       port: argv.port,
       open: argv.open,
       notify: false,
@@ -103,7 +143,7 @@ const utils = {
         middleware,
       },
     };
-    return config;
+    return bsConfig;
   },
   initRunner(cmd, argv, files, coverage, resolve, reject) {
     const runner = this.createRunner('test-runner');
@@ -178,14 +218,14 @@ const utils = {
     ];
   },
   getConfig(cmd, configPath, additionalConfig) {
-    const config = require(path.relative(__dirname, path.resolve(configPath)));
-    if (typeof config === 'function') {
-      return extend(defaultConfig[cmd], config(additionalConfig || defaultConfig[cmd]));
+    const localCfg = require(path.relative(__dirname, path.resolve(configPath)));
+    if (typeof localCfg === 'function') {
+      return extend(localCfg[cmd], localCfg(additionalConfig || localCfg[cmd]));
     }
-    return extend(additionalConfig || defaultConfig[cmd], config);
+    return extend(additionalConfig || localCfg[cmd], localCfg);
   },
   addArg(arr, arg, val) {
-    if (arg === '--recursive') {
+    if (arg === '--recursive' || arg === '--watch') {
       if (val) {
         arr.push(arg);
       }

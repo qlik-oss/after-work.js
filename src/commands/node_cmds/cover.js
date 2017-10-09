@@ -11,14 +11,9 @@ const cover = {
   desc: 'Generate coverage',
   builder(yargs) {
     yargs
-      .command(['*', 'mocha'], 'Run mocha test', (yMocha) => {
+      .command(['*', 'mocha <mocha.glob> [options]'], 'Run mocha test', (yMocha) => {
         const coverArgv = yMocha
-          .config(utils.config.cover)
-          .option('glob', {
-            description: 'Glob pattern',
-            default: ['test/**/*.spec.js'],
-            type: 'array',
-          })
+          .options(utils.config.cover)
           .argv;
 
         const nycBin = require.resolve('.bin/nyc');
@@ -43,15 +38,13 @@ const cover = {
         }
         const mochaArgs = utils.getArgs(coverArgv, 'mocha');
         const args = nycArgs.concat(mochaBin).concat(mochaArgs.concat('--require', utils.globalMochaRequire));
-        args.push(coverArgv.glob);
-        // console.log(args);
+        args.push(coverArgv.mocha.glob);
+        // console.log(args, coverArgv);
         spawn(nycBin, args);
       })
+      .options(utils.config.cover)
       .argv;
   },
-  // handler(argv) {
-  //   console.log('cover', argv);
-  // },
 };
 
 module.exports = cover;

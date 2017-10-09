@@ -124,7 +124,7 @@ const utils = {
               `No baseline found! New baseline generated at ${`${meta.artifactsPath}/${expected.baseline}`}`,
               `No baseline found! New baseline generated at ${`${meta.artifactsPath}/${expected.baseline}`}`,
               expected,
-              actual,
+              actual
             );
           });
         }
@@ -140,7 +140,7 @@ const utils = {
               `expected ${id} equality to be less than ${tolerance}, but was ${comparison.equality}`,
               `expected ${id} equality to be greater than ${tolerance}, but was ${comparison.equality}`,
               expected,
-              actual,
+              actual
             );
             return comparison;
           });

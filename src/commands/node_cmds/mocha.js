@@ -1,41 +1,26 @@
+/* eslint no-console: 0 */
 const utils = require('../../commands-utils');
-const spawn = require('../../spawn');
+const Mocha = require('mocha');
 
 const mocha = {
-  command: 'mocha [glob] [options]',
+  command: 'mocha [mocha.glob] [options]',
   desc: 'Run mocha',
   builder(yargs) {
     return yargs
-      .usage('mocha [glob] [options]')
-      .config(utils.config.mocha)
-      .option('glob', {
-        description: 'Glob pattern',
-        default: ['test/**/*.spec.js'],
-        type: 'array',
-      })
-      .option('require', {
-        description: 'Require path',
-        default: [],
-        type: 'array',
-      })
-      .option('watch', {
-        description: 'Watch for changes',
-        default: false,
-      });
+      .usage('mocha [mocha.glob] [options]')
+      .options(utils.config.mocha);
   },
   handler(argv) {
-    // console.log('mocha', argv);
-    const mochaBin = require.resolve('.bin/mocha');
-    argv.require.push(utils.globalMochaRequire);
-    const mochaArgs = argv.glob.concat(argv.require.reduce((args, val) => {
-      args.push('--require');
-      args.push(val);
-      return args;
-    }, []));
-    if (argv.watch) {
-      mochaArgs.push('--watch');
+    const files = utils.getFiles(argv.mocha.glob);
+    if (!files.length) {
+      console.log('No files found for:', argv.mocha.glob);
+      process.exit(0);
     }
-    spawn(mochaBin, mochaArgs);
+    const runner = new Mocha(argv.mocha);
+    files.forEach(f => runner.addFile(f));
+    runner.run((failures) => {
+      process.on('exit', () => process.exit(failures));
+    });
   },
 };
 
