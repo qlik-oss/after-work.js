@@ -1,9 +1,6 @@
 /* global browser */
-/* eslint class-methods-use-this: 0 */
-
-const path = require('path');
-// require('babel-register');
 require('./global');
+const path = require('path');
 const { getIPaddress, httpServer, logSeleniumNodeInfo } = require('../utils');
 
 module.exports = function initConfig(artifactsPath) {
@@ -320,7 +317,7 @@ module.exports = function initConfig(artifactsPath) {
     // See the full list at http://mochajs.org/
     mochaOpts: {
       ui: 'bdd',
-      reporter: 'spec', // path.resolve(__dirname, '../../dist/plugins/reporter/index.js'),
+      reporter: path.resolve(__dirname, '../plugins/reporter/index.js'),
       reporterPlugin,
       enableTimeouts: false,
       reporterOptions: {
@@ -329,7 +326,7 @@ module.exports = function initConfig(artifactsPath) {
     },
 
     plugins: [{
-      path: path.resolve(__dirname, '../../dist/plugins/screenshoter/index.js'),
+      path: path.resolve(__dirname, '../plugins/screenshoter/index.js'),
     }, {
       inline: reporterPlugin,
     }],
