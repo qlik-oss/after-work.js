@@ -1,4 +1,4 @@
-/* eslint no-undef: 0 no-console: 0, func-names: 0, prefer-rest-params: 0 */
+/* eslint-disable */
 mocha.delay(true); // Adds a global `run` function
 // mocha.bail( true );
 mocha.fullTrace(true);
@@ -17,7 +17,7 @@ if (typeof callPhantom === 'function') {
 
 var runner = mocha.run(); //eslint-disable-line
 
-runner.on('end', () => {
+runner.on('end', function() {
   if (typeof callPhantom === 'function') {
     callPhantom({ exit: true, failures: runner.failures });
   }
@@ -26,8 +26,8 @@ runner.on('end', () => {
 // Hook up errors and send to server
 if (typeof callPhantom === 'function') {
   onerror = function () { // eslint-disable-line no-restricted-globals
-    const args = [].slice.call(arguments);
-    console.error(...args);
+    var args = [].slice.call(arguments);
+    console.error.apply(null, args);
     callPhantom({ exit: true, failures: runner.failures });
   };
 }

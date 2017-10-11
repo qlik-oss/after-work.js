@@ -1,21 +1,21 @@
-import webpage from 'webpage'; //eslint-disable-line
-import util from 'util';
-import system from 'system';  //eslint-disable-line
+/* eslint-disable  */
+const webpage = require('webpage');
+const util = require('util');
+const system = require('system');
 
 const page = webpage.create();
-const { args } = system;
-const url = args[args.indexOf('--pageUrl') + 1];
-const singleRun = args[args.indexOf('--single-run') + 1] === 'true';
+const url = system.args[system.args.indexOf('--pageUrl') + 1];
+const singleRun = system.args[system.args.indexOf('--single-run') + 1] === 'true';
 
-page.open(url, () => {
-  page.onCallback = (data) => {
+page.open(url, function () {
+  page.onCallback = function (data) {
     if (data.exit && singleRun) {
-      const exitCode = data.failures > 0 ? 1 : 0;
-      phantom.exit(exitCode); // eslint-disable-line no-undef
+      var exitCode = data.failures > 0 ? 1 : 0;
+      phantom.exit(exitCode);
     }
-    let msg = util.format(...data.args);
+    var msg = util.format.apply(null, data.args);
     msg = msg.replace('\u2713', 'v');
     msg = msg.replace(/[\w-]+\.spec\.js/, '\u001b[0m\u001b[31m$&\u001b[90m');
-    console.log(msg); // eslint-disable-line no-console
+    console.log(msg);
   };
 });

@@ -1,6 +1,7 @@
 /* eslint no-unused-expressions:0, prefer-destructuring: 0, no-console: 0, import/no-dynamic-require: 0, quote-props: 0, max-len: 0, global-require: 0 */
 const path = require('path');
 const fs = require('fs');
+const cp = require('child_process');
 // const findUp = require('find-up');
 const globby = require('globby');
 const extend = require('extend');
@@ -52,22 +53,6 @@ const config = {
       default: false,
     },
   },
-  mocha: {
-    'mocha.glob': {
-      description: 'Glob pattern',
-      default: ['test/**/*.spec.js'],
-      type: 'array',
-    },
-    'mocha.require': {
-      description: 'Require path',
-      default: [],
-      type: 'array',
-    },
-    'mocha.watch': {
-      description: 'Watch for changes',
-      default: false,
-    },
-  },
   requirejs: {
     glob: undefined,
     path: undefined,
@@ -98,7 +83,6 @@ const utils = {
     const baseDir = this.getBrowserDefaultPaths(cmd);
     const requirejsDir = this.relativeToCwd(path.dirname(argv.path));
     const requirejsMainDir = this.relativeToCwd(path.dirname(argv.main));
-    console.log(argv);
     baseDir.push(requirejsDir, requirejsMainDir);
     const middleware = [disableCache];
     if (argv.coverage) {
@@ -196,9 +180,11 @@ const utils = {
       });
       client.on('window-error', () => {
         runner.exit();
+        coverage.runner.exit();
+        process.exit(1);
       });
     });
-    resolve();
+    resolve(local);
   },
   createRunner(id) {
     return create(id);
@@ -220,9 +206,9 @@ const utils = {
   getConfig(cmd, configPath, additionalConfig) {
     const localCfg = require(path.relative(__dirname, path.resolve(configPath)));
     if (typeof localCfg === 'function') {
-      return extend(localCfg[cmd], localCfg(additionalConfig || localCfg[cmd]));
+      return extend(config[cmd], localCfg(additionalConfig || config[cmd]));
     }
-    return extend(additionalConfig || localCfg[cmd], localCfg);
+    return extend(additionalConfig || config[cmd], localCfg || {});
   },
   addArg(arr, arg, val) {
     if (arg === '--recursive' || arg === '--watch') {
@@ -256,6 +242,35 @@ const utils = {
   },
   getFiles(args) {
     return globby.sync(args);
+  },
+  runPhantom(url, singleRun) {
+    const phantomFile = this.relativeToCwd(path.resolve(__dirname, 'phantomjs-runner.js'));
+    let phantomBin;
+    try {
+      phantomBin = require.resolve('phantomjs-prebuilt/bin/phantomjs');
+    } catch (_) {
+      try {
+        phantomBin = require.resolve(`${path.resolve(process.cwd())}/node_modules/phantomjs-prebuilt/bin/phantomjs`);
+      } catch (__) {
+        if (__.message.indexOf('phantomjs-prebuilt/bin/phantomjs') !== -1) {
+          console.log('phantomjs-prebuilt could not be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json');
+        } else {
+          console.log(__);
+        }
+        process.exit(1);
+      }
+    }
+    const proc = cp.fork(phantomBin, [phantomFile, '--pageUrl', url, '--single-run', singleRun], {
+      env: process.env,
+      cwd: process.cwd(),
+      stdio: 'inherit',
+    });
+    proc.on('exit', (code) => {
+      process.exit(code);
+    });
+    proc.on('error', () => {
+      process.exit(1);
+    });
   },
 };
 
