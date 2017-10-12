@@ -116,13 +116,17 @@ export function runPhantom(url, singleRun) {
     stdio: 'inherit',
   });
 
-  proc.on('exit', (code) => {
-    process.exit(code);
+  process.on('exit', () => {
+    proc.kill();
   });
 
-  proc.on('error', () => {
-    process.exit(-1);
-  });
+  // proc.on('exit', (code) => {
+  //   process.exit(code);
+  // });
+  //
+  // proc.on('error', () => {
+  //   process.exit(-1);
+  // });
 }
 
 export function run(files, options) {
@@ -142,9 +146,11 @@ export function run(files, options) {
   testRunner.pause();
   coverageRunner.pause();
 
-  testRunner.watch(files).on('change', (event, file) => {
-    testRunner.reload(file);
-  });
+  if (!options.phantomjsSingleRun) {
+    testRunner.watch(files).on('change', (event, file) => {
+      testRunner.reload(file);
+    });
+  }
 
   let coveragePromise = Promise.resolve();
   if (options.coverage) {
@@ -187,9 +193,11 @@ export function run(files, options) {
             global.__coverage__ = coverageObj; //eslint-disable-line
             nyc.writeCoverageFile();
             nyc.report();
-            coverageRunner.reload();
+            if (!options.phantomjsSingleRun) {
+              coverageRunner.reload();
+            }
           }
-          if (options.singleRun) {
+          if (options.singleRun || options.phantomjsSingleRun) {
             testRunner.exit();
             coverageRunner.exit();
             process.exit(stats.failures.length);
@@ -201,7 +209,7 @@ export function run(files, options) {
         client.on('window-error', () => {
           testRunner.exit();
           coverageRunner.exit();
-          process.exit(-1);
+          process.exit(1);
         });
       });
       resolve(local);

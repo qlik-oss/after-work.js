@@ -17,21 +17,6 @@ if (typeof callPhantom === 'function') {
 
 var runner = mocha.run(); //eslint-disable-line
 
-runner.on('end', () => {
-  if (typeof callPhantom === 'function') {
-    callPhantom({ exit: true, failures: runner.failures });
-  }
-});
-
-// Hook up errors and send to server
-if (typeof callPhantom === 'function') {
-  onerror = function () { // eslint-disable-line no-restricted-globals
-    const args = [].slice.call(arguments);
-    console.error(...args);
-    callPhantom({ exit: true, failures: runner.failures });
-  };
-}
-
 // eslint-disable-next-line
 runner.on('start', function() {
   window.___browserSync___.socket.emit('runner-start'); // eslint-disable-line
