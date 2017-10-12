@@ -24,9 +24,7 @@ runner.on('start', function() {
 
 runner.on('end', function () {
   var coverage = window.__coverage__; //eslint-disable-line
-  if (coverage) {
-    window.___browserSync___.socket.emit('runner-end', { stats: this.stats, coverageObj: coverage }); //eslint-disable-line
-  }
+  window.___browserSync___.socket.emit('runner-end', { stats: this.stats, coverageObj: coverage }); //eslint-disable-line
 });
 
 window.onerror = function () {
