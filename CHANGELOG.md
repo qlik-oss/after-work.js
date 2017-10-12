@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.1
+- Fix for creating coverage or phantomjs singleRun before shutting down
+
 ## 3.1.0
 - Adding possibility to get code coverage for browser tests
 
