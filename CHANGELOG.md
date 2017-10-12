@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.2
+- Fix for always sending runner-end 
+
 ## 3.1.1
 - Fix for creating coverage or phantomjs singleRun before shutting down
 
