@@ -1,7 +1,7 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0 */
 const extend = require('extend');
 const Promise = require('bluebird');
-const utils = require('../../commands-utils');
+const utils = require('../commands-utils');
 
 const awBlackList = ['require.js', 'mocha.js', 'chai.js', 'sinon.js', 'setup.js'];
 const runner = {
@@ -21,6 +21,11 @@ const nyc = {
 
 const rjs = {
   options: {
+    logLevel: {
+      description: 'Log level for http server',
+      default: 'silent',
+      type: 'string',
+    },
     port: {
       description: 'Port',
       default: 9676,

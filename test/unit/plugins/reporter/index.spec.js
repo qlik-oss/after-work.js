@@ -39,6 +39,7 @@ describe('Reporter index', () => {
       };
       options = {
         reporterPlugin: {
+          teardown: sandbox.stub().returns(Promise.resolve(true)),
           getBrowser: sandbox.stub().returns(browser),
         },
         reporterOptions: {
@@ -50,6 +51,11 @@ describe('Reporter index', () => {
     afterEach(() => {
       delete global.utils;
     });
+
+    // it('should wait on reporter plugin tear down', () => {
+    //   uiReport.call(uiReport, runner, options);
+    //   expect(options.reporterPlugin.teardown()).to.eventually.equal(true);
+    // });
 
     it('should call pass correctly', () => {
       const test = {

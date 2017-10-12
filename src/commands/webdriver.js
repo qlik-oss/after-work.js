@@ -4,12 +4,17 @@ const utils = require('../commands-utils');
 const initConfig = require('../config/webdriver-config');
 
 const webdriver = {
-  command: 'webdriver <config>',
+  command: 'webdriver',
   desc: 'Run webdriver',
   builder(yargs) {
     return yargs
-      .usage('webdriver <config>')
-      .config(utils.config.webdriver)
+      .usage('webdriver')
+      // .config(utils.config.webdriver)
+      .option('config', {
+        description: 'Path to config file',
+        type: 'string',
+        demandOption: true,
+      })
       .option('glob', {
         description: 'Glob pattern',
         type: 'string',

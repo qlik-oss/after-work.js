@@ -67,6 +67,7 @@ const config = {
 };
 
 const coverageConfig = {
+  logLevel: 'silent',
   open: false,
   notify: false,
   port: 9677,
@@ -83,6 +84,7 @@ const utils = {
     const baseDir = this.getBrowserDefaultPaths(cmd);
     const requirejsDir = this.relativeToCwd(path.dirname(argv.path));
     const requirejsMainDir = this.relativeToCwd(path.dirname(argv.main));
+    argv.coverageConfig.blackList.push(...[path.basename(argv.main), path.basename(argv.path)]);
     baseDir.push(requirejsDir, requirejsMainDir);
     const middleware = [disableCache];
     if (argv.coverage) {
@@ -115,6 +117,7 @@ const utils = {
       },
     }];
     const bsConfig = {
+      logLevel: argv.logLevel,
       port: argv.port,
       open: argv.open,
       notify: false,
@@ -138,7 +141,7 @@ const utils = {
   onCoverageRunnerInit(resolve, reject) {
     const nyc = new NYC(extend({
       reporter: ['text', 'lcov', 'text-summary'],
-      'temp-directory': './coverage/.nyc_output',
+      tempDirectory: './coverage/.nyc_output',
     }));
     const runner = this.createRunner('coverage-runner');
     runner.pause();
@@ -170,7 +173,9 @@ const utils = {
           global.__coverage__ = coverageObj; //eslint-disable-line
           coverage.nyc.writeCoverageFile();
           coverage.nyc.report();
-          coverage.runner.reload();
+          if (!argv.singleRun) {
+            coverage.runner.reload();
+          }
         }
         if (argv.singleRun) {
           runner.exit();
@@ -265,11 +270,8 @@ const utils = {
       cwd: process.cwd(),
       stdio: 'inherit',
     });
-    proc.on('exit', (code) => {
-      process.exit(code);
-    });
-    proc.on('error', () => {
-      process.exit(1);
+    process.on('exit', () => {
+      proc.kill();
     });
   },
 };

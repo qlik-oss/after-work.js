@@ -28,7 +28,9 @@
     "chai": "4.1.1",
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
+    "chokidar": "^1.7.0",
     "extend": "3.0.1",
+    "find-up": "^2.1.0",
     "globby": "6.1.0",
     "handlebars": "4.0.10",
     "highlight.js": "9.12.0",
@@ -46,6 +48,8 @@
     "yargs": "^9.0.1"
   },
   "devDependencies": {
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-register": "^6.26.0",
     "coveralls": "^3.0.0",
     "cross-env": "5.0.5",
     "eslint": "4.8.0",
