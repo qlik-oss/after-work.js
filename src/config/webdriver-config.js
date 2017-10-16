@@ -3,7 +3,10 @@ require('./global');
 const path = require('path');
 const { getIPaddress, httpServer, logSeleniumNodeInfo } = require('../utils');
 
-module.exports = function initConfig(artifactsPath) {
+const reporterPath = path.resolve(__dirname, '../plugins/reporter/index.js');
+const screenshoterPath = path.resolve(__dirname, '../plugins/screenshoter/index.js');
+
+module.exports = function initConfig() {
   const reporterPlugin = {
   };
   const config = {
@@ -141,9 +144,7 @@ module.exports = function initConfig(artifactsPath) {
     // If you would like to run more than one instance of WebDriver on the same
     // tests, use multiCapabilities, which takes an array of capabilities.
     // If this is specified, capabilities will be ignored.
-    multiCapabilities: [{
-      browserName: 'chrome',
-    }],
+    multiCapabilities: [],
 
     // If you need to resolve multiCapabilities asynchronously (i.e. wait for
     // server/proxy, set firefox profile, etc), you can specify a function here
@@ -180,13 +181,60 @@ module.exports = function initConfig(artifactsPath) {
     // How long to wait for a page to load.
     getPageTimeout: 10000,
 
+    viewport: {
+      x: 0,
+      y: 0,
+      width: 1024,
+      height: 768,
+    },
+
+    setViewport(browser, viewport) {
+      const {
+        x,
+        y,
+        width,
+        height,
+      } = viewport;
+      return browser.driver.manage().window().setPosition(x, y)
+        .then(() => browser.driver.manage().window().setSize(width, height));
+    },
+    logSeleniumNodeInfo(browser) {
+      browser.getProcessedConfig().then((processedConfig) => {
+        if (processedConfig.logSeleniumInfo) {
+          logSeleniumNodeInfo(processedConfig);
+        }
+      });
+    },
+    setReporterInfo(browser) {
+      const { reporterInfo } = browser;
+      return browser.getCapabilities().then((cap) => {
+        reporterInfo.browserName = cap.get('browserName').replace(/ /g, '-');
+        reporterInfo.browserVersion = cap.get('version');
+        reporterInfo.platform = cap.get('platform').replace(/ /g, '-').toLowerCase();
+      });
+    },
+    setOnPrepareGlobals(browser, aPath) {
+      global.EC = protractor.ExpectedConditions; // eslint-disable-line no-undef
+      reporterPlugin.getBrowser = () => browser;
+      browser.artifactsPath = aPath;
+      browser.reporterInfo = {
+        mainTime: new Date(), // Unformated date used inside report
+        startTime: new Date().toISOString().replace(/T/, '_').replace(/:/g, '-').replace(/\..+/, ''), // eslint-disable-line
+      };
+    },
+    setBaseUrl(browser) {
+      if (!config.baseUrl) {
+        return getIPaddress().then((ip) => { browser.baseUrl = `http://${ip}:9000`; });
+      }
+      return Promise.resolve(config.baseUrl);
+    },
+    configureHttpServer() {
+      return {};
+    },
     // A callback function called once configs are read but before any environment
     // setup. This will only run once, and before onPrepare.
     // You can specify a file containing code to run by setting beforeLaunch to
     // the filename string.
-    configureHttpServer() {
-      return {};
-    },
     beforeLaunch() {
       return httpServer(config.configureHttpServer());
       // return getFullQualifiedDNSName().then( fqdn => {
@@ -218,39 +266,13 @@ module.exports = function initConfig(artifactsPath) {
       //       console.log("Executing capability", config.capabilities);
       //     });
 
-      global.EC = protractor.ExpectedConditions; // eslint-disable-line no-undef
+      config.setOnPrepareGlobals(browser, config.artifactsPath);
+      config.logSeleniumNodeInfo(browser);
 
-      const x = 0;
-      const y = 0;
-      const width = 1024;
-      const height = 768;
-
-      reporterPlugin.getBrowser = () => browser;
-      browser.artifactsPath = artifactsPath;
-      browser.reporterInfo = {
-        mainTime: new Date(), // Unformated date used inside report
-        startTime: new Date().toISOString().replace(/T/, '_').replace(/:/g, '-').replace(/\..+/, ''), // eslint-disable-line
-      };
-
-      browser.getProcessedConfig().then((processedConfig) => {
-        if (processedConfig.logSeleniumInfo) {
-          logSeleniumNodeInfo(processedConfig);
-        }
-      });
-
-      return getIPaddress().then((ip) => {
-        browser.baseUrl = `http://${ip}:9000`;
-      }).then(() => browser.driver.manage().window().setPosition(x, y).then(() => {
-        browser.driver.manage().window().setSize(width, height).then(() => {
-          browser.getCapabilities().then((cap) => {
-            browser.reporterInfo.browserName = cap.get('browserName').replace(/ /g, '-');
-            browser.reporterInfo.browserVersion = cap.get('version');
-            browser.reporterInfo.platform = cap.get('platform').replace(/ /g, '-').toLowerCase();
-
-            browser.ignoreSynchronization = true; // Must be set if the page doesn't use angular
-          });
-        });
-      }));
+      return config.setBaseUrl(browser)
+        .then(config.setViewport(browser, config.viewport))
+        .then(config.setReporterInfo(browser))
+        .then(() => { browser.ignoreSynchronization = true; });
     },
 
     // A callback function called once tests are finished.
@@ -317,7 +339,7 @@ module.exports = function initConfig(artifactsPath) {
     // See the full list at http://mochajs.org/
     mochaOpts: {
       ui: 'bdd',
-      reporter: path.resolve(__dirname, '../plugins/reporter/index.js'),
+      reporter: reporterPath,
       reporterPlugin,
       enableTimeouts: false,
       reporterOptions: {
@@ -326,7 +348,7 @@ module.exports = function initConfig(artifactsPath) {
     },
 
     plugins: [{
-      path: path.resolve(__dirname, '../plugins/screenshoter/index.js'),
+      path: screenshoterPath,
     }, {
       inline: reporterPlugin,
     }],

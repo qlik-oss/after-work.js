@@ -2,34 +2,59 @@
 const path = require('path');
 const utils = require('../commands-utils');
 const initConfig = require('../config/webdriver-config');
+const findUp = require('find-up');
+const extend = require('extend');
+const fs = require('fs');
 
-const webdriver = {
+const command = {
   command: 'webdriver',
   desc: 'Run webdriver',
+  options: {
+    config: {
+      description: 'Path to config file',
+      type: 'string',
+      default: 'aw.config.js',
+    },
+    glob: {
+      description: 'Glob pattern',
+      type: 'string',
+      default: [],
+    },
+    coverage: {
+      description: 'Generate coverage',
+      type: 'boolean',
+      default: false,
+    },
+    require: {
+      description: 'Require path',
+      default: [],
+      type: 'array',
+    },
+  },
+  getConfig(configPath) {
+    let foundConfigPath = configPath;
+    if (!fs.existsSync(configPath)) {
+      foundConfigPath = findUp.sync(command.options.config.default);
+    }
+    let config = {};
+    const baseConfig = initConfig();
+    try {
+      const p = path.resolve(process.cwd(), foundConfigPath);
+      const foundConfig = require(p);
+      if (typeof foundConfig === 'function') {
+        config = extend(true, baseConfig, foundConfig());
+      } else {
+        config = extend(true, baseConfig, foundConfig);
+      }
+    } catch (_) {
+      console.log('Using default config');
+    }
+    return config;
+  },
   builder(yargs) {
     return yargs
       .usage('webdriver')
-      // .config(utils.config.webdriver)
-      .option('config', {
-        description: 'Path to config file',
-        type: 'string',
-        demandOption: true,
-      })
-      .option('glob', {
-        description: 'Glob pattern',
-        type: 'string',
-        default: [],
-      })
-      .option('coverage', {
-        description: 'Generate coverage',
-        type: 'boolean',
-        default: false,
-      })
-      .option('artifactsPath', {
-        description: 'Path to artifacts',
-        type: 'string',
-        default: 'test/component/artifacts',
-      })
+      .options(command.options)
       .argv;
   },
   handler(argv) {
@@ -47,15 +72,19 @@ const webdriver = {
         process.exit(0);
       }
     }
-    const config = utils.getConfig('webdriver', argv.config, initConfig(argv.artifactsPath));
-    const files = utils.getFiles(argv.glob);
+    const config = command.getConfig(argv.config);
+    argv.require.map(require);
+    if (argv.glob.length) {
+      config.specs = argv.glob;
+    }
+    const files = utils.getFiles(config.specs);
     if (!files.length) {
-      console.log('No files found for:', argv.glob);
+      console.log('No files found for:', config.specs);
       process.exit(0);
     }
-    config.specs = files;
+
     launcher.init('', config);
   },
 };
 
-module.exports = webdriver;
+module.exports = command;

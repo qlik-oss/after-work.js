@@ -2,69 +2,12 @@
 const path = require('path');
 const fs = require('fs');
 const cp = require('child_process');
-// const findUp = require('find-up');
 const globby = require('globby');
 const extend = require('extend');
 const { create } = require('browser-sync');
 const NYC = require('nyc');
 const disableCache = require('./disable-cache');
 
-const globalMochaRequire = path.resolve(__dirname, './config/global.js');
-
-const config = {
-  cover: {
-    'nyc.require': {
-      description: 'Require file',
-      default: [],
-      type: 'array',
-    },
-    'nyc.all': {
-      description: 'Instrument all files',
-      default: true,
-      type: 'boolean',
-    },
-    'nyc.include': {
-      description: 'Include specific files',
-      default: 'src',
-      type: 'array',
-    },
-    'nyc.reporter': {
-      description: 'coverage reporter(s) to use',
-      default: ['text', 'lcov', 'text-summary'],
-      type: 'array',
-    },
-    'nyc.temp-directory': {
-      description: 'directory to output raw coverage to',
-      default: './coverage/.nyc_output',
-      type: 'string',
-    },
-    'mocha.glob': {
-      description: 'Glob pattern',
-      default: ['test/**/*.spec.js'],
-      type: 'array',
-    },
-    'mocha.require': {
-      description: 'Require path',
-      default: [],
-      type: 'array',
-    },
-    'mocha.watch': {
-      description: 'Watch for changes',
-      default: false,
-    },
-  },
-  requirejs: {
-    glob: undefined,
-    path: undefined,
-    main: undefined,
-    coverage: false,
-    coverageConfig: {
-      blackList: ['require.js', 'mocha.js', 'chai.js', 'sinon.js', 'setup.js'],
-    },
-  },
-  webdriver: {
-  },
-};
 
 const coverageConfig = {
   logLevel: 'silent',
@@ -78,8 +21,6 @@ const coverageConfig = {
 };
 
 const utils = {
-  globalMochaRequire,
-  config,
   getRunnerConfig(cmd, argv, files, instrumenter) {
     const baseDir = this.getBrowserDefaultPaths(cmd);
     const requirejsDir = this.relativeToCwd(path.dirname(argv.path));
@@ -207,13 +148,6 @@ const utils = {
       this.relativeToCwd(path.dirname(require.resolve('mocha'))),
       this.relativeToCwd(path.dirname(require.resolve('chai'))),
     ];
-  },
-  getConfig(cmd, configPath, additionalConfig) {
-    const localCfg = require(path.relative(__dirname, path.resolve(configPath)));
-    if (typeof localCfg === 'function') {
-      return extend(config[cmd], localCfg(additionalConfig || config[cmd]));
-    }
-    return extend(additionalConfig || config[cmd], localCfg || {});
   },
   addArg(arr, arg, val) {
     if (arg === '--recursive' || arg === '--watch') {

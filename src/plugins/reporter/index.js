@@ -86,7 +86,7 @@ function uiReport(runner, options) {
 
   runner.on('end', function onEnd() {
     const repoInfo = utils.getRepoInfo();
-    const cleanTests = tests.map(utils.cleanTest);
+    const cleanTests = tests.map(utils.cleanTest.bind(utils));
 
     const obj = {
       tests: cleanTests,

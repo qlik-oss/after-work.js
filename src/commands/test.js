@@ -131,7 +131,6 @@ const command = {
       })
       .coerce('nyc', (opt) => {
         if (opt.babel) {
-          process.env.NODE_ENV = 'test';
           opt.require.push('babel-register');
           opt.sourceMap = false;
           opt.instrumenter = './lib/instrumenters/noop';
@@ -155,3 +154,13 @@ const command = {
 };
 
 module.exports = command;
+
+
+// if (typeof process.stdin.setRawMode === 'function') {
+//   process.stdin.setRawMode(true);
+//   process.stdin.resume();
+//   process.stdin.setEncoding('hex');
+//   process.stdin.on('data', (a, b) => {
+//     console.log(a, b);
+//   });
+// }
