@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "test": "cross-env NODE_ENV=test ./src/cli.js node mocha",
-    "test:coverage": "cross-env NODE_ENV=test ./src/cli.js node cover",
+    "test": "cross-env NODE_ENV=test ./src/cli.js",
+    "test:coverage": "cross-env NODE_ENV=test ./src/cli.js --coverage --single-run",
     "test:coveralls": "npm run test:coverage && cat coverage/lcov.info | coveralls"
   },
   "bin": {
