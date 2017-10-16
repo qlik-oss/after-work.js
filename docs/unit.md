@@ -22,12 +22,10 @@ If you are using babel as transpiler it's recommended to [set up the project](ht
 .babelrc
 ```
 {
-  "babel": {
-    "presets": ["env"],
-    "env": {
-      "test": {
-        "plugins": ["istanbul"]
-      }
+  "presets": ["env"],
+  "env": {
+    "test": {
+      "plugins": ["istanbul"]
     }
   }
 }
