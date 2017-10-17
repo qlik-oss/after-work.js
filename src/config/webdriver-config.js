@@ -10,6 +10,7 @@ module.exports = function initConfig() {
   const reporterPlugin = {
   };
   const config = {
+    artifactsPath: 'test/component/artifacts',
     // ---------------------------------------------------------------------------
     // ----- How to connect to Browser Drivers -----------------------------------
     // ---------------------------------------------------------------------------

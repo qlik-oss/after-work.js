@@ -42,7 +42,7 @@ const command = {
       const p = path.resolve(process.cwd(), foundConfigPath);
       const foundConfig = require(p);
       if (typeof foundConfig === 'function') {
-        config = extend(true, baseConfig, foundConfig());
+        config = extend(true, baseConfig, foundConfig(baseConfig));
       } else {
         config = extend(true, baseConfig, foundConfig);
       }

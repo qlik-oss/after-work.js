@@ -9,11 +9,6 @@ const fs = require('fs');
 
 function runTests(files, { coverage, nyc, mocha }) {
   const n = new NYC(nyc);
-  if (coverage) {
-    n.reset();
-    n.wrap();
-    n.addAllFiles();
-  }
   const m = new Mocha(mocha);
   files.forEach((f) => {
     Object.keys(require.cache).forEach((key) => {
@@ -23,7 +18,11 @@ function runTests(files, { coverage, nyc, mocha }) {
     });
     m.addFile(f);
   });
-
+  if (coverage) {
+    n.reset();
+    n.wrap();
+    n.addAllFiles();
+  }
   const runner = m.run((failures) => {
     process.on('exit', () => {
       process.exit(failures);
@@ -66,7 +65,7 @@ const command = {
     },
     'nyc.exclude': {
       description: 'Exclude glob',
-      default: [],
+      default: ['coverage'],
       type: 'array',
     },
     'nyc.sourceMap': {
