@@ -182,7 +182,7 @@ const utils = {
   getFiles(args) {
     return globby.sync(args);
   },
-  runPhantom(url, singleRun) {
+  runPhantom(url) {
     const phantomFile = this.relativeToCwd(path.resolve(__dirname, 'phantomjs-runner.js'));
     let phantomBin;
     try {
@@ -199,7 +199,7 @@ const utils = {
         process.exit(1);
       }
     }
-    const proc = cp.fork(phantomBin, [phantomFile, '--pageUrl', url, '--single-run', singleRun], {
+    const proc = cp.fork(phantomBin, [phantomFile, '--pageUrl', url], {
       env: process.env,
       cwd: process.cwd(),
       stdio: 'inherit',

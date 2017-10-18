@@ -5,7 +5,6 @@ const system = require('system');
 
 const page = webpage.create();
 const url = system.args[system.args.indexOf('--pageUrl') + 1];
-const singleRun = system.args[system.args.indexOf('--single-run') + 1] === 'true';
 
 page.open(url, function () {
   page.onCallback = function (data) {

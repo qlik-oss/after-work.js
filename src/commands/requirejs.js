@@ -33,7 +33,7 @@ const rjs = {
     },
     open: {
       description: 'Open browser',
-      default: true,
+      default: false,
       type: 'boolean',
     },
     glob: {
@@ -51,6 +51,11 @@ const rjs = {
     },
     phantomjs: {
       description: 'Run phantomjs',
+      type: 'boolean',
+      default: false,
+    },
+    chromeHeadless: {
+      description: 'Run chrome headless',
       type: 'boolean',
       default: false,
     },
@@ -108,7 +113,10 @@ const rjs = {
     return coveragePromise
       .then(coverage => new Promise(utils.initRunner.bind(utils, 'requirejs', argv, files, coverage)))
       .then((url) => {
-        if (argv.phantomjs) {
+        if (argv.chromeHeadless) {
+          const runChromeHeadless = require('../chrome-runner');
+          runChromeHeadless(url);
+        } else if (argv.phantomjs) {
           utils.runPhantom(url, argv.singleRun);
         }
       });

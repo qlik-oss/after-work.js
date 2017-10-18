@@ -4,6 +4,9 @@ mocha.delay(true); // Adds a global `run` function
 mocha.fullTrace(true);
 mocha.timeout(0);
 mocha.ui('bdd');
+Mocha.reporters.Base.useColors = true;
+mocha.reporter('min');
+Mocha.process.stdout.write = function () { };
 
 if (typeof callPhantom === 'function') {
   Mocha.reporters.Base.useColors = true;
