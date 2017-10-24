@@ -200,7 +200,7 @@ export function run(files, options) {
           if (options.singleRun || options.phantomjsSingleRun) {
             testRunner.exit();
             coverageRunner.exit();
-            process.exit(stats.failures.length);
+            process.exit(stats.failures);
           }
         });
         client.on('runner-log', (args) => {
