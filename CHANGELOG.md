@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.3
+- Fix for using correct exit code then running in browser
+- Runing mocha with '--exit'
+
 ## 3.1.2
 - Fix for always sending runner-end 
 
