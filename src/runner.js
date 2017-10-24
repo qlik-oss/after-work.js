@@ -90,6 +90,7 @@ const runner = {
       console.log('Adding default mocha options'); // eslint-disable-line no-console
       info.commandArgs.unshift('--require', path.relative(cwd, path.resolve(__dirname, './config/global.js')));
       info.commandArgs.unshift('--opts', path.relative(cwd, path.resolve(__dirname, './config/mocha.opts')));
+      info.commandArgs.unshift('--exit');
 
       // If nyc is used the code will be transpiled before running mocha
       if (!info.addNycArgs) {
