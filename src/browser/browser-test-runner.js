@@ -50,6 +50,7 @@ export function getBrowserSyncConfig(paths, files, options) {
     notify: false,
     port: 9676,
     ui: false,
+    ghostMode: false,
     server: {
       baseDir: ['./'].concat(paths).concat(rjs).concat(dirs),
       directory: true,
