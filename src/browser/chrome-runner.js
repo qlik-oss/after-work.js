@@ -1,3 +1,4 @@
+/* eslint no-console:0 */
 const CDP = require('chrome-remote-interface');
 const util = require('util');
 const chromeLauncher = require('chrome-launcher');
