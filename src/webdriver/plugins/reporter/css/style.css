@@ -1,0 +1,162 @@
+body{
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+    margin: 0px;
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+pre{
+    margin-top: 0px;
+}
+h1, h1, h3, h4 {
+    text-shadow:1px 1px 1px 1px rgba(0,0,0,0.005);
+    margin: 0px;
+}
+li{
+    list-style-type:none;
+}
+.top_header{
+    height: 40px;
+    padding-left: 50px;
+    padding-right: 50px;
+    background: #333;
+    color: #eee;
+    -webkit-box-shadow: rgba(0,0,0,0.8) 0px 0px 32px;
+    -moz-box-shadow: rgba(0,0,0,0.8) 0px 0px 32px;
+    box-shadow: rgba(0,0,0,0.8) 0px 0px 32px;
+}
+.name{
+    height: 22px;
+}
+.version{
+    font-size: 8px;
+}
+.description{
+    color: #bbb;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+.info_header{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-content: center;
+    align-items: stretch;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-size: 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    -webkit-box-shadow: rgba(255,255,255,0.25) 0px 1px 0px;
+    -moz-box-shadow: rgba(255,255,255,0.25) 0px 1px 0px;
+    box-shadow: rgba(255,255,255,0.25) 0px 1px 0px;
+}
+.info_header ul
+{
+    margin: 0px;
+    padding: 0px;
+    flex: 1 1 auto;
+}
+.info_header li
+{
+    display: inline;
+    list-style-type: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-right: 1px solid rgba(0,0,0,0.25);
+    -webkit-box-shadow: rgba(255,255,255,0.25) 1px 0px 0px;
+    -moz-box-shadow: rgba(255,255,255,0.25) 1px 0px 0px;
+    box-shadow: rgba(255,255,255,0.25) 1px 0px 0px;
+}
+.info li:first-child,
+.stats li:last-child
+{
+    border-left: 1px solid rgba(0,0,0,0.25);
+    -webkit-box-shadow: inset rgba(255,255,255,0.25) 1px 0px 0px;
+    -moz-box-shadow: inset rgba(255,255,255,0.25) 1px 0px 0px;
+    box-shadow: inset rgba(255,255,255,0.25) 1px 0px 0px;
+}
+.info li{
+    float: left;
+}
+.stats li{
+    float: right;
+}
+.status i{
+    padding-right: 4px;
+}
+/*.stats li:before {
+    content: " ";
+    display: block;
+    background: #c00;
+    height: 2px;
+    width: 100%;
+    right:0px;
+    top: 0px;
+}*/
+.info_header i{
+    padding-right: 4px;
+}
+.passed{
+    color: #5cb85c;
+}
+.failed{
+    color: #d9534f;
+}
+.pending{
+    color: #5bc0de;
+}
+.total{
+    color: magenta;
+}
+.tests{
+    padding: 50px;
+}
+.collapsed{
+    display: none;
+}
+.message{
+    padding-left: 25px;
+    padding-right: 5px;
+}
+.tests h4{
+    font-weight: 400;
+    display: inline-block;
+}
+.testcase{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-content: center;
+    align-items: stretch;
+    padding-top: 3px;
+}
+.testName{
+    flex: 1 1 auto;
+}
+.testInfo{
+    flex: 0 1 auto;
+}
+.hljs{
+    font-size: 85%;
+    border-radius: 4px;
+}
+article:after{
+    content: " ";
+    display: block;
+    background: #ccc;
+    height: 1px;
+    width: 100%;
+    right:0px;
+    top: 0px;
+}

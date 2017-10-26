@@ -1,6 +1,6 @@
-require('../../../src/config/global');
+require('../../src/env');
 
-describe('Global', () => {
+describe('Environment', () => {
   describe('chai extensions', () => {
     it('chai-subset should be used', () => {
       const obj = {

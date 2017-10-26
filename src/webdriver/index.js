@@ -1,40 +1,19 @@
 /* eslint global-require: 0, no-console: 0, import/no-unresolved: 0, import/no-extraneous-dependencies: 0, import/no-dynamic-require: 0, max-len: 0 */
 const path = require('path');
-const utils = require('../commands-utils');
-const initConfig = require('../config/webdriver-config');
+const globby = require('globby');
+const initConfig = require('./config');
 const findUp = require('find-up');
 const extend = require('extend');
 const fs = require('fs');
+const options = require('./options');
 
-const command = {
+const webdriver = {
   command: 'webdriver',
   desc: 'Run webdriver',
-  options: {
-    config: {
-      description: 'Path to config file',
-      type: 'string',
-      default: 'aw.config.js',
-    },
-    glob: {
-      description: 'Glob pattern',
-      type: 'string',
-      default: [],
-    },
-    coverage: {
-      description: 'Generate coverage',
-      type: 'boolean',
-      default: false,
-    },
-    require: {
-      description: 'Require path',
-      default: [],
-      type: 'array',
-    },
-  },
   getConfig(configPath) {
     let foundConfigPath = configPath;
     if (!fs.existsSync(configPath)) {
-      foundConfigPath = findUp.sync(command.options.config.default);
+      foundConfigPath = findUp.sync(options.config.default);
     }
     let config = {};
     const baseConfig = initConfig();
@@ -54,7 +33,7 @@ const command = {
   builder(yargs) {
     return yargs
       .usage('webdriver')
-      .options(command.options)
+      .options(options)
       .argv;
   },
   handler(argv) {
@@ -72,12 +51,12 @@ const command = {
         process.exit(0);
       }
     }
-    const config = command.getConfig(argv.config);
-    argv.require.forEach(require);
+    const config = webdriver.getConfig(argv.config);
+    argv.require.map(require);
     if (argv.glob.length) {
       config.specs = argv.glob;
     }
-    const files = utils.getFiles(config.specs);
+    const files = globby.sync(config.specs);
     if (!files.length) {
       console.log('No files found for:', config.specs);
       process.exit(0);
@@ -87,4 +66,4 @@ const command = {
   },
 };
 
-module.exports = command;
+module.exports = webdriver;

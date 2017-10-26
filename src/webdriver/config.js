@@ -1,10 +1,9 @@
 /* global browser */
-require('./global');
 const path = require('path');
 const { getIPaddress, httpServer, logSeleniumNodeInfo } = require('../utils');
 
-const reporterPath = path.resolve(__dirname, '../plugins/reporter/index.js');
-const screenshoterPath = path.resolve(__dirname, '../plugins/screenshoter/index.js');
+const reporterPath = path.resolve(__dirname, './plugins/reporter/index.js');
+const screenshoterPath = path.resolve(__dirname, './plugins/screenshoter/index.js');
 
 module.exports = function initConfig() {
   const reporterPlugin = {

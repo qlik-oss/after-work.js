@@ -1,7 +1,12 @@
 /* eslint-disable */
+mocha.delay(true); // Adds a global `run` function
+// mocha.bail( true );
 mocha.fullTrace(true);
 mocha.timeout(0);
 mocha.ui('bdd');
+Mocha.reporters.Base.useColors = true;
+mocha.reporter('min');
+Mocha.process.stdout.write = function () { };
 
 if (typeof callPhantom === 'function') {
   Mocha.reporters.Base.useColors = true;
@@ -24,6 +29,6 @@ runner.on('end', function () {
 });
 
 window.onerror = function () {
-  console.log([].slice.call(arguments));
+  console.log(['onerror'].slice.call(arguments));
   window.___browserSync___.socket.emit('window-error');
 };

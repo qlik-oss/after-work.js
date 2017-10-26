@@ -1,0 +1,19 @@
+{
+  "env": {
+    "node": true,
+    "mocha": true,
+    "protractor": true,
+    "phantomjs": true
+  },
+  "globals": {
+    "sinon": true,
+    "expect": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+      "no-param-reassign": 0
+  },
+  "extends": "airbnb-base"
+}

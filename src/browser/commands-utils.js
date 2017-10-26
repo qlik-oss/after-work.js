@@ -144,7 +144,7 @@ const utils = {
   getBrowserDefaultPaths(prefix) {
     return [
       './',
-      this.relativeToCwd(path.resolve(__dirname, 'browser', prefix)),
+      this.relativeToCwd(path.resolve(__dirname, './', prefix)),
       this.relativeToCwd(path.dirname(require.resolve('mocha'))),
       this.relativeToCwd(path.dirname(require.resolve('chai'))),
     ];
