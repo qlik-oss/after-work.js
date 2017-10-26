@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.4
+- Disable ghostMode for Browsersync to increase websocket stability
+
 ## 3.1.3
 - Fix for using correct exit code then running in browser
 - Runing mocha with '--exit'
