@@ -36,7 +36,6 @@ const browser = {
       });
   },
   handler(argv) {
-    debugger;
     const files = utils.getFiles(argv.glob);
     if (!files.length) {
       console.log('No files found for:', argv.glob);
