@@ -1,0 +1,11 @@
+{
+  "env": {
+    "amd": true
+  },
+  "globals": {
+    "requirejs": true
+  },
+  "rules": {
+    "import/no-amd": 0
+  }
+}

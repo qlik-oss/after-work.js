@@ -10,4 +10,5 @@ yargs
   .command(require('./node'))
   .command(require('./browser'))
   .command(require('./webdriver'))
+  .command(require('./cdp'))
   .argv;

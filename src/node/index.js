@@ -73,9 +73,9 @@ const node = {
       });
   },
   handler(argv) {
-    const files = globby.sync(argv.mocha.glob);
+    const files = globby.sync(argv.glob);
     if (!files.length) {
-      console.log('No files found for:', argv.mocha.glob);
+      console.log('No files found for:', argv.glob);
       process.exit(1);
     }
     argv.require.forEach((m) => {

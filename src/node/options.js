@@ -4,6 +4,11 @@ module.exports = {
     type: 'string',
     default: 'aw.config.js',
   },
+  glob: {
+    description: 'Glob pattern',
+    default: ['test/**/*.spec.js'],
+    type: 'array',
+  },
   require: {
     description: 'Require path',
     default: [],
@@ -58,10 +63,5 @@ module.exports = {
     description: 'Directory to output coverage reports in',
     default: 'coverage',
     type: 'string',
-  },
-  'mocha.glob': {
-    description: 'Glob pattern',
-    default: ['test/**/*.spec.js'],
-    type: 'array',
   },
 };
