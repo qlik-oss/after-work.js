@@ -1,6 +1,7 @@
 {
   "env": {
-    "amd": true
+    "amd": true,
+    "browser": true
   },
   "globals": {
     "requirejs": true
