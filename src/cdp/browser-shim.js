@@ -4,14 +4,14 @@
     const origRun = m.run;
 
     m.run = (...args) => {
-      win._mediator.emit('started', m.suite.suites.length);
+      win.awMediator.emit('started', m.suite.suites.length);
 
       m.runner = origRun.apply(mocha, ...args);
       if (m.runner.stats && m.runner.stats.end) {
-        win._mediator.emit('ended', m.runner.stats);
+        win.awMediator.emit('ended', m.runner.stats);
       } else {
         m.runner.on('end', () => {
-          win._mediator.emit('ended', m.runner.stats);
+          win.awMediator.emit('ended', m.runner.stats);
         });
       }
       return m.runner;
@@ -41,12 +41,12 @@
       m.process.stdout._write = function (chunks, encoding, cb) {
         const output = chunks.toString ? chunks.toString() : chunks;
 
-        win._mediator.emit('mocha', output);
+        win.awMediator.emit('mocha', output);
 
         m.process.nextTick(cb);
       };
 
-      win._mediator.emit('width');
+      win.awMediator.emit('width');
     },
     configurable: true,
   });

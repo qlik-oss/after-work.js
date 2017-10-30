@@ -1,4 +1,5 @@
 /* eslint-disable */
+mocha.delay(true);
 mocha.fullTrace(true);
 mocha.timeout(0);
 mocha.ui('bdd');

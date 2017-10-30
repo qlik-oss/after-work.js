@@ -6,8 +6,31 @@ const globby = require('globby');
 const extend = require('extend');
 const { create } = require('browser-sync');
 const NYC = require('nyc');
-const disableCache = require('./disable-cache');
+const CDP = require('chrome-remote-interface');
+const util = require('util');
+const chromeLauncher = require('chrome-launcher');
 
+function disableCache(req, res, next) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+}
+
+function instrument(argv, files, instrumenter, req, res, next) {
+  const url = req.url.substring(1);
+  const isTestFile = files.indexOf(url) !== -1;
+  // console.log(isTestFile, url);
+  if (!isTestFile && url.indexOf('.js', url.length - 3) !== -1 &&
+    argv.coverageConfig.blackList.filter(f => url.indexOf(f) !== -1).length === 0) {
+    const filePath = path.relative(process.cwd(), url);
+    const file = fs.readFileSync(filePath, 'utf-8');
+    // console.log('Instrumenting ', url);
+    res.end(instrumenter.instrumentSync(file, filePath));
+  } else {
+    next();
+  }
+}
 
 const coverageConfig = {
   logLevel: 'silent',
@@ -21,6 +44,12 @@ const coverageConfig = {
 };
 
 const utils = {
+  getNYC(options) {
+    return new NYC(extend(true, {}, {
+      reporter: ['text', 'lcov', 'text-summary'],
+      tempDirectory: './coverage/.nyc_output',
+    }, options));
+  },
   getRunnerConfig(cmd, argv, files, instrumenter) {
     const baseDir = this.getBrowserDefaultPaths(cmd);
     const requirejsDir = this.relativeToCwd(path.dirname(argv.path));
@@ -29,20 +58,7 @@ const utils = {
     baseDir.push(requirejsDir, requirejsMainDir);
     const middleware = [disableCache];
     if (argv.coverage) {
-      middleware.push((req, res, next) => {
-        const url = req.url.substring(1);
-        const isTestFile = files.indexOf(url) !== -1;
-        // console.log(isTestFile, url);
-        if (!isTestFile && url.indexOf('.js', url.length - 3) !== -1 &&
-          argv.coverageConfig.blackList.filter(f => url.indexOf(f) !== -1).length === 0) {
-          const filePath = path.relative(process.cwd(), url);
-          const file = fs.readFileSync(filePath, 'utf-8');
-          // console.log('Instrumenting ', url);
-          res.end(instrumenter.instrumentSync(file, filePath));
-        } else {
-          next();
-        }
-      });
+      middleware.push(instrument.bind(null, argv, files, instrumenter));
     }
     const startPath = 'index.html';
     const rewriteRules = [{
@@ -52,7 +68,7 @@ const utils = {
       match: /%insert-requirejs%/g,
       fn: () => {
         let insert = '';
-        insert += `<script>var files = [${files.map(f => `'${f}'`).join(',')}];</script>`;
+        insert += `<script>window.awFiles = [${files.map(f => `'${f}'`).join(',')}];</script>`;
         insert += `<script data-main='/${argv.main.split('\\').pop().split('/').pop()}' src='/${argv.path.split('\\').pop().split('/').pop()}'></script>\n`;
         return insert;
       },
@@ -75,15 +91,13 @@ const utils = {
   },
   initRunner(cmd, argv, files, coverage, resolve, reject) {
     const runner = this.createRunner('test-runner');
+    const onRunnerInit = this.onRunnerInit.bind(this, runner, argv, coverage, resolve, reject);
     runner.pause();
     const bsConfig = this.getRunnerConfig(cmd, argv, files, coverage.nyc.instrumenter());
-    runner.init(bsConfig, this.onRunnerInit.bind(this, runner, argv, coverage, resolve, reject));
+    runner.init(bsConfig, onRunnerInit);
   },
   onCoverageRunnerInit(resolve, reject) {
-    const nyc = new NYC(extend({
-      reporter: ['text', 'lcov', 'text-summary'],
-      tempDirectory: './coverage/.nyc_output',
-    }));
+    const nyc = this.getNYC();
     const runner = this.createRunner('coverage-runner');
     runner.pause();
     runner.init(coverageConfig, (err) => {
@@ -144,40 +158,10 @@ const utils = {
   getBrowserDefaultPaths(prefix) {
     return [
       './',
-      this.relativeToCwd(path.resolve(__dirname, './', prefix)),
+      this.relativeToCwd(path.resolve(__dirname, prefix)),
       this.relativeToCwd(path.dirname(require.resolve('mocha'))),
       this.relativeToCwd(path.dirname(require.resolve('chai'))),
     ];
-  },
-  addArg(arr, arg, val) {
-    if (arg === '--recursive' || arg === '--watch') {
-      if (val) {
-        arr.push(arg);
-      }
-      return;
-    }
-    arr.push(arg);
-    arr.push(val);
-  },
-  addKeys(cfg, keys, prefix) {
-    const arr = [];
-    keys.forEach((key) => {
-      const arg = `--${key}`;
-      const val = cfg[prefix][key];
-      if (Array.isArray(val)) {
-        val.forEach((v) => {
-          this.addArg(arr, arg, v);
-        });
-      } else {
-        this.addArg(arr, arg, val);
-      }
-    });
-    return arr;
-  },
-  getArgs(argv, prefix) {
-    const keys = Object.keys(argv[prefix] || {});
-    const args = this.addKeys(argv, keys, prefix);
-    return args;
   },
   getFiles(args) {
     return globby.sync(args);
@@ -206,6 +190,35 @@ const utils = {
     });
     process.on('exit', () => {
       proc.kill();
+    });
+  },
+  runChromeHeadless(url) {
+    chromeLauncher.launch({
+      chromeFlags: ['--headless', '--disable-gpu'],
+    }).then((chrome) => {
+      console.log(`Chrome debugging port running on ${chrome.port}`);
+      CDP({ port: chrome.port }, (client) => {
+        const { Runtime, Page } = client;
+        Promise.all([Runtime.enable(), Page.enable()])
+          .then(() => {
+            Runtime.consoleAPICalled((msg) => {
+              if (msg.type === 'log') {
+                const args = msg.args.map(e => e.value);
+                let log = util.format.apply(null, args);
+                log = log.replace('\u2713', 'v');
+                log = log.replace(/[\w-]+\.spec\.js/, '\u001b[0m\u001b[31m$&\u001b[90m');
+                console.log(log);
+              }
+            });
+            return Page.navigate({ url })
+              .then(() => Page.loadEventFired());
+          }).catch(console.error);
+      }).on('error', (err) => {
+        console.error(err);
+      });
+      process.on('exit', () => {
+        chrome.kill();
+      });
     });
   },
 };

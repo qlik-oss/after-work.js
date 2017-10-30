@@ -1,7 +1,7 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0 */
 const extend = require('extend');
 const Promise = require('bluebird');
-const utils = require('./commands-utils');
+const utils = require('../commands-utils');
 const options = require('./options');
 
 const awBlackList = ['require.js', 'mocha.js', 'chai.js', 'sinon.js', 'setup.js'];
@@ -55,8 +55,7 @@ const browser = {
       .then(coverage => new Promise(utils.initRunner.bind(utils, 'requirejs', argv, files, coverage)))
       .then((url) => {
         if (argv.chromeHeadless) {
-          const runChromeHeadless = require('./chrome-runner');
-          runChromeHeadless(url);
+          utils.runChromeHeadless(url);
         } else if (argv.phantomjs) {
           utils.runPhantom(url, argv.singleRun);
         }
