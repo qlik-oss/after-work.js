@@ -54,7 +54,8 @@ const cdp = {
         app.use(instrument(relativeFiles, nyc));
       }
       app.use(serve(process.cwd()));
-      app.listen(argv.httpPort);
+      app.use(...argv.http.root.map(root => serve(path.resolve(process.cwd(), root))));
+      app.listen(argv.http.port);
     }
     const runner = new Runner(argv, nyc);
     runner.on('exit', (code) => {
