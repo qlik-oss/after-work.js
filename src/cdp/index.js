@@ -53,7 +53,6 @@ const cdp = {
       if (argv.coverage) {
         app.use(instrument(relativeFiles, nyc));
       }
-      app.use(serve(process.cwd()));
       app.use(...argv.http.root.map(root => serve(path.resolve(process.cwd(), root))));
       app.listen(argv.http.port);
     }
