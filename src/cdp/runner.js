@@ -27,7 +27,7 @@ class Runner {
       this.client.Runtime.evaluate({ expression });
     });
     this.mediator.on('started', (tests) => {
-      this.started = true;
+      this.nyc.reset();
       console.log('Runner started\n');
 
       if (tests === 0) {
@@ -81,10 +81,7 @@ class Runner {
       this.nyc.writeCoverageFile();
       this.nyc.report();
     }
-    // this.closed = true;
-    // if (this.client) {
     await this.client.close();
-    // }
     await this.chrome.kill();
     this.mediator.emit('exit', code);
   }
@@ -109,7 +106,6 @@ class Runner {
       console.error('Resource Failed to Load:', msg);
       this.mediator.emit('resourceFailed', msg);
     });
-    // network(this.bus, log, Network, this.options.ignoreResourceErrors);
   }
   async navigate() {
     if (this.loadError) {

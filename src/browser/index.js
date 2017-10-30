@@ -1,7 +1,7 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0 */
 const extend = require('extend');
 const Promise = require('bluebird');
-const utils = require('../commands-utils');
+const utils = require('./commands-utils');
 const options = require('./options');
 
 const awBlackList = ['require.js', 'mocha.js', 'chai.js', 'sinon.js', 'setup.js'];
