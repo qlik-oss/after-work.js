@@ -29,12 +29,12 @@ module.exports = async function connect(options, files) {
     mochaOptions.timeout = 0;
   }
   const injectMochaOptions = `window.mochaOptions = ${JSON.stringify(mochaOptions)}`;
-  const awFiles = `window.awFiles = ${JSON.stringify(files)}`;
+  const injectAwFiles = `window.awFiles = ${JSON.stringify(files)}`;
 
   await Promise.all([DOM.enable(), DOMStorage.enable(), Network.enable(), Page.enable(), Runtime.enable(), Console.enable()]);
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMediator });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMochaOptions });
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: awFiles });
+  await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwFiles });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: getContent('browser-shim.js') });
 
   return client;

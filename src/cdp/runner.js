@@ -117,7 +117,6 @@ class Runner {
   }
   async run(files) {
     await this.setup(files);
-
     await this.navigate();
   }
 }
