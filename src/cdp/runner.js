@@ -52,9 +52,6 @@ class Runner {
     console.error(msg);
     this.exit(1);
   }
-  injectFiles(files) {
-    return this.client.Page.addScriptToEvaluateOnLoad({ scriptSource: `window.awFiles = ${JSON.stringify(files)}` });
-  }
   async extractCoverage() {
     const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__;', returnByValue: true });
     return value;
@@ -82,17 +79,21 @@ class Runner {
       this.nyc.report();
     }
     await this.client.close();
-    await this.chrome.kill();
+    if (!this.options.debug) {
+      await this.chrome.kill();
+    }
     this.mediator.emit('exit', code);
   }
   launch(options) {
     return this.chromeLauncher.launch(options);
   }
-  async setup() {
-    this.chrome = await this.launch(this.options.chrome);
-    const { port } = this.chrome;
-    const options = { client: { port }, mocha: this.options.mocha };
-    this.client = await connect(options);
+  async setup(files) {
+    if (!this.options.debug) {
+      this.chrome = await this.launch(this.options.chrome);
+      const { port } = this.chrome;
+      this.options.client.port = port;
+    }
+    this.client = await connect(this.options, files);
     if (!this.client) {
       this.fail('CDP Client could not connect');
       return;
@@ -115,8 +116,8 @@ class Runner {
     await this.client.Page.navigate({ url: this.options.url });
   }
   async run(files) {
-    await this.setup();
-    await this.injectFiles(files);
+    await this.setup(files);
+
     await this.navigate();
   }
 }

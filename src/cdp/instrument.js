@@ -7,7 +7,7 @@ module.exports = function instrument(files, nyc) {
   return async (ctx, next) => {
     await next();
     const { request, response } = ctx;
-    const url = request.url.substring(1);
+    const { url } = request;
 
     if (nyc.exclude.shouldInstrument(url)) {
       const filePath = path.relative(process.cwd(), url);

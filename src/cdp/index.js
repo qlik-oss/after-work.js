@@ -4,13 +4,8 @@ const fs = require('fs');
 const globby = require('globby');
 const options = require('./options');
 const Runner = require('./runner');
-const Koa = require('koa');
-const serve = require('koa-static');
-const favicon = require('koa-favicon');
-const instrument = require('./instrument');
+const server = require('./server');
 const NYC = require('nyc');
-
-const app = new Koa();
 
 process.on('unhandledRejection', (err) => {
   console.error(`Promise Rejection:${err}`);
@@ -48,19 +43,11 @@ const cdp = {
     argv.url = cdp.getUrl(argv.url);
     const nyc = new NYC(argv.nyc);
 
-    if (/^(http(s?)):\/\//.test(argv.url)) {
-      app.use(favicon(path.resolve(__dirname, '../../aw.png')));
-      if (argv.coverage) {
-        app.use(instrument(relativeFiles, nyc));
-      }
-      app.use(...argv.http.root.map(root => serve(path.resolve(process.cwd(), root))));
-      app.listen(argv.http.port);
-    }
+    server(argv.url, relativeFiles, argv.coverage, nyc, argv.http);
+
     const runner = new Runner(argv, nyc);
-    runner.on('exit', (code) => {
-      process.exitCode = code;
-      process.exit(code);
-    });
+    runner.on('exit', code => process.exit(code));
+
     (async function run() {
       await runner.run(relativeFiles);
     }());
