@@ -8,7 +8,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 yargs
   .usage('aw <command>')
   .command(require('./node'))
-  .command(require('./browser'))
   .command(require('./webdriver'))
   .command(require('./cdp'))
   .argv;
