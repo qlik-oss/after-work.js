@@ -14,6 +14,11 @@ module.exports = {
     default: ['test/**/*.spec.js'],
     type: 'array',
   },
+  'client.port': {
+    description: 'Chrome port',
+    default: 9222,
+    type: 'number',
+  },
   'chrome.port': {
     description: 'Chrome port',
     default: 9222,
@@ -21,7 +26,6 @@ module.exports = {
   },
   'chrome.chromeFlags': {
     description: 'Chrome flags',
-    // default: [],
     default: ['--headless', '--disable-gpu', '--allow-file-access-from-files'],
     type: 'array',
   },
