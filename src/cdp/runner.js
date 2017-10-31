@@ -49,10 +49,6 @@ class Runner {
     console.error(msg);
     this.exit(1);
   }
-  async extractCoverage() {
-    const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__;', returnByValue: true });
-    return value;
-  }
   pipeOut(Runtime) {
     Runtime.exceptionThrown((exception) => {
       console.error('[chrome-exception]', exception);
@@ -68,18 +64,6 @@ class Runner {
       const data = args.map(arg => (arg.type === 'string' ? arg.value : unmirror(arg)));
       console[type](...data);
     });
-  }
-  async exit(code) {
-    if (this.options.coverage) {
-      global.__coverage__ = await this.extractCoverage(); // eslint-disable-line
-      this.nyc.writeCoverageFile();
-      this.nyc.report();
-    }
-    await this.client.close();
-    if (!this.options.debug) {
-      await this.chrome.kill();
-    }
-    this.mediator.emit('exit', code);
   }
   pipeError(Network) {
     Network.requestWillBeSent(info => this.requests.set(info.requestId, info.request));
@@ -121,6 +105,22 @@ class Runner {
   async run(files) {
     await this.setup(files);
     await this.navigate();
+  }
+  async extractCoverage() {
+    const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__;', returnByValue: true });
+    return value;
+  }
+  async exit(code) {
+    if (this.options.coverage) {
+      global.__coverage__ = await this.extractCoverage(); // eslint-disable-line
+      this.nyc.writeCoverageFile();
+      this.nyc.report();
+    }
+    await this.client.close();
+    if (!this.options.debug) {
+      await this.chrome.kill();
+    }
+    this.mediator.emit('exit', code);
   }
 }
 
