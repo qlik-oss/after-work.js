@@ -12,6 +12,7 @@ class Runner {
     this.chromeLauncher = chromeLauncher;
     this.ended = false;
     this.loadError = false;
+    this.requests = new Map();
     this.bind();
   }
   bind() {
@@ -39,10 +40,6 @@ class Runner {
       console.log('Runner ended\n');
       this.ended = true;
       await this.exit(stats.failures);
-    });
-
-    this.mediator.on('resourceFailed', () => {
-      this.loadError = true;
     });
   }
   on(event, callback) {
@@ -84,6 +81,17 @@ class Runner {
     }
     this.mediator.emit('exit', code);
   }
+  pipeError(Network) {
+    Network.requestWillBeSent(info => this.requests.set(info.requestId, info.request));
+    Network.loadingFailed((info) => {
+      const { errorText } = info;
+      const { url, method } = this.requests.get(info.requestId);
+      const msg = JSON.stringify({ url, method, errorText });
+      console.error('Resource Failed to Load:', msg);
+      this.mediator.emit('resourceFailed', msg);
+      this.loadError = true;
+    });
+  }
   launch(options) {
     return this.chromeLauncher.launch(options);
   }
@@ -101,12 +109,7 @@ class Runner {
     const { DOMStorage, Runtime, Network } = this.client;
     this.mediator.bind(DOMStorage);
     this.pipeOut(Runtime);
-
-    Network.loadingFailed((info) => {
-      const msg = JSON.stringify(info);
-      console.error('Resource Failed to Load:', msg);
-      this.mediator.emit('resourceFailed', msg);
-    });
+    this.pipeError(Network);
   }
   async navigate() {
     if (this.loadError) {

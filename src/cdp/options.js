@@ -26,6 +26,7 @@ module.exports = {
   },
   'chrome.chromeFlags': {
     description: 'Chrome flags',
+    // default: ['--auto-open-devtools-for-tabs'],
     default: ['--headless', '--disable-gpu', '--allow-file-access-from-files'],
     type: 'array',
   },

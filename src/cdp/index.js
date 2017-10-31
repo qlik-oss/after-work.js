@@ -4,7 +4,7 @@ const fs = require('fs');
 const globby = require('globby');
 const options = require('./options');
 const Runner = require('./runner');
-const server = require('./server');
+const createHttpServer = require('./http-server');
 const NYC = require('nyc');
 
 process.on('unhandledRejection', (err) => {
@@ -42,9 +42,9 @@ const cdp = {
     const relativeFiles = files.map(file => path.relative(path.dirname(argv.url), path.resolve(file)));
     argv.url = cdp.getUrl(argv.url);
     const nyc = new NYC(argv.nyc);
-
-    server(argv.url, relativeFiles, argv.coverage, nyc, argv.http);
-
+    if (/^(http(s?)):\/\//.test(argv.url)) {
+      createHttpServer(relativeFiles, argv.coverage, nyc, argv.http);
+    }
     const runner = new Runner(argv, nyc);
     runner.on('exit', code => process.exit(code));
 
