@@ -1,4 +1,4 @@
-/* eslint no-console: 0, max-len: 0 */
+/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0 */
 const path = require('path');
 const fs = require('fs');
 const globby = require('globby');
@@ -6,6 +6,7 @@ const options = require('./options');
 const Runner = require('./runner');
 const createHttpServer = require('./http-server');
 const NYC = require('nyc');
+const findUp = require('find-up');
 
 process.on('unhandledRejection', (err) => {
   console.error(`Promise Rejection:${err}`);
@@ -31,11 +32,21 @@ const cdp = {
     return yargs
       .usage('cdp [options]')
       .options(options)
+      .config('config', (configPath) => {
+        let foundConfigPath = configPath;
+        if (!fs.existsSync(configPath)) {
+          foundConfigPath = findUp.sync(options.config.default);
+        }
+        let config = {};
+        try {
+          config = require(foundConfigPath);
+        } catch (_) {} //eslint-disable-line
+        return config;
+      })
       .coerce('nyc', (opt) => {
         opt.exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.sourceMap = false;
         opt.instrumenter = './lib/instrumenters/noop';
-        // console.log(opt);
         return opt;
       });
   },
