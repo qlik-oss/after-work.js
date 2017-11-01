@@ -94,6 +94,7 @@ class Runner {
     this.mediator.bind(DOMStorage);
     this.pipeOut(Runtime);
     this.pipeError(Network);
+    Network.clearBrowserCache();
   }
   async navigate() {
     if (this.loadError) {
@@ -107,7 +108,7 @@ class Runner {
     await this.navigate();
   }
   async extractCoverage() {
-    const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__;', returnByValue: true });
+    const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'new Function("return this")()["__coverage__"];', returnByValue: true });
     return value;
   }
   async exit(code) {

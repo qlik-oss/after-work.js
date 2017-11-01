@@ -30,18 +30,25 @@ const cdp = {
   builder(yargs) {
     return yargs
       .usage('cdp [options]')
-      .options(options);
+      .options(options)
+      .coerce('nyc', (opt) => {
+        opt.exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
+        opt.sourceMap = false;
+        opt.instrumenter = './lib/instrumenters/noop';
+        // console.log(opt);
+        return opt;
+      });
   },
   handler(argv) {
     const files = globby.sync(argv.glob);
     if (!files.length) {
-      console.log('No files found for:', argv.glob);
+      console.log('No test files found for:', argv.glob);
       process.exit(1);
     }
-
-    const relativeFiles = files.map(file => path.relative(path.dirname(argv.url), path.resolve(file)));
-    argv.url = cdp.getUrl(argv.url);
     const nyc = new NYC(argv.nyc);
+    const relativeFiles = files.map(file => path.relative(path.dirname(argv.url), path.resolve(file)));
+
+    argv.url = cdp.getUrl(argv.url);
     if (/^(http(s?)):\/\//.test(argv.url)) {
       createHttpServer(relativeFiles, argv.coverage, nyc, argv.http);
     }

@@ -11,5 +11,5 @@
 To be able to generate coverage we need to serve the files with a http server and instrument the source files
 
 ```shell
-
+./src/cli.js chrome --url http://localhost:9676/examples/requirejs/index.html --glob examples/requirejs/*.spec.js --coverage
 ```

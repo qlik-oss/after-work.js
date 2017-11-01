@@ -23,6 +23,8 @@
     "/docs"
   ],
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-istanbul": "^4.1.5",
     "bluebird": "3.5.1",
     "browser-sync": "2.18.13",
     "chai": "4.1.1",
@@ -54,7 +56,6 @@
     "yargs": "^10.0.3"
   },
   "devDependencies": {
-    "babel-plugin-istanbul": "^4.1.5",
     "babel-register": "^6.26.0",
     "chrome-remote-debug-protocol": "^1.2.20170721",
     "coveralls": "^3.0.0",

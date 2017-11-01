@@ -1,9 +1,25 @@
-const fs = require('fs');
 const path = require('path');
+const babel = require('babel-core');
+const babelPluginIstanbul = require('babel-plugin-istanbul').default;
+
+function transformFile(filePath) {
+  return (resolve, reject) => {
+    babel.transformFile(filePath, {
+      plugins: [[babelPluginIstanbul, {}]],
+    }, (err, res) => {
+      if (err) {
+        reject(err);
+      }
+      const { code } = res;
+      resolve(code);
+    });
+  };
+}
+function transform(filePath) {
+  return new Promise(transformFile(filePath));
+}
 
 module.exports = function instrument(files, nyc) {
-  const instrumenter = nyc.instrumenter();
-
   return async (ctx, next) => {
     await next();
     const { request, response } = ctx;
@@ -12,8 +28,7 @@ module.exports = function instrument(files, nyc) {
 
     if (nyc.exclude.shouldInstrument(url)) {
       const filePath = path.relative(process.cwd(), url);
-      const file = fs.readFileSync(filePath, 'utf-8');
-      response.body = instrumenter.instrumentSync(file, filePath);
+      response.body = await transform(filePath);
     }
   };
 };
