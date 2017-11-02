@@ -19,6 +19,11 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  launch: {
+    description: 'Launch Chrome?',
+    default: true,
+    type: 'boolean',
+  },
   'mocha.ui': {
     description: 'Test interface',
     default: 'bdd',

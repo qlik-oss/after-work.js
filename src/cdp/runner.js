@@ -80,7 +80,7 @@ class Runner {
     return this.chromeLauncher.launch(options);
   }
   async setup(files) {
-    if (!this.options.debug) {
+    if (this.options.launch) {
       this.chrome = await this.launch(this.options.chrome);
       const { port } = this.chrome;
       this.options.client.port = port;
@@ -118,7 +118,7 @@ class Runner {
       this.nyc.report();
     }
     await this.client.close();
-    if (!this.options.debug) {
+    if (this.options.launch) {
       await this.chrome.kill();
     }
     this.mediator.emit('exit', code);
