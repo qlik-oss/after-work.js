@@ -19,11 +19,6 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
-  launch: {
-    description: 'Launch Chrome?',
-    default: true,
-    type: 'boolean',
-  },
   'mocha.ui': {
     description: 'Test interface',
     default: 'bdd',
@@ -49,6 +44,16 @@ module.exports = {
     default: 9222,
     type: 'number',
   },
+  'chrome.launch': {
+    description: 'Launch Chrome?',
+    default: true,
+    type: 'boolean',
+  },
+  'chrome.devtools': {
+    description: 'Open Chrome with dev tools?',
+    default: false,
+    type: 'boolean',
+  },
   'chrome.port': {
     description: 'Chrome port',
     default: 9222,
@@ -56,7 +61,6 @@ module.exports = {
   },
   'chrome.chromeFlags': {
     description: 'Chrome flags',
-    // default: ['--auto-open-devtools-for-tabs'],
     default: ['--headless', '--disable-gpu', '--allow-file-access-from-files'],
     type: 'array',
   },

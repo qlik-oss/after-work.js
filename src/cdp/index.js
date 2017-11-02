@@ -49,6 +49,13 @@ const cdp = {
         opt.sourceMap = false;
         opt.instrumenter = './lib/instrumenters/noop';
         return opt;
+      })
+      .coerce('chrome', (opt) => {
+        if (opt.devtools) {
+          opt.chromeFlags = ['--auto-open-devtools-for-tabs'];
+          opt.launch = true;
+        }
+        return opt;
       });
   },
   handler(argv) {
@@ -66,7 +73,7 @@ const cdp = {
     }
     const exv = process.execArgv.join();
     const debug = exv.includes('inspect') || exv.includes('debug');
-    if (debug) {
+    if (debug || argv.chrome.devtools) {
       argv.mocha.timeout = 0;
     }
 
