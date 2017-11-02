@@ -2,7 +2,6 @@
 const path = require('path');
 const fs = require('fs');
 const globby = require('globby');
-const findUp = require('find-up');
 const options = require('./options');
 const Mocha = require('mocha');
 
@@ -31,14 +30,16 @@ const puppet = {
       .usage('puppeteer [options]')
       .options(options)
       .config('config', (configPath) => {
-        let foundConfigPath = configPath;
         if (!fs.existsSync(configPath)) {
-          foundConfigPath = findUp.sync(options.config.default);
+          return {};
         }
         let config = {};
-        try {
-          config = require(foundConfigPath);
-        } catch (_) { } //eslint-disable-line
+        const foundConfig = require(configPath);
+        if (typeof foundConfig === 'function') {
+          config = Object.assign({}, foundConfig());
+        } else {
+          config = Object.assign({}, foundConfig);
+        }
         return config;
       });
   },

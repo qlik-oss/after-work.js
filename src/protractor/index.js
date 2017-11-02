@@ -2,7 +2,6 @@
 const path = require('path');
 const globby = require('globby');
 const initConfig = require('./config');
-const findUp = require('find-up');
 const extend = require('extend');
 const fs = require('fs');
 const options = require('./options');
@@ -11,22 +10,17 @@ const protractor = {
   command: 'protractor',
   desc: 'Run protractor',
   getConfig(configPath) {
-    let foundConfigPath = configPath;
+    const baseConfig = initConfig();
     if (!fs.existsSync(configPath)) {
-      foundConfigPath = findUp.sync(options.config.default);
+      return baseConfig;
     }
     let config = {};
-    const baseConfig = initConfig();
-    try {
-      const p = path.resolve(process.cwd(), foundConfigPath);
-      const foundConfig = require(p);
-      if (typeof foundConfig === 'function') {
-        config = extend(true, baseConfig, foundConfig(baseConfig));
-      } else {
-        config = extend(true, baseConfig, foundConfig);
-      }
-    } catch (_) {
-      console.log('Using default config');
+    const p = path.resolve(process.cwd(), configPath);
+    const foundConfig = require(p);
+    if (typeof foundConfig === 'function') {
+      config = extend(true, baseConfig, foundConfig(baseConfig));
+    } else {
+      config = extend(true, baseConfig, foundConfig);
     }
     return config;
   },

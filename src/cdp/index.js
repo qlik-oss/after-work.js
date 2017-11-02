@@ -6,7 +6,6 @@ const options = require('./options');
 const Runner = require('./runner');
 const createHttpServer = require('./http-server');
 const NYC = require('nyc');
-const findUp = require('find-up');
 
 process.on('unhandledRejection', (err) => {
   console.error(`Promise Rejection:${err}`);
@@ -33,14 +32,16 @@ const cdp = {
       .usage('cdp [options]')
       .options(options)
       .config('config', (configPath) => {
-        let foundConfigPath = configPath;
         if (!fs.existsSync(configPath)) {
-          foundConfigPath = findUp.sync(options.config.default);
+          return {};
         }
         let config = {};
-        try {
-          config = require(foundConfigPath);
-        } catch (_) {} //eslint-disable-line
+        const foundConfig = require(configPath);
+        if (typeof foundConfig === 'function') {
+          config = Object.assign({}, foundConfig());
+        } else {
+          config = Object.assign({}, foundConfig);
+        }
         return config;
       })
       .coerce('nyc', (opt) => {

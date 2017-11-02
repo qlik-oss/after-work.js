@@ -1,10 +1,8 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0 */
-const extend = require('extend');
 const globby = require('globby');
 const Mocha = require('mocha');
 const chokidar = require('chokidar');
 const NYC = require('nyc');
-const findUp = require('find-up');
 const fs = require('fs');
 const path = require('path');
 const options = require('./options');
@@ -46,20 +44,15 @@ const node = {
       .usage('node [options]')
       .options(options)
       .config('config', (configPath) => {
-        let foundConfigPath = configPath;
         if (!fs.existsSync(configPath)) {
-          foundConfigPath = findUp.sync(options.config.default);
+          return {};
         }
         let config = {};
-        try {
-          const foundConfig = require(foundConfigPath);
-          if (typeof foundConfig === 'function') {
-            config = extend(true, {}, foundConfig());
-          } else {
-            config = extend(true, {}, foundConfig);
-          }
-        } catch (_) {
-          console.log('Using default config');
+        const foundConfig = require(configPath);
+        if (typeof foundConfig === 'function') {
+          config = Object.assign({}, foundConfig());
+        } else {
+          config = Object.assign({}, foundConfig);
         }
         return config;
       })
