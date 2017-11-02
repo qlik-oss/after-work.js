@@ -7,9 +7,9 @@ const extend = require('extend');
 const fs = require('fs');
 const options = require('./options');
 
-const webdriver = {
-  command: 'webdriver',
-  desc: 'Run webdriver',
+const protractor = {
+  command: 'protractor',
+  desc: 'Run protractor',
   getConfig(configPath) {
     let foundConfigPath = configPath;
     if (!fs.existsSync(configPath)) {
@@ -32,7 +32,6 @@ const webdriver = {
   },
   builder(yargs) {
     return yargs
-      .usage('webdriver')
       .options(options)
       .argv;
   },
@@ -51,7 +50,7 @@ const webdriver = {
         process.exit(0);
       }
     }
-    const config = webdriver.getConfig(argv.config);
+    const config = protractor.getConfig(argv.config);
     argv.require.map(require);
     if (argv.glob.length) {
       config.specs = argv.glob;
@@ -66,4 +65,4 @@ const webdriver = {
   },
 };
 
-module.exports = webdriver;
+module.exports = protractor;
