@@ -64,6 +64,12 @@ const cdp = {
     if (/^(http(s?)):\/\//.test(argv.url)) {
       createHttpServer(relativeFiles, argv.coverage, nyc, argv.http);
     }
+    const exv = process.execArgv.join();
+    const debug = exv.includes('inspect') || exv.includes('debug');
+    if (debug) {
+      argv.mocha.timeout = 0;
+    }
+
     const runner = new Runner(argv, nyc);
     runner.on('exit', code => process.exit(code));
 

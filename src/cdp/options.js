@@ -14,6 +14,31 @@ module.exports = {
     default: ['test/**/*.spec.js'],
     type: 'array',
   },
+  coverage: {
+    description: 'Generate coverage?',
+    default: false,
+    type: 'boolean',
+  },
+  'mocha.ui': {
+    description: 'Test interface',
+    default: 'bdd',
+    type: 'string',
+  },
+  'mocha.timeout': {
+    description: 'Timeout',
+    default: 2000,
+    type: 'number',
+  },
+  'mocha.useColors': {
+    description: 'Use colors',
+    default: true,
+    type: 'boolean',
+  },
+  'mocha.reporter': {
+    description: 'Reporter',
+    default: 'min',
+    type: 'string',
+  },
   'client.port': {
     description: 'Chrome port',
     default: 9222,
@@ -39,11 +64,6 @@ module.exports = {
     description: 'Root folders to serve',
     default: ['./'],
     type: 'array',
-  },
-  coverage: {
-    description: 'Generate coverage?',
-    default: false,
-    type: 'boolean',
   },
   'nyc.require': {
     description: 'Require path',
