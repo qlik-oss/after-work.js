@@ -63,7 +63,6 @@ const puppet = {
       process.exit(1);
     }
     (async function launchAndRun() {
-      console.log(argv.chrome);
       const browser = await puppeteer.launch(argv.chrome);
       global.browser = browser;
       global.page = await browser.newPage();
