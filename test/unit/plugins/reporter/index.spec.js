@@ -2,8 +2,8 @@ const Promise = require('bluebird');
 const fs = require('fs');
 const mocha = require('mocha');
 const mkdirp = require('mkdirp');
-const uiReport = require('../../../../src/plugins/reporter/index');
-const utils = require('../../../../src/plugins/reporter/utils');
+const uiReport = require('../../../../src/protractor/plugins/reporter/index');
+const utils = require('../../../../src/protractor/plugins/reporter/utils');
 
 describe('Reporter index', () => {
   let sandbox;
