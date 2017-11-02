@@ -47,7 +47,7 @@ const protractor = {
         launcher = require(p);
       } catch (__) {
         console.log('Protractor could not be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json');
-        process.exit(0);
+        process.exit(1);
       }
     }
     const config = protractor.getConfig(argv.config);
@@ -58,7 +58,7 @@ const protractor = {
     const files = globby.sync(config.specs);
     if (!files.length) {
       console.log('No files found for:', config.specs);
-      process.exit(0);
+      process.exit(1);
     }
 
     launcher.init('', config);
