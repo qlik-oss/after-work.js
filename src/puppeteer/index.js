@@ -63,10 +63,12 @@ const puppet = {
       process.exit(1);
     }
     (async function launchAndRun() {
+      console.log(argv.chrome);
       const browser = await puppeteer.launch(argv.chrome);
       global.browser = browser;
       global.page = await browser.newPage();
       const failures = await run(files, argv.mocha);
+      await browser.close();
       process.exit(failures);
     }());
   },

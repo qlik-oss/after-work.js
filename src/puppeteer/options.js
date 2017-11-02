@@ -16,7 +16,12 @@ module.exports = {
   },
   'chrome.headless': {
     description: 'Run chrome headless',
-    default: false,
+    default: true,
     type: 'boolean',
+  },
+  'chrome.args': {
+    description: 'Chrome flags',
+    default: [],
+    type: 'array',
   },
 };
