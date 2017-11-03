@@ -1,6 +1,7 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0 */
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const globby = require('globby');
 const options = require('./options');
 const Runner = require('./runner');
@@ -54,6 +55,10 @@ const cdp = {
         if (opt.devtools) {
           opt.chromeFlags = ['--auto-open-devtools-for-tabs'];
           opt.launch = true;
+        }
+        if (!opt.chromeFlags.includes('--user-data-dir')) {
+          const userDataDir = path.resolve(os.tmpdir(), 'aw-test-profile');
+          opt.chromeFlags.push(`--user-data-dir=${userDataDir}`);
         }
         return opt;
       });
