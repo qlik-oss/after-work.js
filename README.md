@@ -20,13 +20,10 @@ Or you can go directly to the different test levels:
 
 after-work.js is designed to be used as a dependency while developing your code. Just add it as a `devDependencies` to your `package.json`:
 
-```js
-"devDependencies": {
-  "after-work.js": "^3.1.0"
-}
-```
 
-You can also accomplish this by running `npm install --save-dev after-work.js`
+```sh
+npm install --save-dev after-work.js
+```
 
 ## Contributing
 

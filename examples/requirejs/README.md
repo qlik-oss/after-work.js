@@ -6,6 +6,8 @@
 ./src/cli.js chrome --url examples/requirejs/index.html --glob examples/requirejs/*.spec.js
 ```
 
+![](./requirejs.gif)
+
 ## Generating coverage
 
 To be able to generate coverage we need to serve the files with a http server and instrument the source files
@@ -13,3 +15,5 @@ To be able to generate coverage we need to serve the files with a http server an
 ```shell
 ./src/cli.js chrome --url http://localhost:9676/examples/requirejs/index.html --glob examples/requirejs/*.spec.js --coverage
 ```
+
+![](./requirejs-coverage.gif)
