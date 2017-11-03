@@ -2,6 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const rimraf = require('rimraf');
 const globby = require('globby');
 const options = require('./options');
 const Runner = require('./runner');
@@ -11,6 +12,22 @@ const NYC = require('nyc');
 process.on('unhandledRejection', (err) => {
   console.error(`Promise Rejection:${err}`);
 });
+
+function remove(f) {
+  return (resolve, reject) => {
+    rimraf(f, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  };
+}
+
+function remover(f) {
+  return new Promise(remove(f));
+}
 
 const cdp = {
   getUrl(url) {
@@ -57,8 +74,8 @@ const cdp = {
           opt.launch = true;
         }
         if (!opt.chromeFlags.includes('--user-data-dir')) {
-          const userDataDir = path.resolve(os.tmpdir(), 'aw-test-profile');
-          opt.chromeFlags.push(`--user-data-dir=${userDataDir}`);
+          opt.__userDataDir__ = path.resolve(os.tmpdir(), 'aw-test-profile');
+          opt.chromeFlags.push(`--user-data-dir=${opt.__userDataDir__}`);
         }
         return opt;
       });
@@ -87,6 +104,7 @@ const cdp = {
 
     (async function run() {
       await runner.run(relativeFiles);
+      await remover(argv.chrome.__userDataDir__);
     }());
   },
 };
