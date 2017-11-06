@@ -9,7 +9,7 @@
     "lint:fix": "eslint src test --fix",
     "test": "./src/cli.js",
     "test:coverage": "./src/cli.js --coverage --single-run",
-    "test:coveralls": "./src/cli.js --coverage --single-run && cat coverage/lcov.info | coveralls"
+    "test:coveralls": "npm run test:coverage && cat coverage/lcov.info | coveralls"
   },
   "bin": {
     "aw": "./src/cli.js"
