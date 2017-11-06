@@ -1,4 +1,4 @@
-/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0 */
+/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, no-underscore-dangle: 0 */
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
