@@ -41,7 +41,7 @@ module.exports = {
   },
   'nyc.sourceMap': {
     description: 'Should nyc detect and handle source maps?',
-    default: true,
+    default: false,
     type: 'boolean',
   },
   'nyc.babel': {
@@ -56,10 +56,10 @@ module.exports = {
   },
   'nyc.reporter': {
     description: 'Coverage reporter(s) to use',
-    default: ['text', 'lcov', 'text-summary'],
+    default: ['ßlcov', 'text-summary'],
     type: 'array',
   },
-  'nyc.reporterDir': {
+  'nyc.reportDir': {
     description: 'Directory to output coverage reports in',
     default: 'coverage',
     type: 'string',
