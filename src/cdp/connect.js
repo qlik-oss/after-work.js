@@ -29,7 +29,6 @@ module.exports = async function connect(options, files) {
   const injectAwDevtools = `window.awDevtools = ${JSON.stringify(options.chrome.devtools)}`;
 
   await Promise.all([DOM.enable(), DOMStorage.enable(), Network.enable(), Page.enable(), Runtime.enable(), Console.enable()]);
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: getContent(path.resolve(__dirname, '../../node_modules/mocha/mocha.js')) });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMediator });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMochaOptions });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwFiles });

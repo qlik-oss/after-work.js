@@ -28,7 +28,9 @@ class Runner {
       this.client.Runtime.evaluate({ expression });
     });
     this.mediator.on('started', (tests) => {
-      this.nyc.reset();
+      if (this.options.coverage) {
+        this.nyc.reset();
+      }
       console.log('Runner started\n');
 
       if (tests === 0) {
@@ -101,6 +103,7 @@ class Runner {
       this.fail(`Failed to load the url:${this.options.url}`);
       return;
     }
+    console.log(`Navigating to ${this.options.url}`);
     await this.client.Page.navigate({ url: this.options.url });
   }
   async run(files) {

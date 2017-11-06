@@ -7,9 +7,9 @@ const fs = require('fs');
 const path = require('path');
 const options = require('./options');
 
-function runTests(files, { coverage, nycOpts, mochaOpts }) {
-  const n = new NYC(nycOpts);
-  const m = new Mocha(mochaOpts);
+function runTests(files, { coverage, nyc, mocha }) {
+  const n = new NYC(nyc);
+  const m = new Mocha(mocha);
   files.forEach((f) => {
     Object.keys(require.cache).forEach((key) => {
       if (key.indexOf(f) !== -1) {

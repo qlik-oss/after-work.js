@@ -1,33 +1,16 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, no-underscore-dangle: 0 */
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
-const rimraf = require('rimraf');
 const globby = require('globby');
 const options = require('./options');
 const Runner = require('./runner');
 const createHttpServer = require('./http-server');
 const NYC = require('nyc');
+const testExclude = require('test-exclude');
 
 process.on('unhandledRejection', (err) => {
   console.error(`Promise Rejection:${err}`);
 });
-
-function remove(f) {
-  return (resolve, reject) => {
-    rimraf(f, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  };
-}
-
-function remover(f) {
-  return new Promise(remove(f));
-}
 
 const cdp = {
   getUrl(url) {
@@ -63,19 +46,18 @@ const cdp = {
         return config;
       })
       .coerce('nyc', (opt) => {
-        opt.exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.sourceMap = false;
         opt.instrumenter = './lib/instrumenters/noop';
+        return opt;
+      })
+      .coerce('instrument', (opt) => {
+        opt.testExclude = testExclude(opt);
         return opt;
       })
       .coerce('chrome', (opt) => {
         if (opt.devtools) {
           opt.chromeFlags = ['--auto-open-devtools-for-tabs'];
           opt.launch = true;
-        }
-        if (!opt.chromeFlags.includes('--user-data-dir')) {
-          opt.__userDataDir__ = path.resolve(os.tmpdir(), 'aw-test-profile');
-          opt.chromeFlags.push(`--user-data-dir=${opt.__userDataDir__}`);
         }
         return opt;
       });
@@ -91,7 +73,7 @@ const cdp = {
 
     argv.url = cdp.getUrl(argv.url);
     if (/^(http(s?)):\/\//.test(argv.url)) {
-      createHttpServer(relativeFiles, argv.coverage, nyc, argv.http);
+      createHttpServer(relativeFiles, argv.instrument.testExclude, argv.coverage, argv.http);
     }
     const exv = process.execArgv.join();
     const debug = exv.includes('inspect') || exv.includes('debug');
@@ -104,7 +86,6 @@ const cdp = {
 
     (async function run() {
       await runner.run(relativeFiles);
-      await remover(argv.chrome.__userDataDir__);
     }());
   },
 };

@@ -56,7 +56,7 @@ module.exports = {
   },
   'nyc.reporter': {
     description: 'Coverage reporter(s) to use',
-    default: ['ßlcov', 'text-summary'],
+    default: ['lcov', 'text-summary'],
     type: 'array',
   },
   'nyc.reportDir': {

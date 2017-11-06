@@ -1,0 +1,16 @@
+{
+  "env": {
+    "test": {
+      "sourceMaps": "inline",
+      "retainLines": true,
+      "presets": [
+        ["env", {
+          "targets": {
+            "browsers": ["last 2 versions", "safari >= 7"]
+          },
+          "modules": "amd"
+        }]
+      ]
+    }
+  }
+}
