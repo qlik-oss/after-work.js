@@ -5,6 +5,11 @@
     },
   });
   requirejs(window.awFiles, () => {
+    if (window.awDevtools) {
+      // We need to wait for Chrome to open the `devtools`
+      setTimeout(() => mocha.run(), 200);
+      return;
+    }
     mocha.run();
   });
 }());
