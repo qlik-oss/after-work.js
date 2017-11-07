@@ -51,7 +51,8 @@ const cdp = {
         return opt;
       })
       .coerce('instrument', (opt) => {
-        opt.testExclude = testExclude(opt);
+        opt.testExclude = testExclude({ include: opt.include, exclude: opt.exclude });
+        opt.coverage.testExclude = testExclude({ include: opt.coverage.include, exclude: opt.coverage.exclude });
         return opt;
       })
       .coerce('chrome', (opt) => {
@@ -68,12 +69,13 @@ const cdp = {
       console.log('No test files found for:', argv.glob);
       process.exit(1);
     }
+
     const nyc = new NYC(argv.nyc);
     const relativeFiles = files.map(file => path.relative(path.dirname(argv.url), path.resolve(file)));
 
     argv.url = cdp.getUrl(argv.url);
     if (/^(http(s?)):\/\//.test(argv.url)) {
-      createHttpServer(relativeFiles, argv.instrument.testExclude, argv.coverage, argv.http);
+      createHttpServer(relativeFiles, argv.instrument.testExclude, argv.coverage, argv.instrument.coverage.testExclude, argv.http);
     }
     const exv = process.execArgv.join();
     const debug = exv.includes('inspect') || exv.includes('debug');

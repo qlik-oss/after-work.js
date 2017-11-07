@@ -127,14 +127,18 @@ class Runner {
     await this.navigate();
   }
   async extractCoverage() {
-    const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'new Function("return this")()["__coverage__"];', returnByValue: true });
+    const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__', returnByValue: true });
     return value;
   }
   async exit(code) {
     if (this.options.coverage) {
+      const coverageStart = process.hrtime();
       global.__coverage__ = await this.extractCoverage(); // eslint-disable-line
       this.nyc.writeCoverageFile();
       this.nyc.report();
+      const coverageEnd = process.hrtime(coverageStart);
+      console.log(`Coverage write time: ${coverageEnd[0]}s ${coverageEnd[1] / 1000000}ms`);
+      console.log('');
     }
     await this.client.close();
     if (this.options.chrome.launch) {
