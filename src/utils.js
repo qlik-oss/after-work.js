@@ -9,8 +9,5 @@ const utils = {
     this.clearLog();
     process.stdout.write(`${msg}`);
   },
-  writeNewLine() {
-    process.stdout.write('\n');
-  },
 };
 module.exports = utils;
