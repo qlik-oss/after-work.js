@@ -53,7 +53,7 @@
     "nyc": "11.3.0",
     "object.assign": "4.0.4",
     "request": "2.83.0",
-    "sinon": "4.1.1",
+    "sinon": "4.1.2",
     "sinon-chai": "2.14.0",
     "systemjs": "0.20.19",
     "util": "0.10.3",
