@@ -3,6 +3,7 @@ const chromeLauncher = require('chrome-launcher');
 const unmirror = require('chrome-unmirror');
 const Mediator = require('./mediator');
 const connect = require('./connect');
+const utils = require('../utils');
 
 class Runner {
   constructor(options = { chrome: { chromeFlags: [] }, client: {} }, nyc) {
@@ -14,6 +15,8 @@ class Runner {
     this.loadError = false;
     this.requests = new Map();
     this.bind();
+    this.loadingStart = null;
+    this.started = false;
   }
   bind() {
     if (!this.options.url) {
@@ -28,9 +31,14 @@ class Runner {
       this.client.Runtime.evaluate({ expression });
     });
     this.mediator.on('started', (tests) => {
+      this.started = true;
       if (this.options.coverage) {
         this.nyc.reset();
       }
+      const loadingEnd = process.hrtime(this.loadingStart);
+      utils.clearLog();
+      console.log(`Loading time: ${loadingEnd[0]}s ${loadingEnd[1] / 1000000}ms`);
+      console.log('');
       console.log('Runner started\n');
 
       if (tests === 0) {
@@ -67,8 +75,16 @@ class Runner {
       console[type](...data);
     });
   }
-  pipeError(Network) {
-    Network.requestWillBeSent(info => this.requests.set(info.requestId, info.request));
+  pipeNetwork(Network) {
+    Network.requestWillBeSent((info) => {
+      if (this.requests.size === 0) {
+        this.loadingStart = process.hrtime();
+      }
+      this.requests.set(info.requestId, info.request);
+      if (!this.started && info.request.url.match(/^(file|http(s?)):\/\//)) {
+        utils.writeLog(info.request.url);
+      }
+    });
     Network.loadingFailed((info) => {
       const { errorText } = info;
       const { url, method } = this.requests.get(info.requestId);
@@ -95,12 +111,12 @@ class Runner {
     const { DOMStorage, Runtime, Network } = this.client;
     this.mediator.bind(DOMStorage);
     this.pipeOut(Runtime);
-    this.pipeError(Network);
+    this.pipeNetwork(Network);
     Network.clearBrowserCache();
   }
   async navigate() {
     if (this.loadError) {
-      this.fail(`Failed to load the url:${this.options.url}`);
+      this.fail(`Failed to load the url: ${this.options.url}`);
       return;
     }
     console.log(`Navigating to ${this.options.url}`);
