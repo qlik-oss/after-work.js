@@ -30,7 +30,9 @@ function transform(filePath, coverage) {
 }
 
 module.exports = function instrument(files, exclude, coverage, coverageExclude) {
-  const shouldInstrument = url => (coverage ? coverageExclude.shouldInstrument(url) : exclude.shouldInstrument(url));
+  const shouldInstrument = url => (coverage ?
+    coverageExclude.shouldInstrument(url) :
+    exclude.shouldInstrument(url));
 
   return async (ctx, next) => {
     await next();
