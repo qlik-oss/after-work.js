@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
-const Promise = require('bluebird');
 const jimp = require('jimp');
 const utils = require('../../../../src/protractor/plugins/screenshoter/utils');
 

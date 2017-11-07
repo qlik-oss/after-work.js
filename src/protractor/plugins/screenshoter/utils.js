@@ -1,7 +1,6 @@
 /* globals document, Element, window */
 const path = require('path');
 const fs = require('fs');
-const Promise = require('bluebird');
 const jimp = require('jimp');
 const util = require('util');
 const mkdirp = require('mkdirp');

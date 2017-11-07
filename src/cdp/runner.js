@@ -1,9 +1,20 @@
 /* eslint no-console: 0, class-methods-use-this: 0 */
 const chromeLauncher = require('chrome-launcher');
 const unmirror = require('chrome-unmirror');
+const readline = require('readline');
 const Mediator = require('./mediator');
 const connect = require('./connect');
-const utils = require('../utils');
+
+const utils = {
+  clearLine() {
+    readline.clearLine(process.stdout, 0);
+    readline.cursorTo(process.stdout, 0, null);
+  },
+  writeLine(msg) {
+    this.clearLine();
+    process.stdout.write(`${msg}`);
+  },
+};
 
 class Runner {
   constructor(options = { chrome: { chromeFlags: [] }, client: {} }, nyc) {
@@ -36,7 +47,7 @@ class Runner {
         this.nyc.reset();
       }
       const loadingEnd = process.hrtime(this.loadingStart);
-      utils.clearLog();
+      utils.clearLine();
       console.log(`Loading time: ${loadingEnd[0]}s ${loadingEnd[1] / 1000000}ms`);
       console.log('');
       console.log('Runner started\n');
@@ -82,7 +93,7 @@ class Runner {
       }
       this.requests.set(info.requestId, info.request);
       if (!this.started && info.request.url.match(/^(file|http(s?)):\/\//)) {
-        utils.writeLog(info.request.url);
+        utils.writeLine(info.request.url);
       }
     });
     Network.loadingFailed((info) => {

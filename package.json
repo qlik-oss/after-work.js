@@ -23,10 +23,6 @@
     "/docs"
   ],
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-istanbul": "^4.1.5",
-    "bluebird": "3.5.1",
-    "browser-sync": "2.18.13",
     "chai": "4.1.1",
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
@@ -47,21 +43,18 @@
     "mocha": "4.0.1",
     "moment": "2.18.1",
     "nyc": "^11.3.0",
-    "object.assign": "4.0.4",
-    "request": "2.83.0",
     "sinon": "4.0.1",
     "sinon-chai": "2.14.0",
-    "systemjs": "0.20.19",
     "test-exclude": "^4.1.1",
-    "util": "0.10.3",
     "yargs": "^10.0.3"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-istanbul": "^4.1.5",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "chrome-remote-debug-protocol": "^1.2.20170721",
     "coveralls": "^3.0.0",
-    "cross-env": "5.0.5",
     "eslint": "4.8.0",
     "eslint-config-airbnb-base": "12.0.2",
     "eslint-plugin-import": "2.7.0"

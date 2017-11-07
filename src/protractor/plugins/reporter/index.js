@@ -6,8 +6,6 @@
 
  For a more generic reporter checkout the work of Adam Gruber (https://github.com/adamgruber)
  */
-
-const Promise = require('bluebird');
 const mocha = require('mocha');
 const fs = require('fs');
 const path = require('path');

@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const fs = require('fs');
 const mocha = require('mocha');
 const mkdirp = require('mkdirp');
