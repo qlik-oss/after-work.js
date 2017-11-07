@@ -5,7 +5,7 @@
   "author": "QlikTech International AB",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src test",
+    "lint": "eslint src test examples",
     "lint:fix": "eslint src test --fix",
     "test": "./src/cli.js",
     "test:coverage": "./src/cli.js --coverage --single-run",

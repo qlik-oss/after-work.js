@@ -6,4 +6,4 @@ coverage/
 .idea/
 *.log
 .vscode
-examples/requirejs/chrome-profile
+.chrome-profile

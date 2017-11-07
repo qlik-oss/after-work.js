@@ -5,6 +5,7 @@ const { expect } = chai;
 
 describe('es2015 - a', () => {
   it('should return "a"', () => {
+    debugger;
     expect(getA()).to.equal('a');
   });
 });
