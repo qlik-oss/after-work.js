@@ -1,3 +1,4 @@
+/* globals requirejs, window */
 (() => {
   requirejs.config({
     paths: {
