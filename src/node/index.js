@@ -2,7 +2,6 @@
 const globby = require('globby');
 const Mocha = require('mocha');
 const chokidar = require('chokidar');
-const importFresh = require('import-fresh');
 const importCwd = require('import-cwd');
 const NYC = require('nyc');
 const fs = require('fs');
@@ -13,17 +12,19 @@ function runTests(files, srcFiles, { coverage, nyc, mocha }) {
   const n = new NYC(nyc);
   const m = new Mocha(mocha);
   files.forEach((f) => {
-    Object.keys(require.cache).forEach((key) => {
-      if (key.indexOf(f) !== -1) {
-        delete require.cache[key];
-      }
-    });
+    if (require.cache[f]) {
+      delete require.cache[f];
+    }
     m.addFile(f);
   });
   if (coverage) {
     n.reset();
     n.wrap();
-    srcFiles.forEach(f => importFresh(f));
+    srcFiles.forEach((f) => {
+      if (require.cache[f]) {
+        delete require.cache[f];
+      }
+    });
   }
   const runner = m.run((failures) => {
     process.on('exit', () => {
@@ -72,7 +73,7 @@ const node = {
       });
   },
   handler(argv) {
-    const files = globby.sync(argv.glob);
+    const files = globby.sync(argv.glob).map(f => path.resolve(f));
     if (!files.length) {
       console.log('No files found for:', argv.glob);
       process.exit(1);

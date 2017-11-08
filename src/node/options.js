@@ -24,6 +24,7 @@ module.exports = {
     description: 'Watch changes',
     default: false,
     type: 'boolean',
+    alias: 'w',
   },
   coverage: {
     description: 'Generate coverage',
