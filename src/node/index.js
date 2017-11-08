@@ -2,12 +2,14 @@
 const globby = require('globby');
 const Mocha = require('mocha');
 const chokidar = require('chokidar');
+const importFresh = require('import-fresh');
+const importCwd = require('import-cwd');
 const NYC = require('nyc');
 const fs = require('fs');
 const path = require('path');
 const options = require('./options');
 
-function runTests(files, { coverage, nyc, mocha }) {
+function runTests(files, srcFiles, { coverage, nyc, mocha }) {
   const n = new NYC(nyc);
   const m = new Mocha(mocha);
   files.forEach((f) => {
@@ -21,7 +23,7 @@ function runTests(files, { coverage, nyc, mocha }) {
   if (coverage) {
     n.reset();
     n.wrap();
-    n.addAllFiles();
+    srcFiles.forEach(f => importFresh(f));
   }
   const runner = m.run((failures) => {
     process.on('exit', () => {
@@ -34,6 +36,10 @@ function runTests(files, { coverage, nyc, mocha }) {
       n.report();
     }
   });
+  return () => {
+    process.removeAllListeners();
+    runner.removeAllListeners();
+  };
 }
 
 const node = {
@@ -71,14 +77,14 @@ const node = {
       console.log('No files found for:', argv.glob);
       process.exit(1);
     }
-    argv.require.forEach((m) => {
-      require(`${path.resolve(process.cwd())}/node_modules/${m}`);
-    });
-    runTests(files, argv);
+    const srcFiles = globby.sync(argv.src).map(f => path.resolve(f));
+    argv.require.forEach(m => importCwd(m));
+    let removeListeners = runTests(files, srcFiles, argv);
     if (argv.watch) {
       // We need to watch source files also
-      chokidar.watch(files).on('change', () => {
-        runTests(files, argv);
+      chokidar.watch([...files, ...srcFiles]).on('change', () => {
+        removeListeners();
+        removeListeners = runTests(files, srcFiles, argv);
       });
     }
   },

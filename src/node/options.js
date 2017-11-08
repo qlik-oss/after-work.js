@@ -10,6 +10,11 @@ module.exports = {
     default: ['test/**/*.spec.js'],
     type: 'array',
   },
+  src: {
+    description: 'Glob pattern for all source files',
+    default: ['src/**/*.{js, ts}'],
+    type: 'array',
+  },
   require: {
     description: 'Require path',
     default: [],

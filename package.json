@@ -8,7 +8,7 @@
     "lint": "eslint src test examples",
     "lint:fix": "eslint src test --fix",
     "test": "./src/cli.js",
-    "test:coverage": "./src/cli.js --coverage --single-run",
+    "test:coverage": "./src/cli.js -c aw.config.js --coverage",
     "test:coveralls": "npm run test:coverage && cat coverage/lcov.info | coveralls"
   },
   "bin": {
@@ -35,6 +35,8 @@
     "globby": "6.1.0",
     "handlebars": "4.0.10",
     "highlight.js": "9.12.0",
+    "import-cwd": "^2.1.0",
+    "import-fresh": "^2.0.0",
     "jimp": "0.2.28",
     "koa": "^2.3.0",
     "koa-favicon": "^2.0.0",
