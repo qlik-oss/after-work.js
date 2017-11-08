@@ -98,5 +98,5 @@ const utils = {
     });
   },
 };
-debugger;
+
 module.exports = utils;
