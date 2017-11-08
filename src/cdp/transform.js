@@ -25,11 +25,11 @@ function transformFile(filePath, coverage) {
     });
   };
 }
-function transform(filePath, coverage) {
+function transformify(filePath, coverage) {
   return new Promise(transformFile(filePath, coverage));
 }
 
-module.exports = function instrument(files, exclude, coverage, coverageExclude) {
+module.exports = function transform(files, exclude, coverage, coverageExclude) {
   const shouldInstrument = url => (coverage ?
     coverageExclude.shouldInstrument(url) :
     exclude.shouldInstrument(url));
@@ -41,7 +41,7 @@ module.exports = function instrument(files, exclude, coverage, coverageExclude) 
     const url = request.url.substring(1);
     if (shouldInstrument(url)) {
       const filePath = path.relative(process.cwd(), url);
-      response.body = await transform(filePath, coverage);
+      response.body = await transformify(filePath, coverage);
     }
   };
 };

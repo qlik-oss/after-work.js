@@ -3,6 +3,7 @@ module.exports = {
     description: 'Path to config file',
     type: 'string',
     default: 'aw.config.js',
+    alias: 'c',
   },
   url: {
     description: 'Url to html file',

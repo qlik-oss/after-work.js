@@ -3,6 +3,7 @@ module.exports = {
     description: 'Path to config file',
     type: 'string',
     default: 'aw.config.js',
+    alias: 'c',
   },
   glob: {
     description: 'Glob pattern',
