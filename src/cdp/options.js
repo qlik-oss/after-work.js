@@ -20,12 +20,12 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
-  'instrument.include': {
-    description: 'Instrument files with babel?',
+  'transform.include': {
+    description: 'Transform files with babel?',
     default: [],
     type: 'array',
   },
-  'instrument.exclude': {
+  'transform.exclude': {
     description: 'Exclude glob',
     default: [
       '**/coverage/**',
@@ -38,12 +38,12 @@ module.exports = {
     ],
     type: 'array',
   },
-  'instrument.coverage.include': {
+  'instrument.include': {
     description: 'Instrument files with babel?',
     default: [],
     type: 'array',
   },
-  'instrument.coverage.exclude': {
+  'instrument.exclude': {
     description: 'Exclude glob',
     default: [
       '**/coverage/**',

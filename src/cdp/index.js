@@ -52,7 +52,10 @@ const cdp = {
       })
       .coerce('instrument', (opt) => {
         opt.testExclude = testExclude({ include: opt.include, exclude: opt.exclude });
-        opt.coverage.testExclude = testExclude({ include: opt.coverage.include, exclude: opt.coverage.exclude });
+        return opt;
+      })
+      .coerce('transform', (opt) => {
+        opt.testExclude = testExclude({ include: opt.include, exclude: opt.exclude });
         return opt;
       })
       .coerce('chrome', (opt) => {
@@ -75,7 +78,7 @@ const cdp = {
 
     argv.url = cdp.getUrl(argv.url);
     if (/^(http(s?)):\/\//.test(argv.url)) {
-      createHttpServer(relativeFiles, argv.instrument.testExclude, argv.coverage, argv.instrument.coverage.testExclude, argv.http);
+      createHttpServer(relativeFiles, argv.transform.testExclude, argv.coverage, argv.instrument.testExclude, argv.http);
     }
     const exv = process.execArgv.join();
     const debug = exv.includes('inspect') || exv.includes('debug');
