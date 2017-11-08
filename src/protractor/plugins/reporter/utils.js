@@ -10,7 +10,7 @@ Highlight.configure({
   languages: ['javascript'],
 });
 
-module.exports = {
+const utils = {
   getRepoInfo() {
     const packageJSON = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), { encoding: 'utf8' }));
     const repoInfo = {};
@@ -98,3 +98,5 @@ module.exports = {
     });
   },
 };
+debugger;
+module.exports = utils;

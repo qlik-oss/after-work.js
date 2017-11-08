@@ -11,12 +11,6 @@ const options = require('./options');
 function runTests(files, srcFiles, { coverage, nyc, mocha }) {
   const n = new NYC(nyc);
   const m = new Mocha(mocha);
-  files.forEach((f) => {
-    if (require.cache[f]) {
-      delete require.cache[f];
-    }
-    m.addFile(f);
-  });
   if (coverage) {
     n.reset();
     n.wrap();
@@ -26,6 +20,16 @@ function runTests(files, srcFiles, { coverage, nyc, mocha }) {
       }
     });
   }
+  files.forEach((f) => {
+    if (require.cache[f]) {
+      delete require.cache[f];
+    }
+    m.addFile(f);
+  });
+  if (coverage) {
+    srcFiles.forEach(f => require(`${f}`));
+  }
+
   const runner = m.run((failures) => {
     process.on('exit', () => {
       process.exit(failures);

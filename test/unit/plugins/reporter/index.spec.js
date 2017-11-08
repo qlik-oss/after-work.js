@@ -1,7 +1,7 @@
 const fs = require('fs');
 const mocha = require('mocha');
 const mkdirp = require('mkdirp');
-const uiReport = require('../../../../src/protractor/plugins/reporter/index');
+const uiReport = require('../../../../src/protractor/plugins/reporter');
 const utils = require('../../../../src/protractor/plugins/reporter/utils');
 
 describe('Reporter index', () => {
@@ -45,10 +45,7 @@ describe('Reporter index', () => {
           xunit: true,
         },
       };
-    });
-
-    afterEach(() => {
-      delete global.utils;
+      sandbox.stub(utils, 'saveScreenshot').returns(Promise.resolve());
     });
 
     // it('should wait on reporter plugin tear down', () => {
@@ -88,7 +85,6 @@ describe('Reporter index', () => {
       const err = {
         message: sandbox.stub().returns('err.message'),
       };
-      sandbox.stub(utils, 'saveScreenshot').returns(Promise.resolve({}));
 
       const log = sandbox.stub(console, 'log');
       runner.on.withArgs('fail').callsArgWith(1, test, err);
