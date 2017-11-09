@@ -82,6 +82,11 @@ const node = {
       console.log('No files found for:', argv.glob);
       process.exit(1);
     }
+    // We need to remove `babel-register` for coverage since NYC needs to require it for instrumentation
+    if (argv.coverage && argv.nyc.babel && argv.require.includes('babel-register')) {
+      const ix = argv.require.indexOf('babel-register');
+      argv.require.splice(ix, 1);
+    }
     const srcFiles = globby.sync(argv.src).map(f => path.resolve(f));
     argv.require.forEach(m => importCwd(m));
     let removeListeners = runTests(files, srcFiles, argv);
