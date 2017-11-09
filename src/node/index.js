@@ -87,7 +87,7 @@ const node = {
     let removeListeners = runTests(files, srcFiles, argv);
     if (argv.watch) {
       // We need to watch source files also
-      chokidar.watch([...files, ...srcFiles]).on('change', () => {
+      chokidar.watch([...new Set([...files, ...srcFiles])]).on('change', () => {
         removeListeners();
         removeListeners = runTests(files, srcFiles, argv);
       });
