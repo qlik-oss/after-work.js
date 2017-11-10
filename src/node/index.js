@@ -48,11 +48,10 @@ function runTests(files, srcFiles, { coverage, nyc, mocha }) {
 }
 
 const node = {
-  command: ['*', 'node [options]'],
+  command: ['node [options]', '$0'],
   desc: 'Run tests in node',
   builder(yargs) {
     return yargs
-      .usage('node [options]')
       .options(options)
       .config('config', (configPath) => {
         if (!fs.existsSync(configPath)) {

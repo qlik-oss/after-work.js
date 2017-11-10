@@ -11,5 +11,6 @@ yargs
   .command(require('./node'))
   .command(require('./protractor'))
   .command(require('./cdp'))
+  .command(require('./serve'))
   .command(require('./puppeteer'))
   .argv;

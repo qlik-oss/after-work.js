@@ -30,7 +30,6 @@ const cdp = {
   desc: 'Run tests with cdp (chrome devtools protocol)',
   builder(yargs) {
     return yargs
-      .usage('cdp [options]')
       .options(options)
       .config('config', (configPath) => {
         if (!fs.existsSync(configPath)) {

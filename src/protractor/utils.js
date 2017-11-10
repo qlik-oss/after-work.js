@@ -3,9 +3,6 @@ const dns = require('dns');
 const os = require('os');
 const http = require('http');
 const path = require('path');
-const Koa = require('koa');
-const serve = require('koa-static');
-const favicon = require('koa-favicon');
 
 module.exports = {
   getFullQualifiedDNSName() {
@@ -35,12 +32,6 @@ module.exports = {
         resolve(add);
       });
     });
-  },
-  httpServer(options = { root: ['test/fixtures'], port: 9000 }) {
-    const app = new Koa();
-    app.use(favicon(path.resolve(__dirname, '../../aw.png')));
-    app.use(...options.root.map(root => serve(path.resolve(process.cwd(), root))));
-    return app.listen(options.port);
   },
   logSeleniumNodeInfo(config) {
     browser.getSession().then((session) => {

@@ -27,7 +27,6 @@ const puppet = {
   desc: 'Run tests with puppeteer',
   builder(yargs) {
     return yargs
-      .usage('puppeteer [options]')
       .options(options)
       .config('config', (configPath) => {
         if (!fs.existsSync(configPath)) {

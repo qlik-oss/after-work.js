@@ -1,6 +1,7 @@
 /* global browser */
 const path = require('path');
-const { getIPaddress, httpServer, logSeleniumNodeInfo } = require('./utils');
+const { getIPaddress, logSeleniumNodeInfo } = require('./utils');
+const createServer = require('../server');
 
 const reporterPath = path.resolve(__dirname, './plugins/reporter/index.js');
 const screenshoterPath = path.resolve(__dirname, './plugins/screenshoter/index.js');
@@ -228,7 +229,7 @@ module.exports = function initConfig() {
     // You can specify a file containing code to run by setting beforeLaunch to
     // the filename string.
     beforeLaunch() {
-      return httpServer(config.configureHttpServer());
+      return createServer(config.configureHttpServer());
       // return getFullQualifiedDNSName().then( fqdn => {
       //     config.baseUrl = "http://" + fqdn + ":9000";
       //     console.log(config.baseUrl);

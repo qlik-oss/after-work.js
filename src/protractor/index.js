@@ -7,7 +7,7 @@ const fs = require('fs');
 const options = require('./options');
 
 const protractor = {
-  command: 'protractor',
+  command: ['protractor [options]', 'ptor'],
   desc: 'Run protractor',
   getConfig(configPath) {
     const baseConfig = initConfig();
@@ -26,8 +26,7 @@ const protractor = {
   },
   builder(yargs) {
     return yargs
-      .options(options)
-      .argv;
+      .options(options);
   },
   handler(argv) {
     let launcher;
