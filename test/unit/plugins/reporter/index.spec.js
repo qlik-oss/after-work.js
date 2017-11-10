@@ -6,6 +6,11 @@ const utils = require('../../../../src/protractor/plugins/reporter/utils');
 
 describe('Reporter index', () => {
   let sandbox;
+  let browser;
+  const Capabilities = new Map();
+  Capabilities.set('browserName', 'chrome');
+  Capabilities.set('version', '62.0.3202.75');
+  Capabilities.set('platform', 'Linux');
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -17,6 +22,11 @@ describe('Reporter index', () => {
       description: 'description',
       version: 'x.y.z',
     });
+    browser = {
+      getCapabilities: sandbox.stub().returns(Promise.resolve(Capabilities)),
+      artifactsPath: 'artifactsPath',
+      reporterInfo: 'reporterInfo',
+    };
   });
 
   afterEach(() => {
@@ -26,11 +36,6 @@ describe('Reporter index', () => {
   describe('UI reporter', () => {
     let runner;
     let options;
-
-    const browser = {
-      artifactsPath: 'artifactsPath',
-      reporterInfo: 'reporterInfo',
-    };
 
     beforeEach(() => {
       runner = {
@@ -47,11 +52,6 @@ describe('Reporter index', () => {
       };
       sandbox.stub(utils, 'saveScreenshot').returns(Promise.resolve());
     });
-
-    // it('should wait on reporter plugin tear down', () => {
-    //   uiReport.call(uiReport, runner, options);
-    //   expect(options.reporterPlugin.teardown()).to.eventually.equal(true);
-    // });
 
     it('should call pass correctly', () => {
       const test = {
