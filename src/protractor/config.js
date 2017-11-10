@@ -205,14 +205,6 @@ module.exports = function initConfig() {
         }
       });
     },
-    setReporterInfo(browser) {
-      const { reporterInfo } = browser;
-      return browser.getCapabilities().then((cap) => {
-        reporterInfo.browserName = cap.get('browserName').replace(/ /g, '-');
-        reporterInfo.browserVersion = cap.get('version');
-        reporterInfo.platform = cap.get('platform').replace(/ /g, '-').toLowerCase();
-      });
-    },
     setOnPrepareGlobals(browser, aPath) {
       global.EC = protractor.ExpectedConditions; // eslint-disable-line no-undef
       reporterPlugin.getBrowser = () => browser;
@@ -271,7 +263,6 @@ module.exports = function initConfig() {
 
       return config.setBaseUrl(browser)
         .then(config.setViewport(browser, config.viewport))
-        .then(config.setReporterInfo(browser))
         .then(() => { browser.ignoreSynchronization = true; });
     },
 

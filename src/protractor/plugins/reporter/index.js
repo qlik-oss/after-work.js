@@ -21,17 +21,24 @@ function uiReport(runner, options) {
   let passes = 0;
   const browser = options.reporterPlugin.getBrowser();
   const { artifactsPath } = browser;
-  const info = browser.reporterInfo;
   const waitForPromises = [];
+  let reportName;
 
-  const reportName = `${info.browserName}-report-${info.startTime}_${Math.floor(Math.random() * 10000000)}`;
+  const { reporterInfo } = browser;
+  browser.getCapabilities().then((cap) => {
+    reporterInfo.browserName = cap.get('browserName').replace(/ /g, '-');
+    reporterInfo.browserVersion = cap.get('version');
+    reporterInfo.platform = cap.get('platform').replace(/ /g, '-').toLowerCase();
 
-  if (options.reporterOptions) {
-    if (options.reporterOptions.xunit) {
-      options.reporterOptions.output = path.resolve(artifactsPath, `${reportName}.xml`);
-      new mocha.reporters.XUnit(runner, options); // eslint-disable-line no-new
+    reportName = `${reporterInfo.browserName}-report-${reporterInfo.startTime}_${Math.floor(Math.random() * 10000000)}`;
+
+    if (options.reporterOptions) {
+      if (options.reporterOptions.xunit) {
+        options.reporterOptions.output = path.resolve(artifactsPath, `${reportName}.xml`);
+        new mocha.reporters.XUnit(runner, options); // eslint-disable-line no-new
+      }
     }
-  }
+  });
 
   Base.call(this, runner);
 
@@ -77,7 +84,7 @@ function uiReport(runner, options) {
       });
     }
 
-    test.screenshot = (`screenshots/${utils.screenshotName(test.fullTitle(), info.browserName, info.startTime)}`);
+    test.screenshot = (`screenshots/${utils.screenshotName(test.fullTitle(), browser.reporterInfo.browserName, browser.reporterInfo.startTime)}`);
     tests.push(test);
     failures++;
   });
@@ -95,12 +102,12 @@ function uiReport(runner, options) {
         pending,
         failures,
         start: this.stats.start,
-        mainStart: info.mainStart,
+        mainStart: browser.reporterInfo.mainStart,
         end: this.stats.end,
         duration: this.stats.duration,
-        browserName: info.browserName,
-        browserVersion: info.browserVersion,
-        platform: info.platform,
+        browserName: browser.reporterInfo.browserName,
+        browserVersion: browser.reporterInfo.browserVersion,
+        platform: browser.reporterInfo.platform,
         name: repoInfo.name,
         description: repoInfo.description,
         version: repoInfo.version,
