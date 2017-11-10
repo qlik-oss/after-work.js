@@ -1,7 +1,7 @@
 const createServer = require('../server');
 
 const server = {
-  command: ['serve [argv]'],
+  command: ['serve [options]'],
   desc: 'Serve files',
   builder(yargs) {
     return yargs
