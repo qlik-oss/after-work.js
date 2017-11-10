@@ -55,7 +55,7 @@ const node = {
       .options(options)
       .config('config', (configPath) => {
         if (!fs.existsSync(configPath)) {
-          return {};
+          throw new Error(`Config ${configPath} not found`);
         }
         let config = {};
         const foundConfig = require(configPath);

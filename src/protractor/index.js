@@ -12,7 +12,7 @@ const protractor = {
   getConfig(configPath) {
     const baseConfig = initConfig();
     if (!fs.existsSync(configPath)) {
-      return baseConfig;
+      throw new Error(`Config ${configPath} not found`);
     }
     let config = {};
     const p = path.resolve(process.cwd(), configPath);

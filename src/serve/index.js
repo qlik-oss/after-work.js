@@ -1,3 +1,5 @@
+/* eslint global-require: 0, import/no-dynamic-require: 0 */
+const fs = require('fs');
 const createServer = require('../server');
 
 const server = {
@@ -6,6 +8,12 @@ const server = {
   builder(yargs) {
     return yargs
       .options({
+        config: {
+          description: 'Path to config file',
+          type: 'string',
+          default: 'aw.config.js',
+          alias: 'c',
+        },
         port: {
           description: 'Listen on this port',
           default: 9000,
@@ -21,6 +29,19 @@ const server = {
           default: {},
           type: 'object',
         },
+      })
+      .config('config', (configPath) => {
+        if (!fs.existsSync(configPath)) {
+          throw new Error(`Config ${configPath} not found`);
+        }
+        let config = {};
+        const foundConfig = require(configPath);
+        if (typeof foundConfig === 'function') {
+          config = Object.assign({}, foundConfig());
+        } else {
+          config = Object.assign({}, foundConfig);
+        }
+        return config;
       });
   },
   handler(argv) {
