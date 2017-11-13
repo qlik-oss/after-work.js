@@ -26,6 +26,12 @@ module.exports = {
     type: 'boolean',
     alias: 'w',
   },
+  watchGlob: {
+    description: 'Watch glob',
+    default: ['src/**/*.{js,ts}', 'test/**/*.{js,ts}'],
+    type: 'array',
+    alias: 'wg',
+  },
   coverage: {
     description: 'Generate coverage',
     default: false,

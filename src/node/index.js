@@ -8,17 +8,21 @@ const fs = require('fs');
 const path = require('path');
 const options = require('./options');
 
-function runTests(files, srcFiles, { coverage, nyc, mocha }) {
+function runTests(firstRun, files, srcFiles, { coverage, nyc, mocha }) {
+  // We need to wipe the global `__coverage__` to support watching
+  delete global.__coverage__; // eslint-disable-line
   const n = new NYC(nyc);
   const m = new Mocha(mocha);
   if (coverage) {
-    n.reset();
-    n.wrap();
     srcFiles.forEach((f) => {
       if (require.cache[f]) {
         delete require.cache[f];
       }
     });
+    n.reset();
+    if (firstRun) {
+      n.wrap();
+    }
   }
   files.forEach((f) => {
     if (require.cache[f]) {
@@ -91,12 +95,12 @@ const node = {
     }
     const srcFiles = globby.sync(argv.src).map(f => path.resolve(f));
     argv.require.forEach(m => importCwd(m));
-    let removeListeners = runTests(files, srcFiles, argv);
+    let removeListeners = runTests(true, files, srcFiles, argv);
     if (argv.watch) {
       // We need to watch source files also
-      chokidar.watch([...new Set([...files, ...srcFiles])]).on('change', () => {
+      chokidar.watch(argv.watchGlob).on('change', () => {
         removeListeners();
-        removeListeners = runTests(files, srcFiles, argv);
+        removeListeners = runTests(false, files, srcFiles, argv);
       });
     }
   },
