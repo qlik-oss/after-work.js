@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const jimp = require('jimp');
-const utils = require('../../../../src/protractor/plugins/screenshoter/utils');
+const utils = require('../../../../../src/protractor/plugins/screenshoter/utils');
 
 describe('Screenshoter Utils', () => {
   let sandbox;

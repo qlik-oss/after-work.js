@@ -1,4 +1,4 @@
-const plugin = require('../../../../src/protractor/plugins/screenshoter/index');
+const plugin = require('../../../../../src/protractor/plugins/screenshoter/index');
 
 describe('Screenshoter Index', () => {
   let sandbox;

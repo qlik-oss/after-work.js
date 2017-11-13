@@ -1,5 +1,5 @@
 const fs = require('fs');
-const report = require('../../../../src/protractor/plugins/reporter/create-static');
+const report = require('../../../../../src/protractor/plugins/reporter/create-static');
 
 describe('Reporter create-static', () => {
   let sandbox;

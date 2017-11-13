@@ -8,50 +8,107 @@ const fs = require('fs');
 const path = require('path');
 const options = require('./options');
 
-function runTests(firstRun, files, srcFiles, { coverage, nyc, mocha }) {
-  // We need to wipe the global `__coverage__` to support watching
-  delete global.__coverage__; // eslint-disable-line
-  const n = new NYC(nyc);
-  const m = new Mocha(mocha);
-  if (coverage) {
-    srcFiles.forEach((f) => {
+class Runner {
+  constructor(argv) {
+    this.argv = argv;
+    this.files = [];
+    this.srcFiles = [];
+    this.mochaRunner = undefined;
+    this.mocha = undefined;
+    this.nyc = undefined;
+    this.isFirstRun = true;
+    this.importCwd = importCwd;
+  }
+  setFiles() {
+    this.files = globby.sync(this.argv.glob).map(f => path.resolve(f));
+    if (!this.files.length) {
+      console.log('No files found for:', this.argv.glob);
+      process.exit(1);
+    }
+    return this;
+  }
+  setSrcFiles() {
+    this.srcFiles = globby.sync(this.argv.src).map(f => path.resolve(f));
+    return this;
+  }
+  ensureBabelRequire() {
+    // We need to remove `babel-register` for coverage since NYC needs to require it for instrumentation
+    if (this.argv.coverage && this.argv.nyc.babel && this.argv.require.includes('babel-register')) {
+      const ix = this.argv.require.indexOf('babel-register');
+      this.argv.require.splice(ix, 1);
+    }
+    return this;
+  }
+  require() {
+    this.argv.require.forEach(m => this.importCwd(m));
+    return this;
+  }
+  deleteCoverage() {
+    delete global.__coverage__; // eslint-disable-line
+    return this;
+  }
+  runTests() {
+    this.mochaRunner = this.mocha.run((failures) => {
+      process.on('exit', () => {
+        process.exit(failures);
+      });
+    });
+    this.mochaRunner.on('end', () => {
+      if (this.argv.coverage) {
+        this.nyc.writeCoverageFile();
+        this.nyc.report();
+      }
+    });
+    return this;
+  }
+  setup() {
+    if (this.argv.coverage) {
+      this.nyc.reset();
+      if (this.isFirstRun) {
+        this.nyc.wrap();
+      }
+      this.srcFiles.forEach((f) => {
+        if (require.cache[f]) {
+          delete require.cache[f];
+        }
+      });
+    }
+    this.files.forEach((f) => {
       if (require.cache[f]) {
         delete require.cache[f];
       }
+      this.mocha.addFile(f);
     });
-    n.reset();
-    if (firstRun) {
-      n.wrap();
+    if (this.argv.coverage) {
+      this.srcFiles.forEach(f => require(`${f}`));
     }
+    return this;
   }
-  files.forEach((f) => {
-    if (require.cache[f]) {
-      delete require.cache[f];
-    }
-    m.addFile(f);
-  });
-  if (coverage) {
-    srcFiles.forEach(f => require(`${f}`));
-  }
-
-  const runner = m.run((failures) => {
-    process.on('exit', () => {
-      process.exit(failures);
-    });
-  });
-  runner.on('end', () => {
-    if (coverage) {
-      n.writeCoverageFile();
-      n.report();
-    }
-  });
-  return () => {
+  setupAndRunTests() {
     process.removeAllListeners();
-    runner.removeAllListeners();
-  };
+    if (this.mochaRunner) {
+      this.mochaRunner.removeAllListeners();
+    }
+    this.mocha = new Mocha(this.argv.mocha);
+    this.nyc = new NYC(this.argv.nyc);
+    this
+      .deleteCoverage()
+      .setup()
+      .runTests();
+  }
+  run() {
+    this.setupAndRunTests();
+    if (this.argv.watch) {
+      chokidar.watch(this.argv.watchGlob).on('change', () => {
+        this.isFirstRun = false;
+        this.setupAndRunTests();
+      });
+    }
+  }
 }
 
 const node = {
+  Runner,
   command: ['node [options]', '$0'],
   desc: 'Run tests in node',
   builder(yargs) {
@@ -83,26 +140,14 @@ const node = {
       });
   },
   handler(argv) {
-    const files = globby.sync(argv.glob).map(f => path.resolve(f));
-    if (!files.length) {
-      console.log('No files found for:', argv.glob);
-      process.exit(1);
-    }
-    // We need to remove `babel-register` for coverage since NYC needs to require it for instrumentation
-    if (argv.coverage && argv.nyc.babel && argv.require.includes('babel-register')) {
-      const ix = argv.require.indexOf('babel-register');
-      argv.require.splice(ix, 1);
-    }
-    const srcFiles = globby.sync(argv.src).map(f => path.resolve(f));
-    argv.require.forEach(m => importCwd(m));
-    let removeListeners = runTests(true, files, srcFiles, argv);
-    if (argv.watch) {
-      // We need to watch source files also
-      chokidar.watch(argv.watchGlob).on('change', () => {
-        removeListeners();
-        removeListeners = runTests(false, files, srcFiles, argv);
-      });
-    }
+    const runner = new Runner(argv);
+    runner
+      .setFiles()
+      .setSrcFiles()
+      .ensureBabelRequire()
+      .require()
+      .run();
+    return runner;
   },
 };
 

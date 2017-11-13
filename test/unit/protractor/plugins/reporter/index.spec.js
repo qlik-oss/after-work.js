@@ -1,8 +1,8 @@
 const fs = require('fs');
 const mocha = require('mocha');
 const mkdirp = require('mkdirp');
-const uiReport = require('../../../../src/protractor/plugins/reporter');
-const utils = require('../../../../src/protractor/plugins/reporter/utils');
+const uiReport = require('../../../../../src/protractor/plugins/reporter');
+const utils = require('../../../../../src/protractor/plugins/reporter/utils');
 
 describe('Reporter index', () => {
   let sandbox;
