@@ -29,6 +29,9 @@ const puppet = {
     return yargs
       .options(options)
       .config('config', (configPath) => {
+        if (configPath === null) {
+          return {};
+        }
         if (!fs.existsSync(configPath)) {
           throw new Error(`Config ${configPath} not found`);
         }

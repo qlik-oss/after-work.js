@@ -2,7 +2,7 @@ module.exports = {
   config: {
     description: 'Path to config file',
     type: 'string',
-    default: 'aw.config.js',
+    default: null,
     alias: 'c',
   },
   url: {

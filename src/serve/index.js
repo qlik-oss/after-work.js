@@ -11,7 +11,7 @@ const server = {
         config: {
           description: 'Path to config file',
           type: 'string',
-          default: 'aw.config.js',
+          default: null,
           alias: 'c',
         },
         port: {
@@ -31,6 +31,9 @@ const server = {
         },
       })
       .config('config', (configPath) => {
+        if (configPath === null) {
+          return {};
+        }
         if (!fs.existsSync(configPath)) {
           throw new Error(`Config ${configPath} not found`);
         }
