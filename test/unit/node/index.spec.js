@@ -86,12 +86,13 @@ describe('Node command', () => {
   describe('Run tests', () => {
     it('should exit with correct exit code', () => {
       const exit = sandbox.stub(process, 'exit');
+      const on = sandbox.stub(process, 'on');
       const runner = new Runner({});
       const run = sandbox.stub().returns({ on: sandbox.stub() });
       runner.mocha = { run };
       runner.runTests();
       run.callArgWith(0, 9);
-      process.emit('exit');
+      on.callArg(1);
       expect(exit).to.have.been.calledWithExactly(9);
     });
 
