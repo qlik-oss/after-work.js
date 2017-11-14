@@ -11,17 +11,41 @@ const options = require('./options');
 class Runner {
   constructor(argv, libs) {
     this.argv = argv;
-    this.files = [];
+    this.testFiles = [];
+    this.onlyTestFiles = [];
     this.srcFiles = [];
+    this.onlySrcFiles = [];
     this.mochaRunner = undefined;
     this.mocha = undefined;
     this.nyc = undefined;
     this.isFirstRun = true;
     this.libs = libs;
   }
-  setFiles() {
-    this.files = globby.sync(this.argv.glob).map(f => path.resolve(f));
-    if (!this.files.length) {
+  setOnlyFilesFromTestFile(testFile) {
+    this.onlyTestFiles = [testFile];
+    const mod = require.cache[testFile];
+    this.onlySrcFiles = mod.children.filter(m => this.srcFiles.indexOf(m.id) !== -1).map(m => m.id);
+  }
+  setOnlyFilesFromSrcFile(srcFile) {
+    this.onlyTestFiles = this.testFiles.filter((f) => {
+      const mod = require.cache[f];
+      return mod
+        .children
+        .filter(m => m.id === srcFile).length !== 0;
+    });
+    this.onlySrcFiles = [srcFile];
+  }
+  setOnlyFiles(file) {
+    const isTestFile = this.testFiles.indexOf(file) !== -1;
+    if (isTestFile) {
+      this.setOnlyFilesFromTestFile(file);
+    } else {
+      this.setOnlyFilesFromSrcFile(file);
+    }
+  }
+  setTestFiles() {
+    this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f));
+    if (!this.testFiles.length) {
       console.log('No files found for:', this.argv.glob);
       process.exit(1);
     }
@@ -61,30 +85,30 @@ class Runner {
     });
     return this;
   }
-  setup() {
+  setup(testFiles, srcFiles) {
     if (this.argv.coverage) {
       this.nyc.reset();
       if (this.isFirstRun) {
         this.nyc.wrap();
       }
-      this.srcFiles.forEach((f) => {
+      srcFiles.forEach((f) => {
         if (require.cache[f]) {
           delete require.cache[f];
         }
       });
     }
-    this.files.forEach((f) => {
+    testFiles.forEach((f) => {
       if (require.cache[f]) {
         delete require.cache[f];
       }
       this.mocha.addFile(f);
     });
     if (this.argv.coverage) {
-      this.srcFiles.forEach(f => require(`${f}`));
+      srcFiles.forEach(f => require(`${f}`));
     }
     return this;
   }
-  setupAndRunTests() {
+  setupAndRunTests(testFiles, srcFiles) {
     process.removeAllListeners();
     if (this.mochaRunner) {
       this.mochaRunner.removeAllListeners();
@@ -93,15 +117,16 @@ class Runner {
     this.nyc = new this.libs.NYC(this.argv.nyc);
     this
       .deleteCoverage()
-      .setup()
+      .setup(testFiles, srcFiles)
       .runTests();
   }
   run() {
-    this.setupAndRunTests();
+    this.setupAndRunTests(this.testFiles, this.srcFiles);
     if (this.argv.watch) {
-      this.libs.chokidar.watch(this.argv.watchGlob).on('change', () => {
+      this.libs.chokidar.watch(this.argv.watchGlob).on('change', (f) => {
         this.isFirstRun = false;
-        this.setupAndRunTests();
+        this.setOnlyFiles(path.resolve(f));
+        this.setupAndRunTests(this.onlyTestFiles, this.onlySrcFiles);
       });
     }
   }
@@ -148,7 +173,7 @@ const node = {
   handler(argv) {
     const runner = new node.Runner(argv, { Mocha, NYC, importCwd, chokidar });
     runner
-      .setFiles()
+      .setTestFiles()
       .setSrcFiles()
       .ensureBabelRequire()
       .require()

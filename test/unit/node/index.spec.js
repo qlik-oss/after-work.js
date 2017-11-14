@@ -26,7 +26,7 @@ describe('Node command', () => {
     const argv = {};
     const runner = new Runner(argv);
     expect(runner.argv).to.equal(argv);
-    expect(runner.files).to.eql([]);
+    expect(runner.testFiles).to.eql([]);
     expect(runner.srcFiles).to.eql([]);
     expect(runner.mochaRunner).to.equal(undefined);
     expect(runner.mocha).to.equal(undefined);
@@ -38,8 +38,8 @@ describe('Node command', () => {
     const argv = {};
     const runner = new Runner(argv);
     sandbox.stub(globby, 'sync').returns(['foo.js']);
-    runner.setFiles();
-    expect(runner.files).to.eql([path.resolve('foo.js')]);
+    runner.setTestFiles();
+    expect(runner.testFiles).to.eql([path.resolve('foo.js')]);
   });
 
   it('should exit if no files found', () => {
@@ -48,7 +48,7 @@ describe('Node command', () => {
     const runner = new Runner(argv);
     sandbox.stub(globby, 'sync').returns([]);
     sandbox.stub(console, 'log');
-    runner.setFiles();
+    runner.setTestFiles();
     expect(exit).to.have.been.calledWithExactly(1);
   });
 
@@ -116,7 +116,7 @@ describe('Node command', () => {
         const wrap = sandbox.stub();
         const runner = new Runner({ coverage: true });
         runner.nyc = { reset, wrap };
-        runner.setup();
+        runner.setup([], []);
         expect(reset).to.have.been.calledWithExactly();
         expect(wrap).to.have.been.calledWithExactly();
       });
@@ -127,7 +127,7 @@ describe('Node command', () => {
         const runner = new Runner({ coverage: true });
         runner.nyc = { reset, wrap };
         runner.isFirstRun = false;
-        runner.setup();
+        runner.setup([], []);
         expect(reset).to.have.been.calledWithExactly();
         expect(wrap.callCount).to.equal(0);
       });
@@ -140,11 +140,7 @@ describe('Node command', () => {
         runner.nyc = { reset, wrap };
         runner.mocha = { addFile };
         const file = path.resolve('test/unit/node/index.spec.js');
-        const files = [file];
-        const srcFiles = [path.resolve('src/node/index.js')];
-        runner.files = files;
-        runner.srcFiles = srcFiles;
-        runner.setup();
+        runner.setup([file], []);
         expect(addFile).to.have.been.calledWithExactly(file);
       });
     });
@@ -181,19 +177,25 @@ describe('Node command', () => {
     it('should run without watching', () => {
       const runner = new Runner({ watch: false });
       runner.setupAndRunTests = sandbox.stub();
+      const testFiles = ['foo.spec.js'];
+      const srcFiles = ['foo.js'];
+      runner.testFiles = testFiles;
+      runner.srcFiles = srcFiles;
       runner.run();
-      expect(runner.setupAndRunTests).to.have.been.calledWithExactly();
+      expect(runner.setupAndRunTests).to.have.been.calledWithExactly(testFiles, srcFiles);
     });
 
     it('should run with watching', () => {
+      sandbox.stub(console, 'log');
       const watchGlob = ['foo.js'];
       const on = sandbox.stub();
       const watch = sandbox.stub().returns({ on });
       const chokidar = { watch };
       const runner = new Runner({ watch: true, watchGlob }, { chokidar });
       runner.setupAndRunTests = sandbox.stub();
+      runner.findFiles = sandbox.stub();
       runner.run();
-      on.callArg(1);
+      on.callArg(1, 'foo.js');
       expect(runner.isFirstRun).to.equal(false);
       expect(runner.setupAndRunTests.callCount).to.equal(2);
     });
@@ -238,20 +240,20 @@ describe('Node command', () => {
 
     it('should call the runner functions', () => {
       const origRunner = cmd.Runner;
-      const setFiles = sandbox.stub().returnsThis();
+      const setTestFiles = sandbox.stub().returnsThis();
       const setSrcFiles = sandbox.stub().returnsThis();
       const ensureBabelRequire = sandbox.stub().returnsThis();
       const req = sandbox.stub().returnsThis();
       const run = sandbox.stub().returnsThis();
       class Dummy { }
-      Dummy.prototype.setFiles = setFiles;
+      Dummy.prototype.setTestFiles = setTestFiles;
       Dummy.prototype.setSrcFiles = setSrcFiles;
       Dummy.prototype.ensureBabelRequire = ensureBabelRequire;
       Dummy.prototype.require = req;
       Dummy.prototype.run = run;
       cmd.Runner = Dummy;
       handler({});
-      expect(setFiles).to.have.been.calledImmediatelyBefore(setSrcFiles);
+      expect(setTestFiles).to.have.been.calledImmediatelyBefore(setSrcFiles);
       expect(setSrcFiles).to.have.been.calledImmediatelyBefore(ensureBabelRequire);
       expect(ensureBabelRequire).to.have.been.calledImmediatelyBefore(req);
       expect(req).to.have.been.calledImmediatelyBefore(run);
