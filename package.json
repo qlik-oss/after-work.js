@@ -55,7 +55,6 @@
     "babel-plugin-istanbul": "^4.1.5",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
-    "chrome-remote-debug-protocol": "^1.2.20170721",
     "coveralls": "^3.0.0",
     "eslint": "4.8.0",
     "eslint-config-airbnb-base": "12.0.2",

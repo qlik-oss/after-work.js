@@ -1,4 +1,4 @@
-/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0 */
+/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0 */
 const globby = require('globby');
 const Mocha = require('mocha');
 const chokidar = require('chokidar');
@@ -9,7 +9,7 @@ const path = require('path');
 const options = require('./options');
 
 class Runner {
-  constructor(argv) {
+  constructor(argv, libs) {
     this.argv = argv;
     this.files = [];
     this.srcFiles = [];
@@ -17,7 +17,7 @@ class Runner {
     this.mocha = undefined;
     this.nyc = undefined;
     this.isFirstRun = true;
-    this.importCwd = importCwd;
+    this.libs = libs;
   }
   setFiles() {
     this.files = globby.sync(this.argv.glob).map(f => path.resolve(f));
@@ -40,7 +40,7 @@ class Runner {
     return this;
   }
   require() {
-    this.argv.require.forEach(m => this.importCwd(m));
+    this.argv.require.forEach(m => this.libs.importCwd(m));
     return this;
   }
   deleteCoverage() {
@@ -89,8 +89,8 @@ class Runner {
     if (this.mochaRunner) {
       this.mochaRunner.removeAllListeners();
     }
-    this.mocha = new Mocha(this.argv.mocha);
-    this.nyc = new NYC(this.argv.nyc);
+    this.mocha = new this.libs.Mocha(this.argv.mocha);
+    this.nyc = new this.libs.NYC(this.argv.nyc);
     this
       .deleteCoverage()
       .setup()
@@ -99,7 +99,7 @@ class Runner {
   run() {
     this.setupAndRunTests();
     if (this.argv.watch) {
-      chokidar.watch(this.argv.watchGlob).on('change', () => {
+      this.libs.chokidar.watch(this.argv.watchGlob).on('change', () => {
         this.isFirstRun = false;
         this.setupAndRunTests();
       });
@@ -107,40 +107,46 @@ class Runner {
   }
 }
 
+const configure = (configPath) => {
+  if (configPath === null) {
+    return {};
+  }
+  if (!fs.existsSync(configPath)) {
+    throw new Error(`Config ${configPath} not found`);
+  }
+  let config = {};
+  const foundConfig = require(configPath);
+  if (typeof foundConfig === 'function') {
+    config = Object.assign({}, foundConfig());
+  } else {
+    config = Object.assign({}, foundConfig);
+  }
+  return config;
+};
+
+const coerceNyc = (opt) => {
+  if (opt.babel) {
+    opt.require.push('babel-register');
+    opt.sourceMap = false;
+    opt.instrumenter = './lib/instrumenters/noop';
+  }
+  return opt;
+};
+
 const node = {
   Runner,
+  configure,
+  coerceNyc,
   command: ['node [options]', '$0'],
   desc: 'Run tests in node',
   builder(yargs) {
     return yargs
       .options(options)
-      .config('config', (configPath) => {
-        if (configPath === null) {
-          return {};
-        }
-        if (!fs.existsSync(configPath)) {
-          throw new Error(`Config ${configPath} not found`);
-        }
-        let config = {};
-        const foundConfig = require(configPath);
-        if (typeof foundConfig === 'function') {
-          config = Object.assign({}, foundConfig());
-        } else {
-          config = Object.assign({}, foundConfig);
-        }
-        return config;
-      })
-      .coerce('nyc', (opt) => {
-        if (opt.babel) {
-          opt.require.push('babel-register');
-          opt.sourceMap = false;
-          opt.instrumenter = './lib/instrumenters/noop';
-        }
-        return opt;
-      });
+      .config('config', configure)
+      .coerce('nyc', coerceNyc);
   },
   handler(argv) {
-    const runner = new Runner(argv);
+    const runner = new node.Runner(argv, { Mocha, NYC, importCwd, chokidar });
     runner
       .setFiles()
       .setSrcFiles()

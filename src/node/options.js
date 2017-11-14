@@ -32,6 +32,12 @@ module.exports = {
     type: 'array',
     alias: 'wg',
   },
+  only: {
+    description: 'Only run last changed tests',
+    default: false,
+    type: 'boolean',
+    alias: 'o',
+  },
   coverage: {
     description: 'Generate coverage',
     default: false,
