@@ -1,20 +1,9 @@
 /* eslint no-console: 0, class-methods-use-this: 0 */
 const chromeLauncher = require('chrome-launcher');
 const unmirror = require('chrome-unmirror');
-const readline = require('readline');
 const Mediator = require('./mediator');
 const connect = require('./connect');
-
-const utils = {
-  clearLine() {
-    readline.clearLine(process.stdout, 0);
-    readline.cursorTo(process.stdout, 0, null);
-  },
-  writeLine(msg) {
-    this.clearLine();
-    process.stdout.write(`${msg}`);
-  },
-};
+const utils = require('../terminal-utils');
 
 class Runner {
   constructor(options = { chrome: { chromeFlags: [] }, client: {} }, nyc) {

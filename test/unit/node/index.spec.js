@@ -31,7 +31,7 @@ describe('Node command', () => {
     expect(runner.mochaRunner).to.equal(undefined);
     expect(runner.mocha).to.equal(undefined);
     expect(runner.nyc).to.equal(undefined);
-    expect(runner.isFirstRun).to.equal(true);
+    expect(runner.isWrapped).to.equal(false);
   });
 
   it('should set files', () => {
@@ -126,7 +126,7 @@ describe('Node command', () => {
         const wrap = sandbox.stub();
         const runner = new Runner({ coverage: true });
         runner.nyc = { reset, wrap };
-        runner.isFirstRun = false;
+        runner.isWrapped = true;
         runner.setup([], []);
         expect(reset).to.have.been.calledWithExactly();
         expect(wrap.callCount).to.equal(0);
@@ -149,7 +149,11 @@ describe('Node command', () => {
       const procRemoveAllListeners = sandbox.stub(process, 'removeAllListeners');
       const removeAllListeners = sandbox.stub();
       const mochaRunner = { removeAllListeners };
-      class Dummy { }
+      class Dummy {
+        constructor() {
+          this.suite = { on: sandbox.stub() };
+        }
+      }
       const runner = new Runner({}, { Mocha: Dummy, NYC: Dummy });
       sandbox.stub(runner, 'deleteCoverage').returnsThis();
       sandbox.stub(runner, 'setup').returnsThis();
@@ -163,7 +167,11 @@ describe('Node command', () => {
     it('should setupAndRunTests', () => {
       sandbox.stub(process, 'removeAllListeners');
       const mochaRunner = { removeAllListeners: sandbox.stub() };
-      class Dummy { }
+      class Dummy {
+        constructor() {
+          this.suite = { on: sandbox.stub() };
+        }
+      }
       const runner = new Runner({}, { Mocha: Dummy, NYC: Dummy });
       const del = sandbox.stub(runner, 'deleteCoverage').returnsThis();
       const set = sandbox.stub(runner, 'setup').returnsThis();
@@ -196,7 +204,7 @@ describe('Node command', () => {
       runner.findFiles = sandbox.stub();
       runner.run();
       on.callArg(1, 'foo.js');
-      expect(runner.isFirstRun).to.equal(false);
+      expect(runner.all).to.equal(false);
       expect(runner.setupAndRunTests.callCount).to.equal(2);
     });
 
@@ -240,12 +248,14 @@ describe('Node command', () => {
 
     it('should call the runner functions', () => {
       const origRunner = cmd.Runner;
+      const setupKeyPress = sandbox.stub().returnsThis();
       const setTestFiles = sandbox.stub().returnsThis();
       const setSrcFiles = sandbox.stub().returnsThis();
       const ensureBabelRequire = sandbox.stub().returnsThis();
       const req = sandbox.stub().returnsThis();
       const run = sandbox.stub().returnsThis();
       class Dummy { }
+      Dummy.prototype.setupKeyPress = setupKeyPress;
       Dummy.prototype.setTestFiles = setTestFiles;
       Dummy.prototype.setSrcFiles = setSrcFiles;
       Dummy.prototype.ensureBabelRequire = ensureBabelRequire;
