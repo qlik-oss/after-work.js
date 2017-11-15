@@ -96,7 +96,7 @@ const utils = {
     })));
   },
   matchImageOf(id, folder = '', tolerance = 0.002) {
-    const promise = this._obj.then || Promise.resolve(this._obj); // eslint-disable-line
+    const promise = this._obj.then ? this._obj : Promise.resolve(this._obj); // eslint-disable-line
     return promise.then((meta) => {
       const imageName = util.format('%s-%s-%s.png', id, meta.platform, meta.browserName);
 
