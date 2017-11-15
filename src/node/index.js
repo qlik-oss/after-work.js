@@ -79,10 +79,14 @@ class Runner {
     return this;
   }
   ensureBabelRequire() {
-    // We need to remove `babel-register` for coverage since NYC needs to require it for instrumentation
-    if (this.argv.coverage && this.argv.nyc.babel && this.argv.require.includes('babel-register')) {
-      const ix = this.argv.require.indexOf('babel-register');
-      this.argv.require.splice(ix, 1);
+    // We need to move all `babel` requires to `nyc.require` else the instrumentation will not work
+    const containsBabelRequires = this.argv.require.filter(r => r.startsWith('babel'));
+    if (this.argv.coverage && this.argv.nyc.babel && containsBabelRequires.length) {
+      containsBabelRequires.forEach((r) => {
+        const ix = this.argv.require.indexOf(r);
+        const move = this.argv.require.splice(ix, 1)[0];
+        this.argv.nyc.require = [...new Set(this.argv.nyc.require.concat(move))];
+      });
     }
     return this;
   }

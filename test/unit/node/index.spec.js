@@ -61,10 +61,11 @@ describe('Node command', () => {
   });
 
   it('should ensureBabelRequire', () => {
-    const argv = { require: ['babel-register'], coverage: true, nyc: { babel: true } };
+    const argv = { require: ['babel-register', 'babel-helpers', 'foo'], coverage: true, nyc: { require: [], babel: true } };
     const runner = new Runner(argv);
     runner.ensureBabelRequire();
-    expect(runner.argv.require).to.eql([]);
+    expect(runner.argv.require).to.eql(['foo']);
+    expect(runner.argv.nyc.require).to.eql(['babel-register', 'babel-helpers']);
   });
 
   it('should require', () => {
