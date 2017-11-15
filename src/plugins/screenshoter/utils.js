@@ -96,9 +96,8 @@ const utils = {
     })));
   },
   matchImageOf(id, folder = '', tolerance = 0.002) {
-      const promise = this._obj.then || Promise.resolve(this._obj);
-      return promise.then((meta) => { // eslint-disable-line no-underscore-dangle
-      
+    const promise = this._obj.then || Promise.resolve(this._obj); // eslint-disable-line
+    return promise.then((meta) => {
       const imageName = util.format('%s-%s-%s.png', id, meta.platform, meta.browserName);
 
       mkdirp.sync(path.resolve(meta.artifactsPath, 'baseline', folder));
