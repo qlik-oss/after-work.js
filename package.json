@@ -19,6 +19,7 @@
     "url": "ssh://git@github.com:qlik-oss/after-work.js.git"
   },
   "files": [
+    "aw.png",
     "/src",
     "/docs"
   ],
