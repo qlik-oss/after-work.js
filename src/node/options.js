@@ -28,7 +28,7 @@ module.exports = {
   },
   watchGlob: {
     description: 'Watch glob',
-    default: ['src/**/*.{js,ts}', 'test/**/*.{js,ts}'],
+    default: ['src/**/*.{js,ts}', 'test/**/*.spec.{js,ts}'],
     type: 'array',
     alias: 'wg',
   },
@@ -36,6 +36,21 @@ module.exports = {
     description: 'Generate coverage',
     default: false,
     type: 'boolean',
+  },
+  'mocha.reporter': {
+    description: 'Which reporter to use',
+    default: undefined,
+    type: 'string',
+  },
+  'mocha.bail': {
+    description: 'Bail on fail?',
+    default: true,
+    type: 'boolean',
+  },
+  'mocha.timeout': {
+    description: 'Timeout',
+    default: undefined,
+    type: 'number',
   },
   'nyc.require': {
     description: 'Require path',

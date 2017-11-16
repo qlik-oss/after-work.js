@@ -1,4 +1,4 @@
-/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0 */
+/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0 */
 const readline = require('readline');
 const globby = require('globby');
 const Mocha = require('mocha');
@@ -36,35 +36,43 @@ class Runner {
       console.log(`    \u001b[90m${f}\u001b[0m`);
     });
     console.log('\nSave\u001b[90m a test file or source file to run only affected tests\u001b[0m');
-    console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all\u001b[0m');
+    console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
     return this;
+  }
+  matchDependency(found, testName, extCnt) {
+    let use = found;
+    if (found.length > 1) {
+      const matchName = found.filter(id => path.basename(id).slice(0, extCnt) === testName);
+      if (matchName.length === 1) {
+        use = matchName;
+      } else {
+        use = found.splice(0, 1);
+      }
+    }
+    return use;
   }
   setOnlyFilesFromTestFile(testFile) {
     this.onlyTestFiles = [testFile];
+    const testName = path.basename(testFile).slice(0, -8);
     const mod = require.cache[testFile];
     const found = mod
       .children
       .filter(m => this.srcFiles.indexOf(m.id) !== -1)
       .map(m => m.id);
-    this.onlySrcFiles = [...new Set([...found])];
+    const use = this.matchDependency(found, testName, -3);
+    this.onlySrcFiles = [...new Set([...use])];
   }
   setOnlyFilesFromSrcFile(srcFile) {
+    const srcName = path.basename(srcFile).slice(0, -3);
     const found = this.testFiles.filter((f) => {
       const mod = require.cache[f];
       return mod
         .children
         .filter(m => m.id === srcFile).length !== 0;
     });
-    this.onlyTestFiles = [...new Set([...found])];
+    const use = this.matchDependency(found, srcName, -8);
+    this.onlyTestFiles = [...new Set([...use])];
     this.onlySrcFiles = [srcFile];
-  }
-  setOnlyFiles(file) {
-    const isTestFile = this.testFiles.indexOf(file) !== -1;
-    if (isTestFile) {
-      this.setOnlyFilesFromTestFile(file);
-    } else {
-      this.setOnlyFilesFromSrcFile(file);
-    }
   }
   setTestFiles() {
     this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f));
@@ -188,14 +196,24 @@ class Runner {
       .setup(testFiles, srcFiles)
       .runTests();
   }
+  onWatch(f) {
+    const isTestFile = this.testFiles.indexOf(f) !== -1;
+    const isSrcFile = this.srcFiles.indexOf(f) !== -1;
+    if (!isTestFile && !isSrcFile) {
+      return;
+    }
+    this.all = false;
+    if (isTestFile) {
+      this.setOnlyFilesFromTestFile(f);
+    } else {
+      this.setOnlyFilesFromSrcFile(f);
+    }
+    this.setupAndRunTests(this.onlyTestFiles, this.onlySrcFiles);
+  }
   run() {
     this.setupAndRunTests(this.testFiles, this.srcFiles);
     if (this.argv.watch) {
-      this.libs.chokidar.watch(this.argv.watchGlob).on('change', (f) => {
-        this.all = false;
-        this.setOnlyFiles(path.resolve(f));
-        this.setupAndRunTests(this.onlyTestFiles, this.onlySrcFiles, true);
-      });
+      this.libs.chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f)));
     }
   }
 }
@@ -239,6 +257,11 @@ const node = {
       .coerce('nyc', coerceNyc);
   },
   handler(argv) {
+    const exv = process.execArgv.join();
+    const debug = exv.includes('inspect') || exv.includes('debug');
+    if (debug) {
+      argv.mocha.enableTimeouts = false;
+    }
     const runner = new node.Runner(argv, { Mocha, NYC, importCwd, chokidar });
     runner
       .setupKeyPress()

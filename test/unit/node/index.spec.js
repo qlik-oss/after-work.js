@@ -202,11 +202,10 @@ describe('Node command', () => {
       const chokidar = { watch };
       const runner = new Runner({ watch: true, watchGlob }, { chokidar });
       runner.setupAndRunTests = sandbox.stub();
-      runner.findFiles = sandbox.stub();
+      runner.onWatch = sandbox.stub();
       runner.run();
       on.callArg(1, 'foo.js');
-      expect(runner.all).to.equal(false);
-      expect(runner.setupAndRunTests.callCount).to.equal(2);
+      expect(runner.onWatch).to.have.been.calledWithExactly(path.resolve('foo.js'));
     });
 
     describe('configure', () => {
@@ -263,7 +262,7 @@ describe('Node command', () => {
       Dummy.prototype.require = req;
       Dummy.prototype.run = run;
       cmd.Runner = Dummy;
-      handler({});
+      handler({ mocha: {} });
       expect(setTestFiles).to.have.been.calledImmediatelyBefore(setSrcFiles);
       expect(setSrcFiles).to.have.been.calledImmediatelyBefore(ensureBabelRequire);
       expect(ensureBabelRequire).to.have.been.calledImmediatelyBefore(req);
