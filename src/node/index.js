@@ -197,6 +197,9 @@ class Runner {
       .runTests();
   }
   onWatch(f) {
+    if (this.isRunning) {
+      return;
+    }
     const isTestFile = this.testFiles.indexOf(f) !== -1;
     const isSrcFile = this.srcFiles.indexOf(f) !== -1;
     if (!isTestFile && !isSrcFile) {
@@ -215,6 +218,14 @@ class Runner {
     if (this.argv.watch) {
       this.libs.chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f)));
     }
+  }
+  autoDetectDebug() {
+    const exv = process.execArgv.join();
+    const debug = exv.includes('inspect') || exv.includes('debug');
+    if (debug) {
+      this.argv.mocha.enableTimeouts = false;
+    }
+    return this;
   }
 }
 
@@ -257,13 +268,9 @@ const node = {
       .coerce('nyc', coerceNyc);
   },
   handler(argv) {
-    const exv = process.execArgv.join();
-    const debug = exv.includes('inspect') || exv.includes('debug');
-    if (debug) {
-      argv.mocha.enableTimeouts = false;
-    }
     const runner = new node.Runner(argv, { Mocha, NYC, importCwd, chokidar });
     runner
+      .autoDetectDebug()
       .setupKeyPress()
       .setTestFiles()
       .setSrcFiles()

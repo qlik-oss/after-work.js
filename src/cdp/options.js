@@ -15,6 +15,18 @@ module.exports = {
     default: ['test/**/*.spec.js'],
     type: 'array',
   },
+  watch: {
+    description: 'Watch changes',
+    default: false,
+    type: 'boolean',
+    alias: 'w',
+  },
+  watchGlob: {
+    description: 'Watch glob',
+    default: ['src/**/*.{js,ts}', 'test/**/*.{js,ts}'],
+    type: 'array',
+    alias: 'wg',
+  },
   coverage: {
     description: 'Generate coverage?',
     default: false,
@@ -55,6 +67,11 @@ module.exports = {
       '**/*chai*.js',
     ],
     type: 'array',
+  },
+  'mocha.bail': {
+    description: 'Bail on fail?',
+    default: true,
+    type: 'boolean',
   },
   'mocha.ui': {
     description: 'Test interface',

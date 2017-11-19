@@ -29,7 +29,7 @@ function transformify(filePath, coverage) {
   return new Promise(transformFile(filePath, coverage));
 }
 
-module.exports = function transform(files, exclude, coverage, coverageExclude) {
+module.exports = function transform(exclude, coverage, coverageExclude) {
   const shouldInstrument = url => (coverage ?
     coverageExclude.shouldInstrument(url) :
     exclude.shouldInstrument(url));
@@ -37,7 +37,7 @@ module.exports = function transform(files, exclude, coverage, coverageExclude) {
   return async (ctx, next) => {
     await next();
     const { request, response } = ctx;
-    // We need to remove the leading slash else it will be excluded by default for instrumentation
+    // We need to remove the leading slash else it will be excluded by default
     const url = request.url.substring(1);
     if (shouldInstrument(url)) {
       const filePath = path.relative(process.cwd(), url);

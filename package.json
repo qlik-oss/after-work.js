@@ -46,6 +46,7 @@
     "mocha": "4.0.1",
     "moment": "2.18.1",
     "nyc": "^11.3.0",
+    "precinct": "^3.8.0",
     "sinon": "4.0.1",
     "sinon-chai": "2.14.0",
     "test-exclude": "^4.1.1",
