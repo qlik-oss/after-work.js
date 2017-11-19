@@ -225,7 +225,7 @@ class Runner {
   }
   maybeCreateHttpServer() {
     if (/^(http(s?)):\/\//.test(this.argv.url)) {
-      createHttpServer(this.argv.transform.testExclude, this.argv.coverage, this.argv.instrument.testExclude, this.argv.http);
+      createHttpServer(this.argv.transform.testExclude, this.argv.coverage, this.argv.instrument.testExclude, this.argv.http); //eslint-disable-line
     }
     return this;
   }
