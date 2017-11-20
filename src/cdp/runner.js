@@ -160,6 +160,7 @@ class Runner {
         return [f];
       }
     }
+    console.log(`Couldn't find a test file for ${srcFile}`);
     return [];
   }
   async onWatch(f) {
