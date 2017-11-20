@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.5
+- The matchImageOf is now compatable with protractor async-await 
+
 ## 3.1.4
 - Disable ghostMode for Browsersync to increase websocket stability
 
