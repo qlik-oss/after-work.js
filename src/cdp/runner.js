@@ -152,6 +152,7 @@ class Runner {
     }
     const srcName = path.basename(srcFile).slice(0, -3);
     for (const f of this.testFiles) {
+      utils.writeLine(`Scanning ${f}`);
       const deps = this.getDependencies(f);
       const found = this.matchDependencyName(srcName, deps);
       if (found) {
