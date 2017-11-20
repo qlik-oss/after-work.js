@@ -1,4 +1,5 @@
 /* eslint no-console: 0, class-methods-use-this: 0, no-restricted-syntax: 0 */
+const readline = require('readline');
 const path = require('path');
 const fs = require('fs');
 const chromeLauncher = require('chrome-launcher');
@@ -25,7 +26,19 @@ class Runner {
     this.isRunning = false;
     this.depMap = new Map();
     this.srcTestMap = new Map();
+    this.onlyTestFiles = [];
+    this.all = true;
     this.bind();
+  }
+  log(mode, testFiles) {
+    console.log(`${mode}`);
+    console.log('  test');
+    testFiles.forEach((f) => {
+      console.log(`    \u001b[90m${f}\u001b[0m`);
+    });
+    console.log('\nSave\u001b[90m a test file or source file to run only affected tests\u001b[0m');
+    console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
+    return this;
   }
   bind() {
     if (!this.argv.url) {
@@ -54,6 +67,7 @@ class Runner {
 
     this.mediator.on('ended', async (stats) => {
       console.log('Runner ended\n');
+      this.started = false;
       this.ended = true;
       this.isRunning = false;
       await this.exit(stats.failures);
@@ -160,27 +174,63 @@ class Runner {
         return [f];
       }
     }
+    utils.clearLine();
     console.log(`Couldn't find a test file for ${srcFile}`);
     return [];
   }
-  async onWatch(f) {
-    if (this.isRunning) {
-      return;
-    }
-    let testFiles = [f];
-    if (this.depMap.get(f)) {
-      this.depMap.delete(f);
-    }
-    const isTestFile = this.testFiles.indexOf(f) !== -1;
-    if (!isTestFile) {
-      testFiles = this.matchDependency(f);
-    }
-    const relativeFiles = this.relativeBaseUrlFiles(testFiles);
+  async reloadAndRunTests(relativeFiles) {
+    this.isRunning = true;
     const injectAwFiles = `window.awFiles = ${JSON.stringify(relativeFiles)};`;
     await this.client.Page.reload({ ignoreCache: true, scriptToEvaluateOnLoad: injectAwFiles });
   }
+  async onWatch(abs, rel) {
+    if (this.isRunning) {
+      return;
+    }
+    let testFiles = [abs];
+    if (this.depMap.get(abs)) {
+      this.depMap.delete(abs);
+    }
+    this.all = false;
+    const isTestFile = this.testFiles.indexOf(abs) !== -1;
+    if (!isTestFile) {
+      testFiles = this.matchDependency(abs);
+      const nycOpts = Object.assign({}, this.argv.nyc, { exclude: ['**', `!${rel}`] });
+      this.nyc = new NYC(nycOpts);
+    } else {
+      this.nyc = new NYC(this.argv.nyc);
+    }
+
+    this.onlyTestFiles = this.relativeBaseUrlFiles(testFiles);
+    await this.reloadAndRunTests(this.onlyTestFiles);
+  }
   watch() {
-    chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f)));
+    chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f), f));
+  }
+  setupKeyPress() {
+    if (!this.argv.watch) {
+      return this;
+    }
+    readline.emitKeypressEvents(process.stdin);
+    process.stdin.setRawMode(true);
+    process.stdin.setEncoding('utf8');
+    process.stdin.on('keypress', (str) => {
+      if (str === '\u0003') {
+        process.exit(0);
+      }
+      if (this.isRunning) {
+        return;
+      }
+      switch (str) {
+        case 'a':
+          this.all = true;
+          this.nyc = new NYC(this.argv.nyc);
+          this.reloadAndRunTests(this.testFilesBrowser);
+          break;
+        default: break;
+      }
+    });
+    return this;
   }
   autoDetectDebug() {
     const exv = process.execArgv.join();
@@ -249,6 +299,9 @@ class Runner {
       this.nyc.report();
     }
     if (this.argv.watch) {
+      const mode = this.all ? 'All' : 'Only';
+      const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
+      this.log(mode, testFiles);
       return;
     }
     await this.client.close();

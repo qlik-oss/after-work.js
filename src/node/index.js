@@ -117,12 +117,12 @@ class Runner {
       if (this.argv.coverage) {
         this.nyc.writeCoverageFile();
         this.nyc.report();
-        if (this.argv.watch) {
-          const mode = this.all ? 'All' : 'Only';
-          const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
-          const srcFiles = this.all ? [`${this.argv.src}`] : this.onlySrcFiles;
-          this.log(mode, testFiles, srcFiles);
-        }
+      }
+      if (this.argv.watch) {
+        const mode = this.all ? 'All' : 'Only';
+        const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
+        const srcFiles = this.all ? [`${this.argv.src}`] : this.onlySrcFiles;
+        this.log(mode, testFiles, srcFiles);
       }
       this.isRunning = false;
     });
@@ -164,7 +164,6 @@ class Runner {
           delete require.cache[f];
         }
       });
-      utils.writeLine('Source files cache cleared');
     }
     testFiles.forEach((f) => {
       if (require.cache[f]) {
@@ -172,7 +171,6 @@ class Runner {
       }
       this.mocha.addFile(f);
     });
-    utils.writeLine('Test files cache cleared');
     if (this.argv.coverage) {
       srcFiles.forEach((f) => {
         utils.writeLine(`Loading ${f}`);
@@ -259,7 +257,7 @@ const node = {
   Runner,
   configure,
   coerceNyc,
-  command: ['node [options]', '$0'],
+  command: ['node', '$0'],
   desc: 'Run tests in node',
   builder(yargs) {
     return yargs

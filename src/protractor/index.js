@@ -7,7 +7,7 @@ const fs = require('fs');
 const options = require('./options');
 
 const protractor = {
-  command: ['protractor [options]', 'ptor'],
+  command: ['protractor', 'ptor'],
   desc: 'Run protractor',
   getConfig(configPath) {
     const baseConfig = initConfig();

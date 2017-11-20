@@ -65,6 +65,7 @@ module.exports = {
       '**/*require*.js',
       '**/*sinon*.js',
       '**/*chai*.js',
+      '**/*.spec.js',
     ],
     type: 'array',
   },

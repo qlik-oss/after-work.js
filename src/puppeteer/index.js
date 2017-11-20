@@ -23,7 +23,7 @@ function run(files, mochaOpts) {
 }
 
 const puppet = {
-  command: ['puppeteer [options]', 'puppet'],
+  command: ['puppeteer', 'puppet'],
   desc: 'Run tests with puppeteer',
   builder(yargs) {
     return yargs

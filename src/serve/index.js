@@ -3,7 +3,7 @@ const fs = require('fs');
 const createServer = require('../server');
 
 const server = {
-  command: ['serve [options]'],
+  command: ['serve'],
   desc: 'Serve files',
   builder(yargs) {
     return yargs

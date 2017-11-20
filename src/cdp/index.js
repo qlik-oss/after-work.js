@@ -10,7 +10,7 @@ process.on('unhandledRejection', (err) => {
 });
 
 const cdp = {
-  command: ['cdp [options]', 'chrome'],
+  command: ['cdp', 'chrome'],
   desc: 'Run tests with cdp (chrome devtools protocol)',
   builder(yargs) {
     return yargs
@@ -59,6 +59,7 @@ const cdp = {
       .setTestFiles()
       .setUrl(argv.url)
       .maybeCreateHttpServer()
+      .setupKeyPress()
       .autoDetectDebug();
 
     (async function run() {
