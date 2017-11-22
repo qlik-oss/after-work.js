@@ -53,6 +53,8 @@
     "yargs": "^10.0.3"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.5",
+    "@types/mocha": "^2.2.44",
     "babel-core": "^6.26.0",
     "babel-plugin-istanbul": "^4.1.5",
     "babel-preset-env": "^1.6.1",
@@ -60,7 +62,9 @@
     "coveralls": "^3.0.0",
     "eslint": "4.8.0",
     "eslint-config-airbnb-base": "12.0.2",
-    "eslint-plugin-import": "2.7.0"
+    "eslint-plugin-import": "2.7.0",
+    "requirejs": "^2.3.5",
+    "typescript": "^2.6.1"
   },
   "engines": {
     "node": "> 8"

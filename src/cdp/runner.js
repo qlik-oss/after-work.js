@@ -41,6 +41,10 @@ class Runner {
     return this;
   }
   bind() {
+    if (this.argv.chrome.devtools && this.argv.coverage) {
+      console.log('Can not use coverage with devtools. Coverage set to false');
+      this.argv.coverage = false;
+    }
     if (!this.argv.url) {
       this.fail('`options.url` must be specified to run tests');
     }
@@ -216,7 +220,7 @@ class Runner {
     process.stdin.setEncoding('utf8');
     process.stdin.on('keypress', (str) => {
       if (str === '\u0003') {
-        process.exit(0);
+        this.exit(0, true);
       }
       if (this.isRunning) {
         return;
@@ -252,7 +256,14 @@ class Runner {
     return files.map(file => this.relativeBaseUrlFile(file));
   }
   setTestFiles() {
-    this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f));
+    this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f)).map((f) => {
+      const parts = f.split('.');
+      const ext = parts.pop();
+      if (ext === 'ts') {
+        return `${parts.join('.')}.js`;
+      }
+      return f;
+    });
 
     if (!this.testFiles.length) {
       console.log('No files found for:', this.argv.glob);
@@ -277,7 +288,8 @@ class Runner {
   }
   maybeCreateHttpServer() {
     if (/^(http(s?)):\/\//.test(this.argv.url)) {
-      createHttpServer(this.argv.transform.testExclude, this.argv.coverage, this.argv.instrument.testExclude, this.argv.http); //eslint-disable-line
+      //createHttpServer(this.argv.transform.testExclude, this.argv.coverage, this.argv.instrument.testExclude, this.argv.http); //eslint-disable-line
+      createHttpServer(this.argv);
     }
     return this;
   }
@@ -292,13 +304,13 @@ class Runner {
     const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__', returnByValue: true });
     return value;
   }
-  async exit(code) {
-    if (this.argv.coverage) {
+  async exit(code, force) {
+    if (!force && this.argv.coverage) {
       global.__coverage__ = await this.extractCoverage(); // eslint-disable-line
       this.nyc.writeCoverageFile();
       this.nyc.report();
     }
-    if (this.argv.watch) {
+    if (!force && this.argv.watch) {
       const mode = this.all ? 'All' : 'Only';
       const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
       this.log(mode, testFiles);

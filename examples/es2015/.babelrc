@@ -2,7 +2,6 @@
   "env": {
     "test": {
       "sourceMaps": "inline",
-      "retainLines": true,
       "presets": [
         ["env", {
           "targets": {
