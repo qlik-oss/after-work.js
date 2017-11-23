@@ -1,7 +1,8 @@
-/* eslint global-require: 0, import/no-dynamic-require: 0 */
+/* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0 */
 const path = require('path');
 const fs = require('fs');
 const importCwd = require('import-cwd');
+const { isSourceMap, isTypescript, getPathWithExt, ensureFilePath } = require('./file-utils');
 
 function tryRequire(name) {
   const found = importCwd.silent(name);
@@ -28,17 +29,6 @@ function readFile(filePath) {
   });
 }
 
-function isSourceMap(f) {
-  return !fs.existsSync(f) && f.endsWith('.map');
-}
-function isTypescript(f) {
-  return f.endsWith('.ts');
-}
-function getPathWithExt(f, ext) {
-  const parts = f.split('.');
-  parts.pop();
-  return `${parts.join('.')}.${ext}`;
-}
 function getBabelOpts(filePath, argv) {
   const sourceRoot = argv.coverage ? path.dirname(filePath) : null;
   const plugins = argv.coverage && argv.instrument.testExclude.shouldInstrument(filePath) ?
@@ -46,18 +36,8 @@ function getBabelOpts(filePath, argv) {
     [];
   return { filename: filePath, sourceRoot, plugins };
 }
-function ensureFilePath(js) {
-  if (!fs.existsSync(js) && js.endsWith('.js')) {
-    const ts = getPathWithExt(js, 'ts');
-    if (!fs.existsSync(ts)) {
-      throw new Error(`Can't find file ${js}`);
-    }
-    return ts;
-  }
-  return js;
-}
+
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
-  // const compilerOptions = { sourceRoot, target: 'es5', module: 'amd', inlineSourceMap: true, inlineSources: true };
   const { transform: { typescript: { compilerOptions } } } = argv;
   compilerOptions.sourceRoot = sourceRoot;
   compilerOptions.inlineSources = true;
@@ -90,7 +70,7 @@ async function transformFile(filePath, argv) {
   let content = await readFile(filePath);
   let babelOpts = getBabelOpts(filePath, argv);
   if (isTypescript(filePath)) {
-    const { tsContent, tsBabelOpts } = transformTypescript(filePath, babelOpts.sourceRoot, content, argv);
+    const { tsContent, tsBabelOpts } = transformTypescript(filePath, babelOpts.sourceRoot, content, argv); // eslint-disable-line
     content = tsContent;
     babelOpts = Object.assign({}, babelOpts, tsBabelOpts);
   }
