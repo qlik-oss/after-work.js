@@ -31,8 +31,12 @@ class Runner {
     this.onlyTestFilesBrowser = [];
     this.all = true;
     this.bind();
+    this.debugging = false;
   }
   log(mode, testFiles) {
+    if (this.debugging) {
+      return this;
+    }
     console.log(`${mode}`);
     console.log('  test');
     testFiles.forEach((f) => {
@@ -221,6 +225,9 @@ class Runner {
     if (!this.argv.watch) {
       return this;
     }
+    if (typeof process.stdin.setRawMode !== 'function') {
+      return this;
+    }
     readline.emitKeypressEvents(process.stdin);
     process.stdin.setRawMode(true);
     process.stdin.setEncoding('utf8');
@@ -247,6 +254,7 @@ class Runner {
     const debug = exv.includes('inspect') || exv.includes('debug');
     if (debug || this.argv.chrome.devtools) {
       this.argv.mocha.timeout = 0;
+      this.debugging = true;
     }
   }
   relativeRootFile(file) {

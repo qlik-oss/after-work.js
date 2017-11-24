@@ -99,6 +99,11 @@ module.exports = {
     default: 'min',
     type: 'string',
   },
+  'mocha.reporterOptions': {
+    description: 'Reporter options',
+    default: undefined,
+    type: 'object',
+  },
   'client.port': {
     description: 'Chrome port',
     default: 9222,

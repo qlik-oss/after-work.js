@@ -24,8 +24,12 @@ class Runner {
     this.isRunning = false;
     this.all = true;
     this.libs = libs;
+    this.debugging = false;
   }
   log(mode, testFiles, srcFiles) {
+    if (this.debugging) {
+      return this;
+    }
     console.log(`${mode}`);
     console.log('  test');
     testFiles.forEach((f) => {
@@ -132,6 +136,9 @@ class Runner {
     if (!this.argv.watch) {
       return this;
     }
+    if (typeof process.stdin.setRawMode !== 'function') {
+      return this;
+    }
     readline.emitKeypressEvents(process.stdin);
     process.stdin.setRawMode(true);
     process.stdin.setEncoding('utf8');
@@ -222,6 +229,7 @@ class Runner {
     const debug = exv.includes('inspect') || exv.includes('debug');
     if (debug) {
       this.argv.mocha.enableTimeouts = false;
+      this.debugging = true;
     }
     return this;
   }
