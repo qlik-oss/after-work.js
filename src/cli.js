@@ -13,4 +13,5 @@ yargs
   .command(require('./cdp'))
   .command(require('./serve'))
   .command(require('./puppeteer'))
+  .wrap(Math.min(120, yargs.terminalWidth()))
   .argv;
