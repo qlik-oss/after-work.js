@@ -32,6 +32,11 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  'transform.typescript.config': {
+    description: 'Typescript config file',
+    default: 'tsconfig.json',
+    type: 'string',
+  },
   'transform.include': {
     description: 'Transform files with babel?',
     default: [],

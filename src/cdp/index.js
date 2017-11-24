@@ -1,9 +1,10 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, no-underscore-dangle: 0 */
 const fs = require('fs');
+const path = require('path');
+const testExclude = require('test-exclude');
+const importCwd = require('import-cwd');
 const options = require('./options');
 const Runner = require('./runner');
-
-const testExclude = require('test-exclude');
 
 process.on('unhandledRejection', (err) => {
   console.error(`Promise Rejection:${err}`);
@@ -42,6 +43,7 @@ const cdp = {
       })
       .coerce('transform', (opt) => {
         opt.testExclude = testExclude({ include: opt.include, exclude: opt.exclude });
+        opt.typescript.compilerOptions = Object.assign({ compilerOptions: {} }, importCwd.silent(path.resolve(opt.typescript.config))).compilerOptions;
         return opt;
       })
       .coerce('chrome', (opt) => {

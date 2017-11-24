@@ -1,47 +1,96 @@
-/* eslint global-require: 0, import/no-dynamic-require: 0 */
+/* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0 */
 const path = require('path');
+const fs = require('fs');
+const importCwd = require('import-cwd');
+const { isSourceMap, isTypescript, getPathWithExt, ensureFilePath } = require('./file-utils');
 
 function tryRequire(name) {
-  try {
+  const found = importCwd.silent(name);
+  if (!found) {
     return require(`${name}`);
-  } catch (_) {
-    return require(`${process.cwd()}/node_modules/${name}`);
   }
+  return found;
 }
 
 const babel = tryRequire('babel-core');
 const babelPluginIstanbul = tryRequire('babel-plugin-istanbul').default;
+const tsc = tryRequire('typescript');
+const virtualSourceMap = new Map();
 
-function transformFile(filePath, coverage) {
-  return (resolve, reject) => {
-    const babelOpts = { plugins: coverage ? [[babelPluginIstanbul, {}]] : [] };
-    babel.transformFile(filePath, babelOpts, (err, res) => {
+function readFile(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (err, content) => {
       if (err) {
         reject(err);
-      } else {
-        const { code } = res;
-        resolve(code);
+        return;
       }
+      resolve(content);
     });
-  };
-}
-function transformify(filePath, coverage) {
-  return new Promise(transformFile(filePath, coverage));
+  });
 }
 
-module.exports = function transform(exclude, coverage, coverageExclude) {
-  const shouldInstrument = url => (coverage ?
-    coverageExclude.shouldInstrument(url) :
-    exclude.shouldInstrument(url));
+function getBabelOpts(filePath, argv) {
+  const sourceRoot = argv.coverage ? path.dirname(filePath) : null;
+  const plugins = argv.coverage && argv.instrument.testExclude.shouldInstrument(filePath) ?
+    [[babelPluginIstanbul, {}]] :
+    [];
+  return { filename: filePath, sourceRoot, plugins };
+}
 
+function transformTypescript(filePath, sourceRoot, tsContent, argv) {
+  const { transform: { typescript: { compilerOptions } } } = argv;
+  compilerOptions.sourceRoot = sourceRoot;
+  compilerOptions.inlineSources = true;
+  if (!compilerOptions.sourceMap && !compilerOptions.inlineSourceMap) {
+    compilerOptions.inlineSourceMap = true;
+  }
+  if (compilerOptions.module !== 'amd') {
+    compilerOptions.module = 'amd';
+  }
+  if (!compilerOptions.target) {
+    compilerOptions.target = 'es5';
+  }
+  const transpileOpts = { fileName: filePath, compilerOptions };
+  const res = tsc.transpileModule(tsContent, transpileOpts);
+  tsContent = res.outputText;
+  let tsBabelOpts = {};
+  if (res.sourceMapText) {
+    const inputSourceMap = JSON.parse(res.sourceMapText);
+    tsBabelOpts = { sourceMaps: true, inputSourceMap };
+  } else {
+    tsBabelOpts = { sourceMaps: 'inline' };
+  }
+  return { tsContent, tsBabelOpts };
+}
+async function transformFile(filePath, argv) {
+  if (isSourceMap(filePath)) {
+    return virtualSourceMap.get(filePath);
+  }
+  filePath = ensureFilePath(filePath);
+  let content = await readFile(filePath);
+  let babelOpts = getBabelOpts(filePath, argv);
+  if (isTypescript(filePath)) {
+    const { tsContent, tsBabelOpts } = transformTypescript(filePath, babelOpts.sourceRoot, content, argv); // eslint-disable-line
+    content = tsContent;
+    babelOpts = Object.assign({}, babelOpts, tsBabelOpts);
+  }
+  const { code, map } = babel.transform(content, babelOpts);
+  if (map) {
+    const key = getPathWithExt(filePath, 'js.map');
+    virtualSourceMap.set(key, map);
+  }
+  return code;
+}
+
+module.exports = function transform(argv) {
   return async (ctx, next) => {
     await next();
-    const { request, response } = ctx;
     // We need to remove the leading slash else it will be excluded by default
-    const url = request.url.substring(1);
-    if (shouldInstrument(url)) {
-      const filePath = path.relative(process.cwd(), url);
-      response.body = await transformify(filePath, coverage);
+    const url = ctx.url.substring(1);
+    if (argv.instrument.testExclude.shouldInstrument(url) ||
+      argv.transform.testExclude.shouldInstrument(url)) {
+      const { response } = ctx;
+      response.body = await transformFile(url, argv);
     }
   };
 };

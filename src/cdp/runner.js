@@ -12,6 +12,7 @@ const NYC = require('nyc');
 const Mediator = require('./mediator');
 const connect = require('./connect');
 const utils = require('../terminal-utils');
+const { ensureFilePath, getExt, getPathWithExt } = require('./file-utils');
 
 class Runner {
   constructor(argv = { chrome: { chromeFlags: [] }, client: {} }) {
@@ -27,6 +28,7 @@ class Runner {
     this.depMap = new Map();
     this.srcTestMap = new Map();
     this.onlyTestFiles = [];
+    this.onlyTestFilesBrowser = [];
     this.all = true;
     this.bind();
   }
@@ -41,6 +43,10 @@ class Runner {
     return this;
   }
   bind() {
+    if (this.argv.chrome.devtools && this.argv.coverage) {
+      console.log('Can not use coverage with devtools. Coverage set to false');
+      this.argv.coverage = false;
+    }
     if (!this.argv.url) {
       this.fail('`options.url` must be specified to run tests');
     }
@@ -146,7 +152,8 @@ class Runner {
     if (cached) {
       return cached;
     }
-    const deps = precinct(fs.readFileSync(f, 'utf8'), { amd: { skipLazyLoaded: true } });
+    const rf = ensureFilePath(f);
+    const deps = precinct(fs.readFileSync(rf, 'utf8'), { amd: { skipLazyLoaded: true } });
     this.depMap.set(f, deps);
     return deps;
   }
@@ -164,7 +171,7 @@ class Runner {
     if (cache) {
       return cache;
     }
-    const srcName = path.basename(srcFile).slice(0, -3);
+    const srcName = path.basename(srcFile).split('.').shift();
     for (const f of this.testFiles) {
       utils.writeLine(`Scanning ${f}`);
       const deps = this.getDependencies(f);
@@ -183,11 +190,14 @@ class Runner {
     const injectAwFiles = `window.awFiles = ${JSON.stringify(relativeFiles)};`;
     await this.client.Page.reload({ ignoreCache: true, scriptToEvaluateOnLoad: injectAwFiles });
   }
-  async onWatch(abs, rel) {
+  async onWatch(virtualAbs, virtualRel) {
     if (this.isRunning) {
       return;
     }
-    let testFiles = [abs];
+    const ext = getExt(virtualAbs);
+    const abs = getPathWithExt(virtualAbs, 'js');
+    const rel = getPathWithExt(virtualRel, 'js');
+    let testFiles = [rel];
     if (this.depMap.get(abs)) {
       this.depMap.delete(abs);
     }
@@ -200,9 +210,9 @@ class Runner {
     } else {
       this.nyc = new NYC(this.argv.nyc);
     }
-
-    this.onlyTestFiles = this.relativeBaseUrlFiles(testFiles);
-    await this.reloadAndRunTests(this.onlyTestFiles);
+    this.onlyTestFiles = testFiles.map(f => getPathWithExt(f, ext));
+    this.onlyTestFilesBrowser = this.relativeBaseUrlFiles(testFiles);
+    await this.reloadAndRunTests(this.onlyTestFilesBrowser);
   }
   watch() {
     chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f), f));
@@ -216,7 +226,7 @@ class Runner {
     process.stdin.setEncoding('utf8');
     process.stdin.on('keypress', (str) => {
       if (str === '\u0003') {
-        process.exit(0);
+        this.exit(0, true);
       }
       if (this.isRunning) {
         return;
@@ -252,8 +262,14 @@ class Runner {
     return files.map(file => this.relativeBaseUrlFile(file));
   }
   setTestFiles() {
-    this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f));
-
+    this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f)).map((f) => {
+      const parts = f.split('.');
+      const ext = parts.pop();
+      if (ext === 'ts') {
+        return `${parts.join('.')}.js`;
+      }
+      return f;
+    });
     if (!this.testFiles.length) {
       console.log('No files found for:', this.argv.glob);
       process.exit(1);
@@ -277,7 +293,7 @@ class Runner {
   }
   maybeCreateHttpServer() {
     if (/^(http(s?)):\/\//.test(this.argv.url)) {
-      createHttpServer(this.argv.transform.testExclude, this.argv.coverage, this.argv.instrument.testExclude, this.argv.http); //eslint-disable-line
+      createHttpServer(this.argv);
     }
     return this;
   }
@@ -292,13 +308,13 @@ class Runner {
     const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__', returnByValue: true });
     return value;
   }
-  async exit(code) {
-    if (this.argv.coverage) {
+  async exit(code, force) {
+    if (!force && this.argv.coverage) {
       global.__coverage__ = await this.extractCoverage(); // eslint-disable-line
       this.nyc.writeCoverageFile();
       this.nyc.report();
     }
-    if (this.argv.watch) {
+    if (!force && this.argv.watch) {
       const mode = this.all ? 'All' : 'Only';
       const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
       this.log(mode, testFiles);
