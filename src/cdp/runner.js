@@ -75,12 +75,6 @@ class Runner {
     if (!this.argv.url) {
       this.fail('`options.url` must be specified to run tests');
     }
-    this.mediator.on('write', (output) => {
-      if (!this.argv.outputReporterOnly) {
-        return;
-      }
-      process.stdout.write(output);
-    });
     this.mediator.on('width', () => {
       if (!this.client) {
         return;
