@@ -1,19 +1,13 @@
 /* eslint func-names: 0, no-underscore-dangle: 0, no-console: 0, no-undef: 0, prefer-rest-params: 0, one-var: 0, no-plusplus: 0, max-len: 0, prefer-const: 0 */
 (function (win) {
   function shimMocha(m) {
-    const origRun = m.run;
+    const origRun = m.run.bind(m);
 
-    m.run = (...args) => {
+    m.run = () => {
       win.awMediator.emit('started', m.suite.suites.length);
-
-      m.runner = origRun.apply(mocha, ...args);
-      if (m.runner.stats && m.runner.stats.end) {
-        win.awMediator.emit('ended', m.runner.stats);
-      } else {
-        m.runner.on('end', () => {
-          win.awMediator.emit('ended', m.runner.stats);
-        });
-      }
+      m.runner = origRun(() => {
+        setTimeout(() => win.awMediator.emit('ended', m.runner.stats), 0);
+      });
       return m.runner;
     };
   }
@@ -41,7 +35,7 @@
       m.process.stdout._write = function (chunks, encoding, cb) {
         const output = chunks.toString ? chunks.toString() : chunks;
 
-        win.awMediator.emit('mocha', output);
+        win.awMediator.emit('write', output);
 
         m.process.nextTick(cb);
       };

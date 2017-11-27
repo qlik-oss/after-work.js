@@ -33,8 +33,11 @@ class Runner {
     this.bind();
     this.debugging = false;
   }
-  log(mode, testFiles) {
+  logInfo(mode, testFiles) {
     if (this.debugging) {
+      return this;
+    }
+    if (this.argv.outputReporterOnly) {
       return this;
     }
     console.log(`${mode}`);
@@ -46,15 +49,38 @@ class Runner {
     console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
     return this;
   }
+  log(msg) {
+    if (this.argv.outputReporterOnly) {
+      return;
+    }
+    console.log(msg);
+  }
+  logLine(msg) {
+    if (this.argv.outputReporterOnly) {
+      return;
+    }
+    utils.writeLine(msg);
+  }
+  logClearLine() {
+    if (this.argv.outputReporterOnly) {
+      return;
+    }
+    utils.clearLine();
+  }
   bind() {
     if (this.argv.chrome.devtools && this.argv.coverage) {
-      console.log('Can not use coverage with devtools. Coverage set to false');
+      this.log('Can not use coverage with devtools. Coverage set to false');
       this.argv.coverage = false;
     }
     if (!this.argv.url) {
       this.fail('`options.url` must be specified to run tests');
     }
-    // this.mediator.on('mocha', arg => process.stdout.write(arg));
+    this.mediator.on('write', (arg) => {
+      if (!this.argv.outputReporterOnly) {
+        return;
+      }
+      process.stdout.write(arg);
+    });
     this.mediator.on('width', () => {
       if (!this.client) {
         return;
@@ -68,8 +94,8 @@ class Runner {
       if (this.argv.coverage) {
         this.nyc.reset();
       }
-      utils.clearLine();
-      console.log('Runner started\n');
+      this.logClearLine();
+      this.log('Runner started\n');
 
       if (tests === 0) {
         this.fail('mocha.run() was called with no tests');
@@ -77,7 +103,7 @@ class Runner {
     });
 
     this.mediator.on('ended', async (stats) => {
-      console.log('Runner ended\n');
+      this.log('Runner ended\n');
       this.started = false;
       this.ended = true;
       this.isRunning = false;
@@ -111,7 +137,7 @@ class Runner {
     Network.requestWillBeSent((info) => {
       this.requests.set(info.requestId, info.request);
       if (!this.started && info.request.url.match(/^(file|http(s?)):\/\//)) {
-        utils.writeLine(info.request.url);
+        this.logLine(info.request.url);
       }
     });
     Network.loadingFailed((info) => {
@@ -148,7 +174,7 @@ class Runner {
       this.fail(`Failed to load the url: ${this.argv.url}`);
       return;
     }
-    console.log(`Navigating to ${this.argv.url}`);
+    this.log(`Navigating to ${this.argv.url}`);
     this.isRunning = true;
     await this.client.Page.navigate({ url: this.argv.url });
   }
@@ -178,7 +204,7 @@ class Runner {
     }
     const srcName = path.basename(srcFile).split('.').shift();
     for (const f of this.testFiles) {
-      utils.writeLine(`Scanning ${f}`);
+      this.logLine(`Scanning ${f}`);
       const deps = this.getDependencies(f);
       const found = this.matchDependencyName(srcName, deps);
       if (found) {
@@ -186,8 +212,8 @@ class Runner {
         return [f];
       }
     }
-    utils.clearLine();
-    console.log(`Couldn't find a test file for ${srcFile}`);
+    this.logClearLine();
+    this.log(`Couldn't find a test file for ${srcFile}`);
     return [];
   }
   async reloadAndRunTests(relativeFiles) {
@@ -280,7 +306,7 @@ class Runner {
       return f;
     });
     if (!this.testFiles.length) {
-      console.log('No files found for:', this.argv.glob);
+      this.log('No files found for:', this.argv.glob);
       process.exit(1);
     }
     this.testFilesBrowser = this.relativeBaseUrlFiles(this.testFiles);
@@ -326,7 +352,7 @@ class Runner {
     if (!force && this.argv.watch) {
       const mode = this.all ? 'All' : 'Only';
       const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
-      this.log(mode, testFiles);
+      this.logInfo(mode, testFiles);
       return;
     }
     await this.client.close();
