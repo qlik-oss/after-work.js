@@ -12,7 +12,7 @@ module.exports = {
   },
   src: {
     description: 'Glob pattern for all source files',
-    default: ['src/**/*.{js, ts}'],
+    default: ['src/**/*.js'],
     type: 'array',
   },
   require: {
@@ -28,7 +28,7 @@ module.exports = {
   },
   watchGlob: {
     description: 'Watch glob',
-    default: ['src/**/*.{js,ts}', 'test/**/*.spec.{js,ts}'],
+    default: ['src/**/*.js', 'test/**/*.spec.js'],
     type: 'array',
     alias: 'wg',
   },
@@ -73,7 +73,7 @@ module.exports = {
     type: 'boolean',
   },
   'nyc.babel': {
-    description: 'Sets up a preferred babel test environment e.g add `babel-register` to `nyc.require` `nyc.sourceMap=false` and `nyc.instrument=./lib/instrumenters/noop`',
+    description: 'Sets up a preferred babel test environment\n e.g add `babel-register` to `nyc.require`\n `nyc.sourceMap=false`\n`nyc.instrument=./lib/instrumenters/noop`',
     default: true,
     type: 'boolean',
   },

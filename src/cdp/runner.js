@@ -54,6 +54,7 @@ class Runner {
     if (!this.argv.url) {
       this.fail('`options.url` must be specified to run tests');
     }
+    // this.mediator.on('mocha', arg => process.stdout.write(arg));
     this.mediator.on('width', () => {
       if (!this.client) {
         return;

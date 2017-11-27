@@ -1,0 +1,152 @@
+diff --git a/src/node/index.js b/src/node/index.js
+index c6db984..86e4c51 100644
+--- a/src/node/index.js
++++ b/src/node/index.js
+@@ -43,10 +43,10 @@ class Runner {
+     console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
+     return this;
+   }
+-  matchDependency(found, testName, extCnt) {
++  matchDependency(found, testName) {
+     let use = found;
+     if (found.length > 1) {
+-      const matchName = found.filter(id => path.basename(id).slice(0, extCnt) === testName);
++      const matchName = found.filter(id => path.basename(id).split('.').shift() === testName);
+       if (matchName.length === 1) {
+         use = matchName;
+       } else {
+@@ -55,26 +55,34 @@ class Runner {
+     }
+     return use;
+   }
++  safeDeleteCache(f) {
++    if (require.cache[f]) {
++      delete require.cache[f];
++    }
++  }
+   setOnlyFilesFromTestFile(testFile) {
+-    this.onlyTestFiles = [testFile];
+-    const testName = path.basename(testFile).slice(0, -8);
++    const testName = path.basename(testFile).split('.').shift();
++    this.safeDeleteCache();
++    require(`${testFile}`);
+     const mod = require.cache[testFile];
++    console.log(mod.children);
+     const found = mod
+       .children
+       .filter(m => this.srcFiles.indexOf(m.id) !== -1)
+       .map(m => m.id);
+-    const use = this.matchDependency(found, testName, -3);
++    const use = this.matchDependency(found, testName);
++    this.onlyTestFiles = [testFile];
+     this.onlySrcFiles = [...new Set([...use])];
+   }
+   setOnlyFilesFromSrcFile(srcFile) {
+-    const srcName = path.basename(srcFile).slice(0, -3);
++    const srcName = path.basename(srcFile).split('.').shift();
+     const found = this.testFiles.filter((f) => {
+       const mod = require.cache[f];
+       return mod
+         .children
+         .filter(m => m.id === srcFile).length !== 0;
+     });
+-    const use = this.matchDependency(found, srcName, -8);
++    const use = this.matchDependency(found, srcName);
+     this.onlyTestFiles = [...new Set([...use])];
+     this.onlySrcFiles = [srcFile];
+   }
+@@ -113,6 +121,7 @@ class Runner {
+   runTests() {
+     this.isRunning = true;
+     this.mochaRunner = this.mocha.run((failures) => {
++      this.isRunning = false;
+       process.on('exit', () => {
+         process.exit(failures);
+       });
+@@ -128,7 +137,6 @@ class Runner {
+         const srcFiles = this.all ? [`${this.argv.src}`] : this.onlySrcFiles;
+         this.log(mode, testFiles, srcFiles);
+       }
+-      this.isRunning = false;
+     });
+     return this;
+   }
+@@ -167,15 +175,11 @@ class Runner {
+         this.isWrapped = true;
+       }
+       srcFiles.forEach((f) => {
+-        if (require.cache[f]) {
+-          delete require.cache[f];
+-        }
++        this.safeDeleteCache(f);
+       });
+     }
+     testFiles.forEach((f) => {
+-      if (require.cache[f]) {
+-        delete require.cache[f];
+-      }
++      this.safeDeleteCache(f);
+       this.mocha.addFile(f);
+     });
+     if (this.argv.coverage) {
+@@ -218,10 +222,33 @@ class Runner {
+     }
+     this.setupAndRunTests(this.onlyTestFiles, this.onlySrcFiles);
+   }
++  onWatchAdd(f) {
++    const base = path.basename(f);
++    const parts = base.split('.');
++    if (parts.length > 1) {
++      this.testFiles.push(f);
++    } else {
++      this.srcFiles.push(f);
++    }
++  }
++  onWatchUnlink(f) {
++    const tIx = this.testFiles.indexOf(f);
++    const sIx = this.srcFiles.indexOf(f);
++    if (tIx !== -1) {
++      this.testFiles.splice(tIx, 1);
++    }
++    if (sIx !== -1) {
++      this.srcFiles.splice(sIx, 1);
++    }
++    this.safeDeleteCache(f);
++  }
+   run() {
+     this.setupAndRunTests(this.testFiles, this.srcFiles);
+     if (this.argv.watch) {
+-      this.libs.chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f)));
++      this.libs.chokidar.watch(this.argv.watchGlob, { ignoreInitial: true })
++        .on('change', f => this.onWatch(path.resolve(f)))
++        .on('add', f => this.onWatchAdd(path.resolve(f)))
++        .on('unlink', f => this.onWatchUnlink(path.resolve(f)));
+     }
+   }
+   autoDetectDebug() {
+diff --git a/src/node/options.js b/src/node/options.js
+index ba2a98d..5641f5a 100644
+--- a/src/node/options.js
++++ b/src/node/options.js
+@@ -12,7 +12,7 @@ module.exports = {
+   },
+   src: {
+     description: 'Glob pattern for all source files',
+-    default: ['src/**/*.{js, ts}'],
++    default: ['src/**/*.js'],
+     type: 'array',
+   },
+   require: {
+diff --git a/test/unit/node/index.spec.js b/test/unit/node/index.spec.js
+index 77d8db4..996bcd9 100644
+--- a/test/unit/node/index.spec.js
++++ b/test/unit/node/index.spec.js
+@@ -197,7 +197,7 @@ describe('Node command', () => {
+     it('should run with watching', () => {
+       sandbox.stub(console, 'log');
+       const watchGlob = ['foo.js'];
+-      const on = sandbox.stub();
++      const on = sandbox.stub().returnsThis();
+       const watch = sandbox.stub().returns({ on });
+       const chokidar = { watch };
+       const runner = new Runner({ watch: true, watchGlob }, { chokidar });
