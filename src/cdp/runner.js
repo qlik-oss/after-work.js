@@ -75,11 +75,11 @@ class Runner {
     if (!this.argv.url) {
       this.fail('`options.url` must be specified to run tests');
     }
-    this.mediator.on('write', (arg) => {
+    this.mediator.on('write', (output) => {
       if (!this.argv.outputReporterOnly) {
         return;
       }
-      process.stdout.write(arg);
+      process.stdout.write(output);
     });
     this.mediator.on('width', () => {
       if (!this.client) {
@@ -123,6 +123,10 @@ class Runner {
     });
 
     Runtime.consoleAPICalled(({ type, args }) => {
+      if (type === 'info') {
+        process.stdout.write(args.shift().value);
+        return;
+      }
       if (type === 'warning') {
         type = 'warn';
       }
