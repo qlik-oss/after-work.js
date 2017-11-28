@@ -32,9 +32,9 @@
       delete win.Mocha;
       win.Mocha = m;
 
-      m.process.stdout._write = function (chunks, encoding, cb) {
+      m.process.nextTick = cb => cb();
+      m.process.stdout._write = (chunks, encoding, cb) => {
         const output = chunks.toString ? chunks.toString() : chunks;
-        // win.awMediator.emit('write', output);
         console.info(output);
         m.process.nextTick(cb);
       };

@@ -43,6 +43,12 @@ class Runner {
     console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
     return this;
   }
+  logLine(msg) {
+    if (this.argv.outputReporterOnly) {
+      return;
+    }
+    utils.writeLine(msg);
+  }
   matchDependency(found, testName, extCnt) {
     let use = found;
     if (found.length > 1) {
@@ -180,7 +186,7 @@ class Runner {
     });
     if (this.argv.coverage) {
       srcFiles.forEach((f) => {
-        utils.writeLine(`Loading ${f}`);
+        this.logLine(`Loading ${f}`);
         require(`${f}`);
       });
     }
@@ -193,7 +199,7 @@ class Runner {
     }
     this.mocha = new this.libs.Mocha(this.argv.mocha);
     this.mocha.suite.on('pre-require', (_, file) => {
-      utils.writeLine(`Loading ${file}`);
+      this.logLine(`Loading ${file}`);
     });
     this.nyc = new this.libs.NYC(this.argv.nyc);
     this
