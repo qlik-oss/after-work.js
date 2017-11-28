@@ -160,7 +160,7 @@ describe('Node command', () => {
       sandbox.stub(runner, 'setup').returnsThis();
       sandbox.stub(runner, 'runTests').returnsThis();
       runner.mochaRunner = mochaRunner;
-      runner.setupAndRunTests();
+      runner.setupAndRunTests([], []);
       expect(procRemoveAllListeners).to.have.been.calledWithExactly();
       expect(removeAllListeners).to.have.been.calledWithExactly();
     });
@@ -178,7 +178,7 @@ describe('Node command', () => {
       const set = sandbox.stub(runner, 'setup').returnsThis();
       const run = sandbox.stub(runner, 'runTests').returnsThis();
       runner.mochaRunner = mochaRunner;
-      runner.setupAndRunTests();
+      runner.setupAndRunTests([], []);
       expect(del).to.have.been.calledImmediatelyBefore(set);
       expect(run).to.have.been.calledImmediatelyAfter(set);
     });
@@ -197,7 +197,7 @@ describe('Node command', () => {
     it('should run with watching', () => {
       sandbox.stub(console, 'log');
       const watchGlob = ['foo.js'];
-      const on = sandbox.stub();
+      const on = sandbox.stub().returnsThis();
       const watch = sandbox.stub().returns({ on });
       const chokidar = { watch };
       const runner = new Runner({ watch: true, watchGlob }, { chokidar });

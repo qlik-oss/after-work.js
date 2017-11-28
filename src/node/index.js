@@ -49,10 +49,16 @@ class Runner {
     }
     utils.writeLine(msg);
   }
-  matchDependency(found, testName, extCnt) {
+  logClearLine() {
+    if (this.argv.outputReporterOnly) {
+      return;
+    }
+    utils.clearLine();
+  }
+  matchDependency(found, testName) {
     let use = found;
     if (found.length > 1) {
-      const matchName = found.filter(id => path.basename(id).slice(0, extCnt) === testName);
+      const matchName = found.filter(id => path.basename(id).split('.').shift() === testName);
       if (matchName.length === 1) {
         use = matchName;
       } else {
@@ -61,26 +67,39 @@ class Runner {
     }
     return use;
   }
+  safeDeleteCache(f) {
+    if (require.cache[f]) {
+      delete require.cache[f];
+    }
+  }
+  safeRequireCache(f) {
+    try {
+      require(`${f}`);
+      return require.cache[f];
+    } catch (_) { } //eslint-disable-line
+    return { children: [] };
+  }
   setOnlyFilesFromTestFile(testFile) {
-    this.onlyTestFiles = [testFile];
-    const testName = path.basename(testFile).slice(0, -8);
-    const mod = require.cache[testFile];
+    const testName = path.basename(testFile).split('.').shift();
+    this.safeDeleteCache(testFile);
+    const mod = this.safeRequireCache(testFile);
     const found = mod
       .children
       .filter(m => this.srcFiles.indexOf(m.id) !== -1)
       .map(m => m.id);
-    const use = this.matchDependency(found, testName, -3);
+    const use = this.matchDependency(found, testName);
+    this.onlyTestFiles = [testFile];
     this.onlySrcFiles = [...new Set([...use])];
   }
   setOnlyFilesFromSrcFile(srcFile) {
-    const srcName = path.basename(srcFile).slice(0, -3);
+    const srcName = path.basename(srcFile).split('.').shift();
     const found = this.testFiles.filter((f) => {
-      const mod = require.cache[f];
+      const mod = this.safeRequireCache(f);
       return mod
         .children
         .filter(m => m.id === srcFile).length !== 0;
     });
-    const use = this.matchDependency(found, srcName, -8);
+    const use = this.matchDependency(found, srcName);
     this.onlyTestFiles = [...new Set([...use])];
     this.onlySrcFiles = [srcFile];
   }
@@ -116,27 +135,38 @@ class Runner {
     delete global.__coverage__; // eslint-disable-line
     return this;
   }
+  onFinished(failures) {
+    this.isRunning = false;
+    process.on('exit', () => {
+      process.exit(failures);
+    });
+  }
+  onEnd() {
+    if (this.argv.coverage) {
+      this.nyc.writeCoverageFile();
+      this.nyc.report();
+    }
+    if (this.argv.watch) {
+      const mode = this.all ? 'All' : 'Only';
+      const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
+      const srcFiles = this.all ? [`${this.argv.src}`] : this.onlySrcFiles;
+      this.log(mode, testFiles, srcFiles);
+    }
+  }
   runTests() {
     this.isRunning = true;
-    this.mochaRunner = this.mocha.run((failures) => {
-      process.on('exit', () => {
-        process.exit(failures);
-      });
-    });
-    this.mochaRunner.on('end', () => {
-      if (this.argv.coverage) {
-        this.nyc.writeCoverageFile();
-        this.nyc.report();
-      }
-      if (this.argv.watch) {
-        const mode = this.all ? 'All' : 'Only';
-        const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
-        const srcFiles = this.all ? [`${this.argv.src}`] : this.onlySrcFiles;
-        this.log(mode, testFiles, srcFiles);
-      }
+    try {
+      this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
+      this.mochaRunner.on('start', () => this.logClearLine());
+      this.mochaRunner.on('end', () => this.onEnd());
+    } catch (err) {
       this.isRunning = false;
-    });
-    return this;
+      console.log(err);
+      if (this.argv.watch) {
+        return;
+      }
+      process.exit(1);
+    }
   }
   setupKeyPress() {
     if (!this.argv.watch) {
@@ -172,16 +202,10 @@ class Runner {
         this.nyc.wrap();
         this.isWrapped = true;
       }
-      srcFiles.forEach((f) => {
-        if (require.cache[f]) {
-          delete require.cache[f];
-        }
-      });
+      srcFiles.forEach(f => this.safeDeleteCache(f));
     }
     testFiles.forEach((f) => {
-      if (require.cache[f]) {
-        delete require.cache[f];
-      }
+      this.safeDeleteCache(f);
       this.mocha.addFile(f);
     });
     if (this.argv.coverage) {
@@ -207,6 +231,26 @@ class Runner {
       .setup(testFiles, srcFiles)
       .runTests();
   }
+  onWatchAdd(f) {
+    const base = path.basename(f);
+    const parts = base.split('.');
+    if (parts.length > 1) {
+      this.testFiles.push(f);
+    } else {
+      this.srcFiles.push(f);
+    }
+  }
+  onWatchUnlink(f) {
+    const tIx = this.testFiles.indexOf(f);
+    const sIx = this.srcFiles.indexOf(f);
+    if (tIx !== -1) {
+      this.testFiles.splice(tIx, 1);
+    }
+    if (sIx !== -1) {
+      this.srcFiles.splice(sIx, 1);
+    }
+    this.safeDeleteCache(f);
+  }
   onWatch(f) {
     if (this.isRunning) {
       return;
@@ -227,7 +271,10 @@ class Runner {
   run() {
     this.setupAndRunTests(this.testFiles, this.srcFiles);
     if (this.argv.watch) {
-      this.libs.chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f)));
+      this.libs.chokidar.watch(this.argv.watchGlob, { ignoreInitial: true })
+        .on('change', f => this.onWatch(path.resolve(f)))
+        .on('add', f => this.onWatchAdd(path.resolve(f)))
+        .on('unlink', f => this.onWatchUnlink(path.resolve(f)));
     }
   }
   autoDetectDebug() {
