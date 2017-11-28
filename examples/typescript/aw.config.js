@@ -13,6 +13,7 @@ module.exports = {
     '*sinon*.js',
     '*chai*.js',
     '**/main.js',
+    '**/*.spec.ts',
   ],
   'transform.typescript.config': 'examples/typescript/tsconfig.json',
 };

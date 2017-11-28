@@ -31,15 +31,17 @@ function readFile(filePath) {
 
 function getBabelOpts(filePath, argv) {
   const sourceRoot = argv.coverage ? path.dirname(filePath) : null;
+  const filename = filePath;
   const plugins = argv.coverage && argv.instrument.testExclude.shouldInstrument(filePath) ?
     [[babelPluginIstanbul, {}]] :
     [];
-  return { filename: filePath, sourceRoot, plugins };
+  return { filename, sourceRoot, plugins };
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   const { transform: { typescript: { compilerOptions } } } = argv;
-  compilerOptions.sourceRoot = sourceRoot;
+  const fileName = argv.coverage ? path.basename(filePath) : filePath;
+  compilerOptions.sourceRoot = argv.coverage ? path.resolve(path.dirname(filePath)) : sourceRoot;
   compilerOptions.inlineSources = true;
   if (!compilerOptions.sourceMap && !compilerOptions.inlineSourceMap) {
     compilerOptions.inlineSourceMap = true;
@@ -50,7 +52,7 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   if (!compilerOptions.target) {
     compilerOptions.target = 'es5';
   }
-  const transpileOpts = { fileName: filePath, compilerOptions };
+  const transpileOpts = { fileName, compilerOptions };
   const res = tsc.transpileModule(tsContent, transpileOpts);
   tsContent = res.outputText;
   let tsBabelOpts = {};

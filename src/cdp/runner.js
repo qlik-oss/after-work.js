@@ -343,8 +343,12 @@ class Runner {
   }
   async exit(code, force) {
     if (!force && this.argv.coverage) {
-      global.__coverage__ = await this.extractCoverage(); // eslint-disable-line
-      this.nyc.writeCoverageFile();
+      const coverage = await this.extractCoverage();
+      fs.writeFileSync(
+        path.resolve(this.nyc.tempDirectory(), `${Date.now()}.json`),
+        JSON.stringify(coverage, null, 2),
+        'utf8'
+      );
       this.nyc.report();
     }
     if (!force && this.argv.watch) {
