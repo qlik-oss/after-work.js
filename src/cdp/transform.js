@@ -89,8 +89,9 @@ module.exports = function transform(argv) {
     await next();
     // We need to remove the leading slash else it will be excluded by default
     const url = ctx.url.substring(1);
-    if (argv.instrument.testExclude.shouldInstrument(url) ||
-      argv.transform.testExclude.shouldInstrument(url)) {
+    const shouldInstrument = argv.coverage && argv.instrument.testExclude.shouldInstrument(url);
+    const shouldTransform = argv.transform.testExclude.shouldInstrument(url);
+    if (shouldInstrument || shouldTransform) {
       const { response } = ctx;
       response.body = await transformFile(url, argv);
     }
