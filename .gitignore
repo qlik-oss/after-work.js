@@ -7,3 +7,4 @@ coverage/
 *.log
 .vscode
 .chrome-profile
+.DS_Store

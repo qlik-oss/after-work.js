@@ -156,7 +156,7 @@ class Runner {
       const { port } = this.chrome;
       this.argv.client.port = port;
     }
-    this.client = await connect(this.argv, this.testFilesBrowser);
+    this.client = await connect(this.argv, this.testFilesBrowser, this.debugging);
     if (!this.client) {
       this.fail('CDP Client could not connect');
       return;
