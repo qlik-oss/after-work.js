@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.0
+- CLI with subcommand for running in different contexts
+- Better debugging experience
+- Easier configuration using config files
+
 ## 3.1.0
 - Adding possibility to get code coverage for browser tests
 
