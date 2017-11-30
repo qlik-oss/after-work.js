@@ -98,11 +98,12 @@ See [set up the project](https://github.com/istanbuljs/nyc#use-with-babel-plugin
 ```
 
 ## Examples
-#### [Node](./examples/node/README.md)
-### Browser
-#### [Es2015](./examples/es2015/README.md)
-#### [Requirejs](./examples/requirejs/README.md)
-#### [Typescript](./examples/typescript/README.md)
+* [**Node**](./examples/node/README.md)
+
+Browser
+* [**Es2015**](./examples/es2015/README.md)
+* [**Requirejs**](./examples/requirejs/README.md)
+* [**Typescript**](./examples/typescript/README.md)
 
 ## Contributing
 

@@ -9,7 +9,8 @@
     "lint:fix": "eslint src test --fix",
     "test": "./src/cli.js",
     "test:coverage": "./src/cli.js -c aw.config.js --coverage",
-    "test:coveralls": "npm run test:coverage && cat coverage/lcov.info | coveralls"
+    "test:coveralls": "npm run test:coverage && cat coverage/lcov.info | coveralls",
+    "version:next": "./scripts/next.js && npm publish --tag next && git checkout -- package.json"
   },
   "bin": {
     "aw": "./src/cli.js"
