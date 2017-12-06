@@ -49,6 +49,25 @@ Commands:
   aw puppeteer   Run tests with puppeteer                                          [aliases: puppet]
 ```
 
+All commands support passing a config file for all options.
+
+```shell
+npx aw -c ./path/to/aw.config.js
+```
+
+However, passing an option from command line will override the config file option.
+
+```shell
+npx aw -c ./path/to/aw.config.js --glob /path/that/overrides/glob/in/config/file
+```
+
+This enables easy debugging setup from modern editors for example [Visual Studio Code](https://code.visualstudio.com/)
+
+![](./docs/vscode-debug-config.png)
+
+This will only run the current active file. And you don't have to worry about your tests timing out
+since `after-work.js` will automatically detect running a debugger and set the appropriate options accordingly.
+
 ## Included Tools
 The following tools are bundled into after-work.js:
 * [Mocha](https://mochajs.org/): an extensible testing framework for TDD or BDD.
