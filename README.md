@@ -8,7 +8,7 @@ After.work.js is an unified test framework highly configurable through cli and c
 
 ## Requirements
 ### Default runner
-* [node](https://nodejs.org): Node.js > 8
+* [node](./docs/node.md#node): Node.js > 8
 ### Context dependent
 * [cdp](./docs/cdp.md#cdp) (Chrome Debugging Protocol): Chrome > 61
 * [protractor](./docs/protractor.md#protractor-config) (webdriver protocol): protractor 5.x + browser(s)

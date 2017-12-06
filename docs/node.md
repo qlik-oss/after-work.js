@@ -1,6 +1,6 @@
 ## Node
 
-Run your test in a Node environment with great developer workflow. Just start the runner with
+Run your test in a [Node](https://nodejs.org) environment with great developer workflow. Just start the runner with
 
 ```
 npx aw -c ./path/to/aw.config.js -w --coverage
