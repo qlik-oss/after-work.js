@@ -2,7 +2,7 @@
 
 [**C**hrome **D**ebugging **P**rotocol](https://github.com/cyrus-and/chrome-remote-interface)
 
-This command uses the **C*hrome **D**ebugging **P**rotocol to run tests in the Chrome browser.
+This command uses the **C**hrome **D**ebugging **P**rotocol to run tests in the Chrome browser.
 It's designed to be streamlined with the default Node runner so it can leverage the same
 `Mocha` reporters and `Nyc`reporters even if the tests are running in a browser environment. It
 also supports the same developer workflow when writing tests e.g only rerun affected tests when

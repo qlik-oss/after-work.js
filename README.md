@@ -10,8 +10,8 @@ After.work.js is an unified test framework highly configurable through cli and c
 ### Default runner
 * [node](https://nodejs.org): Node.js > 8
 ### Context dependent
-* [cdp](./docs/cdp.md) (Chrome Debugging Protocol): Chrome > 61
-* [protractor](./docs/protractor.md) (webdriver protocol): protractor 5.x + browser(s)
+* [cdp](./docs/cdp.md#cdp) (Chrome Debugging Protocol): Chrome > 61
+* [protractor](./docs/protractor.md#protractor-config) (webdriver protocol): protractor 5.x + browser(s)
 * [puppeteer](https://github.com/GoogleChrome/puppeteer) (Headless Chrome Node API - experimental): puppeteer
 
 ## Introduction
