@@ -7,9 +7,13 @@
 `after.work.js` is an unified test framework highly configurable through cli and configuration files allowing tests to be executed in the desired context.
 
 ## Requirements
+
 ### Default runner
+
 * [node](./docs/node.md#node): Node.js > 8
+
 ### Context dependent
+
 * [cdp](./docs/cdp.md#cdp) (Chrome Debugging Protocol): Chrome > 61
 * [protractor](./docs/protractor.md#protractor-config) (webdriver protocol): protractor 5.x + browser(s)
 * [puppeteer](https://github.com/GoogleChrome/puppeteer) (High-level Headless Chrome Node API - experimental): puppeteer
@@ -53,12 +57,12 @@ The following tools are bundled into after-work.js:
 * [Nyc](https://istanbul.js.org/): the Istanbul command line interface
 
 ## Examples
-* [**Node**](./examples/node/README.md)
+* [Node](./examples/node/README.md)
 
 Browser
-* [**Es2015**](./examples/es2015/README.md)
-* [**Requirejs**](./examples/requirejs/README.md)
-* [**Typescript**](./examples/typescript/README.md)
+* [ES2015](./examples/es2015/README.md)
+* [Requirejs](./examples/requirejs/README.md)
+* [Typescript](./examples/typescript/README.md)
 
 ## Contributing
 
