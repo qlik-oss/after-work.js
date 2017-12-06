@@ -10,8 +10,8 @@ After.work.js is an unified test framework highly configurable through cli and c
 ### Default runner
 * [node](https://nodejs.org): Node.js > 8
 ### Context dependent
-* [cdp](https://github.com/cyrus-and/chrome-remote-interface) (Chrome Debugging Protocol): Chrome > 61
-* [protractor](https://github.com/angular/protractor) (webdriver protocol): protractor 5.x + browser(s)
+* [cdp](./docs/cdp.md) (Chrome Debugging Protocol): Chrome > 61
+* [protractor](./docs/protractor.md) (webdriver protocol): protractor 5.x + browser(s)
 * [puppeteer](https://github.com/GoogleChrome/puppeteer) (Headless Chrome Node API - experimental): puppeteer
 
 ## Introduction
@@ -25,13 +25,13 @@ To configure `after-work.js` you need to start with an analyse of the code.
 
 ## Get started
 
-### 1. Installation
+### Installation
 Install the module using npm:
 ```sh
 npm install --save-dev after-work.js
 ```
 
-### 2. CLI entrypoint
+### CLI entrypoint
 `after-work.js` is CLI and consists of a command together with appropriate options
 Help is always available with the `--help, -h` option
 ```
@@ -47,29 +47,10 @@ Commands:
 
 ## Included Tools
 The following tools are bundled into after-work.js:
-* **Mocha**: an extensible testing framework for TDD or BDD.
-* **Chai**: an assertion library used together with a JavaScript testing framework.
-* **Sinon**: a framework for standalone test spies, stubs and mocks for JavaScript.
-* **Nyc**: the Istanbul command line interface
-
-### Best practice for coverage
-`after-work.js` will default to use babel and babel-plugin-istanbul for getting correct code coverage but these devDependecies has to be installed per repository. 
-
-See [set up the project](https://github.com/istanbuljs/nyc#use-with-babel-plugin-istanbul-for-babel-support) with the `babel-plugin-istanbul`
-
-.babelrc
-```
-{
-  "babel": {
-    "presets": ["env"],
-    "env": {
-      "test": {
-        "plugins": ["istanbul"]
-      }
-    }
-  }
-}
-```
+* [Mocha](https://mochajs.org/): an extensible testing framework for TDD or BDD.
+* [Chai](http://chaijs.com/): an assertion library used together with a JavaScript testing framework.
+* [Sinon](http://sinonjs.org/): a framework for standalone test spies, stubs and mocks for JavaScript.
+* [Nyc](https://istanbul.js.org/): the Istanbul command line interface
 
 ## Examples
 * [**Node**](./examples/node/README.md)
