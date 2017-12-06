@@ -12,7 +12,7 @@
 ### Context dependent
 * [cdp](./docs/cdp.md#cdp) (Chrome Debugging Protocol): Chrome > 61
 * [protractor](./docs/protractor.md#protractor-config) (webdriver protocol): protractor 5.x + browser(s)
-* [puppeteer](https://github.com/GoogleChrome/puppeteer) (Headless Chrome Node API - experimental): puppeteer
+* [puppeteer](https://github.com/GoogleChrome/puppeteer) (High-level Headless Chrome Node API - experimental): puppeteer
 
 ## Introduction
 `after-work.js` aims to be a tool that facilitates the testing while development or restructuring code.
