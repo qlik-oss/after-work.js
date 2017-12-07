@@ -44,6 +44,11 @@ module.exports = {
   },
   'transform.exclude': {
     description: 'Exclude glob',
+    default: [],
+    type: 'array',
+  },
+  'transform.defaultExclude': {
+    description: 'Default exclude glob',
     default: [
       '**/coverage/**',
       '**/external/**',
@@ -62,6 +67,11 @@ module.exports = {
   },
   'instrument.exclude': {
     description: 'Exclude glob',
+    default: [],
+    type: 'array',
+  },
+  'instrument.defaultExclude': {
+    description: 'Exclude glob',
     default: [
       '**/coverage/**',
       '**/external/**',
@@ -70,7 +80,7 @@ module.exports = {
       '**/*require*.js',
       '**/*sinon*.js',
       '**/*chai*.js',
-      '**/*.spec.js',
+      '**/*.spec.{js,ts}',
     ],
     type: 'array',
   },

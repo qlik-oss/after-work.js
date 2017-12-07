@@ -38,11 +38,13 @@ const cdp = {
         return opt;
       })
       .coerce('instrument', (opt) => {
-        opt.testExclude = testExclude({ include: opt.include, exclude: opt.exclude });
+        const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
+        opt.testExclude = testExclude({ include: opt.include, exclude });
         return opt;
       })
       .coerce('transform', (opt) => {
-        opt.testExclude = testExclude({ include: opt.include, exclude: opt.exclude });
+        const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
+        opt.testExclude = testExclude({ include: opt.include, exclude });
         opt.typescript.compilerOptions = Object.assign({ compilerOptions: {} }, importCwd.silent(path.resolve(opt.typescript.config))).compilerOptions;
         return opt;
       })
