@@ -64,7 +64,7 @@ module.exports = {
   },
   'nyc.exclude': {
     description: 'Exclude glob',
-    default: ['**/coverage/**'],
+    default: ['**/coverage/**', '*.spec.{js,ts}'],
     type: 'array',
   },
   'nyc.sourceMap': {
