@@ -4,7 +4,6 @@ const path = require('path');
 const testExclude = require('test-exclude');
 const importCwd = require('import-cwd');
 const options = require('./options');
-const Runner = require('./runner');
 
 process.on('unhandledRejection', (err) => {
   console.error(`Promise Rejection:${err}`);
@@ -57,6 +56,7 @@ const cdp = {
       });
   },
   handler(argv) {
+    const Runner = require('./runner');
     const runner = new Runner(argv);
     runner.on('exit', code => process.exit(code));
     runner
