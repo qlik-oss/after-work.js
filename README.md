@@ -4,7 +4,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/qlik-oss/after-work.js.svg)](https://greenkeeper.io/)
 [![Coverage Status](https://img.shields.io/coveralls/qlik-oss/after-work.js/master.svg)](https://coveralls.io/github/qlik-oss/after-work.js)
 
-`after.work.js` is an unified test framework highly configurable through cli and configuration files allowing tests to be executed in the desired context.
+`after-work.js` is an unified test framework highly configurable through cli and configuration files allowing tests to be executed in the desired context.
 
 ## Requirements
 
