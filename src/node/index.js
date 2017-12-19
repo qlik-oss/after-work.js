@@ -187,13 +187,13 @@ class Runner {
     return this;
   }
   setup(testFiles, srcFiles) {
+    srcFiles.forEach(f => this.safeDeleteCache(f));
     if (this.argv.coverage) {
       this.nyc.reset();
       if (!this.isWrapped) {
         this.nyc.wrap();
         this.isWrapped = true;
       }
-      srcFiles.forEach(f => this.safeDeleteCache(f));
     }
     testFiles.forEach((f) => {
       this.safeDeleteCache(f);
