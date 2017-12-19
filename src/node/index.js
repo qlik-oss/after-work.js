@@ -155,18 +155,9 @@ class Runner {
   }
   runTests() {
     this.isRunning = true;
-    try {
-      this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
-      this.mochaRunner.on('start', () => this.logClearLine());
-      this.mochaRunner.on('end', () => this.onEnd());
-    } catch (err) {
-      this.isRunning = false;
-      console.log(err);
-      if (this.argv.watch) {
-        return;
-      }
-      process.exit(1);
-    }
+    this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
+    this.mochaRunner.on('start', () => this.logClearLine());
+    this.mochaRunner.on('end', () => this.onEnd());
   }
   setupKeyPress() {
     if (!this.argv.watch) {
@@ -226,10 +217,19 @@ class Runner {
       this.logLine(`Loading ${file}`);
     });
     this.nyc = new this.libs.NYC(this.argv.nyc);
-    this
-      .deleteCoverage()
-      .setup(testFiles, srcFiles)
-      .runTests();
+    try {
+      this
+        .deleteCoverage()
+        .setup(testFiles, srcFiles)
+        .runTests();
+    } catch (err) {
+      this.isRunning = false;
+      console.log(err);
+      if (this.argv.watch) {
+        return;
+      }
+      process.exit(1);
+    }
   }
   onWatchAdd(f) {
     const base = path.basename(f);
