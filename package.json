@@ -44,7 +44,7 @@
     "koa-rewrite": "3.0.0",
     "koa-static": "4.0.2",
     "mkdirp": "0.5.1",
-    "mocha": "4.0.1",
+    "mocha": "4.1.0",
     "moment": "2.20.1",
     "nyc": "11.4.1",
     "precinct": "3.8.0",
