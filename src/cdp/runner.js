@@ -307,7 +307,8 @@ class Runner {
       this.log('No files found for:', this.argv.glob);
       process.exit(1);
     }
-    this.testFilesBrowser = this.relativeBaseUrlFiles(this.testFiles);
+    this.testFilesBrowser = this.relativeBaseUrlFiles(this.testFiles)
+      .map(f => f.split('\\').join('/'));
     return this;
   }
   setUrl(url) {
