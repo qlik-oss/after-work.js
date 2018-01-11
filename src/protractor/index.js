@@ -1,6 +1,5 @@
 /* eslint global-require: 0, no-console: 0, import/no-unresolved: 0, import/no-extraneous-dependencies: 0, import/no-dynamic-require: 0, max-len: 0 */
 const path = require('path');
-const globby = require('globby');
 const initConfig = require('./config');
 const extend = require('extend');
 const fs = require('fs');
@@ -9,18 +8,18 @@ const options = require('./options');
 const protractor = {
   command: ['protractor', 'ptor'],
   desc: 'Run protractor',
-  getConfig(configPath) {
+  getConfig(argv) {
     const baseConfig = initConfig();
-    if (!fs.existsSync(configPath)) {
-      throw new Error(`Config ${configPath} not found`);
+    if (!fs.existsSync(argv.config)) {
+      throw new Error(`Config ${argv.config} not found`);
     }
     let config = {};
-    const p = path.resolve(process.cwd(), configPath);
+    const p = path.resolve(process.cwd(), argv.config);
     const foundConfig = require(p);
     if (typeof foundConfig === 'function') {
-      config = extend(true, baseConfig, foundConfig(baseConfig));
+      config = extend(true, baseConfig, argv, foundConfig(baseConfig));
     } else {
-      config = extend(true, baseConfig, foundConfig);
+      config = extend(true, baseConfig, argv, foundConfig);
     }
     return config;
   },
@@ -43,15 +42,10 @@ const protractor = {
         process.exit(1);
       }
     }
-    const config = protractor.getConfig(argv.config);
+    const config = protractor.getConfig(argv);
     argv.require.map(require);
     if (argv.glob.length) {
       config.specs = argv.glob;
-    }
-    const files = globby.sync(config.specs);
-    if (!files.length) {
-      console.log('No files found for:', config.specs);
-      process.exit(1);
     }
 
     launcher.init('', config);
