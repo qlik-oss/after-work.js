@@ -10,7 +10,7 @@
 
 ### Default runner
 
-* [node](./docs/node.md#node): Node.js > 8
+* [node](./docs/node.md#node): Node.js >= 8.9.4
 
 ### Context dependent
 
