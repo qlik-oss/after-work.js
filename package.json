@@ -55,8 +55,8 @@
     "yargs": "10.1.1"
   },
   "devDependencies": {
-    "@types/chai": "4.1.1",
-    "@types/mocha": "2.2.46",
+    "@types/chai": "4.1.2",
+    "@types/mocha": "2.2.47",
     "babel-core": "6.26.0",
     "babel-plugin-istanbul": "4.1.5",
     "babel-preset-env": "1.6.1",
