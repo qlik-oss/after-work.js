@@ -31,7 +31,8 @@ module.exports = async function connect(argv, files, debugging) {
 
   await Promise.all([DOM.enable(), DOMStorage.enable(), Network.enable(), Page.enable(), Runtime.enable(), Console.enable()]);
   const sourceMapSupport = `${path.dirname(require.resolve('source-map-support'))}/browser-source-map-support.js`;
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: `${getContent(sourceMapSupport)};sourceMapSupport.install();` });
+  await Page.addScriptToEvaluateOnLoad({ scriptSource: `${getContent(sourceMapSupport)};` });
+  await Page.addScriptToEvaluateOnLoad({ scriptSource: 'sourceMapSupport.install();' });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMediator });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMochaOptions });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwFiles });
