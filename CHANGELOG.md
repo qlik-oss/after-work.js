@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.1.0
+- cdp(connect): fix source-map-support
+
+## 4.0.1
+- Ensure normalizing require paths else it will break on windows
+- fix(protractor): extend config with argv
+
 ## 4.0.0
 - CLI with subcommand for running in different contexts
 - Better debugging experience
