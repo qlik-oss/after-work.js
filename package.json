@@ -39,7 +39,7 @@
     "highlight.js": "9.12.0",
     "import-cwd": "2.1.0",
     "jimp": "0.2.28",
-    "koa": "2.4.1",
+    "koa": "2.5.0",
     "koa-favicon": "2.0.0",
     "koa-rewrite": "3.0.0",
     "koa-static": "4.0.2",
@@ -51,7 +51,7 @@
     "sinon": "4.2.2",
     "sinon-chai": "2.14.0",
     "source-map-support": "0.5.3",
-    "test-exclude": "4.1.1",
+    "test-exclude": "4.2.0",
     "yargs": "11.0.0"
   },
   "devDependencies": {
