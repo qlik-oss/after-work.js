@@ -45,7 +45,7 @@
     "koa-static": "4.0.2",
     "mkdirp": "0.5.1",
     "mocha": "5.0.1",
-    "moment": "2.20.1",
+    "moment": "2.21.0",
     "nyc": "11.4.1",
     "precinct": "4.0.0",
     "sinon": "4.4.2",
