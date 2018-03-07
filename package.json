@@ -49,7 +49,7 @@
     "nyc": "11.4.1",
     "precinct": "4.0.0",
     "sinon": "4.4.2",
-    "sinon-chai": "2.14.0",
+    "sinon-chai": "3.0.0",
     "source-map-support": "0.5.3",
     "test-exclude": "4.2.0",
     "yargs": "11.0.0"
