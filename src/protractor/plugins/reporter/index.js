@@ -89,7 +89,7 @@ function uiReport(runner, options) {
     failures++;
   });
 
-  runner.on('end', function onEnd() {
+  runner.once('end', function onEnd() {
     const repoInfo = utils.getRepoInfo();
     const cleanTests = tests.map(utils.cleanTest.bind(utils));
 
