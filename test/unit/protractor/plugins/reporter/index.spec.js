@@ -40,6 +40,7 @@ describe('Reporter index', () => {
     beforeEach(() => {
       runner = {
         on: sandbox.stub(),
+        once: sandbox.stub(),
       };
       options = {
         reporterPlugin: {
@@ -96,9 +97,9 @@ describe('Reporter index', () => {
 
     it('should call end correctly', () => {
       const log = sandbox.stub(console, 'log');
-      runner.on.withArgs('end').callsArgOn(1, runner);
+      runner.once.withArgs('end').callsArgOn(1, runner);
       uiReport.call(uiReport, runner, options);
-      expect(runner.on).to.be.calledWith('end', sinon.match.func);
+      expect(runner.once).to.be.calledWith('end', sinon.match.func);
       expect(console.log).to.be.calledWith(sinon.match(' Σ SUMMARY:')); // eslint-disable-line no-console
       log.restore();
     });
