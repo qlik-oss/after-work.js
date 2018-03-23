@@ -48,7 +48,7 @@
     "moment": "2.21.0",
     "nyc": "11.6.0",
     "precinct": "4.0.0",
-    "sinon": "4.4.6",
+    "sinon": "5.0.0",
     "sinon-chai": "3.0.0",
     "source-map-support": "0.5.4",
     "test-exclude": "4.2.1",
