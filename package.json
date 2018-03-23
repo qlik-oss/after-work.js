@@ -28,7 +28,7 @@
     "chai": "4.1.1",
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
-    "chokidar": "2.0.2",
+    "chokidar": "2.0.3",
     "chrome-launcher": "0.10.2",
     "chrome-remote-interface": "0.25.5",
     "chrome-unmirror": "0.1.0",
