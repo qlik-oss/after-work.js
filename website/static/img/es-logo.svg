@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 400 400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+    <g id="Background" transform="matrix(0.925728,0,0,0.998874,-16.7849,-25.5506)">
+        <rect x="18.771" y="24.88" width="432.668" height="402.351" style="fill:rgb(248,220,61);"/>
+    </g>
+    <g transform="matrix(1,0,0,1,-32.9938,8.55603)">
+        <text x="124.14px" y="357.097px" style="font-family:'OpenSans-Bold', 'Open Sans', sans-serif;font-weight:700;font-size:258.257px;fill:black;">ES</text>
+    </g>
+    <g transform="matrix(1,0,0,1,126.381,-193.709)">
+        <text x="124.14px" y="357.097px" style="font-family:'OpenSans-Bold', 'Open Sans', sans-serif;font-weight:700;font-size:50px;fill:black;">2015</text>
+    </g>
+    <g transform="matrix(1,0,0,1,127.338,-242.704)">
+        <text x="124.14px" y="357.097px" style="font-family:'OpenSans-Bold', 'Open Sans', sans-serif;font-weight:700;font-size:50px;fill:black;fill-opacity:0.75;">2016</text>
+    </g>
+    <g transform="matrix(1,0,0,1,127.843,-289.482)">
+        <text x="124.14px" y="357.097px" style="font-family:'OpenSans-Bold', 'Open Sans', sans-serif;font-weight:700;font-size:50px;fill:black;fill-opacity:0.5;">2017</text>
+    </g>
+</svg>

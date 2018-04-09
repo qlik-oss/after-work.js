@@ -1,3 +1,8 @@
+---
+id: protractor
+title: Protractor
+---
+
 ## [Protractor](https://github.com/angular/protractor) config
 If you are using protractor for running test the configuration has to be according to the protractor configuration. A [base configuration](../src/protractor/config.js) will be provided by `after-work.js` but this can be extended as shown below.
 
