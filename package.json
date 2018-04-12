@@ -47,7 +47,7 @@
     "mocha": "5.0.5",
     "moment": "2.22.0",
     "nyc": "11.6.0",
-    "precinct": "4.0.0",
+    "precinct": "4.1.0",
     "sinon": "5.0.0",
     "sinon-chai": "3.0.0",
     "source-map-support": "0.5.4",
