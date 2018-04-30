@@ -127,7 +127,7 @@ const utils = {
               false,
               `No baseline found! New baseline generated at ${`${meta.artifactsPath}/${expected.baseline}`}`,
               `No baseline found! New baseline generated at ${`${meta.artifactsPath}/${expected.baseline}`}`,
-              expected,
+              JSON.stringify(expected),
               actual
             );
           });
