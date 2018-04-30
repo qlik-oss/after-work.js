@@ -64,6 +64,11 @@ function uiReport(runner, options) {
   });
 
   runner.on('fail', (test, err) => {
+    try {
+      err.expected = JSON.parse(err.expected);
+    } catch (e) {
+      // Empty catch
+    }
     test.consoleEntries = [];
     waitForPromises.push(utils.saveScreenshot(browser, test.fullTitle()));
 
