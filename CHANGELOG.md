@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.2.0
+- Updated dependencies
+- Fix JSON parse for reporting
+
 ## 4.1.0
 - cdp(connect): fix source-map-support
 
