@@ -143,7 +143,7 @@ const utils = {
               comparison.isEqual === true,
               `expected ${id} equality to be less than ${tolerance}, but was ${comparison.equality}`,
               `expected ${id} equality to be greater than ${tolerance}, but was ${comparison.equality}`,
-              expected,
+              JSON.stringify(expected),
               actual
             );
             return comparison;
