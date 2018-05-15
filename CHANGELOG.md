@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.2.1
+- Second fix for JSON parse while creating report
+
 ## 4.2.0
 - Updated dependencies
 - Fix JSON parse for reporting
