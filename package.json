@@ -30,7 +30,7 @@
     "chai-subset": "1.6.0",
     "chokidar": "2.0.3",
     "chrome-launcher": "0.10.2",
-    "chrome-remote-interface": "0.25.5",
+    "chrome-remote-interface": "0.25.6",
     "chrome-unmirror": "0.1.0",
     "extend": "3.0.1",
     "find-up": "2.1.0",
