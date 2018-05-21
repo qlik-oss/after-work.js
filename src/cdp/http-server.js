@@ -2,7 +2,7 @@ const path = require('path');
 const Koa = require('koa');
 const serve = require('koa-static');
 const favicon = require('koa-favicon');
-const transform = require('./transform');
+const transform = require('../transform');
 
 module.exports = function createHttpServer(argv) {
   const app = new Koa();
