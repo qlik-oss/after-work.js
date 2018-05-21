@@ -12,7 +12,7 @@ const NYC = require('nyc');
 const Mediator = require('./mediator');
 const connect = require('./connect');
 const utils = require('../terminal-utils');
-const { ensureFilePath, getExt, getPathWithExt } = require('./file-utils');
+const { ensureFilePath, getExt, getPathWithExt } = require('../file-utils');
 
 class Runner {
   constructor(argv = { chrome: { chromeFlags: [] }, client: {} }) {
