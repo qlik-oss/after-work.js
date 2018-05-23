@@ -38,13 +38,13 @@ const siteConfig = {
   ],
   repoUrl: 'https://github.com/qlik-oss/after-work.js',
   editUrl: 'https://github.com/qlik-oss/after-work.js/edit/master/docs/',
-  // algolia: {
-  //   apiKey: '3acaf839e39f2abc9d53e17093978fe3',
-  //   indexName: 'aw',
-  //   algoliaOptions: {
-  //     hitsPerPage: 7,
-  //   },
-  // },
+  algolia: {
+    apiKey: '7391fc0b98505aa291842bf80570754f',
+    indexName: 'aw',
+    algoliaOptions: {
+      hitsPerPage: 7,
+    },
+  },
 };
 
 module.exports = siteConfig;

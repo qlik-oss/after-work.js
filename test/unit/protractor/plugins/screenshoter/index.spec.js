@@ -4,7 +4,7 @@ describe('Screenshoter Index', () => {
   let sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     const browser = {
       element: sandbox.stub(),
     };
