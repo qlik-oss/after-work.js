@@ -37,7 +37,7 @@ const siteConfig = {
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
   ],
   repoUrl: 'https://github.com/qlik-oss/after-work.js',
-  editUrl: 'https://github.com/qlik-oss/after-work.js/tree/master/docs/',
+  editUrl: 'https://github.com/qlik-oss/after-work.js/edit/master/docs/',
   // algolia: {
   //   apiKey: '3acaf839e39f2abc9d53e17093978fe3',
   //   indexName: 'aw',
