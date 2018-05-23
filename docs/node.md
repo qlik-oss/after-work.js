@@ -1,6 +1,6 @@
 ---
 id: node
-title: Node
+title: Node.js
 ---
 
 Run your test in a [Node](https://nodejs.org) environment with great developer workflow. Just start the runner with
