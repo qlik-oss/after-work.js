@@ -1,4 +1,7 @@
-## CDP
+---
+id: cdp
+title: Cdp
+---
 
 [**C**hrome **D**ebugging **P**rotocol](https://github.com/cyrus-and/chrome-remote-interface)
 
