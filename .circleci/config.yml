@@ -1,6 +1,7 @@
 version: 2
+
 jobs:
-  build:
+  install:
     docker:
       - image: circleci/node:8.9.4
     working_directory: ~/after-work.js
@@ -14,9 +15,8 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Install dependencies
-          command:
-            npm install --quiet
+          name: Install dependencies 
+          command: npm i
       - run:
           name: greenkeeper - Upload
           command: greenkeeper-lockfile-upload
@@ -24,6 +24,18 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
+      - persist_to_workspace:
+          root: ~/after-work.js
+          paths:
+            - .
+
+  build:
+    docker:
+      - image: circleci/node:8.9.4
+    working_directory: ~/after-work.js
+    steps:
+      - attach_workspace:
+          at: ~/after-work.js
       - run:
           name: Run ESLint
           command:
@@ -34,3 +46,12 @@ jobs:
             npm run test:coveralls
       - store_artifacts:
           path: ./coverage
+
+workflows:
+  version: 2
+  build-all:
+    jobs:
+      - install
+      - build:
+          requires:
+            - install
