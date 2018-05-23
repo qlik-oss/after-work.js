@@ -152,6 +152,9 @@ class Runner {
       const srcFiles = this.all ? [`${this.argv.src}`] : this.onlySrcFiles;
       this.log(mode, testFiles, srcFiles);
     }
+    if (this.argv.exit) {
+      process.kill(process.pid);
+    }
   }
   runTests() {
     this.isRunning = true;

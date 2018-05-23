@@ -37,6 +37,11 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  exit: {
+    description: 'After-work.js would force its own process to exit once it was finished executing all tests',
+    default: false,
+    type: 'boolean',
+  },
   'mocha.reporter': {
     description: 'Which reporter to use',
     default: undefined,
