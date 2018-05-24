@@ -1,0 +1,24 @@
+{
+  "name": "@after-work.js/puppeteer",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Run tests with Puppeteer",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme",
+  "dependencies": {
+    "mocha": "5.2.0",
+    "globby": "8.0.1"
+  }
+}

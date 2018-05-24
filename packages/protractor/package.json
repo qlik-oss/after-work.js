@@ -1,0 +1,31 @@
+{
+  "name": "@after-work.js/protractor",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Run tests with Protractor",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "../cli/src/index.js -c ../../aw.config.js -p protractor --colors",
+    "lint": "eslint src test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme",
+  "dependencies": {
+    "extend": "3.0.1",
+    "jimp": "0.2.28",
+    "@after-work.js/server": "0.1.0",
+    "handlebars": "4.0.11",
+    "mkdirp": "0.5.1",
+    "mocha": "5.2.0",
+    "moment": "2.22.1",
+    "highlight.js": "9.12.0"
+  }
+}
