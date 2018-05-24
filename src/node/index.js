@@ -140,6 +140,9 @@ class Runner {
     process.on('exit', () => {
       process.exit(failures);
     });
+    if (this.argv.exit) {
+      process.exit();
+    }
   }
   onEnd() {
     if (this.argv.coverage) {
@@ -151,9 +154,6 @@ class Runner {
       const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
       const srcFiles = this.all ? [`${this.argv.src}`] : this.onlySrcFiles;
       this.log(mode, testFiles, srcFiles);
-    }
-    if (this.argv.exit) {
-      process.kill(process.pid);
     }
   }
   runTests() {
