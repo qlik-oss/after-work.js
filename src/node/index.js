@@ -140,6 +140,9 @@ class Runner {
     process.on('exit', () => {
       process.exit(failures);
     });
+    if (this.argv.exit) {
+      process.exit();
+    }
   }
   onEnd() {
     if (this.argv.coverage) {
