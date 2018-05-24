@@ -38,7 +38,7 @@ module.exports = {
     type: 'boolean',
   },
   exit: {
-    description: 'After-work.js would force its own process to exit once it was finished executing all tests',
+    description: 'Force its own process to exit once it was finished executing all tests',
     default: false,
     type: 'boolean',
   },
