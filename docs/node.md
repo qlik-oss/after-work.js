@@ -41,6 +41,7 @@ Options:
   --watch, -w          Watch changes                                                          [boolean] [default: false]
   --watchGlob, --wg    Watch glob                                 [array] [default: ["src/**/*.js","test/**/*.spec.js"]]
   --coverage           Generate coverage                                                      [boolean] [default: false]
+  --exit               Force its own process to exit once it was finished executing all tests [boolean] [default: false]
   --mocha.reporter     Which reporter to use                                                                    [string]
   --mocha.bail         Bail on fail?                                                           [boolean] [default: true]
   --mocha.timeout      Timeout                                                                                  [number]
@@ -57,3 +58,9 @@ Options:
   --nyc.reportDir      Directory to output coverage reports in                            [string] [default: "coverage"]
   -h, --help           Show help                                                                               [boolean]
 ```
+
+## Tests not finishing correctly?
+
+This is a indicating that the tests isn't cleaning up after themselves, it's often a server still listening on a port or a setTimeout()/setIntervall().
+
+It´s possible to force exit by adding the `--exit` options but this could hide flaws in the test, causing sequential test to give false positive or false negative results.
