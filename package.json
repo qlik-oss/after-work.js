@@ -1,58 +1,16 @@
 {
-  "name": "after-work.js",
-  "version": "4.3.2",
   "description": "Unified testing framework",
   "author": "QlikTech International AB",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src test examples",
-    "lint:fix": "eslint src test --fix",
-    "test": "./src/cli.js",
-    "test:coverage": "./src/cli.js -c aw.config.js --coverage",
-    "test:coveralls": "npm run test:coverage && cat coverage/lcov.info | coveralls",
-    "version:next": "./scripts/next.js && npm publish --tag next && git checkout -- package.json"
-  },
-  "bin": {
-    "aw": "./src/cli.js"
+    "bootstrap": "lerna bootstrap --hoist",
+    "test": "lerna run test",
+    "test:coveralls": "./packages/cli/src/index.js -c aw.config.js && cat coverage/lcov.info | coveralls",
+    "lint": "lerna run lint"
   },
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com:qlik-oss/after-work.js.git"
-  },
-  "files": [
-    "aw.png",
-    "/src",
-    "/docs"
-  ],
-  "dependencies": {
-    "chai": "4.1.2",
-    "chai-as-promised": "7.1.1",
-    "chai-subset": "1.6.0",
-    "chokidar": "2.0.4",
-    "chrome-launcher": "0.10.2",
-    "chrome-remote-interface": "0.25.6",
-    "chrome-unmirror": "0.1.0",
-    "extend": "3.0.1",
-    "find-up": "2.1.0",
-    "globby": "8.0.1",
-    "handlebars": "4.0.11",
-    "highlight.js": "9.12.0",
-    "import-cwd": "2.1.0",
-    "jimp": "0.2.28",
-    "koa": "2.5.1",
-    "koa-favicon": "2.0.1",
-    "koa-rewrite": "3.0.1",
-    "koa-static": "5.0.0",
-    "mkdirp": "0.5.1",
-    "mocha": "5.2.0",
-    "moment": "2.22.2",
-    "nyc": "12.0.2",
-    "precinct": "4.2.0",
-    "sinon": "6.0.1",
-    "sinon-chai": "3.2.0",
-    "source-map-support": "0.5.6",
-    "test-exclude": "4.2.1",
-    "yargs": "11.0.0"
   },
   "devDependencies": {
     "@types/chai": "4.1.4",
@@ -64,11 +22,10 @@
     "coveralls": "3.0.1",
     "eslint": "5.0.1",
     "eslint-config-airbnb-base": "12.1.0",
-    "eslint-plugin-import": "2.13.0",
+    "eslint-plugin-import": "2.12.0",
+    "lerna": "^2.11.0",
     "requirejs": "2.3.5",
-    "typescript": "2.9.2"
-  },
-  "engines": {
-    "node": "> 8"
+    "typescript": "2.6.1",
+    "yargs": "11.0.0"
   }
 }

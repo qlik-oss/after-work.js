@@ -1,0 +1,29 @@
+{
+  "name": "@after-work.js/node",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Run tests in Node",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "../cli/src/index.js -c ../../aw.config.js -p node --colors",
+    "lint": "eslint src test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme",
+  "dependencies": {
+    "mocha": "5.2.0",
+    "globby": "8.0.1",
+    "chokidar": "2.0.3",
+    "import-cwd": "2.1.0",
+    "nyc": "11.8.0",
+    "@after-work.js/terminal-utils": "0.1.0"
+  }
+}

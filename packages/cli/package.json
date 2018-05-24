@@ -1,0 +1,41 @@
+{
+  "name": "@after-work.js/cli",
+  "private": true,
+  "version": "0.1.0",
+  "description": "after-work.js command line interface",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "./src/index.js -c aw.config.js --colors",
+    "lint": "eslint src test"
+  },
+  "bin": {
+    "aw": "./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme",
+  "dependencies": {
+    "yargs": "11.0.0",
+    "import-cwd": "2.1.0"
+  },
+  "devDependencies": {
+    "chai": "4.1.1",
+    "chai-as-promised": "7.1.1",
+    "chai-subset": "1.6.0",
+    "sinon": "5.0.6",
+    "sinon-chai": "3.1.0",
+    "source-map-support": "0.5.6",
+    "@after-work.js/node": "0.1.0",
+    "@after-work.js/cdp": "0.1.0",
+    "@after-work.js/protractor": "0.1.0",
+    "@after-work.js/puppeteer": "0.1.0",
+    "@after-work.js/serve": "0.1.0"
+  }
+}
