@@ -2,7 +2,6 @@
 /* eslint no-unused-expressions:0 */
 
 const yargs = require('yargs');
-require('./env');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 
