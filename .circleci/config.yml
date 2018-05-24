@@ -12,6 +12,12 @@ jobs:
       - run:
           name: Install dependencies 
           command: npm i
+      - run:
+          name: Bootstrap
+          command: npm run bootstrap
+      - run:
+          name: greenkeeper - Upload
+          command: greenkeeper-lockfile-upload
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
