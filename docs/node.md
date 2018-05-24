@@ -60,7 +60,6 @@ Options:
 ```
 
 ## Tests not finishing correctly?
-
-This is a indicating that the tests isn't cleaning up after themselves, it's often a server still listening on a port or a setTimeout()/setIntervall().
+This is indicating that the tests aren’t cleaning up after themselves. This could be caused by a server still listening on a port or a setTimeout()/setInterval().
 
 It´s possible to force exit by adding the `--exit` options but this could hide flaws in the test, causing sequential test to give false positive or false negative results.
