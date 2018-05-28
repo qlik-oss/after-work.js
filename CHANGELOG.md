@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.1
+- Fix: lazy require `server`
+
 ## 4.3.0
 - Adding the possibility to force its own process to exit once it was finished executing all tests (Node context)
 
