@@ -1,6 +1,5 @@
 /* eslint global-require: 0, no-console: 0, import/no-unresolved: 0, import/no-extraneous-dependencies: 0, import/no-dynamic-require: 0, max-len: 0 */
 const path = require('path');
-const initConfig = require('./config');
 const extend = require('extend');
 const fs = require('fs');
 const options = require('./options');
@@ -9,7 +8,7 @@ const protractor = {
   command: ['protractor', 'ptor'],
   desc: 'Run protractor',
   getConfig(argv) {
-    const baseConfig = initConfig();
+    const baseConfig = require('./config')();
     if (!fs.existsSync(argv.config)) {
       throw new Error(`Config ${argv.config} not found`);
     }
