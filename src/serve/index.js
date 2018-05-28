@@ -1,6 +1,5 @@
 /* eslint global-require: 0, import/no-dynamic-require: 0 */
 const fs = require('fs');
-const createServer = require('../server');
 
 const server = {
   command: ['serve'],
@@ -48,6 +47,7 @@ const server = {
       });
   },
   handler(argv) {
+    const createServer = require('../server');
     createServer(argv);
   },
 };
