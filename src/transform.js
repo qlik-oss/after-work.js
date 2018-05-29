@@ -15,7 +15,8 @@ function tryRequire(name) {
 const babel = tryRequire('babel-core');
 const babelPluginIstanbul = tryRequire('babel-plugin-istanbul').default;
 const tsc = tryRequire('typescript');
-const virtualSourceMap = new Map();
+const cacheSourceMap = new Map();
+const cacheTransform = new Map();
 
 function readFile(filePath) {
   return new Promise((resolve, reject) => {
@@ -66,9 +67,13 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
 }
 async function transformFile(filePath, argv) {
   if (isSourceMap(filePath)) {
-    return virtualSourceMap.get(filePath);
+    return cacheSourceMap.get(filePath);
   }
   filePath = ensureFilePath(filePath);
+  const cache = cacheTransform.get(filePath);
+  if (cache) {
+    return cache;
+  }
   let content = await readFile(filePath);
   let babelOpts = getBabelOpts(filePath, argv);
   if (isTypescript(filePath)) {
@@ -80,8 +85,9 @@ async function transformFile(filePath, argv) {
 
   if (map) {
     const key = getPathWithExt(filePath, 'js.map');
-    virtualSourceMap.set(key, map);
+    cacheSourceMap.set(key, map);
   }
+  cacheTransform.set(filePath, code);
   return code;
 }
 
