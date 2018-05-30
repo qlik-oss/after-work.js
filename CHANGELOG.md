@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.2
+- Cache transformed files
+
 ## 4.3.1
 - Fix: lazy require `server`
 
