@@ -13,17 +13,17 @@ const server = {
           default: null,
           alias: 'c',
         },
-        port: {
+        'http.port': {
           description: 'Listen on this port',
           default: 9000,
           type: 'number',
         },
-        root: {
+        'http.root': {
           description: 'Serve root(s)',
           default: ['./'],
           type: 'array',
         },
-        rewrite: {
+        'http.rewrite': {
           description: 'Rewrite url(s)',
           default: {},
           type: 'object',
