@@ -144,6 +144,11 @@ module.exports = {
     default: ['./'],
     type: 'array',
   },
+  'http.rewrite': {
+    description: 'Rewrite url(s)',
+    default: {},
+    type: 'object',
+  },
   'nyc.tempDirectory': {
     description: 'Directory to output raw coverage information to',
     default: './coverage/.nyc_output',
