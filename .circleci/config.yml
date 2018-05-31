@@ -35,11 +35,15 @@ jobs:
       - attach_workspace:
           at: ~/after-work.js
       - run:
-          name: Run ESLint
+          name: Lint
           command:
             npm run lint
       - run:
-          name: Run unit and component tests
+          name: Test packages
+          command:
+            npm test
+      - run:
+          name: Test node packages with coverage
           command:
             npm run test:coveralls
       - store_artifacts:
