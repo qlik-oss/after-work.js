@@ -1,9 +1,9 @@
 {
+  "root": true,
   "env": {
     "node": true,
     "mocha": true,
-    "protractor": true,
-    "phantomjs": true
+    "protractor": true
   },
   "globals": {
     "sinon": true,
@@ -13,14 +13,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-param-reassign": 0,
-    "comma-dangle": ["error", {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always-multiline",
-        "exports": "always-multiline",
-        "functions": "never"
-    }]
+    "import/no-extraneous-dependencies": [2, { "devDependencies": true }]
   },
   "extends": "airbnb-base"
 }

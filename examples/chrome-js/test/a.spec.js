@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import getA from './a';
+import getA from '../src/a';
 
-describe('es2015 - a', () => {
+describe('A', () => {
   it('should return "a"', () => {
     expect(getA()).to.equal('a');
   });

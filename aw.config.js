@@ -1,60 +1,65 @@
-/* eslint import/no-extraneous-dependencies: 0, prefer-destructuring: 0 */
+/* eslint import/no-extraneous-dependencies: 0, prefer-destructuring: 0, no-param-reassign: 0 */
 
 const yargs = require('yargs');
 const path = require('path');
+const globby = require('globby');
+const { packages } = require('./lerna.json');
 
-const setup = path.resolve(__dirname, 'packages/cli/src/env.js');
+const setup = path.resolve(__dirname, 'aw.setup.js');
+const cmd = process.argv.slice(2).shift();
 
 const argv = yargs
   .options({
-    'opt.basePath': {
-      description: 'Base path',
-      type: 'string',
-      default: 'packages/*/',
-    },
-    'opt.package': {
-      description: 'Package name',
+    scope: {
+      description: 'Scope to package',
       type: 'string',
       default: '*',
-      alias: 'p',
-    },
-    'opt.src': {
-      description: 'Source',
-      type: 'array',
-      default: ['src/**/*.js'],
       alias: 's',
     },
-    require: {
-      description: 'Require',
-      type: 'array',
-      default: [],
-      alias: 'r',
-    },
   })
-  .coerce('opt', (opt) => {
-    if (opt.package !== '*') {
-      if (process.cwd() === __dirname) {
-        opt.basePath = 'packages/';
-        opt.package += '/';
+  .coerce('scope', (scope) => {
+    const scopes = new Map();
+    const chromeExamplePackages = [];
+    const nodePackages = [];
+    globby.sync(packages.map(p => `${p}/package.json`)).forEach((p) => {
+      const name = require(`./${p}`).name; //eslint-disable-line
+      const pkgPath = path.dirname(p);
+      scopes.set(name, pkgPath);
+      if (name.startsWith('@after-work.js/example-chrome')) {
+        chromeExamplePackages.push(pkgPath);
       } else {
-        opt.basePath = '';
-        opt.package = '';
+        nodePackages.push(pkgPath);
       }
-      opt.src = [`${opt.basePath}${opt.package}${opt.src}`];
-    } else {
-      opt.src = [`${opt.basePath}cli/src/**/!(index|)*.js`, `${opt.basePath}${opt.package}src/**/!(browser-shim|)*.js`];
+    });
+    const s = scopes.get(scope);
+    if (s) {
+      return s;
     }
-    return opt;
+    if (cmd === 'chrome') {
+      return `*(${chromeExamplePackages.join('|')})`;
+    }
+    return `*(${nodePackages.join('|')})`;
   })
   .argv;
 
+let url = null;
+if (cmd === 'chrome') {
+  url = 'http://localhost:9676/examples/index.html';
+}
+const test = `${argv.scope}/test/**/*.spec.{js,ts}`;
+const src = `${argv.scope}/src/**/*.{js,ts}`;
+
 module.exports = {
-  require: [setup],
-  glob: [`${argv.opt.basePath}${argv.opt.package}test/**/*.spec.js`],
-  src: argv.opt.src,
-  watchGlob: [`${argv.opt.basePath}${argv.opt.package}src/**/*.js`, `${argv.opt.basePath}${argv.opt.package}test/**/*.spec.js`],
+  url,
+  glob: [test],
+  src: [src],
+  watchGlob: [src, test],
   nyc: {
-    include: `${argv.opt.basePath}${argv.opt.package}src`,
+    require: [setup],
+    include: [src],
+    exclude: ['**/cli/src/index.js', '**/browser-shim.js'],
+    babel: false, // handle this separately
+    sourceMap: false,
+    instrumenter: './lib/instrumenters/noop',
   },
-  coverage: true,
 };

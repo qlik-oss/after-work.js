@@ -7,13 +7,13 @@ const transform = require('./transform');
 const testExclude = require('test-exclude');
 
 module.exports = function createServer(options) {
-  options = Object.assign({}, { port: 9000, root: ['./'], rewrite: {}, instrument: { exclude: '**' }, transform: { exclude: '**' } }, options); //eslint-disable-line
-  options.instrument.testExclude = testExclude({ include: options.instrument.include, exclude: options.instrument.exclude }); //eslint-disable-line
-  options.transform.testExclude = testExclude({ include: options.transform.include, exclude: options.transform.exclude }); //eslint-disable-line
+  options = Object.assign({}, { http: { port: 9000, root: ['./'] }, rewrite: {}, instrument: { exclude: '**' }, transform: { exclude: '**' } }, options); //eslint-disable-line
+  options.instrument.testExclude = options.instrument.testExclude || testExclude({ include: options.instrument.include, exclude: options.instrument.exclude }); //eslint-disable-line
+  options.transform.testExclude = options.transform.testExclude || testExclude({ include: options.transform.include, exclude: options.transform.exclude }); //eslint-disable-line
   const app = new Koa();
-  app.use(favicon(path.resolve(__dirname, '../aw.png')));
+  app.use(favicon(path.resolve(__dirname, '../../../aw.png')));
   Object.keys(options.rewrite).forEach(key => app.use(rewrite(key, options.rewrite[key])));
   app.use(transform(options));
-  app.use(...options.root.map(root => serve(path.resolve(process.cwd(), root))));
-  return app.listen(options.port);
+  app.use(...options.http.root.map(root => serve(path.resolve(process.cwd(), root))));
+  return app.listen(options.http.port);
 };

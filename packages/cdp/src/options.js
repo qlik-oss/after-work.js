@@ -8,7 +8,7 @@ module.exports = {
   url: {
     description: 'Url to html file',
     type: 'string',
-    demandOption: true,
+    default: null,
   },
   glob: {
     description: 'Glob pattern',

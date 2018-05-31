@@ -6,7 +6,7 @@ const fs = require('fs');
 const report = require('./create-static');
 
 function reduceTestObject(accumulator, currentValue) {
-  accumulator.tests = accumulator.tests.concat(currentValue.tests);
+  accumulator.tests = accumulator.tests.concat(currentValue.tests); // eslint-disable-line no-param-reassign, max-len
   const { stats } = accumulator;
   const currentStats = currentValue.stats;
 

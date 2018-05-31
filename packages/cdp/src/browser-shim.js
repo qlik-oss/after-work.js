@@ -1,4 +1,4 @@
-/* eslint func-names: 0, no-underscore-dangle: 0, no-console: 0, no-undef: 0, prefer-rest-params: 0, one-var: 0, no-plusplus: 0, max-len: 0, prefer-const: 0 */
+/* eslint func-names: 0, no-underscore-dangle: 0, no-console: 0, no-undef: 0, prefer-rest-params: 0, one-var: 0, no-plusplus: 0, max-len: 0, prefer-const: 0, no-param-reassign: 0 */
 (function (win) {
   function shimMocha(m) {
     const origRun = m.run.bind(m);

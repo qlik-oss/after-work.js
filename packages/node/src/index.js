@@ -204,6 +204,9 @@ class Runner {
     });
     if (this.argv.coverage) {
       srcFiles.forEach((f) => {
+        if (!this.nyc.exclude.shouldInstrument(f)) {
+          return;
+        }
         this.logLine(`Loading ${f}`);
         require(`${f}`);
       });
@@ -311,8 +314,8 @@ const configure = (configPath) => {
 const coerceNyc = (opt) => {
   if (opt.babel) {
     opt.require.push('babel-register');
-    opt.sourceMap = false;
-    opt.instrumenter = './lib/instrumenters/noop';
+    opt.sourceMap = false; // eslint-disable-line no-param-reassign
+    opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
   }
   return opt;
 };

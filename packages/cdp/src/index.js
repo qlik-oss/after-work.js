@@ -32,25 +32,25 @@ const cdp = {
         return config;
       })
       .coerce('nyc', (opt) => {
-        opt.sourceMap = false;
-        opt.instrumenter = './lib/instrumenters/noop';
+        opt.sourceMap = false; // eslint-disable-line no-param-reassign
+        opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
         return opt;
       })
       .coerce('instrument', (opt) => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
-        opt.testExclude = testExclude({ include: opt.include, exclude });
+        opt.testExclude = testExclude({ include: opt.include, exclude }); // eslint-disable-line no-param-reassign
         return opt;
       })
       .coerce('transform', (opt) => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
-        opt.testExclude = testExclude({ include: opt.include, exclude });
-        opt.typescript.compilerOptions = Object.assign({ compilerOptions: {} }, importCwd.silent(path.resolve(opt.typescript.config))).compilerOptions;
+        opt.testExclude = testExclude({ include: opt.include, exclude }); // eslint-disable-line no-param-reassign
+        opt.typescript.compilerOptions = Object.assign({ compilerOptions: {} }, importCwd.silent(path.resolve(opt.typescript.config))).compilerOptions; // eslint-disable-line no-param-reassign
         return opt;
       })
       .coerce('chrome', (opt) => {
         if (opt.devtools) {
-          opt.chromeFlags = ['--auto-open-devtools-for-tabs'];
-          opt.launch = true;
+          opt.chromeFlags = ['--auto-open-devtools-for-tabs']; // eslint-disable-line no-param-reassign
+          opt.launch = true; // eslint-disable-line no-param-reassign
         }
         return opt;
       });
@@ -62,7 +62,7 @@ const cdp = {
     runner
       .setTestFiles()
       .setUrl(argv.url)
-      .maybeCreateHttpServer()
+      .maybeCreateServer()
       .setupKeyPress()
       .autoDetectDebug();
 
