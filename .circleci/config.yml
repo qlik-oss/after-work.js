@@ -1,10 +1,13 @@
 version: 2
 
+defaults: &defaults
+  working_directory: ~/after-work.js
+  docker:
+    - image: circleci/node:8.9.4-browsers
+
 jobs:
   install:
-    docker:
-      - image: circleci/node:8.9.4-browsers
-    working_directory: ~/after-work.js
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -27,25 +30,29 @@ jobs:
           paths:
             - .
 
-  build:
-    docker:
-      - image: circleci/node:8.9.4-browsers
-    working_directory: ~/after-work.js
+  lint:
+    <<: *defaults
     steps:
       - attach_workspace:
           at: ~/after-work.js
-      - run:
-          name: Lint
-          command:
-            npm run lint
-      - run:
-          name: Test packages
-          command:
-            npm test
-      - run:
-          name: Test node packages with coverage
-          command:
-            npm run test:coveralls
+      - run: npm run bootstrap
+      - run: npm run lint
+
+  test-all:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/after-work.js
+      - run: npm run bootstrap
+      - run: npm test
+
+  test-node-coverage:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/after-work.js
+      - run: npm run bootstrap
+      - run: npm run test:coveralls
       - store_artifacts:
           path: ./coverage
 
@@ -54,6 +61,12 @@ workflows:
   build-all:
     jobs:
       - install
-      - build:
+      - lint:
+          requires:
+            - install
+      - test-all:
+          requires:
+            - install
+      - test-node-coverage:
           requires:
             - install
