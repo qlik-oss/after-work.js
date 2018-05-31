@@ -58,7 +58,7 @@ jobs:
 
 workflows:
   version: 2
-  build-all:
+  all:
     jobs:
       - install
       - lint:
