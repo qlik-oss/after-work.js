@@ -4,7 +4,7 @@ const fs = require('fs');
 const importCwd = require('import-cwd');
 const { isSourceMap, isTypescript, getPathWithExt, ensureFilePath } = require('@after-work.js/file-utils');
 
-function tryRequire(name) {
+function getModule(name) {
   const found = importCwd.silent(name);
   if (!found) {
     return require(`${name}`);
@@ -12,9 +12,9 @@ function tryRequire(name) {
   return found;
 }
 
-const babel = tryRequire('babel-core');
-const babelPluginIstanbul = tryRequire('babel-plugin-istanbul').default;
-const tsc = tryRequire('typescript');
+const babel = getModule('@babel/core');
+const babelPluginIstanbul = getModule('babel-plugin-istanbul').default;
+const tsc = getModule('typescript');
 const cacheSourceMap = new Map();
 const cacheTransform = new Map();
 
@@ -31,7 +31,7 @@ function readFile(filePath) {
 }
 
 function getBabelOpts(filePath, argv) {
-  const sourceRoot = argv.coverage ? path.dirname(filePath) : null;
+  const sourceRoot = argv.coverage ? path.dirname(filePath) : undefined;
   const filename = filePath;
   const plugins = argv.coverage && argv.instrument.testExclude.shouldInstrument(filePath) ?
     [[babelPluginIstanbul, {}]] :
@@ -47,29 +47,35 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   if (!compilerOptions.sourceMap && !compilerOptions.inlineSourceMap) {
     compilerOptions.inlineSourceMap = true;
   }
-  if (compilerOptions.module !== 'amd') {
-    compilerOptions.module = 'amd';
-  }
-  if (!compilerOptions.target) {
-    compilerOptions.target = 'es5';
+  if (!compilerOptions.module) {
+    compilerOptions.module = 'esnext';
   }
   const transpileOpts = { fileName, compilerOptions };
   const res = tsc.transpileModule(tsContent, transpileOpts);
-  tsContent = res.outputText;
+  tsContent = res.outputText; // eslint-disable-line no-param-reassign
   let tsBabelOpts = {};
+
   if (res.sourceMapText) {
     const inputSourceMap = JSON.parse(res.sourceMapText);
     tsBabelOpts = { sourceMaps: true, inputSourceMap };
   } else {
     tsBabelOpts = { sourceMaps: 'inline' };
   }
+  tsBabelOpts.presets = [
+    ['@babel/preset-env', {
+      targets: {
+        browsers: ['last 2 versions', 'safari >= 7'],
+      },
+      modules: false,
+    }],
+  ];
   return { tsContent, tsBabelOpts };
 }
 async function transformFile(filePath, argv) {
   if (isSourceMap(filePath)) {
     return cacheSourceMap.get(filePath);
   }
-  filePath = ensureFilePath(filePath);
+  filePath = ensureFilePath(filePath); // eslint-disable-line no-param-reassign
   const cache = cacheTransform.get(filePath);
   if (cache) {
     return cache;

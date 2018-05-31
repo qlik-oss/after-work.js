@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
-    "test": "lerna run test",
-    "test:coveralls": "./packages/cli/src/index.js -c aw.config.js && cat coverage/lcov.info | coveralls",
+    "test": "aw -c aw.config.js && aw chrome -c aw.config.js",
+    "test:coveralls": "aw -c aw.config.js --coverage && cat coverage/lcov.info | coveralls",
     "lint": "lerna run lint"
   },
   "repository": {
@@ -13,16 +13,18 @@
     "url": "ssh://git@github.com:qlik-oss/after-work.js.git"
   },
   "devDependencies": {
-    "@types/chai": "4.1.4",
-    "@types/mocha": "5.2.3",
-    "babel-core": "6.26.3",
+    "@after-work.js/cli": "file:packages/cli",
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/preset-env": "^7.0.0-beta.49",
+    "@babel/register": "^7.0.0-beta.49",
+    "@types/chai": "4.1.3",
+    "@types/mocha": "5.2.0",
     "babel-plugin-istanbul": "4.1.6",
-    "babel-preset-env": "1.7.0",
-    "babel-register": "6.26.0",
     "coveralls": "3.0.1",
     "eslint": "5.0.1",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.12.0",
+    "globby": "^8.0.1",
     "lerna": "^2.11.0",
     "requirejs": "2.3.5",
     "typescript": "2.6.1",

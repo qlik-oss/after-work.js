@@ -209,7 +209,8 @@ module.exports = function initConfig() {
     setOnPrepareGlobals(browser, aPath) {
       global.EC = protractor.ExpectedConditions; // eslint-disable-line no-undef
       reporterPlugin.getBrowser = () => browser;
-      browser.artifactsPath = aPath;
+      browser.artifactsPath = aPath; // eslint-disable-line no-param-reassign
+      // eslint-disable-next-line no-param-reassign
       browser.reporterInfo = {
         mainTime: new Date(), // Unformated date used inside report
         startTime: new Date().toISOString().replace(/T/, '_').replace(/:/g, '-').replace(/\..+/, ''), // eslint-disable-line
@@ -217,7 +218,7 @@ module.exports = function initConfig() {
     },
     setBaseUrl(browser) {
       if (!config.baseUrl) {
-        return getIPaddress().then((ip) => { browser.baseUrl = `http://${ip}:9000`; });
+        return getIPaddress().then((ip) => { browser.baseUrl = `http://${ip}:9000`; }); // eslint-disable-line no-param-reassign
       }
       return Promise.resolve(config.baseUrl);
     },

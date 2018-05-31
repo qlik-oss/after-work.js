@@ -7,7 +7,8 @@ const unmirror = require('chrome-unmirror');
 const chokidar = require('chokidar');
 const globby = require('globby');
 const precinct = require('precinct');
-const createHttpServer = require('./http-server');
+// const createHttpServer = require('./http-server');
+const createServer = require('@after-work.js/server');
 const NYC = require('nyc');
 const Mediator = require('./mediator');
 const connect = require('./connect');
@@ -122,10 +123,10 @@ class Runner {
         return;
       }
       if (type === 'warning') {
-        type = 'warn';
+        type = 'warn'; // eslint-disable-line no-param-reassign
       }
       if (!(type in console)) {
-        type = 'log';
+        type = 'log'; // eslint-disable-line no-param-reassign
       }
       const data = args.map(arg => (arg.type === 'string' ? arg.value : unmirror(arg)));
       console[type](...data);
@@ -314,20 +315,20 @@ class Runner {
   setUrl(url) {
     if (!/^(file|http(s?)):\/\//.test(url)) {
       if (!fs.existsSync(url)) {
-        url = `file://${path.resolve(path.join(process.cwd(), url))}`;
+        url = `file://${path.resolve(path.join(process.cwd(), url))}`; // eslint-disable-line no-param-reassign
       }
       if (!fs.existsSync(url)) {
         console.error('You must specify an existing url.');
         process.exit(1);
       }
-      url = `file://${fs.realpathSync(url)}`;
+      url = `file://${fs.realpathSync(url)}`; // eslint-disable-line no-param-reassign
     }
     this.argv.url = url;
     return this;
   }
-  maybeCreateHttpServer() {
+  maybeCreateServer() {
     if (/^(http(s?)):\/\//.test(this.argv.url)) {
-      createHttpServer(this.argv);
+      createServer(this.argv);
     }
     return this;
   }
@@ -348,7 +349,7 @@ class Runner {
       fs.writeFileSync(
         path.resolve(this.nyc.tempDirectory(), `${Date.now()}.json`),
         JSON.stringify(coverage, null, 2),
-        'utf8'
+        'utf8',
       );
       this.nyc.report();
     }

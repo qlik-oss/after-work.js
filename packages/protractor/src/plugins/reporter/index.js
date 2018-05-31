@@ -34,7 +34,7 @@ function uiReport(runner, options) {
 
     if (options.reporterOptions) {
       if (options.reporterOptions.xunit) {
-        options.reporterOptions.output = path.resolve(artifactsPath, `${reportName}.xml`);
+        options.reporterOptions.output = path.resolve(artifactsPath, `${reportName}.xml`); // eslint-disable-line no-param-reassign
         new mocha.reporters.XUnit(runner, options); // eslint-disable-line no-new
       }
     }
@@ -48,7 +48,7 @@ function uiReport(runner, options) {
   // generating the report before the process is shutdown
   // This is handled by a inline dummy plugins
   // and hooking into the `teardown` function
-  options.reporterPlugin.teardown = function teardown() {
+  options.reporterPlugin.teardown = function teardown() { // eslint-disable-line no-param-reassign
     return Promise.all(waitForPromises);
   };
 
@@ -65,11 +65,11 @@ function uiReport(runner, options) {
 
   runner.on('fail', (test, err) => {
     try {
-      err.expected = JSON.parse(err.expected);
+      err.expected = JSON.parse(err.expected); // eslint-disable-line no-param-reassign
     } catch (e) {
       // Empty catch
     }
-    test.consoleEntries = [];
+    test.consoleEntries = []; // eslint-disable-line no-param-reassign
     waitForPromises.push(utils.saveScreenshot(browser, test.fullTitle()));
 
     console.log('\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n' + // eslint-disable-line no-console
@@ -89,7 +89,7 @@ function uiReport(runner, options) {
       });
     }
 
-    test.screenshot = (`screenshots/${utils.screenshotName(test.fullTitle(), browser.reporterInfo.browserName, browser.reporterInfo.startTime)}`);
+    test.screenshot = (`screenshots/${utils.screenshotName(test.fullTitle(), browser.reporterInfo.browserName, browser.reporterInfo.startTime)}`); // eslint-disable-line no-param-reassign
     tests.push(test);
     failures++;
   });
@@ -119,7 +119,7 @@ function uiReport(runner, options) {
       },
     };
 
-    runner.testResults = obj;
+    runner.testResults = obj; // eslint-disable-line no-param-reassign
 
     console.log('\u001b[35m Σ SUMMARY: %s testcases runned. \u001b[32m%s passed, \u001b[36m%s pending, \u001b[31m%s failed\u001b[0m', obj.stats.tests, obj.stats.passes, obj.stats.pending, obj.stats.failures); // eslint-disable-line no-console
 
