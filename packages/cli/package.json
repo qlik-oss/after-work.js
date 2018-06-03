@@ -23,7 +23,6 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
     "import-cwd": "2.1.0",
-    "stack-trace": "0.0.10",
     "yargs": "11.0.0"
   },
   "devDependencies": {

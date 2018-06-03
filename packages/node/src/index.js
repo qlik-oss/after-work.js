@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const options = require('./options');
 const utils = require('@after-work.js/terminal-utils');
+const { SnapshotState, toMatchSnapshot } = require('jest-snapshot');
 
 class Runner {
   constructor(argv, libs) {
@@ -25,6 +26,61 @@ class Runner {
     this.all = true;
     this.libs = libs;
     this.debugging = false;
+    this.addToMatchSnapshot();
+  }
+  addToMatchSnapshot() {
+    const runner = this;
+    const chai = importCwd.silent('chai');
+    if (chai) {
+      // eslint-disable-next-line prefer-arrow-callback
+      chai.Assertion.addMethod('toMatchSnapshot', function chaiToMatchSnapshot() {
+        const s = new Error().stack
+          .split('\n')
+          .slice(1)
+          .map(c => c.split(/\(([^)]+)\)/)[1])
+          .filter(c => c !== undefined)
+          .map(c => c.split(':'))
+          .filter(([filename]) => runner.testFiles.indexOf(filename) !== -1);
+
+        if (!s.length) {
+          throw new Error('Can\t find test file');
+        }
+        const [filename, lineno] = s.shift();
+        const src = fs.readFileSync(filename, 'utf8');
+        const lines = src.split('\n');
+        let currentTestName = null;
+        for (let i = lineno - 1; i >= 0; i -= 1) {
+          const line = lines[i];
+          if (line.trimLeft().startsWith('it')) {
+            [, currentTestName] = line.match(/it\((.*),/);
+          }
+        }
+        if (currentTestName === null) {
+          throw new Error('Can\'t find current test name');
+        }
+        const snapshotPath = `${path.join(
+          path.join(path.dirname(filename), '__snapshots__'),
+          `${path.join(path.basename(filename))}.snap`,
+        )}`;
+        const snapshotState = new SnapshotState(currentTestName, {
+          updateSnapshot: process.env.SNAPSHOT_UPDATE ? 'all' : 'new',
+          snapshotPath,
+        });
+        const matcher = toMatchSnapshot.bind({
+          snapshotState,
+          currentTestName,
+        });
+        const result = matcher(this._obj); // eslint-disable-line no-underscore-dangle
+        snapshotState.save();
+        this.assert(
+          result.pass,
+          result.message,
+          result.message,
+          result.expected,
+          result.actual,
+        );
+      });
+    }
   }
   log(mode, testFiles, srcFiles) {
     if (this.debugging) {

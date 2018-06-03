@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/qlik-oss/after-work.js/issues"
   },
-  "homepage": "https://github.com/qlik-oss/after-work.js#readme"
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme",
+  "devDependencies": {
+    "react": "16.4.0",
+    "react-test-renderer": "16.4.0"
+  }
 }

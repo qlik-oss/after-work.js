@@ -16,11 +16,12 @@ module.exports = (api) => {
       };
     default:
       return {
-        // presets: [
-        //   ['@babel/preset-env', { node: 'current' }],
-        // ],
+        sourceMaps: true,
+        presets: [
+          ['@babel/preset-env', { node: 'current' }],
+        ],
         plugins: [
-          // '@babel/plugin-transform-react-jsx',
+          '@babel/plugin-transform-react-jsx',
           [
             'istanbul',
             {
