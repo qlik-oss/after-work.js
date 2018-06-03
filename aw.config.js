@@ -54,8 +54,8 @@ module.exports = {
   glob: [test],
   src: [src],
   watchGlob: [src, test],
+  require: [setup], // move all requies to nyc in node runner
   nyc: {
-    require: [setup],
     include: [src],
     exclude: ['**/cli/src/index.js', '**/browser-shim.js'],
     babel: false, // handle this separately

@@ -10,10 +10,38 @@
     "expect": true
   },
   "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
     "sourceType": "module"
   },
   "rules": {
-    "import/no-extraneous-dependencies": [2, { "devDependencies": true }]
+    "import/no-extraneous-dependencies": [
+      2,
+      {
+        "devDependencies": true
+      }
+    ],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "react/prop-types": [
+      1,
+      {
+        "ignore": [
+          "children"
+        ]
+      }
+    ],
+    "react/prefer-stateless-function": 0
   },
-  "extends": "airbnb-base"
+  "extends": [
+    "airbnb"
+  ]
 }

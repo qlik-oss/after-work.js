@@ -23,6 +23,7 @@
     "globby": "8.0.1",
     "chokidar": "2.0.3",
     "import-cwd": "2.1.0",
+    "jest-snapshot": "23.0.1",
     "nyc": "11.8.0",
     "@after-work.js/terminal-utils": "0.1.0"
   }
