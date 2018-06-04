@@ -32,6 +32,7 @@ const argv = yargs
       }
     });
     const s = scopes.get(scope);
+
     if (s) {
       return s;
     }
