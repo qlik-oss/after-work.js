@@ -27,6 +27,7 @@ class Runner {
     this.libs = libs;
     this.debugging = false;
     this.addToMatchSnapshot();
+    this.snapshotStates = new Map();
   }
   addToMatchSnapshot() {
     const runner = this;
@@ -52,20 +53,25 @@ class Runner {
         for (let i = lineno - 1; i >= 0; i -= 1) {
           const line = lines[i];
           if (line.trimLeft().startsWith('it')) {
-            [, currentTestName] = line.match(/it\((.*),/);
+            [, currentTestName] = line.match(/it.*\((.*),/);
+            break;
           }
         }
         if (currentTestName === null) {
           throw new Error('Can\'t find current test name');
         }
-        const snapshotPath = `${path.join(
-          path.join(path.dirname(filename), '__snapshots__'),
-          `${path.join(path.basename(filename))}.snap`,
-        )}`;
-        const snapshotState = new SnapshotState(currentTestName, {
-          updateSnapshot: process.env.SNAPSHOT_UPDATE ? 'all' : 'new',
-          snapshotPath,
-        });
+        let snapshotState = runner.snapshotStates.get(filename);
+        if (!snapshotState) {
+          const snapshotPath = `${path.join(
+            path.join(path.dirname(filename), '__snapshots__'),
+            `${path.join(path.basename(filename))}.snap`,
+          )}`;
+          snapshotState = new SnapshotState(currentTestName, {
+            updateSnapshot: process.env.SNAPSHOT_UPDATE ? 'all' : 'new',
+            snapshotPath,
+          });
+          runner.snapshotStates.set(filename, snapshotState);
+        }
         const matcher = toMatchSnapshot.bind({
           snapshotState,
           currentTestName,

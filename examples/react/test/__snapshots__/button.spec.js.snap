@@ -5,3 +5,15 @@ exports[`'renders correctly' 1`] = `
   Text
 </button>
 `;
+
+exports[`'renders correctly' 2`] = `
+<button>
+  Text1
+</button>
+`;
+
+exports[`'renders fancy' 1`] = `
+<button>
+  fancy1
+</button>
+`;
