@@ -35,17 +35,25 @@ class Runner {
     if (chai) {
       // eslint-disable-next-line prefer-arrow-callback
       chai.Assertion.addMethod('toMatchSnapshot', function chaiToMatchSnapshot() {
+        // Magically figure out the current test from the stack trace (callsites not working with sourcemaps)
         const s = new Error().stack
           .split('\n')
           .slice(1)
           .map(c => c.split(/\(([^)]+)\)/)[1])
           .filter(c => c !== undefined)
-          .map(c => c.split(':'))
+          .map(c => {
+            const parts = c.split(':')
+            const columnno = parts.pop();
+            const lineno = parts.pop();
+            const filename = path.resolve(parts.join(':'));
+            return [filename, lineno, columnno];
+          })
           .filter(([filename]) => runner.testFiles.indexOf(filename) !== -1);
 
         if (!s.length) {
-          throw new Error('Can\t find test file');
+          throw new Error('Can not find test file');
         }
+
         const [filename, lineno] = s.shift();
         const src = fs.readFileSync(filename, 'utf8');
         const lines = src.split('\n');
@@ -58,7 +66,7 @@ class Runner {
           }
         }
         if (currentTestName === null) {
-          throw new Error('Can\'t find current test name');
+          throw new Error('Can not find current test name');
         }
         let snapshotState = runner.snapshotStates.get(filename);
         if (!snapshotState) {
