@@ -41,14 +41,13 @@ class Runner {
           .slice(1)
           .map(c => c.split(/\(([^)]+)\)/)[1])
           .filter(c => c !== undefined)
-          .map(c => {
-            const parts = c.split(':')
+          .map(((c) => {
+            const parts = c.split(':');
             const columnno = parts.pop();
             const lineno = parts.pop();
             const filename = path.resolve(parts.join(':'));
             return [filename, lineno, columnno];
-          })
-          .filter(([filename]) => runner.testFiles.indexOf(filename) !== -1);
+          }).filter(([filename]) => runner.testFiles.indexOf(filename) !== -1));
 
         if (!s.length) {
           throw new Error('Can not find test file');
