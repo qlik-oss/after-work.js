@@ -37,6 +37,11 @@ module.exports = {
     default: 'tsconfig.json',
     type: 'string',
   },
+  'transform.typescript.babelOptions': {
+    description: 'Typescript babel options',
+    default: {},
+    type: 'object',
+  },
   'transform.include': {
     description: 'Transform files with babel?',
     default: [],

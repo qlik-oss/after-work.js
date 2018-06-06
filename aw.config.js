@@ -63,4 +63,17 @@ module.exports = {
     sourceMap: false,
     instrumenter: './lib/instrumenters/noop',
   },
+  mocha: {
+    reporter: 'spec',
+  },
+  'transform.typescript.babelOptions': {
+    presets: [
+      ['@babel/preset-env', {
+        targets: {
+          browsers: ['last 2 versions', 'safari >= 7'],
+        },
+        modules: false,
+      }],
+    ],
+  },
 };
