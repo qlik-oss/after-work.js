@@ -5,14 +5,24 @@ const importCwd = require('import-cwd');
 const { isSourceMap, isTypescript, getPathWithExt, ensureFilePath } = require('@after-work.js/file-utils');
 
 function getModule(name) {
-  const found = importCwd.silent(name);
+  let found = importCwd.silent(name);
   if (!found) {
-    return require(`${name}`);
+    try {
+      found = require(name);
+    } catch (err) {
+      found = null;
+    }
   }
   return found;
 }
 
-const babel = getModule('@babel/core');
+let babel = getModule('babel-core');
+if (!babel) {
+  babel = getModule('@babel/core');
+  if (!babel) {
+    throw new Error('Can not find babel core');
+  }
+}
 const babelPluginIstanbul = getModule('babel-plugin-istanbul').default;
 const tsc = getModule('typescript');
 const cacheSourceMap = new Map();
@@ -40,7 +50,7 @@ function getBabelOpts(filePath, argv) {
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
-  const { transform: { typescript: { compilerOptions } } } = argv;
+  const { transform: { typescript: { compilerOptions, babelOptions } } } = argv;
   const fileName = argv.coverage ? path.basename(filePath) : filePath;
   compilerOptions.sourceRoot = argv.coverage ? path.resolve(path.dirname(filePath)) : sourceRoot;
   compilerOptions.inlineSources = true;
@@ -61,14 +71,7 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   } else {
     tsBabelOpts = { sourceMaps: 'inline' };
   }
-  tsBabelOpts.presets = [
-    ['@babel/preset-env', {
-      targets: {
-        browsers: ['last 2 versions', 'safari >= 7'],
-      },
-      modules: false,
-    }],
-  ];
+  tsBabelOpts = Object.assign(babelOptions, tsBabelOpts);
   return { tsContent, tsBabelOpts };
 }
 async function transformFile(filePath, argv) {
@@ -97,20 +100,4 @@ async function transformFile(filePath, argv) {
   return code;
 }
 
-module.exports = function transform(argv) {
-  return async (ctx, next) => {
-    await next();
-    let { url } = ctx;
-    // We need to remove the leading slash else it will be excluded by default
-    if (ctx.url.length && ctx.url.startsWith('/')) {
-      url = ctx.url.substring(1);
-    }
-    const shouldInstrument = argv.coverage && argv.instrument && argv.instrument.testExclude.shouldInstrument(url); //eslint-disable-line
-    const shouldTransform = argv.transform && argv.transform.testExclude.shouldInstrument(url);
-
-    if (shouldInstrument || shouldTransform) {
-      const { response } = ctx;
-      response.body = await transformFile(url, argv);
-    }
-  };
-};
+module.exports = transformFile;

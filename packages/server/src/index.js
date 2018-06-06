@@ -3,7 +3,7 @@ const Koa = require('koa');
 const serve = require('koa-static');
 const favicon = require('koa-favicon');
 const rewrite = require('koa-rewrite');
-const transform = require('./transform');
+const transform = require('@after-work.js/transform-middleware');
 const testExclude = require('test-exclude');
 
 module.exports = function createServer(options) {
