@@ -59,7 +59,7 @@
     "@types/mocha": "5.2.0",
     "babel-core": "6.26.0",
     "babel-plugin-istanbul": "4.1.6",
-    "babel-preset-env": "1.6.1",
+    "babel-preset-env": "1.7.0",
     "babel-register": "6.26.0",
     "coveralls": "3.0.1",
     "eslint": "4.19.1",
