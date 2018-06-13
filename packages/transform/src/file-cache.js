@@ -2,14 +2,9 @@
 
 const path = require('path');
 const findCacheDir = require('find-cache-dir');
-const util = require('util');
 const fs = require('fs');
 const zlib = require('zlib');
 const crypto = require('crypto');
-
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-const inflate = util.promisify(zlib.inflate);
 
 class FileCache {
   constructor() {
@@ -26,11 +21,6 @@ class FileCache {
     const str = JSON.stringify(value, null, 2);
     return str;
   }
-  async get(filename) {
-    const value = await this.safeLoadCache(this.getCacheFilename(filename));
-    this.transform.set(filename, value);
-    return value;
-  }
   setSync(filename, transform) {
     transform.mtime = +fs.statSync(filename).mtime; // eslint-disable-line no-param-reassign
     this.transform.set(filename, transform);
@@ -44,15 +34,6 @@ class FileCache {
     }
     return value;
   }
-  async safeLoadCache(filename) {
-    try {
-      const gz = await readFile(filename);
-      const str = await inflate(gz);
-      return JSON.parse(str);
-    } catch (err) {
-      return null;
-    }
-  }
   safeLoadCacheSync(filename) {
     try {
       const gz = fs.readFileSync(filename);
@@ -62,15 +43,6 @@ class FileCache {
       return null;
     }
   }
-  async safeSaveCache(filename) {
-    try {
-      const str = this.getStringifiedValue(filename);
-      const gz = await zlib.deflate(str);
-      await writeFile(filename, gz, 'utf8');
-    } catch (err) {
-      console.log(err); // eslint-disable-line no-console
-    }
-  }
   safeSaveCacheSync(filename) {
     try {
       const str = this.getStringifiedValue(filename);
@@ -78,11 +50,6 @@ class FileCache {
       fs.writeFileSync(this.getCacheFilename(filename), gz, 'utf8');
     } catch (err) {
       console.log(err); // eslint-disable-line no-console
-    }
-  }
-  async save() {
-    for (const filename of this.transform.keys()) {
-      await this.safeSaveCache(this.getCacheFilename(filename));
     }
   }
   saveSync() {
