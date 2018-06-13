@@ -34,7 +34,7 @@ const argv = yargs
     if (s) {
       return s;
     }
-    if (s !== '*') {
+    if (scope !== '*') {
       throw new Error(`Scope ${scope} not found`);
     }
     if (cmd === 'chrome') {
