@@ -16,9 +16,12 @@ module.exports = (api) => {
       };
     default:
       return {
-        sourceMaps: true,
+        sourceMaps: 'inline',
+        retainLines: true,
         presets: [
-          ['@babel/preset-env', { node: 'current' }],
+          ['@babel/preset-env', {
+            targets: { node: 'current' },
+          }],
         ],
         plugins: [
           '@babel/plugin-transform-react-jsx',
@@ -33,5 +36,4 @@ module.exports = (api) => {
         ],
       };
   }
-}
-
+};

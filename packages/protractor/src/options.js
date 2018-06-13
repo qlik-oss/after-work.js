@@ -20,4 +20,11 @@ module.exports = {
     default: [],
     type: 'array',
   },
+  babelOptions: {
+    description: '',
+    default: {
+      ignore: [],
+      configFile: './babel.config.js',
+    },
+  },
 };

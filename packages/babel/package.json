@@ -1,11 +1,10 @@
 {
-  "name": "@after-work.js/node",
+  "name": "@after-work.js/babel",
   "private": true,
   "version": "0.1.0",
-  "description": "Run tests in Node",
+  "description": "Transpile files with babel",
   "main": "src/index.js",
   "scripts": {
-    "test": "../cli/src/index.js -c ../../aw.config.js -p node --colors",
     "lint": "eslint src test"
   },
   "repository": {
@@ -19,14 +18,10 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "mocha": "5.2.0",
-    "globby": "8.0.1",
-    "chokidar": "2.0.3",
-    "import-cwd": "2.1.0",
-    "jest-snapshot": "23.0.1",
-    "nyc": "11.8.0",
-    "@after-work.js/terminal-utils": "0.1.0",
     "@after-work.js/transform": "0.1.0",
-    "@after-work.js/babel": "0.1.0"
+    "import-cwd": "2.1.0",
+    "find-cache-dir": "1.0.0",
+    "pirates": "3.0.2",
+    "source-map-support": "0.5.6"
   }
 }

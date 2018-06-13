@@ -21,9 +21,24 @@ const tryAddCommand = (m) => {
   }
 };
 
-['@after-work.js/node', '@after-work.js/cdp', '@after-work.js/protractor', '@after-work.js/puppeteer', '@after-work.js/serve'].forEach(tryAddCommand);
+[
+  '@after-work.js/node',
+  '@after-work.js/cdp',
+  '@after-work.js/protractor',
+  '@after-work.js/puppeteer',
+  '@after-work.js/serve',
+].forEach(tryAddCommand);
 
-yargs
+const { presetEnv } = yargs
   .alias('h', 'help')
+  .option('presetEnv', {
+    description: 'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset',
+    default: true,
+    type: 'booelan',
+  })
   .wrap(Math.min(120, yargs.terminalWidth()))
   .argv;
+
+if (presetEnv) {
+  importCwd('@after-work.js/cli/src/preset-env');
+}

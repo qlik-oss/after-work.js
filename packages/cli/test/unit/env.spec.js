@@ -1,4 +1,4 @@
-require('../../src/env');
+require('../../src/preset-env');
 
 describe('Environment', () => {
   describe('chai extensions', () => {

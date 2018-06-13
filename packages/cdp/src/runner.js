@@ -14,6 +14,7 @@ const Mediator = require('./mediator');
 const connect = require('./connect');
 const utils = require('@after-work.js/terminal-utils');
 const { ensureFilePath, getExt, getPathWithExt } = require('@after-work.js/file-utils');
+const { deleteTransform, safeSaveCache } = require('@after-work.js/transform');
 
 class Runner {
   constructor(argv = { chrome: { chromeFlags: [] }, client: {} }) {
@@ -224,6 +225,7 @@ class Runner {
     if (this.isRunning) {
       return;
     }
+    deleteTransform(virtualAbs);
     const ext = getExt(virtualAbs);
     const abs = getPathWithExt(virtualAbs, 'js');
     const rel = getPathWithExt(virtualRel, 'js');
@@ -353,6 +355,7 @@ class Runner {
       );
       this.nyc.report();
     }
+    safeSaveCache();
     if (!force && this.argv.watch) {
       const mode = this.all ? 'All' : 'Only';
       const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;

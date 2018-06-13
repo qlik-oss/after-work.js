@@ -6,7 +6,8 @@
   ],
   "npmClient": "npm",
   "npmClientArgs": [
-    "--no-optional"
+    "--no-optional",
+    "--no-package-lock"
   ],
   "version": "5.0.0"
 }
