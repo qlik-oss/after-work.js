@@ -19,9 +19,9 @@ const getModule = (name) => {
   return found;
 };
 
-let babel = getModule('babel-core');
+let babel = getModule('@babel/core');
 if (!babel) {
-  babel = getModule('@babel/core');
+  babel = getModule('babel-core');
   if (!babel) {
     throw new Error('Can not find babel core');
   }
@@ -32,7 +32,8 @@ const tsc = getModule('typescript');
 
 function getBabelOpts(filename, argv) {
   const sourceRoot = (argv.babelOptions && argv.babelOptions.sourceRoot) || argv.coverage ? path.dirname(filename) : undefined;// eslint-disable-line
-  const plugins = argv.coverage && argv.instrument.testExclude.shouldInstrument(filename) ?
+  const addCoverage = argv.coverage && argv.instrument.testExclude.shouldInstrument(filename);
+  const plugins = addCoverage ?
     [[babelPluginIstanbul, {}]] :
     [];
   const { only, ignore } = argv.babelOptions || {};
@@ -89,7 +90,7 @@ function transformFile(filename, argv, content = null) {
   }
   babelOpts.ast = false;
   const transform = babel.transform(content, babelOpts);
-  fileCache.setSync(filename, transform);
+  fileCache.setSync(filename, transform, argv);
   return transform.code;
 }
 

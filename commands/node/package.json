@@ -24,7 +24,7 @@
     "chokidar": "2.0.3",
     "import-cwd": "2.1.0",
     "jest-snapshot": "23.0.1",
-    "nyc": "11.8.0",
+    "nyc": "13.0.0",
     "@after-work.js/terminal-utils": "0.1.0",
     "@after-work.js/transform": "0.1.0",
     "@after-work.js/babel": "0.1.0"

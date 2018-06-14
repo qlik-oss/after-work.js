@@ -40,5 +40,5 @@ const { presetEnv } = yargs
   .argv;
 
 if (presetEnv) {
-  importCwd('@after-work.js/cli/src/preset-env');
+  require('./preset-env'); // eslint-disable-line global-require
 }
