@@ -35,7 +35,6 @@ class Runner {
     this.all = true;
     this.libs = libs;
     this.debugging = false;
-    this.addToMatchSnapshot();
     this.snapshotStates = new Map();
   }
   addToMatchSnapshot() {
@@ -58,11 +57,9 @@ class Runner {
             return [filename, lineno, columnno];
           })
           .filter(([filename]) => runner.testFiles.indexOf(filename) !== -1);
-
         if (!s.length) {
           throw new Error('Can not find test file');
         }
-
         const [filename, lineno] = s.shift();
         const src = getSourceContent(filename);
         const lines = src.split('\n');
@@ -106,6 +103,7 @@ class Runner {
         );
       });
     }
+    return this;
   }
   log(mode, testFiles, srcFiles) {
     if (this.debugging) {
@@ -149,7 +147,7 @@ class Runner {
     return use;
   }
   safeDeleteCache(f) {
-    if (/after-work.js\/packages\/*(cli|transform)\/src\/index.js$/.test(f)) {
+    if (/after-work.js\/*(commands|command-utils)\/*(cli|transform)\/src\/index.js$/.test(f)) {
       return;
     }
     if (require.cache[f]) {
@@ -419,6 +417,7 @@ const node = {
   handler(argv) {
     const runner = new node.Runner(argv, { Mocha, NYC, importCwd, chokidar });
     runner
+      .addToMatchSnapshot()
       .autoDetectDebug()
       .setupKeyPress()
       .setTestFiles()

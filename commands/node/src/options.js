@@ -59,6 +59,11 @@ module.exports = {
     default: true,
     type: 'boolean',
   },
+  mocks: {
+    description: 'Automagically mock modules',
+    default: [['**/*.{scss, less, css}', '{}']],
+    type: 'array',
+  },
   'mocha.reporter': {
     description: 'Which reporter to use',
     default: undefined,
@@ -73,6 +78,21 @@ module.exports = {
     description: 'Timeout',
     default: undefined,
     type: 'number',
+  },
+  'nyc.hookRequire': {
+    description: 'Hook require',
+    default: true,
+    type: 'boolean',
+  },
+  'nyc.hookRunInContext': {
+    description: 'Hook require',
+    default: false,
+    type: 'boolean',
+  },
+  'nyc.hookRunInThisContext': {
+    description: 'Hook require',
+    default: false,
+    type: 'boolean',
   },
   'nyc.require': {
     description: 'Require path',

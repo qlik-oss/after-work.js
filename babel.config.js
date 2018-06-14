@@ -25,14 +25,6 @@ module.exports = (api) => {
         ],
         plugins: [
           '@babel/plugin-transform-react-jsx',
-          [
-            'istanbul',
-            {
-              exclude: [
-                '**/test/**',
-              ],
-            },
-          ],
         ],
       };
   }

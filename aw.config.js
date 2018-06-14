@@ -7,40 +7,52 @@ const { packages } = require('./lerna.json');
 
 const cmd = process.argv.slice(2).shift();
 
+let glob = [];
+let src = [];
+
 const argv = yargs
   .options({
     scope: {
       description: 'Scope to package',
       type: 'string',
-      default: '*',
+      default: '',
       alias: 's',
     },
   })
   .coerce('scope', (scope) => {
     const scopes = new Map();
-    const chromeExamplePackages = [];
-    const nodePackages = [];
     globby.sync(packages.map(p => `${p}/package.json`)).forEach((p) => {
-      const name = require(`./${p}`).name; //eslint-disable-line
+      const { name } = require(`./${p}`); //eslint-disable-line
       const pkgPath = path.dirname(p);
       scopes.set(name, pkgPath);
-      if (name.startsWith('@after-work.js/example-chrome')) {
-        chromeExamplePackages.push(pkgPath);
-      } else {
-        nodePackages.push(pkgPath);
-      }
     });
     const s = scopes.get(scope);
-    if (s) {
-      return s;
-    }
-    if (scope !== '*') {
+    if (scope && !s) {
       throw new Error(`Scope ${scope} not found`);
     }
-    if (cmd === 'chrome') {
-      return `*(${chromeExamplePackages.join('|')})`;
+    if (scope) {
+      glob = [`${s}/test/**/*.spec.{js,ts}`];
+      src = [`${s}/src/**/*.{js,ts}`];
+      return scope;
     }
-    return `*(${nodePackages.join('|')})`;
+    if (cmd === 'chrome') {
+      [...scopes.keys()]
+        .filter(k => k.includes('example-chrome'))
+        .map(k => scopes.get(k))
+        .forEach((p) => {
+          glob = [`${p}/test/**/*.spec.{js,ts}`];
+          src = [`${p}/src/**/*.{js,ts}`];
+        });
+    } else {
+      [...scopes.keys()]
+        .filter(k => !k.includes('example-chrome'))
+        .map(k => scopes.get(k))
+        .forEach((p) => {
+          glob = [...glob, `${p}/test/**/*.spec.{js,ts}`];
+          src = [...src, `${p}/src/**/*.{js,ts}`];
+        });
+    }
+    return '';
   })
   .argv;
 
@@ -48,16 +60,17 @@ let url = null;
 if (cmd === 'chrome') {
   url = 'http://localhost:9676/examples/index.html';
 }
-const test = `${argv.scope}/test/**/*.spec.{js,ts}`;
-const src = `${argv.scope}/src/**/*.{js,ts}`;
 
 module.exports = {
   url,
-  glob: [test],
-  src: [src],
-  watchGlob: [src, test],
+  glob,
+  src,
+  watchGlob: [...src, ...glob],
+  mocks: [
+    ['**/cdp/src/browser-shim.js', '{}'],
+  ],
   nyc: {
-    include: [src],
+    include: src,
     exclude: ['**/cli/src/index.js', '**/transform/src/index.js', '**/browser-shim.js'],
     babel: false, // handle this separately
     sourceMap: false,
