@@ -1,6 +1,9 @@
 {
   "name": "@after-work.js/terminal-utils",
-  "version": "0.1.0",
+  "version": "5.1.0-beta.2121cb88",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Terminal utils",
   "main": "src/index.js",
   "scripts": {

@@ -1,6 +1,9 @@
 {
   "name": "@after-work.js/cdp",
-  "version": "0.1.0",
+  "version": "5.1.0-beta.2121cb88",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Run tests with Chrome Debugging Protocol",
   "main": "src/index.js",
   "scripts": {
@@ -17,21 +20,21 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "import-cwd": "2.1.0",
-    "test-exclude": "4.2.1",
-    "@after-work.js/terminal-utils": "0.1.0",
-    "@after-work.js/file-utils": "0.1.0",
+    "@after-work.js/file-utils": "^5.1.0-beta.2121cb88",
+    "@after-work.js/server": "^5.1.0-beta.2121cb88",
+    "@after-work.js/terminal-utils": "^5.1.0-beta.2121cb88",
+    "@after-work.js/transform": "^5.1.0-beta.2121cb88",
+    "chokidar": "2.0.3",
     "chrome-launcher": "0.10.2",
     "chrome-remote-interface": "0.25.6",
     "chrome-unmirror": "0.1.0",
-    "chokidar": "2.0.3",
     "globby": "8.0.1",
-    "precinct": "4.2.0",
-    "nyc": "11.8.0",
+    "import-cwd": "2.1.0",
     "koa": "2.5.1",
-    "koa-static": "4.0.3",
     "koa-favicon": "2.0.1",
-    "@after-work.js/server": "0.1.0",
-    "@after-work.js/transform": "0.1.0"
+    "koa-static": "4.0.3",
+    "nyc": "11.8.0",
+    "precinct": "4.2.0",
+    "test-exclude": "4.2.1"
   }
 }

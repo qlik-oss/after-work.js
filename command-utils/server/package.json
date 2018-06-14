@@ -1,6 +1,9 @@
 {
   "name": "@after-work.js/server",
-  "version": "0.1.0",
+  "version": "5.1.0-beta.2121cb88",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Simple http server",
   "main": "src/index.js",
   "scripts": {
@@ -17,13 +20,13 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
+    "@after-work.js/file-utils": "^5.1.0-beta.2121cb88",
+    "@after-work.js/transform-middleware": "^5.1.0-beta.2121cb88",
+    "import-cwd": "2.1.0",
     "koa": "2.5.1",
-    "koa-static": "4.0.3",
     "koa-favicon": "2.0.1",
     "koa-rewrite": "3.0.1",
-    "test-exclude": "4.2.1",
-    "import-cwd": "2.1.0",
-    "@after-work.js/file-utils": "0.1.0",
-    "@after-work.js/transform-middleware": "0.1.0"
+    "koa-static": "4.0.3",
+    "test-exclude": "4.2.1"
   }
 }
