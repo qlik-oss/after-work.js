@@ -1,6 +1,9 @@
 {
   "name": "@after-work.js/protractor",
-  "version": "0.1.0",
+  "version": "5.1.0-beta.2121cb88",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Run tests with Protractor",
   "main": "src/index.js",
   "scripts": {
@@ -18,13 +21,13 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
+    "@after-work.js/server": "^5.1.0-beta.2121cb88",
     "extend": "3.0.1",
-    "jimp": "0.2.28",
-    "@after-work.js/server": "0.1.0",
     "handlebars": "4.0.11",
+    "highlight.js": "9.12.0",
+    "jimp": "0.2.28",
     "mkdirp": "0.5.1",
     "mocha": "5.2.0",
-    "moment": "2.22.1",
-    "highlight.js": "9.12.0"
+    "moment": "2.22.1"
   }
 }

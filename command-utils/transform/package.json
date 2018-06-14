@@ -1,6 +1,9 @@
 {
   "name": "@after-work.js/transform",
-  "version": "0.1.0",
+  "version": "5.1.0-beta.2121cb88",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Transform files",
   "main": "src/index.js",
   "scripts": {
@@ -17,8 +20,8 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "import-cwd": "2.1.0",
-    "@after-work.js/file-utils": "0.1.0",
-    "find-cache-dir": "1.0.0"
+    "@after-work.js/file-utils": "^5.1.0-beta.2121cb88",
+    "find-cache-dir": "1.0.0",
+    "import-cwd": "2.1.0"
   }
 }

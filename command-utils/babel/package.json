@@ -1,6 +1,9 @@
 {
   "name": "@after-work.js/babel",
-  "version": "0.1.0",
+  "version": "5.1.0-beta.2121cb88",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Transpile files with babel",
   "main": "src/index.js",
   "scripts": {
@@ -17,9 +20,9 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/transform": "0.1.0",
-    "import-cwd": "2.1.0",
+    "@after-work.js/transform": "^5.1.0-beta.2121cb88",
     "find-cache-dir": "1.0.0",
+    "import-cwd": "2.1.0",
     "minimatch": "3.0.4",
     "pirates": "3.0.2",
     "source-map-support": "0.5.6"
