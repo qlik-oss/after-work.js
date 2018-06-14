@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/server",
-  "private": true,
   "version": "0.1.0",
   "description": "Simple http server",
   "main": "src/index.js",

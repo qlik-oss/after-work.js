@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/babel",
-  "private": true,
   "version": "0.1.0",
   "description": "Transpile files with babel",
   "main": "src/index.js",

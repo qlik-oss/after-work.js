@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/file-utils",
-  "private": true,
   "version": "0.1.0",
   "description": "File utils",
   "main": "src/index.js",

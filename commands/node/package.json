@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/node",
-  "private": true,
   "version": "0.1.0",
   "description": "Run tests in Node",
   "main": "src/index.js",
