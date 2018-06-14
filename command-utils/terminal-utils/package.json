@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/terminal-utils",
-  "private": true,
   "version": "0.1.0",
   "description": "Terminal utils",
   "main": "src/index.js",

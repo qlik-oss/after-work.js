@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/transform-middleware",
-  "private": true,
   "version": "0.1.0",
   "description": "Transform files",
   "main": "src/index.js",

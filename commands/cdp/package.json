@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/cdp",
-  "private": true,
   "version": "0.1.0",
   "description": "Run tests with Chrome Debugging Protocol",
   "main": "src/index.js",

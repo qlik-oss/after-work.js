@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/protractor",
-  "private": true,
   "version": "0.1.0",
   "description": "Run tests with Protractor",
   "main": "src/index.js",

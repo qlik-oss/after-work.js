@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/serve",
-  "private": true,
   "version": "0.1.0",
   "description": "Serve files",
   "main": "src/index.js",

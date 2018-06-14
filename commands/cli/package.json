@@ -1,6 +1,5 @@
 {
   "name": "@after-work.js/cli",
-  "private": true,
   "version": "0.1.0",
   "description": "after-work.js command line interface",
   "main": "src/index.js",

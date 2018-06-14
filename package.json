@@ -1,6 +1,7 @@
 {
   "description": "Unified testing framework",
   "author": "QlikTech International AB",
+  "private": true,
   "license": "MIT",
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
