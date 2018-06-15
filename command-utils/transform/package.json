@@ -23,5 +23,8 @@
     "@after-work.js/file-utils": "^5.1.0-beta.2121cb88",
     "find-cache-dir": "1.0.0",
     "import-cwd": "2.1.0"
-  }
+  },
+  "files": [
+    "/src"
+  ]
 }

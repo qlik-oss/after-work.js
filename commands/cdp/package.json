@@ -36,5 +36,8 @@
     "nyc": "11.8.0",
     "precinct": "4.2.0",
     "test-exclude": "4.2.1"
-  }
+  },
+  "files": [
+    "/src"
+  ]
 }

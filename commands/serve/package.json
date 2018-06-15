@@ -21,5 +21,8 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
     "@after-work.js/server": "^5.1.0-beta.2121cb88"
-  }
+  },
+  "files": [
+    "/src"
+  ]
 }

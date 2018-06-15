@@ -1,4 +1,4 @@
-/* eslint import/no-extraneous-dependencies: 0, prefer-destructuring: 0, no-param-reassign: 0 */
+/* eslint import/no-extraneous-dependencies: 0, prefer-destructuring: 0, no-param-reassign: 0, no-unused-expressions: 0, max-len: 0 */
 
 const yargs = require('yargs');
 const path = require('path');
@@ -10,7 +10,7 @@ const cmd = process.argv.slice(2).shift();
 let glob = [];
 let src = [];
 
-const argv = yargs
+yargs
   .options({
     scope: {
       description: 'Scope to package',

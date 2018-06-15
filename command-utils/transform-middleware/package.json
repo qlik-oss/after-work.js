@@ -22,5 +22,8 @@
   "dependencies": {
     "@after-work.js/transform": "^5.1.0-beta.2121cb88",
     "import-cwd": "2.1.0"
-  }
+  },
+  "files": [
+    "/src"
+  ]
 }
