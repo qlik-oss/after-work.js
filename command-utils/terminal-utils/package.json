@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/terminal-utils",
-  "version": "5.1.0-beta.2121cb88",
+  "version": "5.0.0-alpha.5",
   "publishConfig": {
     "access": "public"
   },

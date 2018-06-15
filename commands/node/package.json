@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/node",
-  "version": "5.1.0-beta.2121cb88",
+  "version": "5.0.0-alpha.5",
   "publishConfig": {
     "access": "public"
   },
@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/babel": "^5.1.0-beta.2121cb88",
-    "@after-work.js/terminal-utils": "^5.1.0-beta.2121cb88",
-    "@after-work.js/transform": "^5.1.0-beta.2121cb88",
+    "@after-work.js/babel": "^5.0.0-alpha.5",
+    "@after-work.js/terminal-utils": "^5.0.0-alpha.5",
+    "@after-work.js/transform": "^5.0.0-alpha.5",
     "chokidar": "2.0.3",
     "globby": "8.0.1",
     "import-cwd": "2.1.0",
