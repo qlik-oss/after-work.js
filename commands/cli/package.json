@@ -39,5 +39,8 @@
     "sinon": "5.0.6",
     "sinon-chai": "3.1.0",
     "source-map-support": "0.5.6"
-  }
+  },
+  "files": [
+    "/src"
+  ]
 }

@@ -28,5 +28,8 @@
     "koa-rewrite": "3.0.1",
     "koa-static": "4.0.3",
     "test-exclude": "4.2.1"
-  }
+  },
+  "files": [
+    "/src"
+  ]
 }
