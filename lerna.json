@@ -10,5 +10,5 @@
     "--no-optional",
     "--no-package-lock"
   ],
-  "version": "5.0.0"
+  "version": "5.0.0-alpha.5"
 }

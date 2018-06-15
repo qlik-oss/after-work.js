@@ -81,7 +81,7 @@ module.exports = {
   },
   'nyc.hookRequire': {
     description: 'Hook require',
-    default: true,
+    default: false,
     type: 'boolean',
   },
   'nyc.hookRunInContext': {
