@@ -27,6 +27,9 @@ const protractor = {
       .options(options);
   },
   handler(argv) {
+    if (argv.presetEnv) {
+      require(argv.presetEnv);
+    }
     let launcher;
     try {
       launcher = require('protractor/built/launcher');
