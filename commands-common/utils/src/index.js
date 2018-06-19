@@ -56,7 +56,7 @@ const utils = {
     return found;
   },
   coerceBabel(opt) {
-    if (opt.enable && opt.core) {
+    if (opt.enable && opt.core && typeof opt.core === 'string') {
       opt.babel = importCwd(opt.core); // eslint-disable-line no-param-reassign
     } else if (opt.enable && !opt.core) {
       let core = utils.safeGetModule('@babel/core');
@@ -68,7 +68,9 @@ const utils = {
       }
       opt.babel = core; // eslint-disable-line no-param-reassign
     }
-    opt.babelPluginIstanbul = importCwd(opt.babelPluginIstanbul).default; // eslint-disable-line no-param-reassign, max-len
+    if (typeof opt.babelPluginIstanbul === 'string') {
+      opt.babelPluginIstanbul = importCwd(opt.babelPluginIstanbul).default; // eslint-disable-line no-param-reassign, max-len
+    }
     return opt;
   },
   coerceTsc(opt) {
