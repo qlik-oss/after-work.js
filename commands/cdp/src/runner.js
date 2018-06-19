@@ -12,9 +12,8 @@ const createServer = require('@after-work.js/server');
 const NYC = require('nyc');
 const Mediator = require('./mediator');
 const connect = require('./connect');
-const utils = require('@after-work.js/terminal-utils');
-const { ensureFilePath, getExt, getPathWithExt } = require('@after-work.js/file-utils');
-const { deleteTransform, safeSaveCache } = require('@after-work.js/transform');
+const utils = require('@after-work.js/utils');
+const { deleteTransform } = require('@after-work.js/transform');
 
 class Runner {
   constructor(argv = { chrome: { chromeFlags: [] }, client: {} }) {
@@ -183,7 +182,7 @@ class Runner {
     if (cached) {
       return cached;
     }
-    const rf = ensureFilePath(f);
+    const rf = utils.ensureFilePath(f);
     const deps = precinct(fs.readFileSync(rf, 'utf8'), { amd: { skipLazyLoaded: true } });
     this.depMap.set(f, deps);
     return deps;
@@ -226,9 +225,9 @@ class Runner {
       return;
     }
     deleteTransform(virtualAbs);
-    const ext = getExt(virtualAbs);
-    const abs = getPathWithExt(virtualAbs, 'js');
-    const rel = getPathWithExt(virtualRel, 'js');
+    const ext = utils.getExt(virtualAbs);
+    const abs = utils.getPathWithExt(virtualAbs, 'js');
+    const rel = utils.getPathWithExt(virtualRel, 'js');
     let testFiles = [rel];
     if (this.depMap.get(abs)) {
       this.depMap.delete(abs);
@@ -242,7 +241,7 @@ class Runner {
     } else {
       this.nyc = new NYC(this.argv.nyc);
     }
-    this.onlyTestFiles = testFiles.map(f => getPathWithExt(f, ext));
+    this.onlyTestFiles = testFiles.map(f => utils.getPathWithExt(f, ext));
     this.onlyTestFilesBrowser = this.relativeBaseUrlFiles(testFiles);
     await this.reloadAndRunTests(this.onlyTestFilesBrowser);
   }
@@ -355,7 +354,7 @@ class Runner {
       );
       this.nyc.report();
     }
-    safeSaveCache();
+    // safeSaveCache();
     if (!force && this.argv.watch) {
       const mode = this.all ? 'All' : 'Only';
       const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;

@@ -10,7 +10,6 @@ class FileCache {
   constructor() {
     this.cacheDir = findCacheDir({ name: '@after-work.js/transform', create: true });
     this.transform = new Map();
-    this.dirtyFiles = [];
   }
   getCacheFilename(filename) {
     const hash = crypto.createHash('md5').update(filename).digest('hex');
@@ -31,7 +30,7 @@ class FileCache {
   setSync(filename, transform, { virtualMock }) {
     transform.mtime = virtualMock ? -1 : +fs.statSync(filename).mtime; // eslint-disable-line no-param-reassign
     this.transform.set(filename, transform);
-    this.dirtyFiles.push(filename);
+    this.safeSaveCacheSync(filename);
   }
   getSync(filename) {
     const value = this.safeLoadCacheSync(this.getCacheFilename(filename));
@@ -61,9 +60,6 @@ class FileCache {
     } catch (err) {
       console.log(err); // eslint-disable-line no-console
     }
-  }
-  saveSync() {
-    this.dirtyFiles.forEach(filename => this.safeSaveCacheSync(filename));
   }
 }
 

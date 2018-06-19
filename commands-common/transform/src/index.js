@@ -1,37 +1,14 @@
 /* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0, max-len: 0 */
 const path = require('path');
 const fs = require('fs');
-const importCwd = require('import-cwd');
-const { isSourceMap, isTypescript, ensureFilePath } = require('@after-work.js/file-utils');
+const { isSourceMap, isTypescript, ensureFilePath } = require('@after-work.js/utils');
 const FileCache = require('./file-cache');
 
 const fileCache = new FileCache();
 
-const getModule = (name) => {
-  let found = importCwd.silent(name);
-  if (!found) {
-    try {
-      found = require(name);
-    } catch (err) {
-      found = null;
-    }
-  }
-  return found;
-};
-
-let babel = getModule('@babel/core');
-if (!babel) {
-  babel = getModule('babel-core');
-  if (!babel) {
-    throw new Error('Can not find babel core');
-  }
-}
-
-const babelPluginIstanbul = getModule('babel-plugin-istanbul').default;
-const tsc = getModule('typescript');
-
 function getBabelOpts(filename, argv) {
-  const sourceRoot = (argv.babelOptions && argv.babelOptions.sourceRoot) || argv.coverage ? path.dirname(filename) : undefined;// eslint-disable-line
+  const { options, babelPluginIstanbul } = argv.babel;
+  const sourceRoot = (options && options.sourceRoot) || argv.coverage ? path.dirname(filename) : undefined;// eslint-disable-line
   const addCoverage = argv.coverage && argv.instrument.testExclude.shouldInstrument(filename);
   const plugins = addCoverage ?
     [[babelPluginIstanbul, {}]] :
@@ -41,6 +18,7 @@ function getBabelOpts(filename, argv) {
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
+  const { tsc } = argv;
   const { transform: { typescript: { compilerOptions, babelOptions } } } = argv;
   const fileName = argv.coverage ? path.basename(filePath) : filePath;
   compilerOptions.sourceRoot = argv.coverage ? path.resolve(path.dirname(filePath)) : sourceRoot;
@@ -89,6 +67,7 @@ function transformFile(filename, argv, content = null) {
     babelOpts = Object.assign({}, babelOpts, tsBabelOpts);
   }
   babelOpts.ast = false;
+  const { babel } = argv.babel;
   const transform = babel.transform(content, babelOpts);
   fileCache.setSync(filename, transform, argv);
   return transform.code;

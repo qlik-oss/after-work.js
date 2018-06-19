@@ -72,6 +72,8 @@ describe('Node command', () => {
     const argv = { require: ['foo'] };
     const importCwd = sandbox.stub();
     const runner = new Runner(argv, { importCwd });
+    runner.setupBabel = sandbox.stub();
+    runner.addToMatchSnapshot = sandbox.stub();
     runner.require();
     expect(importCwd).to.have.been.calledWithExactly('foo');
   });

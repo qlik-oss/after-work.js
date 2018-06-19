@@ -32,12 +32,31 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
-  babelOptions: {
-    description: '',
+  'babel.enable': {
+    description: 'Enable babel',
+    default: true,
+    type: 'boolean',
+  },
+  'babel.core': {
+    description: 'Path to babel core module',
+    default: '',
+    type: 'string',
+  },
+  'babel.babelPluginIstanbul': {
+    description: 'Path to babel plugin istanbul module',
+    default: 'babel-plugin-istanbul',
+    type: 'string',
+  },
+  'babel.options': {
+    description: 'Babel options',
     default: {
-      ignore: [],
-      configFile: './babel.config.js',
     },
+    type: 'object',
+  },
+  tsc: {
+    description: 'Path to typescript compiler module',
+    default: 'typescript',
+    type: 'string',
   },
   'transform.typescript.config': {
     description: 'Typescript config file',

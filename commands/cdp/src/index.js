@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const testExclude = require('test-exclude');
 const importCwd = require('import-cwd');
+const utils = require('@after-work.js/utils');
 const options = require('./options');
 
 process.on('unhandledRejection', (err) => {
@@ -31,6 +32,8 @@ const cdp = {
         }
         return config;
       })
+      .coerce('babel', utils.coerceBabel)
+      .coerce('tsc', utils.coerceTsc)
       .coerce('nyc', (opt) => {
         opt.sourceMap = false; // eslint-disable-line no-param-reassign
         opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
