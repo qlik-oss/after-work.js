@@ -69,10 +69,10 @@ class Runner {
     utils.clearLine();
   }
   bind() {
-    if (this.argv.chrome.devtools && this.argv.coverage) {
-      this.log('Can not use coverage with devtools. Coverage set to false');
-      this.argv.coverage = false;
-    }
+    // if (this.argv.chrome.devtools && this.argv.coverage) {
+    //   this.log('Can not use coverage with devtools. Coverage set to false');
+    //   this.argv.coverage = false;
+    // }
     if (!this.argv.url) {
       this.fail('`options.url` must be specified to run tests');
     }
