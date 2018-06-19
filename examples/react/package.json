@@ -1,7 +1,7 @@
 {
   "name": "@after-work.js/example-react",
   "private": true,
-  "version": "5.0.0-alpha.9",
+  "version": "5.0.0-alpha.10",
   "description": "React",
   "main": "src/index.js",
   "scripts": {
