@@ -40,8 +40,8 @@ yargs
         .filter(k => k.includes('example-chrome'))
         .map(k => scopes.get(k))
         .forEach((p) => {
-          glob = [`${p}/test/**/*.spec.{js,ts}`];
-          src = [`${p}/src/**/*.{js,ts}`];
+          glob = [...glob, `${p}/test/**/*.spec.{js,ts}`];
+          src = [...src, `${p}/src/**/*.{js,ts}`];
         });
     } else {
       [...scopes.keys()]
@@ -90,4 +90,7 @@ module.exports = {
       }],
     ],
   },
+  'instrument.exclude': [
+    '**/main.js',
+  ],
 };
