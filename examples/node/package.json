@@ -1,7 +1,7 @@
 {
   "name": "@after-work.js/example-node",
   "private": true,
-  "version": "5.0.0-alpha.5",
+  "version": "5.0.0-alpha.6",
   "description": "File utils",
   "main": "src/index.js",
   "scripts": {
