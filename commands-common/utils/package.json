@@ -1,5 +1,5 @@
 {
-  "name": "@after-work.js/file-utils",
+  "name": "@after-work.js/utils",
   "version": "5.0.0-alpha.5",
   "publishConfig": {
     "access": "public"

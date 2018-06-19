@@ -3,6 +3,7 @@
 
 const yargs = require('yargs');
 const importCwd = require('import-cwd');
+const path = require('path');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 
@@ -10,11 +11,13 @@ yargs
   .usage('aw <command>');
 
 const tryAddCommand = (m) => {
-  let cmd = importCwd.silent(m);
-  if (cmd === null) {
-    try {
-      cmd = require(m); //eslint-disable-line
-    } catch (e) { } //eslint-disable-line
+  let cmd = null;
+  try {
+    // First try local (enables running aw from src)
+    cmd = require(m); //eslint-disable-line
+  } catch (e) {
+    // Try installed
+    cmd = importCwd.silent(m);
   }
   if (cmd !== null) {
     yargs.command(cmd);
@@ -29,16 +32,13 @@ const tryAddCommand = (m) => {
   '@after-work.js/serve',
 ].forEach(tryAddCommand);
 
-const { presetEnv } = yargs
+yargs
   .alias('h', 'help')
   .option('presetEnv', {
     description: 'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset',
-    default: true,
-    type: 'booelan',
+    default: path.resolve(__dirname, 'preset-env.js'),
+    type: 'string',
   })
   .wrap(Math.min(120, yargs.terminalWidth()))
   .argv;
 
-if (presetEnv) {
-  require('./preset-env'); // eslint-disable-line global-require
-}

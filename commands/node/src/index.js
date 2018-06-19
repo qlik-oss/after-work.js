@@ -8,8 +8,8 @@ const NYC = require('nyc');
 const fs = require('fs');
 const path = require('path');
 const options = require('./options');
-const utils = require('@after-work.js/terminal-utils');
-const { getTransform, deleteTransform, safeSaveCache } = require('@after-work.js/transform');
+const utils = require('@after-work.js/utils');
+const { getTransform, deleteTransform } = require('@after-work.js/transform');
 const { SnapshotState, toMatchSnapshot } = require('jest-snapshot');
 
 const getSourceContent = (filename) => {
@@ -212,11 +212,11 @@ class Runner {
   onFinished(failures) {
     this.isRunning = false;
     process.on('exit', () => {
-      safeSaveCache();
+      // safeSaveCache();
       process.exit(failures);
     });
     if (this.argv.exit) {
-      safeSaveCache();
+      // safeSaveCache();
       process.exit();
     }
   }
@@ -250,7 +250,6 @@ class Runner {
     process.stdin.setEncoding('utf8');
     process.stdin.on('keypress', (str) => {
       if (str === '\u0003') {
-        safeSaveCache();
         process.exit(0);
       }
       if (this.isRunning) {
@@ -267,7 +266,9 @@ class Runner {
     return this;
   }
   setupBabel() {
-    require('@after-work.js/babel')(this.argv);
+    if (this.argv.babel.enable) {
+      require('@after-work.js/babel')(this.argv);
+    }
   }
   setup(testFiles, srcFiles) {
     srcFiles.forEach(f => this.safeDeleteCache(f));
@@ -405,6 +406,8 @@ const node = {
     return yargs
       .options(options)
       .config('config', configure)
+      .coerce('babel', utils.coerceBabel)
+      .coerce('tsc', utils.coerceTsc)
       .coerce('nyc', (opt) => {
         if (opt.babel) {
           // opt.require.push('babel-register');
@@ -415,6 +418,9 @@ const node = {
       });
   },
   handler(argv) {
+    if (argv.presetEnv) {
+      require(argv.presetEnv);
+    }
     const runner = new node.Runner(argv, { Mocha, NYC, importCwd, chokidar });
     runner
       .addToMatchSnapshot()

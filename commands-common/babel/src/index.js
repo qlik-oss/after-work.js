@@ -2,7 +2,6 @@
 
 const path = require('path');
 const fs = require('fs');
-const importCwd = require('import-cwd');
 const { addHook } = require('pirates');
 const sourceMapSupport = require('source-map-support');
 const { transformFile, getTransform } = require('@after-work.js/transform');
@@ -10,35 +9,22 @@ const minimatch = require('minimatch');
 const mod = require('module');
 
 const originLoader = mod._load; //eslint-disable-line
-let babel = null;
 let removeCompileHook = () => { };
 let removeLoadHook = () => { };
 
-function getModule(name) {
-  let found = importCwd.silent(name);
-  if (!found) {
-    try {
-      found = require(name);
-    } catch (err) {
-      found = null;
-    }
-  }
-  return found;
-}
-
-function compileHook(options, code, filename, virtualMock = false) {
+function compileHook(argv, code, filename, virtualMock = false) {
   const sourceRoot = path.dirname(filename);
-  const { babelOptions } = options;
+  const { babel, options } = argv.babel;
   const opts = new babel.OptionManager().init({
-    ...babelOptions,
+    ...options,
     filename,
     sourceRoot,
   });
   if (opts === null) {
     return code;
   }
-  const argv = {
-    ...options,
+  const newArgv = {
+    ...argv,
     babelOptions: {
       ...opts,
     },
@@ -47,7 +33,7 @@ function compileHook(options, code, filename, virtualMock = false) {
   if (/after-work.js\/*(commands|command-utils)\/*(cli|transform)/.test(filename)) {
     return code;
   }
-  return transformFile(filename, argv, code);
+  return transformFile(filename, newArgv, code);
 }
 
 function compile(value, filename, options) {
@@ -114,13 +100,6 @@ function installSourceMapSupport() {
 }
 
 module.exports = function register(options = {}) {
-  babel = getModule('@babel/core');
-  if (!babel) {
-    babel = getModule('babel-core');
-    if (!babel) {
-      throw new Error('Can not find babel core');
-    }
-  }
   installSourceMapSupport();
   removeCompileHook();
   removeLoadHook();

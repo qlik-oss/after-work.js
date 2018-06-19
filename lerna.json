@@ -2,7 +2,7 @@
   "lerna": "2.11.0",
   "packages": [
     "commands/*",
-    "command-utils/*",
+    "commands-common/*",
     "examples/*"
   ],
   "npmClient": "npm",
