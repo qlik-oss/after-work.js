@@ -1,7 +1,7 @@
 {
   "name": "@after-work.js/example-chrome-js",
   "private": true,
-  "version": "5.0.0-alpha.6",
+  "version": "5.0.0-alpha.7",
   "description": "Typescript",
   "main": "src/index.js",
   "scripts": {
