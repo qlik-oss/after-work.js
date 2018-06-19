@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/puppeteer",
-  "version": "5.0.0-alpha.8",
+  "version": "5.0.0-alpha.9",
   "publishConfig": {
     "access": "public"
   },
