@@ -30,6 +30,7 @@
     "test-exclude": "4.2.1"
   },
   "files": [
-    "/src"
+    "/src",
+    "aw.png"
   ]
 }
