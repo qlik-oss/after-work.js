@@ -9,6 +9,10 @@
     "type": "git",
     "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
   },
+  "main": "src/index.js",
+  "bin": {
+    "aw": "src/index.js"
+  },
   "author": "QlikTech International AB",
   "license": "MIT",
   "bugs": {
