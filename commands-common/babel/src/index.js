@@ -13,6 +13,10 @@ let removeCompileHook = () => { };
 let removeLoadHook = () => { };
 
 function compileHook(argv, code, filename, virtualMock = false) {
+  // Ignore transpiling after-work.js except react
+  // if (/after-work.js\/*!(react)/.test(filename)) {
+  //   return code;
+  // }
   const sourceRoot = path.dirname(filename);
   const { babel, options } = argv.babel;
   const opts = new babel.OptionManager().init({
@@ -30,9 +34,6 @@ function compileHook(argv, code, filename, virtualMock = false) {
     },
     virtualMock,
   };
-  if (/after-work.js\/*(commands|command-utils)\/*(cli|transform)/.test(filename)) {
-    return code;
-  }
   return transformFile(filename, newArgv, code);
 }
 

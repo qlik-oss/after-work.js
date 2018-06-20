@@ -27,18 +27,41 @@ class FileCache {
     const str = JSON.stringify(value, null, 2);
     return str;
   }
-  setSync(filename, transform, { virtualMock }) {
-    transform.mtime = virtualMock ? -1 : +fs.statSync(filename).mtime; // eslint-disable-line no-param-reassign
-    this.transform.set(filename, transform);
+  setSync(filename, transformItem, options) {
+    const {
+      virtualMock,
+      babelOptions,
+      instrument,
+      transform,
+    } = options;
+    transformItem.hash = this.getCacheHash(filename, { ...babelOptions, ...instrument, ...transform }); // eslint-disable-line no-param-reassign
+    if (!virtualMock) {
+      transformItem.mtime = +fs.statSync(filename).mtime; // eslint-disable-line no-param-reassign
+    }
+    this.transform.set(filename, transformItem);
     this.safeSaveCacheSync(filename);
   }
-  getSync(filename) {
+  getSync(filename, options = {}) {
+    const {
+      ignoreCacheInvalidation = false,
+      virtualMock = false,
+      babelOptions,
+      instrument,
+      transform,
+    } = options;
     const value = this.safeLoadCacheSync(this.getCacheFilename(filename));
     this.transform.set(filename, value);
-    if (value && value.mtime === -1) { // virtual mock always refresh
+    if (ignoreCacheInvalidation) {
+      return value;
+    }
+    if (virtualMock) { // virtual mock always refresh
       return null;
     }
-    if (value && value.mtime !== +fs.statSync(filename).mtime) {
+    if (value && value.mtime && value.mtime !== +fs.statSync(filename).mtime) {
+      return null;
+    }
+    const hash = this.getCacheHash(filename, { ...babelOptions, ...instrument, ...transform });
+    if (value && value.hash && value.hash !== hash) {
       return null;
     }
     return value;
