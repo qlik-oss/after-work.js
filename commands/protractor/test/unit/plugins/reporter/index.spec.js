@@ -25,7 +25,7 @@ describe('Reporter index', () => {
     browser = {
       getCapabilities: sandbox.stub().returns(Promise.resolve(Capabilities)),
       artifactsPath: 'artifactsPath',
-      reporterInfo: 'reporterInfo',
+      reporterInfo: {},
     };
   });
 
