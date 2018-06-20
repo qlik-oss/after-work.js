@@ -4,7 +4,6 @@ module.exports = (api) => {
   switch (cmd) {
     case 'chrome':
       return {
-        sourceMaps: true,
         presets: [
           ['@babel/preset-env', {
             targets: {
@@ -16,8 +15,6 @@ module.exports = (api) => {
       };
     default:
       return {
-        sourceMaps: 'inline',
-        retainLines: true,
         presets: [
           ['@babel/preset-env', {
             targets: { node: 'current' },
