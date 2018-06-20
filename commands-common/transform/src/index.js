@@ -9,13 +9,14 @@ const fileCache = new FileCache();
 function getBabelOpts(filename, argv) {
   const { options, babelPluginIstanbul } = argv.babel;
   const sourceRoot = (options && options.sourceRoot) || argv.coverage ? path.dirname(filename) : undefined;// eslint-disable-line
-  const addCoverage = argv.coverage && argv.instrument.testExclude.shouldInstrument(filename);
+  const addCoverage = argv.instrument.testExclude.shouldInstrument(filename);
   const plugins = addCoverage ?
     [[babelPluginIstanbul, {}]] :
     [];
   const sourceMaps = 'both';
+  const retainLines = true;
   const { only, ignore } = argv.babelOptions || {};
-  return { filename, sourceRoot, plugins, only, ignore, sourceMaps };
+  return { filename, sourceRoot, plugins, only, ignore, sourceMaps, retainLines };
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
@@ -70,7 +71,6 @@ function transformFile(filename, argv, content = null) {
   babelOpts.ast = false;
   const { babel } = argv.babel;
   const transform = babel.transform(content, babelOpts);
-  transform.code = `${transform.code}\n//# sourceMappingURL=/${filename}.map`;
   fileCache.setSync(filename, transform, argv);
   return transform.code;
 }

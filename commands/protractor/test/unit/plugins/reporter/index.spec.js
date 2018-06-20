@@ -71,7 +71,6 @@ describe('Reporter index', () => {
 
     it('should call pending correctly', () => {
       const test = null;
-
       runner.on.withArgs('pending').callsArgWith(1, test);
       uiReport.call(uiReport, runner, options);
       expect(runner.on).to.be.calledWith('pending', sinon.match.func);
