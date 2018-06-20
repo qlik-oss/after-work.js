@@ -75,7 +75,6 @@ module.exports = {
     babel: false, // handle this separately
     sourceMap: false,
     instrumenter: './lib/instrumenters/noop',
-    reporter: ['text-summary', 'lcovonly'],
   },
   mocha: {
     reporter: 'spec',
