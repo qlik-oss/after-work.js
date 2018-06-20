@@ -13,8 +13,9 @@ function getBabelOpts(filename, argv) {
   const plugins = addCoverage ?
     [[babelPluginIstanbul, {}]] :
     [];
+  const sourceMaps = 'both';
   const { only, ignore } = argv.babelOptions || {};
-  return { filename, sourceRoot, plugins, only, ignore };
+  return { filename, sourceRoot, plugins, only, ignore, sourceMaps };
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
@@ -32,13 +33,13 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   const transpileOpts = { fileName, compilerOptions };
   const res = tsc.transpileModule(tsContent, transpileOpts);
   tsContent = res.outputText; // eslint-disable-line no-param-reassign
-  let tsBabelOpts = {};
+  let tsBabelOpts = {
+    sourceMaps: 'both',
+  };
 
   if (res.sourceMapText) {
     const inputSourceMap = JSON.parse(res.sourceMapText);
-    tsBabelOpts = { sourceMaps: true, inputSourceMap };
-  } else {
-    tsBabelOpts = { sourceMaps: 'inline' };
+    tsBabelOpts = { inputSourceMap };
   }
   tsBabelOpts = Object.assign(babelOptions, tsBabelOpts);
   return { tsContent, tsBabelOpts };
@@ -69,6 +70,7 @@ function transformFile(filename, argv, content = null) {
   babelOpts.ast = false;
   const { babel } = argv.babel;
   const transform = babel.transform(content, babelOpts);
+  transform.code = `${transform.code}\n//# sourceMappingURL=/${filename}.map`;
   fileCache.setSync(filename, transform, argv);
   return transform.code;
 }

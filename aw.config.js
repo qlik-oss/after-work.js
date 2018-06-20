@@ -93,4 +93,5 @@ module.exports = {
   'instrument.exclude': [
     '**/main.js',
   ],
+  coverage: true,
 };
