@@ -47,18 +47,18 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
 }
 function transformFile(filename, argv, content = null) {
   if (!content && isSourceMap(filename)) {
-    const cachedTransform = fileCache.getSync(filename.split('.map').join(''));
+    const cachedTransform = fileCache.getSync(filename.split('.map').join(''), argv);
     return cachedTransform.map;
   }
   if (!content) {
     filename = ensureFilePath(filename); // eslint-disable-line no-param-reassign
-    const cachedTransform = fileCache.getSync(filename);
+    const cachedTransform = fileCache.getSync(filename, argv);
     if (cachedTransform) {
       return cachedTransform.code;
     }
     content = fs.readFileSync(filename, 'utf8'); // eslint-disable-line no-param-reassign
   }
-  const cachedTransform = fileCache.getSync(filename);
+  const cachedTransform = fileCache.getSync(filename, argv);
   if (cachedTransform) {
     return cachedTransform.code;
   }
@@ -75,7 +75,7 @@ function transformFile(filename, argv, content = null) {
   return transform.code;
 }
 
-const getTransform = filename => fileCache.getSync(filename);
+const getTransform = filename => fileCache.getSync(filename, { ignoreCacheInvalidation: true });
 const deleteTransform = filename => fileCache.transform.delete(filename);
 const safeSaveCache = () => fileCache.saveSync();
 
