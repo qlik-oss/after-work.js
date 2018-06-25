@@ -1,5 +1,8 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
+import 'foo.scss'; // eslint-disable-line import/no-unresolved
+import 'bar.less'; // eslint-disable-line import/no-unresolved
+import 'baz.css'; // eslint-disable-line import/no-unresolved
 
 import Button from '../src/button';
 
