@@ -68,6 +68,7 @@ module.exports = {
   watchGlob: [...src, ...glob],
   mocks: [
     ['**/cdp/src/browser-shim.js', '{}'],
+    ['*.{scss,less,css}', '{}'],
   ],
   nyc: {
     include: src,

@@ -76,7 +76,7 @@ module.exports = {
   },
   mocks: {
     description: 'Automagically mock modules',
-    default: [['**/*.{scss, less, css}', '{}']],
+    default: [['*.{scss,less,css}', '{}']],
     type: 'array',
   },
   'mocha.reporter': {
