@@ -13,10 +13,6 @@ let removeCompileHook = () => { };
 let removeLoadHook = () => { };
 
 function compileHook(argv, code, filename, virtualMock = false) {
-  // Ignore transpiling after-work.js except react
-  // if (/after-work.js\/*!(react)/.test(filename)) {
-  //   return code;
-  // }
   const sourceRoot = path.dirname(filename);
   const { babel, options } = argv.babel;
   const opts = new babel.OptionManager().init({
@@ -61,9 +57,13 @@ function hookedLoader(options, request, parent, isMain) {
     filename = request;
   }
 
-  for (const item of options.mocks || []) { // eslint-disable-line
-    const [key, value] = item;
+  for (const item of options.mocks ||  []) { // eslint-disable-line
+    let [key, value] = item; //eslint-disable-line
     if (minimatch(filename, key)) {
+      if (value === undefined && fs.existsSync(filename)) {
+        const src = fs.readFileSync(filename, 'utf8');
+        value = `${JSON.stringify(src)}`;
+      }
       return compile(value, filename, options);
     }
   }
@@ -104,7 +104,7 @@ module.exports = function register(options = {}) {
   installSourceMapSupport();
   removeCompileHook();
   removeLoadHook();
-  const exts = [...new Set(options.extensions || []), '.js', '.ts', '.jsx', '.scss', '.less', '.css'];
+  const exts = [...new Set(options.extensions || []), '.js', '.ts', '.jsx', '.scss', '.less', '.css', '.html'];
   removeCompileHook = addHook(compileHook.bind(null, options), { exts });
   removeLoadHook = addLoadHook(options);
 };
