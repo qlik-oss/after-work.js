@@ -83,7 +83,7 @@ class Runner {
             `${path.join(path.basename(filename))}.snap`,
           )}`;
           snapshotState = new SnapshotState(currentTestName, {
-            updateSnapshot: process.env.SNAPSHOT_UPDATE ? 'all' : 'new',
+            updateSnapshot: runner.argv.updateSnapshot ? 'all' : 'new',
             snapshotPath,
           });
           runner.snapshotStates.set(filename, snapshotState);
