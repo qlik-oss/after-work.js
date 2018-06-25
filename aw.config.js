@@ -74,7 +74,6 @@ module.exports = {
   nyc: {
     include: src,
     exclude: ['**/cli/src/index.js', '**/transform/src/index.js', '**/browser-shim.js', '**/commands/aw'],
-    babel: false, // handle this separately
     sourceMap: false,
     instrumenter: './lib/instrumenters/noop',
   },
