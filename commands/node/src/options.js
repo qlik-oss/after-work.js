@@ -129,11 +129,6 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
-  'nyc.babel': {
-    description: 'Sets up a preferred babel test environment\n e.g add `babel-register` to `nyc.require`\n `nyc.sourceMap=false`\n`nyc.instrument=./lib/instrumenters/noop`',
-    default: false,
-    type: 'boolean',
-  },
   'nyc.tempDirectory': {
     description: 'Directory to output raw coverage information to',
     default: './coverage/.nyc_output',
