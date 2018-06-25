@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`'should import template' 1`] = `"<div>foobar</div>"`;
+
+exports[`'should import virtual template' 1`] = `"<div>hello world</div>"`;
