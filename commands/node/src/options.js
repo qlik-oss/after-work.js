@@ -42,6 +42,12 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  updateSnapshot: {
+    description: 'Update snapshots',
+    default: false,
+    type: 'boolean',
+    alias: 'u',
+  },
   'babel.enable': {
     description: 'Enable babel',
     default: true,
