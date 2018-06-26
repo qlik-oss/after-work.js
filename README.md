@@ -31,7 +31,7 @@ To configure `after-work.js` you need to start with an analyse of the code.
 ### Installation
 Install the module using npm:
 ```sh
-npm install --save-dev after-work.js
+npm install --save-dev @after-work.js/aw
 ```
 
 ### CLI entrypoint
@@ -50,13 +50,13 @@ Commands:
 
 All commands support passing a config file for all options.
 
-```shell
+```sh
 npx aw -c ./path/to/aw.config.js
 ```
 
 However, passing an option from command line will override the config file option.
 
-```shell
+```sh
 npx aw -c ./path/to/aw.config.js --glob /path/that/overrides/glob/in/config/file
 ```
 
