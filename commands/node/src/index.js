@@ -407,7 +407,7 @@ const node = {
       .options(options)
       .config('config', configure)
       .coerce('babel', utils.coerceBabel)
-      .coerce('tsc', utils.coerceTsc)
+      .coerce('typescript', utils.coerceTypescript)
       .coerce('nyc', (opt) => {
         if (opt.babel) {
           // opt.require.push('babel-register');
