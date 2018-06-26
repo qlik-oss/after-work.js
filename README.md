@@ -1,4 +1,4 @@
-![after-work.js](aw.png)
+![after-work.js](commands-common/server/aw.png)
 
 [![CircleCI](https://circleci.com/gh/qlik-oss/after-work.js.svg?style=shield)](https://circleci.com/gh/qlik-oss/after-work.js)
 [![Coverage Status](https://coveralls.io/repos/github/qlik-oss/after-work.js/badge.svg?branch=master)](https://coveralls.io/github/qlik-oss/after-work.js?branch=master)
