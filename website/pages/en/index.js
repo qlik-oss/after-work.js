@@ -117,7 +117,7 @@ const Mocking = () => (
     {[
       {
         content: 'Automagically 🧙‍ mocking features\n\nEven virtual/external dependencies',
-        title: 'Snapshot Testing',
+        title: 'Easy mocking',
       },
     ]}
   </Block>
