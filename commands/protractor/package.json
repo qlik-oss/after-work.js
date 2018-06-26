@@ -22,6 +22,8 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
     "@after-work.js/server": "^5.0.0-beta.0",
+    "@after-work.js/register": "^5.0.0-beta.0",
+    "@after-work.js/utils": "^5.0.0-beta.0",
     "extend": "3.0.1",
     "handlebars": "4.0.11",
     "highlight.js": "9.12.0",

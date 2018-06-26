@@ -2,6 +2,7 @@
 const path = require('path');
 const extend = require('extend');
 const fs = require('fs');
+const utils = require('@after-work.js/utils');
 const options = require('./options');
 
 const protractor = {
@@ -24,9 +25,18 @@ const protractor = {
   },
   builder(yargs) {
     return yargs
-      .options(options);
+      .options(options)
+      .coerce('babel', utils.coerceBabel)
+      .coerce('typescript', utils.coerceTypescript);
   },
   handler(argv) {
+    argv.instrument = { //eslint-disable-line
+      testExclude: {
+        shouldInstrument() {
+          return false;
+        },
+      },
+    };
     if (argv.presetEnv) {
       require(argv.presetEnv);
     }
@@ -45,6 +55,9 @@ const protractor = {
       }
     }
     const config = protractor.getConfig(argv);
+    if (argv.hookRequire) {
+      require('@after-work.js/register')(argv);
+    }
     argv.require.map(require);
     if (argv.glob.length) {
       config.specs = argv.glob;
