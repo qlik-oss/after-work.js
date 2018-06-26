@@ -5,16 +5,24 @@ title: Installation
 
 ## Getting started
 
-Make sure you meet [requirements](./requirements.md)
+Make sure you meet the [requirements](./requirements.md)
 
-Install the package with:
+Install all packages with:
 
-```shell
-npm i -D after-work.js
+```sh
+npm i -D @after-work.js/aw
 ```
 
 Now you have a couple of sub commands available
 
-```shell
+```sh
 npx aw -h
+```
+
+## Custom
+
+If you only need the node runner:
+
+```sh
+npm i -D @after-work.js/cli @after-work.js/node
 ```

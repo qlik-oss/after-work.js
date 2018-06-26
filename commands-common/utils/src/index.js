@@ -73,11 +73,15 @@ const utils = {
     }
     return opt;
   },
-  coerceTsc(opt) {
-    if (typeof opt === 'string') {
-      return importCwd('typescript');
-    }
-    return opt;
+  coerceTypescript(opt) {
+    return {
+      get compiler() {
+        if (typeof opt === 'string') {
+          return importCwd(opt);
+        }
+        return opt;
+      },
+    };
   },
 };
 

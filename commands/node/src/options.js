@@ -7,12 +7,12 @@ module.exports = {
   },
   glob: {
     description: 'Glob pattern',
-    default: ['test/**/*.spec.js'],
+    default: ['test/**/*.spec.{js,ts}'],
     type: 'array',
   },
   src: {
     description: 'Glob pattern for all source files',
-    default: ['src/**/*.js'],
+    default: ['src/**/*.{js,ts}'],
     type: 'array',
   },
   require: {
@@ -28,7 +28,7 @@ module.exports = {
   },
   watchGlob: {
     description: 'Watch glob',
-    default: ['src/**/*.js', 'test/**/*.spec.js'],
+    default: ['src/**/*.{js,ts}', 'test/**/*.spec.{js,ts}'],
     type: 'array',
     alias: 'wg',
   },
@@ -74,14 +74,14 @@ module.exports = {
     },
     type: 'object',
   },
-  tsc: {
+  typescript: {
     description: 'Path to typescript compiler module',
     default: 'typescript',
     type: 'string',
   },
   mocks: {
     description: 'Automagically mock modules',
-    default: [['*.{scss,less,css}', '{}']],
+    default: [['*.{scss,less,css}']],
     type: 'array',
   },
   'mocha.reporter': {
@@ -90,7 +90,7 @@ module.exports = {
     type: 'string',
   },
   'mocha.bail': {
-    description: 'Bail on fail?',
+    description: 'Bails on failure',
     default: true,
     type: 'boolean',
   },
@@ -130,7 +130,7 @@ module.exports = {
     type: 'array',
   },
   'nyc.sourceMap': {
-    description: 'Should nyc detect and handle source maps?',
+    description: 'Sets if NYC should handle source maps.',
     default: false,
     type: 'boolean',
   },

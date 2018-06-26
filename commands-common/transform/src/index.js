@@ -20,7 +20,7 @@ function getBabelOpts(filename, argv) {
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
-  const { tsc } = argv;
+  const { typescript: { compiler } } = argv;
   const { transform: { typescript: { compilerOptions, babelOptions } } } = argv;
   const fileName = argv.coverage ? path.basename(filePath) : filePath;
   compilerOptions.sourceRoot = argv.coverage ? path.resolve(path.dirname(filePath)) : sourceRoot;
@@ -32,7 +32,7 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
     compilerOptions.module = 'esnext';
   }
   const transpileOpts = { fileName, compilerOptions };
-  const res = tsc.transpileModule(tsContent, transpileOpts);
+  const res = compiler.transpileModule(tsContent, transpileOpts);
   tsContent = res.outputText; // eslint-disable-line no-param-reassign
   let tsBabelOpts = {
     sourceMaps: 'both',

@@ -1,58 +1,59 @@
 const React = require('react');
-const CompLibrary = require('../../core/CompLibrary.js');
-
-const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
+const { MarkdownBlock } = require('../../core/CompLibrary.js');
 
 const examples = [{
   title: 'Node',
   imgs: ['img/node.svg'],
   links: {
-    gh: 'https://github.com/qlik-oss/after-work.js/tree/master/examples/node#this-is-a-sample-for-node-and-after-workjs'
+    gh: 'https://github.com/qlik-oss/after-work.js/tree/master/examples/node#this-is-a-sample-for-node-and-after-workjs',
   },
   tags: {
     env: ['node'],
-    context: ['unit']
-  }
+    context: ['unit'],
+  },
 }, {
   title: 'ES5',
   imgs: ['img/js-logo.svg', 'img/require-js.svg'],
   links: {
-    gh: 'https://github.com/qlik-oss/after-work.js/tree/master/examples/requirejs#this-is-a-sample-for-requirejs'
+    gh: 'https://github.com/qlik-oss/after-work.js/tree/master/examples/requirejs#this-is-a-sample-for-requirejs',
   },
   tags: {
     env: ['node'],
-    context: ['unit']
-  }
+    context: ['unit'],
+  },
 }, {
   title: 'ES2015+',
   imgs: ['img/es-logo.svg', 'img/require-js.svg'],
   links: {
-    gh: 'https://github.com/qlik-oss/after-work.js/tree/master/examples/es2015#this-is-a-sample-for-es2015-and-requirejs'
+    gh: 'https://github.com/qlik-oss/after-work.js/tree/master/examples/es2015#this-is-a-sample-for-es2015-and-requirejs',
   },
   tags: {
     env: ['node'],
-    context: ['unit']
-  }
+    context: ['unit'],
+  },
 }, {
   title: 'Typescript',
   imgs: ['img/typescript.svg', 'img/require-js.svg'],
   links: {
-    gh: 'https://github.com/qlik-oss/after-work.js/tree/master/examples/typescript#this-is-a-sample-for-typescript'
+    gh: 'https://github.com/qlik-oss/after-work.js/tree/master/examples/typescript#this-is-a-sample-for-typescript',
   },
   tags: {
     env: ['node'],
-    context: ['unit']
-  }
+    context: ['unit'],
+  },
 }];
 
-const Sample = props => (
-  <div className="cell">
+const Sample = (props, ix) => (
+  <div className="cell" key={ix}>
     <div className="card">
-      <a href={props.links.gh} target="_blank">
+      <a href={props.links.gh} target="_blank" rel="noopener noreferrer">
         {
-          props.imgs.map((img) => <div style={{
-            backgroundImage: `url(${img})`
-          }}></div>)
+          props.imgs.map(img => (<div
+            key={img}
+            style={{
+            backgroundImage: `url(${img})`,
+          }}
+           />))
         }
       </a>
       <div className="info">
@@ -65,8 +66,8 @@ const Sample = props => (
   </div>
 );
 
-const Empty = () => (
-  <div className="cell"></div>
+const Empty = i => (
+  <div className="cell" key={i} />
 );
 
 const Category = props => (
