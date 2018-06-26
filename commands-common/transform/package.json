@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/transform",
-  "version": "5.0.0-alpha.13",
+  "version": "5.0.0-beta.0",
   "publishConfig": {
     "access": "public"
   },
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/utils": "^5.0.0-alpha.13",
+    "@after-work.js/utils": "^5.0.0-beta.0",
     "find-cache-dir": "1.0.0",
     "import-cwd": "2.1.0"
   },
