@@ -71,17 +71,10 @@ const utils = {
     if (typeof opt.babelPluginIstanbul === 'string') {
       opt.babelPluginIstanbul = importCwd(opt.babelPluginIstanbul).default; // eslint-disable-line no-param-reassign, max-len
     }
+    if (typeof opt.typescript === 'string') {
+      opt.typescript = importCwd.silent(opt.typescript); // eslint-disable-line no-param-reassign
+    }
     return opt;
-  },
-  coerceTypescript(opt) {
-    return {
-      get compiler() {
-        if (typeof opt === 'string') {
-          return importCwd(opt);
-        }
-        return opt;
-      },
-    };
   },
 };
 

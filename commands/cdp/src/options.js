@@ -58,7 +58,7 @@ module.exports = {
     },
     type: 'object',
   },
-  typescript: {
+  'babel.typescript': {
     description: 'Path to typescript compiler module',
     default: 'typescript',
     type: 'string',

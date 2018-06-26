@@ -144,7 +144,7 @@ Path to babel plugin istanbul module
 
 Pass options to babel
 
-### --typescript [string] [default: 'typescript']
+### --babel.typescript [string] [default: 'typescript']
 
 Path to typescript compiler module
 
