@@ -63,7 +63,7 @@
     "babel-register": "6.26.0",
     "coveralls": "3.0.1",
     "eslint": "5.0.1",
-    "eslint-config-airbnb-base": "12.1.0",
+    "eslint-config-airbnb-base": "13.0.0",
     "eslint-plugin-import": "2.13.0",
     "requirejs": "2.3.5",
     "typescript": "2.9.2"
