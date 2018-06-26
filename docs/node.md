@@ -12,54 +12,196 @@ npx aw -c ./path/to/aw.config.js -w --coverage
 and start testing. It will only rerun affected tests and generate coverage accordingly.
 Add files, remove files as you go and change your tests to rapidly build up a test coverage.
 
-## Best practice for coverage
-`after-work.js` will default to use babel and babel-plugin-istanbul for getting correct code coverage but these devDependecies has to be installed per repository. 
+## Snapshot Testing
 
-See [set up the project](https://github.com/istanbuljs/nyc#use-with-babel-plugin-istanbul-for-babel-support) with the `babel-plugin-istanbul`
+We are using the awesome 💖 [**jest-snapshot**](https://github.com/facebook/jest/tree/master/packages/jest-snapshot) package.
 
-.babelrc
-```
-{
-  "babel": {
-    "presets": ["env"],
-    "env": {
-      "test": {
-        "plugins": ["istanbul"]
-      }
-    }
-  }
-}
-```
+<summary><details>
+<p>
 
-```shell
-Options:
-  --version            Show version number                                                                     [boolean]
-  --config, -c         Path to JSON config file                                                 [string] [default: null]
-  --glob               Glob pattern                                             [array] [default: ["test/**/*.spec.js"]]
-  --src                Glob pattern for all source files                              [array] [default: ["src/**/*.js"]]
-  --require            Require path                                                                [array] [default: []]
-  --watch, -w          Watch changes                                                          [boolean] [default: false]
-  --watchGlob, --wg    Watch glob                                 [array] [default: ["src/**/*.js","test/**/*.spec.js"]]
-  --coverage           Generate coverage                                                      [boolean] [default: false]
-  --exit               Force its own process to exit once it was finished executing all tests [boolean] [default: false]
-  --mocha.reporter     Which reporter to use                                                                    [string]
-  --mocha.bail         Bail on fail?                                                           [boolean] [default: true]
-  --mocha.timeout      Timeout                                                                                  [number]
-  --nyc.require        Require path                                                                [array] [default: []]
-  --nyc.include        Include glob                                                                [array] [default: []]
-  --nyc.exclude        Exclude glob                                                [array] [default: ["**/coverage/**"]]
-  --nyc.sourceMap      Should nyc detect and handle source maps?                              [boolean] [default: false]
-  --nyc.babel          Sets up a preferred babel test environment
-                       e.g add `babel-register` to `nyc.require`
-                       `nyc.sourceMap=false`
-                       `nyc.instrument=./lib/instrumenters/noop`                               [boolean] [default: true]
-  --nyc.tempDirectory  Directory to output raw coverage information to      [string] [default: "./coverage/.nyc_output"]
-  --nyc.reporter       Coverage reporter(s) to use                            [array] [default: ["lcov","text-summary"]]
-  --nyc.reportDir      Directory to output coverage reports in                            [string] [default: "coverage"]
-  -h, --help           Show help                                                                               [boolean]
+```javascript
+import React from 'react';
+import renderer from 'react-test-renderer';
+import 'foo.scss';
+import 'bar.less';
+import 'baz.css';
+import Button from '../src/button';
+
+describe('button', () => {
+  it('renders correctly', () => {
+    const tree = renderer.create(<Button>Text</Button>).toJSON();
+    expect(tree).toMatchSnapshot();
+    const tree1 = renderer.create(<Button>Text1</Button>).toJSON();
+    expect(tree1).toMatchSnapshot();
+  });
+  it('renders fancy', () => {
+    const tree1 = renderer.create(<Button>fancy1</Button>).toJSON();
+    expect(tree1).toMatchSnapshot();
+  });
+});
 ```
 
-## Tests not finishing correctly?
-This is indicating that the tests aren’t cleaning up after themselves. This could be caused by a server still listening on a port or a setTimeout()/setInterval().
+</p>
+</details></summary>
+
+
+## Options
+
+### \-\-presetEnv [boolean] [default: true]
+
+Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset.
+
+<summary><details>
+<p>
+
+```javascript
+const sinon = require('sinon');
+const chai = require('chai');
+const sinonChai = require('sinon-chai');
+const chaiAsPromised = require('chai-as-promised');
+const chaiSubset = require('chai-subset');
+
+global.sinon = sinon;
+global.chai = chai;
+global.expect = chai.expect;
+
+chai.use(sinonChai);
+chai.use(chaiAsPromised);
+chai.use(chaiSubset);
+```
+
+This enables writing your tests like this:
+
+```javascript
+const hello = require('../src/hello');
+
+describe('hello', () => {
+  it('should say world', () => {
+    expect(hello()).to.equal('world');
+  });
+});
+```
+
+</p>
+</details></summary>
+
+### --config, -c [string] [default: null]
+
+Path to config file.
+
+### --glob [array] [default: ['test/\*\*/\*.spec.{js,ts}']]
+
+Test glob pattern.
+
+### --src [array] [default: ['src/\*\*/\*.{js,ts}]]
+
+Glob pattern for all source files that should be loaded.
+
+### --require [array] [default: []]
+
+Require additional test setup files.
+
+### --watch [boolean] [default: false]
+
+Watch for changes
+
+### --watchGlob, -wg [array] [default: ['src/\*\*/\*.{js,ts}', 'test/\*\*/\*.spec.{js,ts}']]
+
+Glob pattern for watching files that will trigger a rerun.
+
+### --coverage [boolean] [default: false]
+
+Generate coverage
+
+### --exit [boolean] [default: false]
+
+Escape hatch for tests that aren’t cleaning up after themselves. This could be caused by a server still listening on a port or a setTimeout()/setInterval().
 
 It´s possible to force exit by adding the `--exit` options but this could hide flaws in the test, causing sequential test to give false positive or false negative results.
+
+### --updateSnapshot, -u [boolean] [default: false]
+
+Update your snapshots.
+
+### --hookRequire [boolean] [default: true]
+
+Hook `require` to be able to mock and transform files
+
+
+### --babel.enable [boolean] [default: true]
+
+Enables babel tranformation
+
+### --babel.core [string|module] [default: '']
+
+Path to babel core module
+
+### --babel.babelPluginIstanbul [string|module] [default: '']
+
+Path to babel plugin istanbul module
+
+### --babel.options [object] [default: {}]
+
+Pass options to babel
+
+### --typescript [string] [default: 'typescript']
+
+Path to typescript compiler module
+
+### --mocks [array] [default: [['\*.{scss,less,css}']],]
+
+<summary><details>
+<p>
+
+```javascript
+
+mocks: [
+    ['**/cdp/src/browser-shim.js', '{}'],
+    ['**/*.{scss,less,css,html}'],
+    ['./foobar-virtual.html', '"<div>hello world</div>"'],
+  ],
+
+```
+
+</p>
+</details></summary>
+
+### --mocha.reporter [string] [default: undefined]
+
+Which reporter to use. 
+
+Check Mochas [**list**](https://mochajs.org/#reporters) for valid options.
+
+
+### --mocha.bail [boolean] [default: true]
+
+Bails on failure
+
+### --mocha.timeout [number] [default: undefined]
+
+Timeout in ms.
+
+### --nyc.include [array] [default: []]
+
+Include glob for coverage.
+
+### --nyc.exclude [array] [default: ['\*\*/coverage/\*\*', '\*\*/dist/\*\*', '\*\*/\*.spec.{js,ts}']]
+
+Exclude glob for coverage.
+
+### --nyc.sourceMap [boolean] [default: false]
+
+Sets if NYC should handle source maps.
+
+### --nyc.tempDirectory [string] [default: './coverage/.nyc_output']
+
+Directory to output raw coverage information to.
+
+### --nyc.reporter [array] [default: ['lcov', 'text-summary']]
+
+Coverage reporter(s) to use.
+
+
+### --nyc.reportDir [string] [default: 'coverage']
+
+Directory to output coverage reports in.
