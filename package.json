@@ -33,7 +33,7 @@
     "chrome-remote-interface": "0.25.6",
     "chrome-unmirror": "0.1.0",
     "extend": "3.0.1",
-    "find-up": "2.1.0",
+    "find-up": "3.0.0",
     "globby": "8.0.1",
     "handlebars": "4.0.11",
     "highlight.js": "9.12.0",
