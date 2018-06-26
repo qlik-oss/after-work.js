@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/babel": "^5.0.0-alpha.13",
+    "@after-work.js/register": "^5.0.0-alpha.13",
     "@after-work.js/transform": "^5.0.0-alpha.13",
     "@after-work.js/utils": "^5.0.0-alpha.13",
     "chokidar": "2.0.3",
