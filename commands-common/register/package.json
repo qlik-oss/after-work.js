@@ -1,10 +1,10 @@
 {
-  "name": "@after-work.js/babel",
+  "name": "@after-work.js/register",
   "version": "5.0.0-alpha.13",
   "publishConfig": {
     "access": "public"
   },
-  "description": "Transpile files with babel",
+  "description": "Register hooks with require",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src test"

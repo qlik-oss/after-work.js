@@ -48,6 +48,11 @@ module.exports = {
     type: 'boolean',
     alias: 'u',
   },
+  hookRequire: {
+    description: 'Hook require to be able to mock and transform files',
+    default: true,
+    type: 'boolean',
+  },
   'babel.enable': {
     description: 'Enable babel',
     default: true,

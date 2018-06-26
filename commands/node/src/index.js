@@ -266,8 +266,8 @@ class Runner {
     return this;
   }
   setupBabel() {
-    if (this.argv.babel.enable) {
-      require('@after-work.js/babel')(this.argv);
+    if (this.argv.hookRequire) {
+      require('@after-work.js/register')(this.argv);
     }
   }
   setup(testFiles, srcFiles) {

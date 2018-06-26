@@ -20,6 +20,11 @@ module.exports = {
     default: [],
     type: 'array',
   },
+  hookRequire: {
+    description: 'Hook require to be able to mock and transform files',
+    default: true,
+    type: 'boolean',
+  },
   'babel.enable': {
     description: 'Enable babel',
     default: true,
