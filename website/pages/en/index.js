@@ -95,7 +95,18 @@ const SnapshotTesting = () => (
     {[
       {
         content: 'Uses 💖 jest-snapshot for snapshot testing',
-        title: 'Snapshot Testing',
+        title: 'Snapshot Testing (v5)',
+      },
+    ]}
+  </Block>
+);
+
+const Mocking = () => (
+  <Block>
+    {[
+      {
+        content: 'Automagically 🧙‍ mocking features\n\nEven virtual/external dependencies',
+        title: 'Easy mocking (v5)',
       },
     ]}
   </Block>
@@ -107,17 +118,6 @@ const Transform = () => (
       {
         content: 'Uses Babel and Typescript for transpiling\n\nCache for blazing fast reruns 🔥',
         title: 'Transform',
-      },
-    ]}
-  </Block>
-);
-
-const Mocking = () => (
-  <Block>
-    {[
-      {
-        content: 'Automagically 🧙‍ mocking features\n\nEven virtual/external dependencies',
-        title: 'Easy mocking',
       },
     ]}
   </Block>
