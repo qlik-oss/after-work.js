@@ -46,7 +46,7 @@ module.exports = {
     },
     type: 'object',
   },
-  tsc: {
+  typescript: {
     description: 'Path to typescript compiler module',
     default: 'typescript',
     type: 'string',
