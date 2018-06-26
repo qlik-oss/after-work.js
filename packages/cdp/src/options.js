@@ -32,6 +32,13 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  babelOptions: {
+    description: '',
+    default: {
+      ignore: [],
+      configFile: './babel.config.js',
+    },
+  },
   'transform.typescript.config': {
     description: 'Typescript config file',
     default: 'tsconfig.json',

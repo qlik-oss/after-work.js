@@ -1,4 +1,4 @@
-const transformFile = require('@after-work.js/transform');
+const { transformFile } = require('@after-work.js/transform');
 
 module.exports = function transform(argv) {
   return async (ctx, next) => {
@@ -13,7 +13,7 @@ module.exports = function transform(argv) {
 
     if (shouldInstrument || shouldTransform) {
       const { response } = ctx;
-      response.body = await transformFile(url, argv);
+      response.body = transformFile(url, argv);
     }
   };
 };

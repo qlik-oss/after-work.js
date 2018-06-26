@@ -5,7 +5,6 @@ const path = require('path');
 const globby = require('globby');
 const { packages } = require('./lerna.json');
 
-const setup = path.resolve(__dirname, 'aw.setup.js');
 const cmd = process.argv.slice(2).shift();
 
 const argv = yargs
@@ -32,9 +31,11 @@ const argv = yargs
       }
     });
     const s = scopes.get(scope);
-
     if (s) {
       return s;
+    }
+    if (s !== '*') {
+      throw new Error(`Scope ${scope} not found`);
     }
     if (cmd === 'chrome') {
       return `*(${chromeExamplePackages.join('|')})`;
@@ -55,13 +56,13 @@ module.exports = {
   glob: [test],
   src: [src],
   watchGlob: [src, test],
-  require: [setup], // move all requies to nyc in node runner
   nyc: {
     include: [src],
-    exclude: ['**/cli/src/index.js', '**/browser-shim.js'],
+    exclude: ['**/cli/src/index.js', '**/transform/src/index.js', '**/browser-shim.js'],
     babel: false, // handle this separately
     sourceMap: false,
     instrumenter: './lib/instrumenters/noop',
+    reporter: ['text-summary', 'lcovonly'],
   },
   mocha: {
     reporter: 'spec',

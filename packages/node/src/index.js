@@ -9,7 +9,16 @@ const fs = require('fs');
 const path = require('path');
 const options = require('./options');
 const utils = require('@after-work.js/terminal-utils');
+const { getTransform, deleteTransform, safeSaveCache } = require('@after-work.js/transform');
 const { SnapshotState, toMatchSnapshot } = require('jest-snapshot');
+
+const getSourceContent = (filename) => {
+  const { map } = getTransform(filename) || {};
+  if (map) {
+    return map.sourcesContent[0];
+  }
+  return fs.readFileSync(filename, 'utf8');
+};
 
 class Runner {
   constructor(argv, libs) {
@@ -55,8 +64,9 @@ class Runner {
         }
 
         const [filename, lineno] = s.shift();
-        const src = fs.readFileSync(filename, 'utf8');
+        const src = getSourceContent(filename);
         const lines = src.split('\n');
+
         let currentTestName = null;
         for (let i = lineno - 1; i >= 0; i -= 1) {
           const line = lines[i];
@@ -68,6 +78,7 @@ class Runner {
         if (currentTestName === null) {
           throw new Error('Can not find current test name');
         }
+
         let snapshotState = runner.snapshotStates.get(filename);
         if (!snapshotState) {
           const snapshotPath = `${path.join(
@@ -100,7 +111,7 @@ class Runner {
     if (this.debugging) {
       return this;
     }
-    console.log(`${mode}`);
+    console.log(mode);
     console.log('  test');
     testFiles.forEach((f) => {
       console.log(`    \u001b[90m${f}\u001b[0m`);
@@ -138,6 +149,9 @@ class Runner {
     return use;
   }
   safeDeleteCache(f) {
+    if (/after-work.js\/packages\/*(cli|transform)\/src\/index.js$/.test(f)) {
+      return;
+    }
     if (require.cache[f]) {
       delete require.cache[f];
     }
@@ -152,6 +166,7 @@ class Runner {
   setOnlyFilesFromTestFile(testFile) {
     const testName = path.basename(testFile).split('.').shift();
     this.safeDeleteCache(testFile);
+    deleteTransform(testFile);
     const mod = this.safeRequireCache(testFile);
     const found = mod
       .children
@@ -185,19 +200,10 @@ class Runner {
     this.srcFiles = globby.sync(this.argv.src).map(f => path.resolve(f));
     return this;
   }
-  ensureBabelRequire() {
-    // We need to move all `babel` requires to `nyc.require` else the instrumentation will not work
-    const containsBabelRequires = this.argv.require.filter(r => r.startsWith('babel'));
-    if (this.argv.coverage && this.argv.nyc.babel && containsBabelRequires.length) {
-      containsBabelRequires.forEach((r) => {
-        const ix = this.argv.require.indexOf(r);
-        const move = this.argv.require.splice(ix, 1)[0];
-        this.argv.nyc.require = [...new Set(this.argv.nyc.require.concat(move))];
-      });
-    }
-    return this;
-  }
   require() {
+    if (!this.argv.coverage) {
+      this.setupBabel();
+    }
     this.argv.require.forEach(m => this.libs.importCwd(m));
     return this;
   }
@@ -208,9 +214,11 @@ class Runner {
   onFinished(failures) {
     this.isRunning = false;
     process.on('exit', () => {
+      safeSaveCache();
       process.exit(failures);
     });
     if (this.argv.exit) {
+      safeSaveCache();
       process.exit();
     }
   }
@@ -229,8 +237,8 @@ class Runner {
   runTests() {
     this.isRunning = true;
     this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
-    this.mochaRunner.on('start', () => this.logClearLine());
-    this.mochaRunner.on('end', () => this.onEnd());
+    this.mochaRunner.once('start', () => this.logClearLine());
+    this.mochaRunner.once('end', () => this.onEnd());
   }
   setupKeyPress() {
     if (!this.argv.watch) {
@@ -244,6 +252,7 @@ class Runner {
     process.stdin.setEncoding('utf8');
     process.stdin.on('keypress', (str) => {
       if (str === '\u0003') {
+        safeSaveCache();
         process.exit(0);
       }
       if (this.isRunning) {
@@ -259,6 +268,9 @@ class Runner {
     });
     return this;
   }
+  setupBabel() {
+    require('@after-work.js/babel')(this.argv);
+  }
   setup(testFiles, srcFiles) {
     srcFiles.forEach(f => this.safeDeleteCache(f));
     if (this.argv.coverage) {
@@ -266,6 +278,7 @@ class Runner {
       if (!this.isWrapped) {
         this.nyc.wrap();
         this.isWrapped = true;
+        this.setupBabel();
       }
     }
     testFiles.forEach((f) => {
@@ -293,6 +306,9 @@ class Runner {
       this.logLine(`Loading ${file}`);
     });
     this.nyc = new this.libs.NYC(this.argv.nyc);
+    this.argv.instrument = {
+      testExclude: this.nyc.exclude,
+    };
     try {
       this
         .deleteCoverage()
@@ -326,6 +342,7 @@ class Runner {
       this.srcFiles.splice(sIx, 1);
     }
     this.safeDeleteCache(f);
+    deleteTransform(f);
   }
   onWatch(f) {
     if (this.isRunning) {
@@ -381,26 +398,23 @@ const configure = (configPath) => {
   return config;
 };
 
-const coerceNyc = (opt) => {
-  if (opt.babel) {
-    opt.require.push('babel-register');
-    opt.sourceMap = false; // eslint-disable-line no-param-reassign
-    opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
-  }
-  return opt;
-};
-
 const node = {
   Runner,
   configure,
-  coerceNyc,
   command: ['node', '$0'],
   desc: 'Run tests in node',
   builder(yargs) {
     return yargs
       .options(options)
       .config('config', configure)
-      .coerce('nyc', coerceNyc);
+      .coerce('nyc', (opt) => {
+        if (opt.babel) {
+          // opt.require.push('babel-register');
+          opt.sourceMap = false; // eslint-disable-line no-param-reassign
+          opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
+        }
+        return opt;
+      });
   },
   handler(argv) {
     const runner = new node.Runner(argv, { Mocha, NYC, importCwd, chokidar });
@@ -409,7 +423,6 @@ const node = {
       .setupKeyPress()
       .setTestFiles()
       .setSrcFiles()
-      .ensureBabelRequire()
       .require()
       .run();
     return runner;

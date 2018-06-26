@@ -1,10 +1,13 @@
-/* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0 */
+/* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0, max-len: 0 */
 const path = require('path');
 const fs = require('fs');
 const importCwd = require('import-cwd');
-const { isSourceMap, isTypescript, getPathWithExt, ensureFilePath } = require('@after-work.js/file-utils');
+const { isSourceMap, isTypescript, ensureFilePath } = require('@after-work.js/file-utils');
+const FileCache = require('./file-cache');
 
-function getModule(name) {
+const fileCache = new FileCache();
+
+const getModule = (name) => {
   let found = importCwd.silent(name);
   if (!found) {
     try {
@@ -14,7 +17,7 @@ function getModule(name) {
     }
   }
   return found;
-}
+};
 
 let babel = getModule('babel-core');
 if (!babel) {
@@ -23,30 +26,17 @@ if (!babel) {
     throw new Error('Can not find babel core');
   }
 }
+
 const babelPluginIstanbul = getModule('babel-plugin-istanbul').default;
 const tsc = getModule('typescript');
-const cacheSourceMap = new Map();
-const cacheTransform = new Map();
 
-function readFile(filePath) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, content) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve(content);
-    });
-  });
-}
-
-function getBabelOpts(filePath, argv) {
-  const sourceRoot = argv.coverage ? path.dirname(filePath) : undefined;
-  const filename = filePath;
-  const plugins = argv.coverage && argv.instrument.testExclude.shouldInstrument(filePath) ?
+function getBabelOpts(filename, argv) {
+  const sourceRoot = (argv.babelOptions && argv.babelOptions.sourceRoot) || argv.coverage ? path.dirname(filename) : undefined;// eslint-disable-line
+  const plugins = argv.coverage && argv.instrument.testExclude.shouldInstrument(filename) ?
     [[babelPluginIstanbul, {}]] :
     [];
-  return { filename, sourceRoot, plugins };
+  const { only, ignore } = argv.babelOptions || {};
+  return { filename, sourceRoot, plugins, only, ignore };
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
@@ -74,30 +64,42 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   tsBabelOpts = Object.assign(babelOptions, tsBabelOpts);
   return { tsContent, tsBabelOpts };
 }
-async function transformFile(filePath, argv) {
-  if (isSourceMap(filePath)) {
-    return cacheSourceMap.get(filePath);
+function transformFile(filename, argv, content = null) {
+  if (!content && isSourceMap(filename)) {
+    const cachedTransform = fileCache.getSync(filename.split('.map').join(''));
+    return cachedTransform.map;
   }
-  filePath = ensureFilePath(filePath); // eslint-disable-line no-param-reassign
-  const cache = cacheTransform.get(filePath);
-  if (cache) {
-    return cache;
+  if (!content) {
+    filename = ensureFilePath(filename); // eslint-disable-line no-param-reassign
+    const cachedTransform = fileCache.getSync(filename);
+    if (cachedTransform) {
+      return cachedTransform.code;
+    }
+    content = fs.readFileSync(filename, 'utf8'); // eslint-disable-line no-param-reassign
   }
-  let content = await readFile(filePath);
-  let babelOpts = getBabelOpts(filePath, argv);
-  if (isTypescript(filePath)) {
-    const { tsContent, tsBabelOpts } = transformTypescript(filePath, babelOpts.sourceRoot, content, argv); // eslint-disable-line
-    content = tsContent;
+  const cachedTransform = fileCache.getSync(filename);
+  if (cachedTransform) {
+    return cachedTransform.code;
+  }
+  let babelOpts = getBabelOpts(filename, argv);
+  if (isTypescript(filename)) {
+    const { tsContent, tsBabelOpts } = transformTypescript(filename, babelOpts.sourceRoot, content, argv); // eslint-disable-line
+    content = tsContent; // eslint-disable-line no-param-reassign
     babelOpts = Object.assign({}, babelOpts, tsBabelOpts);
   }
-  const { code, map } = babel.transform(content, babelOpts);
-
-  if (map) {
-    const key = getPathWithExt(filePath, 'js.map');
-    cacheSourceMap.set(key, map);
-  }
-  cacheTransform.set(filePath, code);
-  return code;
+  babelOpts.ast = false;
+  const transform = babel.transform(content, babelOpts);
+  fileCache.setSync(filename, transform);
+  return transform.code;
 }
 
-module.exports = transformFile;
+const getTransform = filename => fileCache.getSync(filename);
+const deleteTransform = filename => fileCache.transform.delete(filename);
+const safeSaveCache = () => fileCache.saveSync();
+
+module.exports = {
+  getTransform,
+  deleteTransform,
+  safeSaveCache,
+  transformFile,
+};

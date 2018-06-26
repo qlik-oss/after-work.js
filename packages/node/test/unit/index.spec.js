@@ -4,7 +4,7 @@ const cmdOpts = require('../../src/options');
 const globby = require('globby');
 const path = require('path');
 
-const { Runner, configure, coerceNyc, builder, handler } = cmd;
+const { Runner, configure, builder, handler } = cmd;
 
 describe('Node command', () => {
   let sandbox;
@@ -60,7 +60,7 @@ describe('Node command', () => {
     expect(runner.srcFiles).to.eql([path.resolve('foo.js')]);
   });
 
-  it('should ensureBabelRequire', () => {
+  it.skip('should ensureBabelRequire', () => {
     const argv = { require: ['babel-register', 'babel-helpers', 'foo'], coverage: true, nyc: { require: [], babel: true } };
     const runner = new Runner(argv);
     runner.ensureBabelRequire();
@@ -89,7 +89,7 @@ describe('Node command', () => {
       const exit = sandbox.stub(process, 'exit');
       const on = sandbox.stub(process, 'on');
       const runner = new Runner({});
-      const run = sandbox.stub().returns({ on: sandbox.stub() });
+      const run = sandbox.stub().returns({ once: sandbox.stub() });
       runner.mocha = { run };
       runner.runTests();
       run.callArgWith(0, 9);
@@ -102,11 +102,11 @@ describe('Node command', () => {
       const report = sandbox.stub();
       const runner = new Runner({ coverage: true });
       runner.nyc = { writeCoverageFile, report };
-      const on = sandbox.stub();
-      const run = sandbox.stub().returns({ on });
+      const once = sandbox.stub();
+      const run = sandbox.stub().returns({ once });
       runner.mocha = { run };
       runner.runTests();
-      on.callArgWith(1);
+      once.callArgWith(1);
       expect(runner.nyc.writeCoverageFile).to.have.been.calledWithExactly();
       expect(runner.nyc.report).to.have.been.calledWithExactly();
     });
@@ -117,6 +117,7 @@ describe('Node command', () => {
         const wrap = sandbox.stub();
         const runner = new Runner({ coverage: true });
         runner.nyc = { reset, wrap };
+        runner.setupBabel = sandbox.stub();
         runner.setup([], []);
         expect(reset).to.have.been.calledWithExactly();
         expect(wrap).to.have.been.calledWithExactly();
@@ -128,6 +129,7 @@ describe('Node command', () => {
         const runner = new Runner({ coverage: true });
         runner.nyc = { reset, wrap };
         runner.isWrapped = true;
+        runner.setupBabel = sandbox.stub();
         runner.setup([], []);
         expect(reset).to.have.been.calledWithExactly();
         expect(wrap.callCount).to.equal(0);
@@ -141,6 +143,7 @@ describe('Node command', () => {
         runner.nyc = { reset, wrap };
         runner.mocha = { addFile };
         const file = path.resolve('test/unit/node/index.spec.js');
+        runner.setupBabel = sandbox.stub();
         runner.setup([file], []);
         expect(addFile).to.have.been.calledWithExactly(file);
       });
@@ -160,6 +163,7 @@ describe('Node command', () => {
       sandbox.stub(runner, 'setup').returnsThis();
       sandbox.stub(runner, 'runTests').returnsThis();
       runner.mochaRunner = mochaRunner;
+      runner.setupBabel = sandbox.stub();
       runner.setupAndRunTests([], []);
       expect(procRemoveAllListeners).to.have.been.calledWithExactly();
       expect(removeAllListeners).to.have.been.calledWithExactly();
@@ -178,6 +182,7 @@ describe('Node command', () => {
       const set = sandbox.stub(runner, 'setup').returnsThis();
       const run = sandbox.stub(runner, 'runTests').returnsThis();
       runner.mochaRunner = mochaRunner;
+      runner.setupBabel = sandbox.stub();
       runner.setupAndRunTests([], []);
       expect(del).to.have.been.calledImmediatelyBefore(set);
       expect(run).to.have.been.calledImmediatelyAfter(set);
@@ -201,6 +206,7 @@ describe('Node command', () => {
       const watch = sandbox.stub().returns({ on });
       const chokidar = { watch };
       const runner = new Runner({ watch: true, watchGlob }, { chokidar });
+      runner.setupBabel = sandbox.stub();
       runner.setupAndRunTests = sandbox.stub();
       runner.onWatch = sandbox.stub();
       runner.run();
@@ -228,13 +234,6 @@ describe('Node command', () => {
       });
     });
 
-    describe('coerceNyc', () => {
-      it('should set options when babel is truthy', () => {
-        const opt = { babel: true, require: [], sourceMap: true, instrumenter: '' };
-        expect(coerceNyc(opt)).to.eql({ babel: true, require: ['babel-register'], sourceMap: false, instrumenter: './lib/instrumenters/noop' });
-      });
-    });
-
     it('should build', () => {
       const options = sandbox.stub().returnsThis();
       const config = sandbox.stub().returnsThis();
@@ -243,7 +242,6 @@ describe('Node command', () => {
       builder(yargs);
       expect(options).to.have.been.calledWithExactly(cmdOpts);
       expect(config).to.have.been.calledWithExactly('config', configure);
-      expect(coerce).to.have.been.calledWithExactly('nyc', coerceNyc);
     });
 
     it('should call the runner functions', () => {
@@ -252,7 +250,6 @@ describe('Node command', () => {
       const setupKeyPress = sandbox.stub().returnsThis();
       const setTestFiles = sandbox.stub().returnsThis();
       const setSrcFiles = sandbox.stub().returnsThis();
-      const ensureBabelRequire = sandbox.stub().returnsThis();
       const req = sandbox.stub().returnsThis();
       const run = sandbox.stub().returnsThis();
       class Dummy { }
@@ -260,7 +257,6 @@ describe('Node command', () => {
       Dummy.prototype.setupKeyPress = setupKeyPress;
       Dummy.prototype.setTestFiles = setTestFiles;
       Dummy.prototype.setSrcFiles = setSrcFiles;
-      Dummy.prototype.ensureBabelRequire = ensureBabelRequire;
       Dummy.prototype.require = req;
       Dummy.prototype.run = run;
       cmd.Runner = Dummy;
@@ -269,8 +265,6 @@ describe('Node command', () => {
       expect(setupKeyPress).to.have.been.calledImmediatelyBefore(setTestFiles);
       expect(setTestFiles).to.have.been.calledImmediatelyBefore(setSrcFiles);
       expect(setTestFiles).to.have.been.calledImmediatelyBefore(setSrcFiles);
-      expect(setSrcFiles).to.have.been.calledImmediatelyBefore(ensureBabelRequire);
-      expect(ensureBabelRequire).to.have.been.calledImmediatelyBefore(req);
       expect(req).to.have.been.calledImmediatelyBefore(run);
       cmd.Runner = origRunner;
     });

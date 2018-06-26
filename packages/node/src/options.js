@@ -42,6 +42,23 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  babel: {
+    description: '',
+    default: true,
+    type: 'boolean',
+  },
+  babelOptions: {
+    description: '',
+    default: {
+      ignore: [],
+      configFile: './babel.config.js',
+    },
+  },
+  presetEnv: {
+    description: 'Preset environment with Sinon and Chai',
+    default: true,
+    type: 'boolean',
+  },
   'mocha.reporter': {
     description: 'Which reporter to use',
     default: undefined,
@@ -69,7 +86,7 @@ module.exports = {
   },
   'nyc.exclude': {
     description: 'Exclude glob',
-    default: ['**/coverage/**'],
+    default: ['**/coverage/**', '**/dist/**', '**/*.spec.{js,ts}'],
     type: 'array',
   },
   'nyc.sourceMap': {
@@ -79,7 +96,7 @@ module.exports = {
   },
   'nyc.babel': {
     description: 'Sets up a preferred babel test environment\n e.g add `babel-register` to `nyc.require`\n `nyc.sourceMap=false`\n`nyc.instrument=./lib/instrumenters/noop`',
-    default: true,
+    default: false,
     type: 'boolean',
   },
   'nyc.tempDirectory': {

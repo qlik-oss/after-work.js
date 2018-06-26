@@ -32,6 +32,7 @@
     "koa": "2.5.1",
     "koa-static": "4.0.3",
     "koa-favicon": "2.0.1",
-    "@after-work.js/server": "0.1.0"
+    "@after-work.js/server": "0.1.0",
+    "@after-work.js/transform": "0.1.0"
   }
 }
