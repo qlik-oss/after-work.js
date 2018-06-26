@@ -58,7 +58,7 @@ module.exports = {
     },
     type: 'object',
   },
-  tsc: {
+  typescript: {
     description: 'Path to typescript compiler module',
     default: 'typescript',
     type: 'string',
@@ -121,7 +121,7 @@ module.exports = {
     type: 'array',
   },
   'mocha.bail': {
-    description: 'Bail on fail?',
+    description: 'Bails on failure',
     default: true,
     type: 'boolean',
   },
@@ -136,7 +136,7 @@ module.exports = {
     type: 'number',
   },
   'mocha.useColors': {
-    description: 'Use colors',
+    description: 'Use colors in output',
     default: true,
     type: 'boolean',
   },
@@ -151,12 +151,12 @@ module.exports = {
     type: 'number',
   },
   'chrome.launch': {
-    description: 'Launch Chrome?',
+    description: 'Launch Chrome',
     default: true,
     type: 'boolean',
   },
   'chrome.devtools': {
-    description: 'Open Chrome with dev tools?',
+    description: 'Open Chrome with dev tools',
     default: false,
     type: 'boolean',
   },

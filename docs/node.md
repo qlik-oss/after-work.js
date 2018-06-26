@@ -16,7 +16,7 @@ Add files, remove files as you go and change your tests to rapidly build up a te
 
 We are using the awesome 💖 [**jest-snapshot**](https://github.com/facebook/jest/tree/master/packages/jest-snapshot) package.
 
-<summary><details>
+<details><summary>Example</summary>
 <p>
 
 ```javascript
@@ -42,16 +42,16 @@ describe('button', () => {
 ```
 
 </p>
-</details></summary>
+</details>
 
 
 ## Options
 
-### \-\-presetEnv [boolean] [default: true]
+### --presetEnv [boolean] [default: true]
 
 Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset.
 
-<summary><details>
+<details><summary>Details</summary>
 <p>
 
 ```javascript
@@ -83,7 +83,7 @@ describe('hello', () => {
 ```
 
 </p>
-</details></summary>
+</details>
 
 ### --config, -c [string] [default: null]
 
@@ -150,7 +150,7 @@ Path to typescript compiler module
 
 ### --mocks [array] [default: [['\*.{scss,less,css}']],]
 
-<summary><details>
+<details><summary>Details</summary>
 <p>
 
 ```javascript
@@ -164,11 +164,11 @@ mocks: [
 ```
 
 </p>
-</details></summary>
+</details>
 
 ### --mocha.reporter [string] [default: undefined]
 
-Which reporter to use. 
+Which reporter to use.
 
 Check Mochas [**list**](https://mochajs.org/#reporters) for valid options.
 
