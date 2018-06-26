@@ -11,7 +11,6 @@ module.exports = function createServer(options) {
   const http = Object.assign({ port: 9000, root: ['./'], rewrite: {} }, options.http);
   const instrument = Object.assign({ exclude: '**' }, options.instrument);
   const transform = Object.assign({ exclude: '**' }, options.transform);
-  const typescript = utils.coerceTypescript(options.tsc || {});
   const babel = utils.coerceBabel({
     enable: true,
     babelPluginIstanbul: 'babel-plugin-istanbul',
@@ -33,7 +32,6 @@ module.exports = function createServer(options) {
     babel: {
       ...babel,
     },
-    typescript,
   };
   const app = new Koa();
   app.use(favicon(path.resolve(__dirname, '../aw.png')));

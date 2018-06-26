@@ -33,7 +33,6 @@ const cdp = {
         return config;
       })
       .coerce('babel', utils.coerceBabel)
-      .coerce('tsc', utils.coerceTsc)
       .coerce('nyc', (opt) => {
         opt.sourceMap = false; // eslint-disable-line no-param-reassign
         opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
