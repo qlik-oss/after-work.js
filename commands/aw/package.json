@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/aw",
-  "version": "5.0.0-beta.0",
+  "version": "5.0.0-beta.1",
   "publishConfig": {
     "access": "public"
   },
@@ -20,11 +20,11 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/cdp": "^5.0.0-beta.0",
-    "@after-work.js/cli": "^5.0.0-beta.0",
-    "@after-work.js/node": "^5.0.0-beta.0",
-    "@after-work.js/protractor": "^5.0.0-beta.0",
-    "@after-work.js/puppeteer": "^5.0.0-beta.0",
-    "@after-work.js/serve": "^5.0.0-beta.0"
+    "@after-work.js/cdp": "^5.0.0-beta.1",
+    "@after-work.js/cli": "^5.0.0-beta.1",
+    "@after-work.js/node": "^5.0.0-beta.1",
+    "@after-work.js/protractor": "^5.0.0-beta.1",
+    "@after-work.js/puppeteer": "^5.0.0-beta.1",
+    "@after-work.js/serve": "^5.0.0-beta.1"
   }
 }
