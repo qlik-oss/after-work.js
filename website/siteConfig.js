@@ -10,8 +10,6 @@ const siteConfig = {
   organizationName: 'qlik-oss',
   headerLinks: [
     { doc: 'installation', label: 'Docs' },
-    // { doc: 'tutorial', label: 'Tutorial' },
-    // { page: 'examples', label: 'Examples' },
     { search: true },
     { href: 'https://github.com/qlik-oss/after-work.js', label: '\uf09b' },
   ],
@@ -19,7 +17,6 @@ const siteConfig = {
   disableHeaderTitle: true,
   footerIcon: 'img/aw.svg',
   ogImage: 'img/aw.svg',
-  // gaTrackingId: '',
   favicon: 'img/aw.png',
   colors: {
     primaryColor: '#333',
@@ -31,7 +28,6 @@ const siteConfig = {
   },
   scripts: [
     'https://buttons.github.io/buttons.js',
-    // `${baseUrl}js/landing.js`
   ],
   stylesheets: [
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',

@@ -1,26 +1,47 @@
 {
+  "root": true,
   "env": {
     "node": true,
     "mocha": true,
-    "protractor": true,
-    "phantomjs": true
+    "protractor": true
   },
   "globals": {
     "sinon": true,
     "expect": true
   },
   "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
     "sourceType": "module"
   },
   "rules": {
-    "no-param-reassign": 0,
-    "comma-dangle": ["error", {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always-multiline",
-        "exports": "always-multiline",
-        "functions": "never"
-    }]
+    "import/no-extraneous-dependencies": [
+      2,
+      {
+        "devDependencies": true
+      }
+    ],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "react/prop-types": [
+      1,
+      {
+        "ignore": [
+          "children"
+        ]
+      }
+    ],
+    "react/prefer-stateless-function": 0
   },
-  "extends": "airbnb-base"
+  "extends": [
+    "airbnb"
+  ]
 }
