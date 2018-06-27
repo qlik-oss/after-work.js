@@ -42,6 +42,14 @@ npm install --save-dev @after-work.js/aw
 `after-work.js` is CLI and consists of a command together with appropriate options
 Help is always available with the `--help, -h` option
 
+```sh
+npx aw -h
+npx aw chrome -h
+npx aw protractor -h
+npx aw serve -h
+npx aw puppeteer -h
+```
+
  | Command    | Description                                     | Alias  | Default | Experimental |
  | ---------- | ----------------------------------------------- | ------ | :-----: | :----------: |
  | node       | Run tests in node.                              |        | x       |              |
