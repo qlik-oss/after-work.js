@@ -40,16 +40,30 @@ module.exports = function initConfig(baseConfig) {
         console.log(`log: ${util.inspect(browserLog)}`); //eslint-disable-line
       });
     },
+    configureHttpServer() {
+      return {
+        http: {
+          rewrite: {
+            '/fixtures/(.*)': 'packages/foo/test/integration/$1',
+          }
+        }
+      };
+    },
   };
   return extend(true, baseConfig, config);
 };
 ```
 
 ## Protractor plugins
+
 There are two Protractor plugins developed and bundled together with after-work.js:
+
 * **Screenshooter**: enables you to take a screenshot of an element and compare it to a saved baseline using an expect statement
 
 ```js
-return expect( browser.takeImageOf( <element> ) ).to.eventually.matchImageOf( <baseline> );
+it('should match baseline', async () => {
+  expect( await browser.takeImageOf( <element> ) ).to.matchImageOf( <baseline> );
+});
 ```
+
 * **Custom Reporter**: a mocha reporter that saves the test results into JSON. A HTML report is generated after the test is completed with the ability to show the different states of a rendering (Screenshooter) test.
