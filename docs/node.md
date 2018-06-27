@@ -53,8 +53,6 @@ describe('button', () => {
  | ------------------------------------------------------------------------------------------- | ------- | ------- |
  | Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset. | boolean | true    |
 
----
-
 <details><summary>Details</summary>
 <p>
 
@@ -88,6 +86,8 @@ describe('hello', () => {
 
 </p>
 </details>
+
+---
 
 ### --config
 
@@ -172,7 +172,7 @@ It´s possible to force exit by adding the `--exit` options but this could hide 
 
 ---
 
-### --babel.enable [boolean] [default: true]
+### --babel.enable
 
  | Description                  | Type    | Default |
  | ---------------------------- | ------- | ------- |
@@ -196,7 +196,7 @@ It´s possible to force exit by adding the `--exit` options but this could hide 
 
 ---
 
-### --babel.options [object] [default: {}]
+### --babel.options
 
  | Description            | Type   | Default |
  | ---------------------- | ------ | ------- |
@@ -278,7 +278,7 @@ Check Mochas [**list**](https://mochajs.org/#reporters) for valid options.
 
 ---
 
-### --nyc.sourceMap [boolean] [default: false]
+### --nyc.sourceMap
 
  | Description                            | Type    | Default |
  | -------------------------------------- | ------- | ------- |
