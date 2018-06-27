@@ -44,6 +44,7 @@ class FileCache {
   getSync(filename, options = {}) {
     const {
       ignoreCacheInvalidation = false,
+      fileCache = true,
       virtualMock = false,
       babelOptions,
       instrument,
@@ -51,6 +52,9 @@ class FileCache {
     } = options;
     const value = this.safeLoadCacheSync(this.getCacheFilename(filename));
     this.transform.set(filename, value);
+    if (!fileCache) {
+      return null;
+    }
     if (ignoreCacheInvalidation) {
       return value;
     }

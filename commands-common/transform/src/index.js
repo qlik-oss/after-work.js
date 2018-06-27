@@ -1,5 +1,4 @@
 /* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0, max-len: 0 */
-const path = require('path');
 const fs = require('fs');
 const { isSourceMap, isTypescript, ensureFilePath } = require('@after-work.js/utils');
 const FileCache = require('./file-cache');
@@ -7,23 +6,21 @@ const FileCache = require('./file-cache');
 const fileCache = new FileCache();
 
 function getBabelOpts(filename, argv) {
-  const { options, babelPluginIstanbul } = argv.babel;
-  const sourceRoot = (options && options.sourceRoot) || argv.coverage ? path.dirname(filename) : undefined;// eslint-disable-line
+  const { options: { sourceRoot, only, ignore }, babelPluginIstanbul } = argv.babel;
   const addCoverage = argv.instrument.testExclude.shouldInstrument(filename);
   const plugins = addCoverage ?
     [[babelPluginIstanbul, {}]] :
     [];
   const sourceMaps = 'both';
   const retainLines = true;
-  const { only, ignore } = argv.babelOptions || {};
   return { filename, sourceRoot, plugins, only, ignore, sourceMaps, retainLines };
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   const { babel: { typescript } } = argv;
   const { transform: { typescript: { compilerOptions, babelOptions } } } = argv;
-  const fileName = argv.coverage ? path.basename(filePath) : filePath;
-  compilerOptions.sourceRoot = argv.coverage ? path.resolve(path.dirname(filePath)) : sourceRoot;
+  const fileName = filePath;
+  compilerOptions.sourceRoot = sourceRoot;
   compilerOptions.inlineSources = true;
   if (!compilerOptions.sourceMap && !compilerOptions.inlineSourceMap) {
     compilerOptions.inlineSourceMap = true;
