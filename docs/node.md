@@ -47,9 +47,13 @@ describe('button', () => {
 
 ## Options
 
-### --presetEnv [boolean] [default: true]
+### --presetEnv
 
-Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset.
+ | Description                                                                                 | Type    | Default |
+ | ------------------------------------------------------------------------------------------- | ------- | ------- |
+ | Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset. | boolean | true    |
+
+---
 
 <details><summary>Details</summary>
 <p>
@@ -85,70 +89,134 @@ describe('hello', () => {
 </p>
 </details>
 
-### --config, -c [string] [default: null]
+### --config
 
-Path to config file.
+ | Description          | Type   | Default | Alias |
+ | -------------------- | ------ | ------- | ----- |
+ | Path to config file. | string | null    | -c    |
 
-### --glob [array] [default: ['test/\*\*/\*.spec.{js,ts}']]
+---
 
-Test glob pattern.
+### --glob
 
-### --src [array] [default: ['src/\*\*/\*.{js,ts}]]
+ | Description        | Type  | Default                       |
+ | ------------------ | ----- | ----------------------------- |
+ | Test glob pattern. | array | ['test/\*\*/\*.spec.{js,ts}'] |
 
-Glob pattern for all source files that should be loaded.
+---
 
-### --require [array] [default: []]
+### --src
 
-Require additional test setup files.
+ | Description                                              | Type  | Default                |
+ | -------------------------------------------------------- | ----- | ---------------------- |
+ | Glob pattern for all source files that should be loaded. | array | ['src/\*\*/\*.{js,ts}] |
 
-### --watch [boolean] [default: false]
+---
 
-Watch for changes
+### --require
 
-### --watchGlob, -wg [array] [default: ['src/\*\*/\*.{js,ts}', 'test/\*\*/\*.spec.{js,ts}']]
+ | Description                          | Type  | Default |
+ | ------------------------------------ | ----- | ------- |
+ | Require additional test setup files. | array | []      |
 
-Glob pattern for watching files that will trigger a rerun.
+---
 
-### --coverage [boolean] [default: false]
+### --watch
 
-Generate coverage
+ | Description        | Type    | Default |
+ | ------------------ | ------- | ------- |
+ | Watch for changes. | boolean | false   |
 
-### --exit [boolean] [default: false]
+---
 
-Escape hatch for tests that aren’t cleaning up after themselves. This could be caused by a server still listening on a port or a setTimeout()/setInterval().
+### --watchGlob
 
+ | Description                                                | Type  | Default                                              |
+ | ---------------------------------------------------------- | ----- | ---------------------------------------------------- |
+ | Glob pattern for watching files that will trigger a rerun. | array | ['src/\*\*/\*.{js,ts}', 'test/\*\*/\*.spec.{js,ts}'] |
+
+---
+
+### --coverage
+
+ | Description        | Type    | Default |
+ | ------------------ | ------- | ------- |
+ | Generate coverage. | boolean | false   |
+
+---
+
+### --exit
+
+ | Description                                                       | Type    | Default |
+ | ----------------------------------------------------------------- | ------- | ------- |
+ | Escape hatch for tests that are not cleaning up after themselves. | boolean | false   |
+
+>⚠️ This could be caused by a server still listening on a port or a setTimeout()/setInterval().
 It´s possible to force exit by adding the `--exit` options but this could hide flaws in the test, causing sequential test to give false positive or false negative results.
 
-### --updateSnapshot, -u [boolean] [default: false]
+---
 
-Update your snapshots.
+### --updateSnapshot
 
-### --hookRequire [boolean] [default: true]
+ | Description            | Type    | Default | Alias |
+ | ---------------------- | ------- | ------- | ----- |
+ | Update your snapshots. | boolean | false   | -u    |
 
-Hook `require` to be able to mock and transform files
+---
 
+### --hookRequire
+
+ | Description                                            | Type    | Default |
+ | ------------------------------------------------------ | ------- | ------- |
+ | Hook `require` to be able to mock and transform files. | boolean | true    |
+
+---
 
 ### --babel.enable [boolean] [default: true]
 
-Enables babel tranformation
+ | Description                  | Type    | Default |
+ | ---------------------------- | ------- | ------- |
+ | Enables babel tranformation. | boolean | true    |
 
-### --babel.core [string|module] [default: '']
+---
 
-Path to babel core module
+### --babel.core
 
-### --babel.babelPluginIstanbul [string|module] [default: '']
+ | Description                | Type   | Default |
+ | -------------------------- | ------ | ------- |
+ | Path to babel core module. | string | ''      |
 
-Path to babel plugin istanbul module
+---
+
+### --babel.babelPluginIstanbul
+
+ | Description                           | Type   | Default |
+ | ------------------------------------- | ------ | ------- |
+ | Path to babel plugin istanbul module. | string | ''      |
+
+---
 
 ### --babel.options [object] [default: {}]
 
-Pass options to babel
+ | Description            | Type   | Default |
+ | ---------------------- | ------ | ------- |
+ | Pass options to babel. | object | {}      |
 
-### --babel.typescript [string] [default: 'typescript']
+---
 
-Path to typescript compiler module
+### --babel.typescript
 
-### --mocks [array] [default: [['\*.{scss,less,css}']],]
+ | Description                         | Type   | Default      |
+ | ----------------------------------- | ------ | ------------ |
+ | Path to typescript compiler module. | string | 'typescript' |
+
+---
+
+### --mocks
+
+ | Description   | Type  | Default                  |
+ | ------------- | ----- | ------------------------ |
+ | Mock modules. | array | [['\*.{scss,less,css}']] |
 
 <details><summary>Details</summary>
 <p>
@@ -166,42 +234,78 @@ mocks: [
 </p>
 </details>
 
-### --mocha.reporter [string] [default: undefined]
+---
 
-Which reporter to use.
+### --mocha.reporter
+
+ | Description            | Type   | Default   |
+ | ---------------------- | ------ | --------- |
+ | Which reporter to use. | string | undefined |
 
 Check Mochas [**list**](https://mochajs.org/#reporters) for valid options.
 
+---
 
-### --mocha.bail [boolean] [default: true]
+### --mocha.bail
 
-Bails on failure
+ | Description      | Type    | Default |
+ | ---------------- | ------- | ------- |
+ | Bail on failure. | boolean | true    |
 
-### --mocha.timeout [number] [default: undefined]
+---
 
-Timeout in ms.
+### --mocha.timeout
 
-### --nyc.include [array] [default: []]
+ | Description    | Type   | Default   |
+ | -------------- | ------ | --------- |
+ | Timeout in ms. | number | undefined |
 
-Include glob for coverage.
+---
 
-### --nyc.exclude [array] [default: ['\*\*/coverage/\*\*', '\*\*/dist/\*\*', '\*\*/\*.spec.{js,ts}']]
+### --nyc.include
 
-Exclude glob for coverage.
+ | Description                | Type  | Default |
+ | -------------------------- | ----- | ------- |
+ | Include glob for coverage. | array | []      |
+
+---
+
+### --nyc.exclude
+
+ | Description                | Type  | Default                                                          |
+ | -------------------------- | ----- | ---------------------------------------------------------------- |
+ | Exclude glob for coverage. | array | ['\*\*/coverage/\*\*', '\*\*/dist/\*\*', '\*\*/\*.spec.{js,ts}'] |
+
+---
 
 ### --nyc.sourceMap [boolean] [default: false]
 
-Sets if NYC should handle source maps.
+ | Description                            | Type    | Default |
+ | -------------------------------------- | ------- | ------- |
+ | Sets if NYC should handle source maps. | boolean | false   |
 
-### --nyc.tempDirectory [string] [default: './coverage/.nyc_output']
+---
 
-Directory to output raw coverage information to.
+### --nyc.tempDirectory
 
-### --nyc.reporter [array] [default: ['lcov', 'text-summary']]
+ | Description                                      | Type   | Default                  |
+ | ------------------------------------------------ | ------ | ------------------------ |
+ | Directory to output raw coverage information to. | string | './coverage/.nyc_output' |
 
-Coverage reporter(s) to use.
+---
 
+### --nyc.reporter
 
-### --nyc.reportDir [string] [default: 'coverage']
+ | Description                  | Type  | Default                  |
+ | ---------------------------- | ----- | ------------------------ |
+ | Coverage reporter(s) to use. | array | ['lcov', 'text-summary'] |
 
-Directory to output coverage reports in.
+---
+
+### --nyc.reportDir
+
+ | Description                              | Type   | Default   |
+ | ---------------------------------------- | ------ | --------- |
+ | Directory to output coverage reports in. | string | 'coverage' |
+
+---
