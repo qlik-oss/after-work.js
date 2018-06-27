@@ -5,6 +5,7 @@
     "previous": "Previous",
     "tagline": "Testing, made simple",
     "cdp": "Chrome",
+    "development": "Development",
     "installation": "Installation",
     "node": "Node",
     "protractor": "Protractor",
@@ -13,7 +14,8 @@
     "Docs": "Docs",
     "": "",
     "Getting started": "Getting started",
-    "Commands": "Commands"
+    "Commands": "Commands",
+    "Contributing": "Contributing"
   },
   "pages-strings": {
     "Help Translate|recruit community translators for your project": "Help Translate",
