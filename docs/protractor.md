@@ -10,7 +10,8 @@ If you are using protractor for running test the configuration has to be accordi
 ## Override default configs
 
 aw.config.js
-```
+
+```js
 'use strict';
 
 const path = require('path');

@@ -8,6 +8,9 @@
       "node",
       "cdp",
       "protractor"
+    ],
+    "Contributing": [
+      "development"
     ]
   }
 }
