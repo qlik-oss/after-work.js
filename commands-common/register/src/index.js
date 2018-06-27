@@ -28,8 +28,11 @@ function compileHook(argv, code, filename, virtualMock = false) {
   }
   const newArgv = {
     ...argv,
-    babelOptions: {
-      ...opts,
+    babel: {
+      ...argv.babel,
+      options: {
+        ...opts,
+      },
     },
     virtualMock,
   };
