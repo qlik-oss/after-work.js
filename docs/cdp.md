@@ -126,7 +126,7 @@ Add files, remove files as you go and change your tests to rapidly build up a te
 
 ---
 
-### --transform.exclude [array] [default: []]
+### --transform.exclude
 
  | Description                      | Type  | Default |
  | -------------------------------- | ----- | ------- |
@@ -233,7 +233,7 @@ Check Mochas [**list**](https://mochajs.org/#reporters) for valid options.
 
 ---
 
-### --chrome.port [number] [default: 9222]
+### --chrome.port
 
  | Description  | Type   | Default |
  | ------------ | ------ | ------- |
