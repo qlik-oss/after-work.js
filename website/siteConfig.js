@@ -45,6 +45,7 @@ const siteConfig = {
   scrollToTopOptions: {
     zIndex: 100,
   },
+  onPageNav: 'separate',
 };
 
 module.exports = siteConfig;
