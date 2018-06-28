@@ -140,3 +140,20 @@ footer .sitemap {
   padding: 10px;
   text-align: left;
 }
+
+nav.toc .toggleNav {
+  background: transparent;
+}
+
+nav.toc .toggleNav ul li a {
+  color: #aaa;
+}
+
+nav.toc .toggleNav .navGroup.navGroupActive h3 {
+  background: none;
+  color: #666;
+}
+
+nav.toc .toggleNav .navGroup, nav.toc .toggleNav .navGroup.navGroupActive {
+  background: #fff;
+}
