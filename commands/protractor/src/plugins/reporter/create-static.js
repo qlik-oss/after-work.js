@@ -65,8 +65,7 @@ Handlebars.registerHelper('formatDuration', (context) => {
   return `${dur.hrs}:${dur.min < 10 ? (`0${dur.min}`) : dur.min}:${dur.sec < 10 ? (`0${dur.sec}`) : dur.sec}.${dur.ms} h`;
 });
 
-Handlebars.registerHelper('dateFormat', (context, format) =>
-  moment(context).format(format));
+Handlebars.registerHelper('dateFormat', (context, format) => moment(context).format(format));
 
 const report = {
   generate(jsonFileName) {

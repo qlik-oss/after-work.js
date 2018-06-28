@@ -1,8 +1,10 @@
+/* eslint import/no-unresolved: 0, react/jsx-one-expression-per-line: 0 */
+
 import React from 'react';
 import renderer from 'react-test-renderer';
-import 'foo.scss'; // eslint-disable-line import/no-unresolved
-import 'bar.less'; // eslint-disable-line import/no-unresolved
-import 'baz.css'; // eslint-disable-line import/no-unresolved
+import 'foo.scss';
+import 'bar.less';
+import 'baz.css';
 import Button from '../src/button';
 
 describe('button', () => {

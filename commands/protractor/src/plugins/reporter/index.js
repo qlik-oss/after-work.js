@@ -72,9 +72,9 @@ function uiReport(runner, options) {
     test.consoleEntries = []; // eslint-disable-line no-param-reassign
     waitForPromises.push(utils.saveScreenshot(browser, test.fullTitle()));
 
-    console.log('\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n' + // eslint-disable-line no-console
-            '\u001b[33m     %s\u001b[0m\n' +
-            '\u001b[34m     %s\u001b[0m', test.fullTitle(), test.duration, err.message, test.file);
+    console.log('\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n' // eslint-disable-line no-console
+            + '\u001b[33m     %s\u001b[0m\n'
+            + '\u001b[34m     %s\u001b[0m', test.fullTitle(), test.duration, err.message, test.file);
 
     if (browser.reporterInfo.browserName === 'chrome') {
       browser.manage().logs().get('browser').then((browserLog) => {

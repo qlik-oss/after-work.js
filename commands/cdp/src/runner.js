@@ -10,10 +10,11 @@ const precinct = require('precinct');
 // const createHttpServer = require('./http-server');
 const createServer = require('@after-work.js/server');
 const NYC = require('nyc');
-const Mediator = require('./mediator');
-const connect = require('./connect');
 const utils = require('@after-work.js/utils');
 const { deleteTransform } = require('@after-work.js/transform');
+const Mediator = require('./mediator');
+const connect = require('./connect');
+
 
 class Runner {
   constructor(argv = { chrome: { chromeFlags: [] }, client: {} }) {
@@ -34,6 +35,7 @@ class Runner {
     this.bind();
     this.debugging = false;
   }
+
   logInfo(mode, testFiles) {
     if (this.debugging) {
       return this;
@@ -50,24 +52,28 @@ class Runner {
     console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
     return this;
   }
+
   log(msg) {
     if (this.argv.outputReporterOnly) {
       return;
     }
     console.log(msg);
   }
+
   logLine(msg) {
     if (this.argv.outputReporterOnly) {
       return;
     }
     utils.writeLine(msg);
   }
+
   logClearLine() {
     if (this.argv.outputReporterOnly) {
       return;
     }
     utils.clearLine();
   }
+
   bind() {
     if (!this.argv.url) {
       this.fail('`options.url` must be specified to run tests');
@@ -101,13 +107,16 @@ class Runner {
       await this.exit(stats.failures);
     });
   }
+
   on(event, callback) {
     this.mediator.on(event, callback);
   }
+
   fail(msg) {
     console.error(msg);
     this.exit(1);
   }
+
   pipeOut(Runtime) {
     Runtime.exceptionThrown((exception) => {
       console.error('[chrome-exception]', exception);
@@ -128,6 +137,7 @@ class Runner {
       console[type](...data);
     });
   }
+
   pipeNetwork(Network) {
     Network.requestWillBeSent((info) => {
       this.requests.set(info.requestId, info.request);
@@ -144,9 +154,11 @@ class Runner {
       this.loadError = true;
     });
   }
+
   launch(options) {
     return this.chromeLauncher.launch(options);
   }
+
   async setup() {
     if (this.argv.chrome.launch) {
       this.chrome = await this.launch(this.argv.chrome);
@@ -164,6 +176,7 @@ class Runner {
     this.pipeNetwork(Network);
     Network.clearBrowserCache();
   }
+
   async navigate() {
     if (this.loadError) {
       this.fail(`Failed to load the url: ${this.argv.url}`);
@@ -173,6 +186,7 @@ class Runner {
     this.isRunning = true;
     await this.client.Page.navigate({ url: this.argv.url });
   }
+
   getDependencies(f) {
     const cached = this.depMap.get(f);
     if (cached) {
@@ -183,6 +197,7 @@ class Runner {
     this.depMap.set(f, deps);
     return deps;
   }
+
   matchDependencyName(srcName, deps) {
     for (const dep of deps) {
       const name = path.basename(dep);
@@ -192,6 +207,7 @@ class Runner {
     }
     return false;
   }
+
   matchDependency(srcFile) {
     const cache = this.srcTestMap.get(srcFile);
     if (cache) {
@@ -211,11 +227,13 @@ class Runner {
     this.log(`Couldn't find a test file for ${srcFile}`);
     return [];
   }
+
   async reloadAndRunTests(relativeFiles) {
     this.isRunning = true;
     const injectAwFiles = `window.awFiles = ${JSON.stringify(relativeFiles)};`;
     await this.client.Page.reload({ ignoreCache: true, scriptToEvaluateOnLoad: injectAwFiles });
   }
+
   async onWatch(virtualAbs, virtualRel) {
     if (this.isRunning) {
       return;
@@ -241,9 +259,11 @@ class Runner {
     this.onlyTestFilesBrowser = this.relativeBaseUrlFiles(testFiles);
     await this.reloadAndRunTests(this.onlyTestFilesBrowser);
   }
+
   watch() {
     chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f), f));
   }
+
   setupKeyPress() {
     if (!this.argv.watch) {
       return this;
@@ -272,6 +292,7 @@ class Runner {
     });
     return this;
   }
+
   autoDetectDebug() {
     const exv = process.execArgv.join();
     const debug = exv.includes('inspect') || exv.includes('debug');
@@ -280,18 +301,23 @@ class Runner {
       this.debugging = true;
     }
   }
+
   relativeRootFile(file) {
     return path.relative(path.relative(this.argv.url, process.cwd()), file);
   }
+
   relativeRootFiles(files) {
     return files.map(file => this.relativeRootFile(file));
   }
+
   relativeBaseUrlFile(file) {
     return path.relative(path.dirname(this.argv.url), path.resolve(file));
   }
+
   relativeBaseUrlFiles(files) {
     return files.map(file => this.relativeBaseUrlFile(file));
   }
+
   setTestFiles() {
     this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f)).map((f) => {
       const parts = f.split('.');
@@ -309,6 +335,7 @@ class Runner {
       .map(f => f.split('\\').join('/'));
     return this;
   }
+
   setUrl(url) {
     if (!/^(file|http(s?)):\/\//.test(url)) {
       if (!fs.existsSync(url)) {
@@ -323,12 +350,14 @@ class Runner {
     this.argv.url = url;
     return this;
   }
+
   maybeCreateServer() {
     if (/^(http(s?)):\/\//.test(this.argv.url)) {
       createServer(this.argv);
     }
     return this;
   }
+
   async run() {
     await this.setup();
     await this.navigate();
@@ -336,10 +365,12 @@ class Runner {
       this.watch();
     }
   }
+
   async extractCoverage() {
     const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__', returnByValue: true });
     return value;
   }
+
   async exit(code, force) {
     if (!force && this.argv.coverage) {
       const coverage = await this.extractCoverage();

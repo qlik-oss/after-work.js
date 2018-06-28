@@ -7,10 +7,10 @@ const importCwd = require('import-cwd');
 const NYC = require('nyc');
 const fs = require('fs');
 const path = require('path');
-const options = require('./options');
 const utils = require('@after-work.js/utils');
 const { getTransform, deleteTransform } = require('@after-work.js/transform');
 const { SnapshotState, toMatchSnapshot } = require('jest-snapshot');
+const options = require('./options');
 
 const getSourceContent = (filename) => {
   const { map } = getTransform(filename) || {};
@@ -37,6 +37,7 @@ class Runner {
     this.debugging = false;
     this.snapshotStates = new Map();
   }
+
   addToMatchSnapshot() {
     const runner = this;
     const chai = importCwd.silent('chai');
@@ -105,6 +106,7 @@ class Runner {
     }
     return this;
   }
+
   log(mode, testFiles, srcFiles) {
     if (this.debugging) {
       return this;
@@ -122,18 +124,21 @@ class Runner {
     console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
     return this;
   }
+
   logLine(msg) {
     if (this.argv.outputReporterOnly) {
       return;
     }
     utils.writeLine(msg);
   }
+
   logClearLine() {
     if (this.argv.outputReporterOnly) {
       return;
     }
     utils.clearLine();
   }
+
   matchDependency(found, testName) {
     let use = found;
     if (found.length > 1) {
@@ -146,6 +151,7 @@ class Runner {
     }
     return use;
   }
+
   safeDeleteCache(f) {
     if (/after-work.js\/*(commands|command-utils)\/*(cli|transform)\/src\/index.js$/.test(f)) {
       return;
@@ -154,6 +160,7 @@ class Runner {
       delete require.cache[f];
     }
   }
+
   safeRequireCache(f) {
     try {
       require(`${f}`);
@@ -161,6 +168,7 @@ class Runner {
     } catch (_) { } //eslint-disable-line
     return { children: [] };
   }
+
   setOnlyFilesFromTestFile(testFile) {
     const testName = path.basename(testFile).split('.').shift();
     this.safeDeleteCache(testFile);
@@ -174,6 +182,7 @@ class Runner {
     this.onlyTestFiles = [testFile];
     this.onlySrcFiles = [...new Set([...use])];
   }
+
   setOnlyFilesFromSrcFile(srcFile) {
     const srcName = path.basename(srcFile).split('.').shift();
     const found = this.testFiles.filter((f) => {
@@ -186,6 +195,7 @@ class Runner {
     this.onlyTestFiles = [...new Set([...use])];
     this.onlySrcFiles = [srcFile];
   }
+
   setTestFiles() {
     this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f));
     if (!this.testFiles.length) {
@@ -194,10 +204,12 @@ class Runner {
     }
     return this;
   }
+
   setSrcFiles() {
     this.srcFiles = globby.sync(this.argv.src).map(f => path.resolve(f));
     return this;
   }
+
   require() {
     if (!this.argv.coverage) {
       this.setupBabel();
@@ -205,10 +217,12 @@ class Runner {
     this.argv.require.forEach(m => this.libs.importCwd(m));
     return this;
   }
+
   deleteCoverage() {
     delete global.__coverage__; // eslint-disable-line
     return this;
   }
+
   onFinished(failures) {
     this.isRunning = false;
     process.on('exit', () => {
@@ -220,6 +234,7 @@ class Runner {
       process.exit();
     }
   }
+
   onEnd() {
     if (this.argv.coverage) {
       this.nyc.writeCoverageFile();
@@ -232,12 +247,14 @@ class Runner {
       this.log(mode, testFiles, srcFiles);
     }
   }
+
   runTests() {
     this.isRunning = true;
     this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
     this.mochaRunner.once('start', () => this.logClearLine());
     this.mochaRunner.once('end', () => this.onEnd());
   }
+
   setupKeyPress() {
     if (!this.argv.watch) {
       return this;
@@ -265,11 +282,13 @@ class Runner {
     });
     return this;
   }
+
   setupBabel() {
     if (this.argv.hookRequire) {
       require('@after-work.js/register')(this.argv);
     }
   }
+
   setup(testFiles, srcFiles) {
     srcFiles.forEach(f => this.safeDeleteCache(f));
     if (this.argv.coverage) {
@@ -295,6 +314,7 @@ class Runner {
     }
     return this;
   }
+
   setupAndRunTests(testFiles, srcFiles) {
     process.removeAllListeners();
     if (this.mochaRunner) {
@@ -322,6 +342,7 @@ class Runner {
       process.exit(1);
     }
   }
+
   onWatchAdd(f) {
     const base = path.basename(f);
     const parts = base.split('.');
@@ -331,6 +352,7 @@ class Runner {
       this.srcFiles.push(f);
     }
   }
+
   onWatchUnlink(f) {
     const tIx = this.testFiles.indexOf(f);
     const sIx = this.srcFiles.indexOf(f);
@@ -343,6 +365,7 @@ class Runner {
     this.safeDeleteCache(f);
     deleteTransform(f);
   }
+
   onWatch(f) {
     if (this.isRunning) {
       return;
@@ -360,6 +383,7 @@ class Runner {
     }
     this.setupAndRunTests(this.onlyTestFiles, this.onlySrcFiles);
   }
+
   run() {
     this.setupAndRunTests(this.testFiles, this.srcFiles);
     if (this.argv.watch) {
@@ -369,6 +393,7 @@ class Runner {
         .on('unlink', f => this.onWatchUnlink(path.resolve(f)));
     }
   }
+
   autoDetectDebug() {
     const exv = process.execArgv.join();
     const debug = exv.includes('inspect') || exv.includes('debug');

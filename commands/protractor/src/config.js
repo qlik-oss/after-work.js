@@ -1,7 +1,8 @@
 /* global browser */
 const path = require('path');
-const { getIPaddress, logSeleniumNodeInfo } = require('./utils');
 const createServer = require('@after-work.js/server');
+const { getIPaddress, logSeleniumNodeInfo } = require('./utils');
+
 
 const reporterPath = path.resolve(__dirname, './plugins/reporter/index.js');
 const screenshoterPath = path.resolve(__dirname, './plugins/screenshoter/index.js');

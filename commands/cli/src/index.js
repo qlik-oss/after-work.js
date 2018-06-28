@@ -41,4 +41,3 @@ yargs
   })
   .wrap(Math.min(120, yargs.terminalWidth()))
   .argv;
-

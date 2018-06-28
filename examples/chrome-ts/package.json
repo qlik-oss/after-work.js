@@ -5,7 +5,6 @@
   "description": "Typescript",
   "main": "src/index.js",
   "scripts": {
-    "lint": "eslint src test"
   },
   "repository": {
     "type": "git",
