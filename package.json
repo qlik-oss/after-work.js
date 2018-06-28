@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist",
-    "test": "aw -c aw.config.js && aw chrome -c aw.config.js",
+    "test:node": "aw -c aw.config.js",
+    "test:chrome": "aw chrome -c aw.config.js",
+    "test:protractor": "aw protractor -c examples/protractor/aw.config.js",
     "test:coveralls": "aw -c aw.config.js --coverage && cat coverage/lcov.info | coveralls",
     "lint": "lerna run lint"
   },
@@ -30,6 +32,7 @@
     "eslint-plugin-react": "^7.9.1",
     "globby": "^8.0.1",
     "lerna": "^2.11.0",
+    "protractor": "^5.3.2",
     "requirejs": "2.3.5",
     "typescript": "2.9.1",
     "yargs": "11.0.0"

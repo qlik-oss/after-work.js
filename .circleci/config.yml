@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies 
           command: npm i
@@ -19,7 +19,7 @@ jobs:
           name: Bootstrap
           command: npm run bootstrap
       - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
       - persist_to_workspace:
@@ -35,13 +35,30 @@ jobs:
       - run: npm run bootstrap
       - run: npm run lint
 
-  test-all:
+  test-node:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/after-work.js
       - run: npm run bootstrap
-      - run: npm test
+      - run: npm run test:node
+
+  test-chrome:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/after-work.js
+      - run: npm run bootstrap
+      - run: npm run test:chrome
+
+  test-protractor:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/after-work.js
+      - run: npm run bootstrap
+      - run : node_modules/protractor/bin/webdriver-manager update --gecko false --versions.chrome 2.37
+      - run: npm run test:protractor
 
   test-node-coverage:
     <<: *defaults
@@ -61,7 +78,13 @@ workflows:
       - lint:
           requires:
             - install
-      - test-all:
+      - test-node:
+          requires:
+            - install
+      - test-chrome:
+          requires:
+            - install
+      - test-protractor:
           requires:
             - install
       - test-node-coverage:
