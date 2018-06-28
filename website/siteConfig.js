@@ -41,6 +41,10 @@ const siteConfig = {
       hitsPerPage: 7,
     },
   },
+  scrollToTop: true,
+  scrollToTopOptions: {
+    zIndex: 100,
+  },
 };
 
 module.exports = siteConfig;
