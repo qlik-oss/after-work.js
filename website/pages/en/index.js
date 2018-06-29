@@ -94,7 +94,7 @@ const SnapshotTesting = () => (
   <Block>
     {[
       {
-        content: 'Uses 💖 jest-snapshot for snapshot testing',
+        content: 'Uses jest-snapshot 📸  for snapshot testing',
         title: 'Snapshot Testing (v5)',
       },
     ]}
