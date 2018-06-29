@@ -14,7 +14,7 @@ Add files, remove files as you go and change your tests to rapidly build up a te
 
 ## Snapshot Testing
 
-We are using the awesome 💖 [**jest-snapshot**](https://github.com/facebook/jest/tree/master/packages/jest-snapshot) package.
+We are using the awesome 📸 [**jest-snapshot**](https://github.com/facebook/jest/tree/master/packages/jest-snapshot) package.
 
 <details><summary>Example</summary>
 <p>
