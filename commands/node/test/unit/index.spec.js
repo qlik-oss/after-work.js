@@ -1,8 +1,8 @@
 /* eslint object-curly-newline: 0 */
-const cmd = require('../../src');
-const cmdOpts = require('../../src/options');
 const globby = require('globby');
 const path = require('path');
+const cmd = require('../../src');
+const cmdOpts = require('../../src/options');
 
 const { Runner, configure, builder, handler } = cmd;
 

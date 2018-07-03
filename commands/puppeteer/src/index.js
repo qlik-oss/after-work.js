@@ -2,8 +2,8 @@
 const path = require('path');
 const fs = require('fs');
 const globby = require('globby');
-const options = require('./options');
 const Mocha = require('mocha');
+const options = require('./options');
 
 process.on('unhandledRejection', (err) => {
   console.error(`Promise Rejection:${err}`);

@@ -7,7 +7,7 @@
   "description": "File utils",
   "main": "src/index.js",
   "scripts": {
-    "lint": "eslint src test"
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",

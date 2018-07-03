@@ -11,10 +11,12 @@ class FileCache {
     this.cacheDir = findCacheDir({ name: '@after-work.js/transform', create: true });
     this.transform = new Map();
   }
+
   getCacheFilename(filename) {
     const hash = crypto.createHash('md5').update(filename).digest('hex');
     return path.join(this.cacheDir, `${hash}.json.gz`);
   }
+
   getCacheHash(filename, options) {
     const data = JSON.stringify({
       filename,
@@ -22,11 +24,13 @@ class FileCache {
     });
     return crypto.createHash('md5').update(data).digest('hex');
   }
+
   getStringifiedValue(filename) {
     const value = this.transform.get(filename);
     const str = JSON.stringify(value, null, 2);
     return str;
   }
+
   setSync(filename, transformItem, options) {
     const {
       virtualMock,
@@ -41,6 +45,7 @@ class FileCache {
     this.transform.set(filename, transformItem);
     this.safeSaveCacheSync(filename);
   }
+
   getSync(filename, options = {}) {
     const {
       ignoreCacheInvalidation = false,
@@ -70,6 +75,7 @@ class FileCache {
     }
     return value;
   }
+
   safeLoadCacheSync(filename) {
     try {
       const gz = fs.readFileSync(filename);
@@ -79,6 +85,7 @@ class FileCache {
       return null;
     }
   }
+
   safeSaveCacheSync(filename) {
     try {
       const str = this.getStringifiedValue(filename);

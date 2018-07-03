@@ -7,7 +7,7 @@
   "description": "Run tests with Chrome Debugging Protocol",
   "main": "src/index.js",
   "scripts": {
-    "lint": "eslint src test"
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",

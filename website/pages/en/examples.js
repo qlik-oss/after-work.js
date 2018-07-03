@@ -48,18 +48,24 @@ const Sample = (props, ix) => (
     <div className="card">
       <a href={props.links.gh} target="_blank" rel="noopener noreferrer">
         {
-          props.imgs.map(img => (<div
-            key={img}
-            style={{
-            backgroundImage: `url(${img})`,
-          }}
-           />))
+          props.imgs.map(img => (
+            <div
+              key={img}
+              style={{
+                backgroundImage: `url(${img})`,
+              }}
+            />
+          ))
         }
       </a>
       <div className="info">
-        <h3>{props.title}</h3>
+        <h3>
+          {props.title}
+        </h3>
         <div>
-          <span>{props.description}</span>
+          <span>
+            {props.description}
+          </span>
         </div>
       </div>
     </div>
@@ -72,7 +78,9 @@ const Empty = i => (
 
 const Category = props => (
   <div className="category">
-    <h2>{props.title}</h2>
+    <h2>
+      {props.title}
+    </h2>
     <div className="gallery">
       {props.children}
     </div>
@@ -91,11 +99,17 @@ class Examples extends React.Component {
         <div className="container mainContainer">
           <div className="wrapper">
             <div className="post">
-              <header className="postHeader"><h1>Examples</h1></header>
+              <header className="postHeader">
+                <h1>
+Examples
+                </h1>
+              </header>
               <MarkdownBlock>
                 Boilerplate configurations depending on your context
               </MarkdownBlock>
-              <Category title="Configurations">{generateGrid(examples)}</Category>
+              <Category title="Configurations">
+                {generateGrid(examples)}
+              </Category>
             </div>
           </div>
         </div>
