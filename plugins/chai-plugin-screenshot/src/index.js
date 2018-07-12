@@ -60,7 +60,7 @@ const plugin = {
       equality: `distance: ${distance}, percent: ${diff.percent}`,
     });
   },
-  // TODO do not make a breaking change with second and third argument?
+  // TODO do not make a breaking change? Create a new method instead?
   matchImageOf(id, {
     type = 'png',
     platform = '',
@@ -71,7 +71,7 @@ const plugin = {
   } = {}) {
     const promise = this._obj.then ? this._obj : Promise.resolve(this._obj); // eslint-disable-line
     return promise.then((meta) => {
-      const imageName = util.format('%s-%s-%s.png', id, meta.platform || platform, meta.browserName || browserName);
+      const imageName = util.format(`%s-%s-%s.${type}`, id, meta.platform || platform, meta.browserName || browserName);
 
       const basePath = meta.artifactsPath || artifactsPath;
       mkdirp.sync(path.resolve(basePath, 'baseline', folder));
