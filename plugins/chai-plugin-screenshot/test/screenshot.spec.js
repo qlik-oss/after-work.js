@@ -85,26 +85,6 @@ describe('chai-plugin-screenshot', () => {
         equality: `distance: ${distance}, percent: ${percent}`,
       });
     });
-
-    it("should not be equal if the tolerance isn't met", () => {
-      const distance = 0.1;
-      const diffImg = {};
-      const percent = 0;
-      jimpRead.returns(Promise.resolve({}));
-      jimpDistance.returns(distance);
-      jimpDiff.returns({ image: diffImg, percent });
-
-      return expect(plugin.compare('baseline', 'regression', 0)).to.eventually.be.fulfilled.and.deep.equal({
-        diffImg,
-        isEqual: false,
-        equality: `distance: ${distance}, percent: ${percent}`,
-      });
-    });
-
-    it('should reject with error', () => {
-      jimpRead.returns(Promise.reject(new Error('error')));
-      expect(plugin.compare('baseline', 'regression', 0)).to.eventually.be.rejected.and.have.property('message', 'error');
-    });
   });
 
   describe('matchImageOf', () => {
@@ -113,6 +93,7 @@ describe('chai-plugin-screenshot', () => {
     let fileExists;
     let writeImage;
     let compare;
+    let toImage;
     let mkdir;
     const baselinePath = 'artifacts/baseline/';
     const baseline = `${baselinePath}id-windows-nt-chrome.png`;
@@ -127,6 +108,7 @@ describe('chai-plugin-screenshot', () => {
       fileExists = sandbox.stub(plugin, 'fileExists');
       writeImage = sandbox.stub(plugin, 'writeImage');
       compare = sandbox.stub(plugin, 'compare');
+      toImage = sandbox.stub(plugin, 'toImage');
       chaiCtx = {
         _obj: Promise.resolve({
           img, browserName: 'chrome', artifactsPath: 'artifacts', platform: 'windows-nt',
@@ -136,6 +118,8 @@ describe('chai-plugin-screenshot', () => {
       matchImageOf = plugin.matchImageOf.bind(chaiCtx);
       sandbox.stub(process, 'cwd').returns('foo');
       mkdir = sandbox.stub(mkdirp, 'sync');
+
+      toImage.returns(Promise.resolve(img));
     });
 
     it("should write baseline if it's not existing", () => {
@@ -179,14 +163,14 @@ describe('chai-plugin-screenshot', () => {
     });
 
     it('should create the artifacts folders with subfolders', () => {
-      const folders = 'foo/bar';
+      const folder = 'foo/bar';
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
-      return matchImageOf('id', folders).then(() => {
+      return matchImageOf('id', { folder }).then(() => {
         expect(mkdir.callCount).to.equal(3);
-        expect(mkdir.firstCall).to.have.been.calledWithExactly(baselinePath + folders);
-        expect(mkdir.secondCall).to.have.been.calledWithExactly(regressionPath + folders);
-        expect(mkdir.thirdCall).to.have.been.calledWithExactly(diffPath + folders);
+        expect(mkdir.firstCall).to.have.been.calledWithExactly(baselinePath + folder);
+        expect(mkdir.secondCall).to.have.been.calledWithExactly(regressionPath + folder);
+        expect(mkdir.thirdCall).to.have.been.calledWithExactly(diffPath + folder);
       });
     });
   });
