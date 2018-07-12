@@ -78,9 +78,9 @@ const plugin = {
       mkdirp.sync(path.resolve(basePath, 'regression', folder));
       mkdirp.sync(path.resolve(basePath, 'diff', folder));
 
-      const baselinePath = path.resolve(basePath, 'baseline', imageName);
-      const regressionPath = path.resolve(basePath, 'regression', imageName);
-      const diffPath = path.resolve(basePath, 'diff', imageName);
+      const baselinePath = path.resolve(basePath, 'baseline', folder, imageName);
+      const regressionPath = path.resolve(basePath, 'regression', folder, imageName);
+      const diffPath = path.resolve(basePath, 'diff', folder, imageName);
 
       // Injecting images into assert
       const expected = {
