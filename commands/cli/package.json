@@ -38,7 +38,8 @@
     "@after-work.js/node": "^5.0.0-beta.2",
     "@after-work.js/protractor": "^5.0.0-beta.2",
     "@after-work.js/puppeteer": "^5.0.0-beta.2",
-    "@after-work.js/serve": "^5.0.0-beta.2"
+    "@after-work.js/serve": "^5.0.0-beta.2",
+    "@after-work.js/chai-plugin-screenshot": "^5.0.0-beta.2"
   },
   "files": [
     "/src"

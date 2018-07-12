@@ -24,7 +24,6 @@
     "@after-work.js/register": "^5.0.0-beta.2",
     "@after-work.js/server": "^5.0.0-beta.2",
     "@after-work.js/utils": "^5.0.0-beta.2",
-    "@after-work.js/chai-plugin-screenshot": "^5.0.0-beta.2",
     "extend": "3.0.1",
     "handlebars": "4.0.11",
     "highlight.js": "9.12.0",
