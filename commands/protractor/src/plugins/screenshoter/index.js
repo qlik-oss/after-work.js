@@ -1,7 +1,8 @@
 /* global browser */
+const screenshotPlugin = require('@after-work.js/chai-plugin-screenshot');
 const utils = require('./utils');
 
-global.chai.Assertion.addMethod('matchImageOf', utils.matchImageOf);
+global.chai.Assertion.addMethod('matchImageOf', screenshotPlugin.matchImageOf);
 
 const screenshoter = {
   /**
