@@ -33,7 +33,7 @@ const plugin = {
       return jimp.read(input);
     }
 
-    return Promise.reject(new Error(`Unable to convert to an image. Unsupported type '${type}'.`));
+    return Promise.reject(new Error(`Unable to create image. Unsupported type '${type}'.`));
   },
   fileExists(filePath) {
     return new Promise((resolve) => {
@@ -71,7 +71,9 @@ const plugin = {
   } = {}) {
     const promise = this._obj.then ? this._obj : Promise.resolve(this._obj); // eslint-disable-line
     return promise.then((meta) => {
-      const imageName = util.format(`%s-%s-%s.${type}`, id, meta.platform || platform, meta.browserName || browserName);
+      const imageName = [id, meta.platform || platform, meta.browserName || browserName]
+        .filter(s => !!s)
+        .reduceRight((prev, curr, i, ary) => `${curr}${i === ary.length - 1 ? '.' : '-'}${prev}`, `${type}`);
 
       const basePath = meta.artifactsPath || artifactsPath;
       mkdirp.sync(path.resolve(basePath, 'baseline', folder));
