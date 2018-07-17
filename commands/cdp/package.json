@@ -25,7 +25,7 @@
     "@after-work.js/utils": "^5.0.0-beta.2",
     "chokidar": "2.0.3",
     "chrome-launcher": "0.10.2",
-    "chrome-remote-interface": "0.25.6",
+    "chrome-remote-interface": "0.26.0",
     "chrome-unmirror": "0.1.0",
     "globby": "8.0.1",
     "import-cwd": "2.1.0",
