@@ -110,7 +110,7 @@ describe('chai-plugin-screenshot', () => {
       compare = sandbox.stub(plugin, 'compare');
       toImage = sandbox.stub(plugin, 'toImage');
       chaiCtx = {
-        _obj: Promise.resolve({
+        _obj: Promise.resolve({ // takeImageOf context
           img, browserName: 'chrome', artifactsPath: 'artifacts', platform: 'windows-nt',
         }),
         assert: sinon.stub(),
@@ -171,6 +171,23 @@ describe('chai-plugin-screenshot', () => {
         expect(mkdir.firstCall).to.have.been.calledWithExactly(baselinePath + folder);
         expect(mkdir.secondCall).to.have.been.calledWithExactly(regressionPath + folder);
         expect(mkdir.thirdCall).to.have.been.calledWithExactly(diffPath + folder);
+      });
+    });
+
+    it('should create the artifacts folders from options object', () => {
+      chaiCtx = {
+        _obj: Promise.resolve({}), // Change context something else than takeImageOf
+        assert: sinon.stub(),
+      };
+      matchImageOf = plugin.matchImageOf.bind(chaiCtx);
+
+      fileExists.returns(Promise.resolve(false));
+      writeImage.returns(Promise.resolve());
+      return matchImageOf('id', { artifactsPath: 'testing', folder: 'test' }).then(() => {
+        expect(mkdir.callCount).to.equal(3);
+        expect(mkdir.firstCall).to.have.been.calledWithExactly('testing/baseline/test');
+        expect(mkdir.secondCall).to.have.been.calledWithExactly('testing/regression/test');
+        expect(mkdir.thirdCall).to.have.been.calledWithExactly('testing/diff/test');
       });
     });
   });

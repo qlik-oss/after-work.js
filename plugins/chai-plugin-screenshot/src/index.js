@@ -1,8 +1,13 @@
 const path = require('path');
 const fs = require('fs');
 const jimp = require('jimp');
-const util = require('util');
 const mkdirp = require('mkdirp');
+
+function mkArtifactDir(basePath, folder) {
+  mkdirp.sync(path.resolve(basePath, 'baseline', folder));
+  mkdirp.sync(path.resolve(basePath, 'regression', folder));
+  mkdirp.sync(path.resolve(basePath, 'diff', folder));
+}
 
 const plugin = {
   toImage(input) {
@@ -62,23 +67,18 @@ const plugin = {
   },
   // TODO do not make a breaking change? Create a new method instead?
   matchImageOf(id, {
-    type = 'png',
-    platform = '',
-    browserName = '',
     folder = '',
     artifactsPath = '',
     tolerance = 0.002,
   } = {}) {
     const promise = this._obj.then ? this._obj : Promise.resolve(this._obj); // eslint-disable-line
     return promise.then((meta) => {
-      const imageName = [id, meta.platform || platform, meta.browserName || browserName]
-        .filter(s => !!s)
-        .reduceRight((prev, curr, i, ary) => `${curr}${i === ary.length - 1 ? '.' : '-'}${prev}`, `${type}`);
+      // TODO takeImageOf is an after-work specific context. Should do a more generic solution.
+      const isTakeImageOf = typeof meta === 'object' && typeof meta.artifactsPath === 'string';
+      const imageName = isTakeImageOf ? `${id}-${meta.platform}-${meta.browserName}.png` : `${id}.png`;
+      const basePath = isTakeImageOf ? meta.artifactsPath : artifactsPath;
 
-      const basePath = meta.artifactsPath || artifactsPath;
-      mkdirp.sync(path.resolve(basePath, 'baseline', folder));
-      mkdirp.sync(path.resolve(basePath, 'regression', folder));
-      mkdirp.sync(path.resolve(basePath, 'diff', folder));
+      mkArtifactDir(basePath, folder);
 
       const baselinePath = path.resolve(basePath, 'baseline', folder, imageName);
       const regressionPath = path.resolve(basePath, 'regression', folder, imageName);
