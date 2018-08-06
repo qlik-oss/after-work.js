@@ -3,12 +3,6 @@ const fs = require('fs');
 const jimp = require('jimp');
 const mkdirp = require('mkdirp');
 
-function mkArtifactDir(basePath, folder) {
-  mkdirp.sync(path.resolve(basePath, 'baseline', folder));
-  mkdirp.sync(path.resolve(basePath, 'regression', folder));
-  mkdirp.sync(path.resolve(basePath, 'diff', folder));
-}
-
 function resolveArgs(opts, t) {
   const type = typeof opts;
   let folder = '';
@@ -69,6 +63,8 @@ const plugin = {
     });
   },
   writeImage(img, filePath) {
+    mkdirp.sync(path.parse(filePath).dir);
+
     return new Promise((resolve, reject) => {
       img.write(filePath, (err) => {
         if (err) {
@@ -105,8 +101,6 @@ const plugin = {
       const isTakeImageOf = typeof meta === 'object' && typeof meta.artifactsPath === 'string';
       const imageName = isTakeImageOf ? `${id}-${meta.platform}-${meta.browserName}.png` : `${id}.png`;
       const basePath = isTakeImageOf ? meta.artifactsPath : artifactsPath;
-
-      mkArtifactDir(basePath, folder);
 
       const baselinePath = path.resolve(basePath, 'baseline', folder, imageName);
       const regressionPath = path.resolve(basePath, 'regression', folder, imageName);
