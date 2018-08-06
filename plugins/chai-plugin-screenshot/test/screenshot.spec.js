@@ -162,11 +162,11 @@ describe('chai-plugin-screenshot', () => {
       });
     });
 
-    it('should create the artifacts folders with subfolders', () => {
+    it('should create the artifacts folders from parameter string', () => {
       const folder = 'foo/bar';
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
-      return matchImageOf('id', { folder }).then(() => {
+      return matchImageOf('id', folder).then(() => {
         expect(mkdir.callCount).to.equal(3);
         expect(mkdir.firstCall).to.have.been.calledWithExactly(baselinePath + folder);
         expect(mkdir.secondCall).to.have.been.calledWithExactly(regressionPath + folder);

@@ -9,6 +9,29 @@ function mkArtifactDir(basePath, folder) {
   mkdirp.sync(path.resolve(basePath, 'diff', folder));
 }
 
+function resolveArgs(opts, t) {
+  const type = typeof opts;
+  let folder = '';
+  let artifactsPath = '';
+  let tolerance = typeof t === 'number' ? t : 0.002;
+
+  if (type === 'string') {
+    folder = opts;
+  } else if (type === 'object') {
+    ({
+      folder = folder,
+      artifactsPath = artifactsPath,
+      tolerance = tolerance,
+    } = opts);
+  }
+
+  return {
+    folder,
+    artifactsPath,
+    tolerance,
+  };
+}
+
 const plugin = {
   toImage(input) {
     const type = typeof input;
@@ -65,12 +88,17 @@ const plugin = {
       equality: `distance: ${distance}, percent: ${diff.percent}`,
     });
   },
-  // TODO do not make a breaking change? Create a new method instead?
-  matchImageOf(id, {
-    folder = '',
-    artifactsPath = '',
-    tolerance = 0.002,
-  } = {}) {
+  /**
+   * @param {string} id - Name of the image
+   * @param {string|object} opts - Folder or options object
+   * @param {number} t - Tolerance
+   */
+  matchImageOf(id, opts, t) {
+    const {
+      folder,
+      artifactsPath,
+      tolerance,
+    } = resolveArgs(opts, t);
     const promise = this._obj.then ? this._obj : Promise.resolve(this._obj); // eslint-disable-line
     return promise.then((meta) => {
       // TODO takeImageOf is an after-work specific context. Should do a more generic solution.
@@ -84,13 +112,6 @@ const plugin = {
       const regressionPath = path.resolve(basePath, 'regression', folder, imageName);
       const diffPath = path.resolve(basePath, 'diff', folder, imageName);
 
-      // Injecting images into assert
-      const expected = {
-        baseline: path.join('baseline', imageName).replace(/\\/g, '/'),
-        diff: path.join('diff', imageName).replace(/\\/g, '/'),
-        regression: path.join('regression', imageName).replace(/\\/g, '/'),
-      };
-      const actual = {};
       const resolvedMeta = typeof meta === 'string' ? Buffer.from(meta, 'base64') : meta;
 
       return plugin.fileExists(baselinePath).then((exists) => {
@@ -98,12 +119,11 @@ const plugin = {
           return Promise.resolve(plugin.toImage(resolvedMeta))
             .then(regressionImg => plugin.writeImage(regressionImg, baselinePath)
               .then(() => {
+                const errStr = `No baseline found! New baseline generated at ${path.join(basePath, 'baseline', folder, imageName)}`;
                 this.assert(
                   false,
-                  `No baseline found! New baseline generated at ${`${basePath}/${expected.baseline}`}`,
-                  `No baseline found! New baseline generated at ${`${basePath}/${expected.baseline}`}`,
-                  JSON.stringify(expected),
-                  actual,
+                  errStr,
+                  errStr,
                 );
               }));
         }
@@ -127,8 +147,6 @@ const plugin = {
                 comparison.isEqual === true,
                 `expected ${id} equality to be less than ${tolerance}, but was ${comparison.equality}`,
                 `expected ${id} equality to be greater than ${tolerance}, but was ${comparison.equality}`,
-                JSON.stringify(expected),
-                actual,
               );
               return comparison;
             });
