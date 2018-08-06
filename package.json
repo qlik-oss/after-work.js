@@ -22,7 +22,7 @@
     "@babel/preset-env": "^7.0.0-beta.51",
     "@babel/register": "^7.0.0-beta.51",
     "@types/chai": "4.1.4",
-    "@types/mocha": "5.2.3",
+    "@types/mocha": "5.2.5",
     "babel-plugin-istanbul": "4.1.6",
     "coveralls": "3.0.2",
     "eslint": "^5.0.1",
