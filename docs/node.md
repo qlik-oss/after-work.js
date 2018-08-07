@@ -44,6 +44,21 @@ describe('button', () => {
 </p>
 </details>
 
+## Screenshot testing
+
+When using the preset-env option. A screenshot assertion plugin is added to Chai. This allows comperisons of images.
+
+```javascript
+describe('screenshot', () => {
+  it('image should be equal', () => {
+    const img = Promise.resolve('<base64-encoded-image>'); //  Promise that resolves to Buffer or a base64 encoded image
+    expect(img).to.equal('<name-of-my-img-on-disk>', {
+      artifactsPath: 'tests/__artifacts__',
+      tolerance: 0.002
+    });
+  });
+});
+```
 
 ## Options
 
