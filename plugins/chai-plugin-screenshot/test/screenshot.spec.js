@@ -151,30 +151,38 @@ describe('chai-plugin-screenshot', () => {
       });
     });
 
-    it('should create the default artifacts folders', () => {
+    it('should create the default baseline folders', () => {
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
       return matchImageOf('id').then(() => {
-        expect(mkdir.callCount).to.equal(3);
-        expect(mkdir.firstCall).to.have.been.calledWithExactly(baselinePath);
-        expect(mkdir.secondCall).to.have.been.calledWithExactly(regressionPath);
-        expect(mkdir.thirdCall).to.have.been.calledWithExactly(diffPath);
+        expect(mkdir.callCount).to.equal(1);
+        expect(mkdir.firstCall).to.have.been.calledWithExactly('artifacts/baseline');
       });
     });
 
-    it('should create the artifacts folders from parameter string', () => {
+    it('should create the default regression and diff folders', () => {
+      fileExists.returns(Promise.resolve(true));
+      writeImage.returns(Promise.resolve());
+      compare.returns(Promise.resolve({ equality: 0, isEqual: false }));
+
+      return matchImageOf('id').then(() => {
+        expect(mkdir.callCount).to.equal(2);
+        expect(mkdir.firstCall).to.have.been.calledWithExactly('artifacts/regression');
+        expect(mkdir.secondCall).to.have.been.calledWithExactly('artifacts/diff');
+      });
+    });
+
+    it('should create the baseline folders from parameter string', () => {
       const folder = 'foo/bar';
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
       return matchImageOf('id', folder).then(() => {
-        expect(mkdir.callCount).to.equal(3);
+        expect(mkdir.callCount).to.equal(1);
         expect(mkdir.firstCall).to.have.been.calledWithExactly(baselinePath + folder);
-        expect(mkdir.secondCall).to.have.been.calledWithExactly(regressionPath + folder);
-        expect(mkdir.thirdCall).to.have.been.calledWithExactly(diffPath + folder);
       });
     });
 
-    it('should create the artifacts folders from options object', () => {
+    it('should create the baseline folders from options object', () => {
       chaiCtx = {
         _obj: Promise.resolve({}), // Change context something else than takeImageOf
         assert: sinon.stub(),
@@ -184,10 +192,8 @@ describe('chai-plugin-screenshot', () => {
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
       return matchImageOf('id', { artifactsPath: 'testing', folder: 'test' }).then(() => {
-        expect(mkdir.callCount).to.equal(3);
+        expect(mkdir.callCount).to.equal(1);
         expect(mkdir.firstCall).to.have.been.calledWithExactly('testing/baseline/test');
-        expect(mkdir.secondCall).to.have.been.calledWithExactly('testing/regression/test');
-        expect(mkdir.thirdCall).to.have.been.calledWithExactly('testing/diff/test');
       });
     });
   });

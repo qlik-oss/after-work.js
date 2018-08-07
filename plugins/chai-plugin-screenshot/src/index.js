@@ -63,8 +63,6 @@ const plugin = {
     });
   },
   writeImage(img, filePath) {
-    mkdirp.sync(path.parse(filePath).dir);
-
     return new Promise((resolve, reject) => {
       img.write(filePath, (err) => {
         if (err) {
@@ -109,9 +107,11 @@ const plugin = {
       const resolvedMeta = typeof meta === 'string' ? Buffer.from(meta, 'base64') : meta;
 
       return plugin.fileExists(baselinePath).then((exists) => {
-        if (!exists) { // File doesnt exist
+        if (!exists) {
+          mkdirp.sync(path.parse(baselinePath).dir);
+
           return Promise.resolve(plugin.toImage(resolvedMeta))
-            .then(regressionImg => plugin.writeImage(regressionImg, baselinePath)
+            .then(baselineImg => plugin.writeImage(baselineImg, baselinePath)
               .then(() => {
                 const errStr = `No baseline found! New baseline generated at ${path.join(basePath, 'baseline', folder, imageName)}`;
                 this.assert(
@@ -133,6 +133,10 @@ const plugin = {
             if (comparison.isEqual) {
               return comparison;
             }
+
+            mkdirp.sync(path.parse(regressionPath).dir);
+            mkdirp.sync(path.parse(diffPath).dir);
+
             return Promise.all([
               plugin.writeImage(regressionImg, regressionPath),
               plugin.writeImage(comparison.diffImg, diffPath),
