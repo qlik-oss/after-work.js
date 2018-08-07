@@ -29,33 +29,35 @@ function resolveArgs(opts, t) {
 const plugin = {
   toImage(input) {
     const type = typeof input;
-    const isObj = type === 'object';
+    const isObj = type === 'object' && input !== null;
 
     if (type === 'string') {
       // If string assume it's a path
       return jimp.read(input);
     }
 
-    if (input instanceof jimp || (isObj && input.img instanceof jimp)) {
-      // Input is an instance of Jimp
-      return input.img ? Promise.resolve(input.img) : Promise.resolve(input);
-    }
+    if (isObj) {
+      if (input instanceof jimp || input.img instanceof jimp) {
+        // Input is an instance of Jimp
+        return input.img ? Promise.resolve(input.img) : Promise.resolve(input);
+      }
 
-    if (isObj && (input.getBuffer || (input.img && input.img.getBuffer))) {
-      // Input is a Jimp object where instanceof doesn't validate to true
-      const fn = (resolve, reject) => (input.img ? input.img : input).getBuffer(
-        jimp.AUTO,
-        (e, b) => (e ? reject(e) : resolve(b)),
-      );
-      return new Promise(fn)
-        .then(buffer => jimp.read(buffer));
+      if (input.getBuffer || (input.img && input.img.getBuffer)) {
+        // Input is a Jimp object where instanceof doesn't validate to true
+        const fn = (resolve, reject) => (input.img ? input.img : input).getBuffer(
+          jimp.AUTO,
+          (e, b) => (e ? reject(e) : resolve(b)),
+        );
+        return new Promise(fn)
+          .then(buffer => jimp.read(buffer));
+      }
     }
 
     if (Buffer.isBuffer(input)) {
       return jimp.read(input);
     }
 
-    return Promise.reject(new Error(`Unable to create image. Unsupported type '${type}'.`));
+    return Promise.reject(new TypeError(`Unable to create image. Unsupported type '${type}'.`));
   },
   fileExists(filePath) {
     return new Promise((resolve) => {

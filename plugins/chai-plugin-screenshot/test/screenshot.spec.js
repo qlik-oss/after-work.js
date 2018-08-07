@@ -87,6 +87,61 @@ describe('chai-plugin-screenshot', () => {
     });
   });
 
+  describe('toImage', () => {
+    let jimpRead;
+
+    beforeEach(() => {
+      jimpRead = sandbox.stub(jimp, 'read').returns(Promise.resolve());
+    });
+
+    it('should create an image from a string', () => {
+      plugin.toImage('myBase64String');
+      expect(jimpRead).to.have.been.calledWithExactly('myBase64String');
+    });
+
+    it('should create an image from a instance of Jimp', () => {
+      const img = new jimp(256, 256, () => {}); // eslint-disable-line
+      plugin.toImage(img).then((out) => {
+        expect(out).to.equal(img);
+      });
+
+      plugin.toImage({ img }).then((out) => {
+        expect(out).to.equal(img);
+      });
+    });
+
+    it('should create an image from a corrupt instance of Jimp', () => {
+      const img = { getBuffer: sandbox.spy() };
+      plugin.toImage(img).then(() => {
+        expect(img.getBuffer.callCount).to.equal(1);
+        expect(jimpRead).to.have.been.calledWithExactly(img.getBuffer);
+      });
+
+      img.getBuffer.resetHistory();
+
+      plugin.toImage({ img }).then(() => {
+        expect(img.getBuffer.callCount).to.equal(1);
+        expect(jimpRead).to.have.been.calledWithExactly(img.getBuffer);
+      });
+    });
+
+    it('should create an image from a Buffer', () => {
+      const input = Buffer.from('');
+      plugin.toImage(input).then(() => {
+        expect(jimpRead).to.have.been.calledWithExactly(input);
+      });
+    });
+
+    it('should reject unsupported types', () => {
+      return Promise.all([
+        expect(plugin.toImage()).to.eventually.be.rejectedWith(TypeError),
+        expect(plugin.toImage({})).to.eventually.be.rejectedWith(TypeError),
+        expect(plugin.toImage([])).to.eventually.be.rejectedWith(TypeError),
+        expect(plugin.toImage(null)).to.eventually.be.rejectedWith(TypeError),
+      ]);
+    });
+  });
+
   describe('matchImageOf', () => {
     let chaiCtx;
     let matchImageOf;
