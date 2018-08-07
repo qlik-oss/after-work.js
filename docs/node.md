@@ -57,6 +57,7 @@ describe('button', () => {
 <p>
 
 ```javascript
+const screenshotPlugin = require('@after-work.js/chai-plugin-screenshot');
 const sinon = require('sinon');
 const chai = require('chai');
 const sinonChai = require('sinon-chai');
@@ -70,6 +71,7 @@ global.expect = chai.expect;
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
 chai.use(chaiSubset);
+chai.Assertion.addMethod('matchImageOf', screenshotPlugin.matchImageOf);
 ```
 
 This enables writing your tests like this:
