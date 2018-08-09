@@ -46,7 +46,7 @@ describe('button', () => {
 
 ## Screenshot testing
 
-When using the preset-env option. A screenshot assertion plugin is added to Chai. This allows comperisons of images.
+When using the preset-env option. A screenshot assertion plugin is added to Chai. This allows comparisons of images.
 
 ```javascript
 describe('screenshot', () => {
