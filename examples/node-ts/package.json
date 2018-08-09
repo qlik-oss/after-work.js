@@ -1,0 +1,16 @@
+{
+  "name": "@after-work.js/example-node-ts",
+  "private": true,
+  "version": "5.0.0-beta.2",
+  "description": "Node example with typescript",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme"
+}

@@ -1,9 +1,8 @@
 {
-  "name": "@after-work.js/example-node",
+  "name": "@after-work.js/example-node-js",
   "private": true,
   "version": "5.0.0-beta.2",
-  "description": "File utils",
-  "main": "src/index.js",
+  "description": "Node example with javascript",
   "scripts": {
     "lint": "eslint test"
   },
