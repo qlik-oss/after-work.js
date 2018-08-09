@@ -1,8 +1,6 @@
 /* global browser */
 const utils = require('./utils');
 
-global.chai.Assertion.addMethod('matchImageOf', utils.matchImageOf);
-
 const screenshoter = {
   /**
      * Sets up plugins before tests are run. This is called after the WebDriver

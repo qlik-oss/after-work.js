@@ -1,0 +1,19 @@
+{
+  "name": "@after-work.js/chai-plugin-screenshot",
+  "private": true,
+  "version": "5.0.0-beta.2",
+  "description": "Chai assertion plugin for compering screenshots",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src"
+  },
+  "author": "QlikTech International AB",
+  "dependencies": {
+    "@after-work.js/utils": "^5.0.0-beta.2",
+    "jimp": "0.3.2",
+    "mkdirp": "0.5.1"
+  },
+  "files": [
+    "/src"
+  ]
+}

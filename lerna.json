@@ -3,7 +3,8 @@
   "packages": [
     "commands/*",
     "commands-common/*",
-    "examples/*"
+    "examples/*",
+    "plugins/*"
   ],
   "npmClient": "npm",
   "npmClientArgs": [
