@@ -50,9 +50,9 @@ When using the preset-env option. A screenshot assertion plugin is added to Chai
 
 ```javascript
 describe('screenshot', () => {
-  it('image should be equal', () => {
+  it('image should be equal', async () => {
     const img = Promise.resolve('<base64-encoded-image>'); //  Promise that resolves to Buffer or a base64 encoded image
-    expect(img).to.equal('<name-of-my-img-on-disk>', {
+    await expect(img).to.matchImageOf('<name-of-my-img-on-disk>', {
       artifactsPath: 'tests/__artifacts__',
       tolerance: 0.002
     });
