@@ -3,7 +3,7 @@
 ## From the project root run
 
 ```shell
-npm run test
+npm run test:node
 ```
 
 ![](./node.gif)

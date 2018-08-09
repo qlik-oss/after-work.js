@@ -18,7 +18,7 @@ function getBabelOpts(filename, argv) {
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   const { babel: { typescript } } = argv;
-  const { transform: { typescript: { compilerOptions, babelOptions } } } = argv;
+  const { transform: { typescript: { compilerOptions = {}, babelOptions = {} } = {} } = {} } = argv;
   const fileName = filePath;
   compilerOptions.sourceRoot = sourceRoot;
   compilerOptions.inlineSources = true;
