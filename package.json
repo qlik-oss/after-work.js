@@ -31,7 +31,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.10.0",
     "globby": "^8.0.1",
-    "lerna": "^2.11.0",
+    "lerna": "^3.0.3",
     "protractor": "^5.3.2",
     "requirejs": "2.3.5",
     "typescript": "3.0.1",
