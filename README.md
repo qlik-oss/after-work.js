@@ -89,16 +89,6 @@ The following tools are bundled into after-work.js:
 * [Sinon](http://sinonjs.org/): a framework for standalone test spies, stubs and mocks for JavaScript.
 * [Nyc](https://istanbul.js.org/): the Istanbul command line interface
 
-## Examples
-
-* [Node](./examples/node/README.md)
-
-Browser
-
-* [ES2015](./examples/es2015/README.md)
-* [Requirejs](./examples/requirejs/README.md)
-* [Typescript](./examples/typescript/README.md)
-
 ## Contributing
 
 Please follow the instructions in [CONTRIBUTING.md](.github/CONTRIBUTING.md).

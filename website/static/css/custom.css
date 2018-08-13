@@ -113,6 +113,7 @@ footer .sitemap {
   transition: all 0.1s ease-out;
   position: relative;
   top: 0;
+  padding: 4px;
 }
 
 .card:hover {
