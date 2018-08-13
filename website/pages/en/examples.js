@@ -10,7 +10,7 @@ const examplesPkgs = globby.sync(`${examplesPath}/*/README.md`);
 const examples = examplesPkgs.map((e) => {
   const dir = path.dirname(e);
   const base = path.basename(dir);
-  const baseUrl = 'https://github.com/qlik-oss/after-work.js';
+  const baseUrl = 'https://github.com/qlik-oss/after-work.js/tree/master';
   const examplePath = dir.slice(process.cwd().split('/website').shift().length);
   const gh = `${baseUrl}${examplePath}#${base}`;
   const node = base.startsWith('node');
