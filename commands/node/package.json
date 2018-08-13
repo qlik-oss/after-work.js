@@ -27,7 +27,7 @@
     "chokidar": "2.0.3",
     "globby": "8.0.1",
     "import-cwd": "2.1.0",
-    "jest-snapshot": "23.4.2",
+    "jest-snapshot": "23.5.0",
     "mocha": "5.2.0",
     "nyc": "13.0.1"
   },
