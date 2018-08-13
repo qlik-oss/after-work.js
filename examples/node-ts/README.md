@@ -1,0 +1,7 @@
+# node-ts
+
+## From the project root run
+
+```shell
+npx aw -c aw.config.js --scope @after-work.js/example-node-ts
+```

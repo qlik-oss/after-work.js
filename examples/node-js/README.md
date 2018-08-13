@@ -1,23 +1,7 @@
-# This is a sample for node and `after-work.js`
+# node-js
 
 ## From the project root run
 
 ```shell
-npm run test:node
+npx aw -c aw.config.js --scope @after-work.js/example-node-js
 ```
-
-![](./node.gif)
-
-Generate coverage
-
-```shell
-npm run test:coverage
-```
-
-![](./node-coverage.gif)
-
-```shell
-./src/cli.js -c aw.config.js --coverage -w
-```
-
-![](./node-coverage-watch.gif)
