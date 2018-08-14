@@ -20,8 +20,10 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "globby": "8.0.1",
-    "mocha": "5.2.0"
+    "@after-work.js/node": "5.0.0-beta.2",
+    "@after-work.js/utils": "5.0.0-beta.2",
+    "puppeteer-core": "1.7.0",
+    "chrome-launcher": "0.10.2"
   },
   "files": [
     "/src"

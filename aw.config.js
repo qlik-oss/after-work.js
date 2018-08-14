@@ -45,7 +45,7 @@ yargs
         });
     } else {
       [...scopes.keys()]
-        .filter(k => (!k.includes('example-chrome') && !k.includes('example-protractor')))
+        .filter(k => (!k.includes('example-chrome') && !k.includes('example-protractor') && !k.includes('example-puppeteer')))
         .map(k => scopes.get(k))
         .forEach((p) => {
           glob = [...glob, `${p}/test/**/*.spec.{js,ts}`];
