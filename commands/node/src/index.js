@@ -1,4 +1,5 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0 */
+const EventEmitter = require('events');
 const readline = require('readline');
 const globby = require('globby');
 const Mocha = require('mocha');
@@ -20,8 +21,9 @@ const getSourceContent = (filename) => {
   return fs.readFileSync(filename, 'utf8');
 };
 
-class Runner {
-  constructor(argv, libs) {
+class Runner extends EventEmitter {
+  constructor(argv, libs = { Mocha, NYC, importCwd, chokidar }) {
+    super();
     this.argv = argv;
     this.testFiles = [];
     this.onlyTestFiles = [];
@@ -200,7 +202,7 @@ class Runner {
     this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f));
     if (!this.testFiles.length) {
       console.log('No files found for:', this.argv.glob);
-      process.exit(1);
+      this.exit(1);
     }
     return this;
   }
@@ -225,13 +227,12 @@ class Runner {
 
   onFinished(failures) {
     this.isRunning = false;
+    this.emit('onFinished', failures);
     process.on('exit', () => {
-      // safeSaveCache();
-      process.exit(failures);
+      this.exit(failures);
     });
     if (this.argv.exit) {
-      // safeSaveCache();
-      process.exit();
+      this.exit();
     }
   }
 
@@ -267,6 +268,7 @@ class Runner {
     process.stdin.setEncoding('utf8');
     process.stdin.on('keypress', (str) => {
       if (str === '\u0003') {
+        this.emit('forceExit');
         process.exit(0);
       }
       if (this.isRunning) {
@@ -339,7 +341,7 @@ class Runner {
       if (this.argv.watch) {
         return;
       }
-      process.exit(1);
+      this.exit(1);
     }
   }
 
@@ -403,6 +405,10 @@ class Runner {
     }
     return this;
   }
+
+  exit(code) {
+    process.exit(code);
+  }
 }
 
 const configure = (configPath) => {
@@ -445,7 +451,7 @@ const node = {
     if (argv.presetEnv) {
       require(argv.presetEnv);
     }
-    const runner = new node.Runner(argv, { Mocha, NYC, importCwd, chokidar });
+    const runner = new node.Runner(argv);
     runner
       .addToMatchSnapshot()
       .autoDetectDebug()

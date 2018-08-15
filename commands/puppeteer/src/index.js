@@ -1,26 +1,20 @@
-/* eslint global-require: 0, no-console: 0, import/no-unresolved: 0, import/no-extraneous-dependencies: 0, import/no-dynamic-require: 0, max-len: 0 */
-const path = require('path');
-const fs = require('fs');
-const globby = require('globby');
-const Mocha = require('mocha');
-const options = require('./options');
+/* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0 */
+const chromeFinder = require('chrome-launcher/dist/chrome-finder');
+const { getPlatform } = require('chrome-launcher/dist/utils');
+const { Runner, configure } = require('@after-work.js/node/src/');
+const nodeOptions = require('@after-work.js/node/src/options');
+const utils = require('@after-work.js/utils');
+const puppetOptions = require('./options');
 
-process.on('unhandledRejection', (err) => {
-  console.error(`Promise Rejection:${err}`);
-});
+const options = Object.assign({}, nodeOptions, puppetOptions);
 
-function runTests(files, mochaOpts) {
-  return (resolve) => {
-    const mocha = new Mocha(mochaOpts);
-    files.forEach(f => mocha.addFile(f));
-    mocha.run((failures) => {
-      resolve(failures);
-    });
-  };
-}
-function run(files, mochaOpts) {
-  return new Promise(runTests(files, mochaOpts));
-}
+const getChromeExecutablePath = async () => {
+  const installations = await chromeFinder[getPlatform()]();
+  if (installations.length === 0) {
+    throw new Error('Chrome not installed');
+  }
+  return installations[0];
+};
 
 const puppet = {
   command: ['puppeteer', 'puppet'],
@@ -28,50 +22,52 @@ const puppet = {
   builder(yargs) {
     return yargs
       .options(options)
-      .config('config', (configPath) => {
-        if (configPath === null) {
-          return {};
+      .config('config', configure)
+      .coerce('babel', utils.coerceBabel)
+      .coerce('nyc', (opt) => {
+        if (opt.babel) {
+          // opt.require.push('babel-register');
+          opt.sourceMap = false; // eslint-disable-line no-param-reassign
+          opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
         }
-        if (!fs.existsSync(configPath)) {
-          throw new Error(`Config ${configPath} not found`);
-        }
-        let config = {};
-        const foundConfig = require(configPath);
-        if (typeof foundConfig === 'function') {
-          config = Object.assign({}, foundConfig());
-        } else {
-          config = Object.assign({}, foundConfig);
-        }
-        return config;
+        return opt;
       });
   },
   handler(argv) {
-    let puppeteer;
-    try {
-      puppeteer = require('puppeteer');
-    } catch (_) {
-      console.log('Could not load puppeteer');
-      const p = `${path.resolve(process.cwd())}/node_modules/puppeteer`;
-      console.log(`Trying: ${p}`);
-      try {
-        puppeteer = require(p);
-      } catch (__) {
-        console.log('Puppeteer could not be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json');
-        process.exit(1);
-      }
-    }
-    const files = globby.sync(argv.glob);
-    if (!files.length) {
-      console.log('No test files found for:', argv.glob);
-      process.exit(1);
-    }
     (async function launchAndRun() {
+      const puppeteer = require('puppeteer-core');
+      if (argv.presetEnv) {
+        require(argv.presetEnv);
+      }
+      const runner = new Runner(argv);
+      if (!argv.chrome.executablePath) {
+        argv.chrome.executablePath = await getChromeExecutablePath(); //eslint-disable-line
+      }
       const browser = await puppeteer.launch(argv.chrome);
       global.browser = browser;
       global.page = await browser.newPage();
-      const failures = await run(files, argv.mocha);
-      await browser.close();
-      process.exit(failures);
+      const closeBrowser = () => {
+        (async function close() {
+          await browser.close();
+        }());
+      };
+      runner.on('onFinished', failures => runner.exit(failures));
+      runner.on('forceExit', closeBrowser);
+      runner.exit = (code) => {
+        if (argv.watch) {
+          return;
+        }
+        process.exitCode = code;
+        closeBrowser();
+      };
+      runner
+        .addToMatchSnapshot()
+        .autoDetectDebug()
+        .setupKeyPress()
+        .setTestFiles()
+        .setSrcFiles()
+        .require()
+        .run();
     }());
   },
 };
