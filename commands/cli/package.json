@@ -7,7 +7,6 @@
   "description": "after-work.js command line interface",
   "main": "src/index.js",
   "scripts": {
-    "test": "./src/index.js -c aw.config.js --colors",
     "lint": "eslint src test"
   },
   "bin": {
