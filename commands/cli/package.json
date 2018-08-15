@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/cli",
-  "version": "5.0.0-beta.2",
+  "version": "5.0.0-beta.3",
   "publishConfig": {
     "access": "public"
   },
@@ -34,12 +34,12 @@
     "yargs": "11.0.0"
   },
   "devDependencies": {
-    "@after-work.js/cdp": "^5.0.0-beta.2",
-    "@after-work.js/node": "^5.0.0-beta.2",
-    "@after-work.js/protractor": "^5.0.0-beta.2",
-    "@after-work.js/puppeteer": "^5.0.0-beta.2",
-    "@after-work.js/serve": "^5.0.0-beta.2",
-    "@after-work.js/chai-plugin-screenshot": "^5.0.0-beta.2"
+    "@after-work.js/cdp": "^5.0.0-beta.3",
+    "@after-work.js/chai-plugin-screenshot": "^5.0.0-beta.3",
+    "@after-work.js/node": "^5.0.0-beta.3",
+    "@after-work.js/protractor": "^5.0.0-beta.3",
+    "@after-work.js/puppeteer": "^5.0.0-beta.3",
+    "@after-work.js/serve": "^5.0.0-beta.3"
   },
   "files": [
     "/src"
