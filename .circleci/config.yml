@@ -60,6 +60,14 @@ jobs:
       - run : node_modules/protractor/bin/webdriver-manager update --gecko false --versions.chrome 2.37
       - run: npm run test:protractor
 
+  test-puppeteer:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/after-work.js
+      - run: npm run bootstrap
+      - run: npm run test:puppeteer
+
   test-node-coverage:
     <<: *defaults
     steps:
@@ -85,6 +93,9 @@ workflows:
           requires:
             - install
       - test-protractor:
+          requires:
+            - install
+      - test-puppeteer:
           requires:
             - install
       - test-node-coverage:
