@@ -7,7 +7,6 @@
   "description": "Run tests in Node",
   "main": "src/index.js",
   "scripts": {
-    "test": "../cli/src/index.js -c ../../aw.config.js -p node --colors",
     "lint": "eslint src test"
   },
   "repository": {
