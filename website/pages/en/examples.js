@@ -16,6 +16,7 @@ const examples = examplesPkgs.map((e) => {
   const node = base.startsWith('node');
   const chrome = base.startsWith('chrome');
   const ptor = base.startsWith('protractor');
+  const puppet = base.startsWith('puppeteer');
   const r = base.startsWith('react');
   const js = base.endsWith('js');
   const ts = base.endsWith('ts');
@@ -41,6 +42,10 @@ const examples = examplesPkgs.map((e) => {
   if (ptor) {
     imgs.push('img/protractor.svg');
     title = 'Protractor';
+  }
+  if (puppet) {
+    imgs.push('https://user-images.githubusercontent.com/10379601/29446482-04f7036a-841f-11e7-9872-91d1fc2ea683.png');
+    title = 'Puppeteer';
   }
   if (r) {
     imgs.push('img/react.svg');
