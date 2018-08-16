@@ -374,14 +374,14 @@ class Runner extends EventEmitter {
     }
     const isTestFile = this.testFiles.indexOf(f) !== -1;
     const isSrcFile = this.srcFiles.indexOf(f) !== -1;
-    if (!isTestFile && !isSrcFile) {
-      return;
-    }
     this.all = false;
     if (isTestFile) {
       this.setOnlyFilesFromTestFile(f);
-    } else {
+    } else if (isSrcFile) {
       this.setOnlyFilesFromSrcFile(f);
+    } else {
+      this.onlySrcFiles = this.srcFiles;
+      this.onlyTestFiles = this.testFiles;
     }
     this.setupAndRunTests(this.onlyTestFiles, this.onlySrcFiles);
   }
