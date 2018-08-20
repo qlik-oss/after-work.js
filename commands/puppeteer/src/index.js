@@ -1,4 +1,4 @@
-/* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0 */
+/* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0, max-len: 0 */
 const chromeFinder = require('chrome-launcher/dist/chrome-finder');
 const { getPlatform } = require('chrome-launcher/dist/utils');
 const { Runner, configure } = require('@after-work.js/node/src/');
@@ -8,15 +8,57 @@ const puppetOptions = require('./options');
 
 const options = Object.assign({}, nodeOptions, puppetOptions);
 
-const getChromeExecutablePath = async () => {
-  const installations = await chromeFinder[getPlatform()]();
-  if (installations.length === 0) {
-    throw new Error('Chrome not installed');
+class PuppetRunner extends Runner {
+  constructor(puppeteer, argv, libs) {
+    super(argv, libs);
+    this.puppeteer = puppeteer;
+    this.on('onFinished', failures => this.exit(failures));
+    this.on('forceExit', () => this.closeBrowser());
   }
-  return installations[0];
-};
+
+  async getChromeExecutablePath() {
+    const installations = await chromeFinder[getPlatform()]();
+    if (installations.length === 0) {
+      throw new Error('Chrome not installed');
+    }
+    return installations.pop(); // If you have multiple installed chromes return regular chrome
+  }
+
+  async launch() {
+    if (!this.argv.chrome.executablePath) {
+      this.argv.chrome.executablePath = await this.getChromeExecutablePath();
+    }
+    if (this.argv.chrome.slowMo && this.argv.chrome.slowMo > 0) {
+      this.argv.mocha.enableTimeouts = false;
+    }
+
+    this.browser = await this.puppeteer.launch(this.argv.chrome);
+    global.browser = this.browser;
+    const pages = await this.browser.pages();
+    if (pages.length) {
+      global.page = pages.shift();
+    } else {
+      global.page = await this.browser.newPage();
+    }
+  }
+
+  closeBrowser() {
+    (async () => {
+      await this.browser.close();
+    })();
+  }
+
+  exit(code) {
+    if (this.argv.watch) {
+      return;
+    }
+    process.exitCode = code;
+    this.closeBrowser();
+  }
+}
 
 const puppet = {
+  Runner: PuppetRunner,
   command: ['puppeteer', 'puppet'],
   desc: 'Run tests with puppeteer',
   builder(yargs) {
@@ -26,7 +68,6 @@ const puppet = {
       .coerce('babel', utils.coerceBabel)
       .coerce('nyc', (opt) => {
         if (opt.babel) {
-          // opt.require.push('babel-register');
           opt.sourceMap = false; // eslint-disable-line no-param-reassign
           opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
         }
@@ -39,27 +80,8 @@ const puppet = {
       if (argv.presetEnv) {
         require(argv.presetEnv);
       }
-      const runner = new Runner(argv);
-      if (!argv.chrome.executablePath) {
-        argv.chrome.executablePath = await getChromeExecutablePath(); //eslint-disable-line
-      }
-      const browser = await puppeteer.launch(argv.chrome);
-      global.browser = browser;
-      global.page = await browser.newPage();
-      const closeBrowser = () => {
-        (async function close() {
-          await browser.close();
-        }());
-      };
-      runner.on('onFinished', failures => runner.exit(failures));
-      runner.on('forceExit', closeBrowser);
-      runner.exit = (code) => {
-        if (argv.watch) {
-          return;
-        }
-        process.exitCode = code;
-        closeBrowser();
-      };
+      const runner = new PuppetRunner(puppeteer, argv);
+      await runner.launch();
       runner
         .addToMatchSnapshot()
         .autoDetectDebug()
