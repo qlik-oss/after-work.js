@@ -6,7 +6,7 @@ const FileCache = require('./file-cache');
 const fileCache = new FileCache();
 
 function getBabelOpts(filename, argv) {
-  const { options: { sourceRoot, only, ignore }, babelPluginIstanbul } = argv.babel;
+  const { options: { sourceRoot, only, ignore } = {}, babelPluginIstanbul } = argv.babel;
   const addCoverage = argv.instrument.testExclude.shouldInstrument(filename);
   const plugins = addCoverage
     ? [[babelPluginIstanbul, {}]]
