@@ -13,7 +13,7 @@ install:
   - npm --version
   # install modules
   - npm install
-  - npm run bootstrap
+  - npm run bootstrap -- --no-ci
 
 # Post-install test scripts.
 test_script:
