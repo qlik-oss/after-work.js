@@ -19,6 +19,7 @@ install:
 test_script:
   # run tests
   - npm run test:node
+  - npm run test:chrome
 
 # Don't actually build.
 build: off
