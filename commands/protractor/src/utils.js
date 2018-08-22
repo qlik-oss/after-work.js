@@ -35,7 +35,7 @@ module.exports = {
   logSeleniumNodeInfo(config) {
     browser.getSession().then((session) => {
       const sessionId = session.getId();
-      console.log(`WebDriverSessionID: ${sessionId}`); // eslint-disable-line no-console
+      console.log(`WebDriverSessionID: ${sessionId}`);
 
       if (!config.seleniumAddress || config.seleniumAddress.trim() === '') {
         return;
@@ -53,7 +53,7 @@ module.exports = {
           if (res.statusCode >= 300) {
             result = result[0].errorText;
             if (result) {
-              console.error(result); // eslint-disable-line no-console
+              console.error(result);
             }
             return;
           }
@@ -66,13 +66,13 @@ module.exports = {
             browser.params.grid.extraUrl = `${nodeUrl}:3000`;
             browser.params.grid.extraVideo = `${nodeUrl}:3000/download_video/${sessionId}.mp4`;
 
-            console.log(`Selenium Node Console: ${result.proxyId}/wd/hub/static/resource/hub.html`); // eslint-disable-line no-console
-            console.log(`Grid Extra Node: ${browser.params.grid.extraUrl}`); // eslint-disable-line no-console
-            console.log(`Grid Extra Video: ${browser.params.grid.extraVideo}`); // eslint-disable-line no-console
+            console.log(`Selenium Node Console: ${result.proxyId}/wd/hub/static/resource/hub.html`);
+            console.log(`Grid Extra Node: ${browser.params.grid.extraUrl}`);
+            console.log(`Grid Extra Video: ${browser.params.grid.extraVideo}`);
           }
         });
       }).on('error', (e) => {
-        console.error(e); // eslint-disable-line no-console
+        console.error(e);
       });
     });
   },

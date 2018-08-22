@@ -78,7 +78,7 @@ class Runner extends EventEmitter {
           snapshotState,
           currentTestName,
         });
-        const result = matcher(this._obj); // eslint-disable-line no-underscore-dangle
+        const result = matcher(this._obj);
         snapshotState.save();
         this.assert(
           result.pass,
@@ -124,46 +124,23 @@ class Runner extends EventEmitter {
     utils.clearLine();
   }
 
-  matchDependency(found, testName) {
-    let use = found;
-    if (found.length > 1) {
-      const matchName = found.filter(id => path.basename(id).split('.').shift() === testName);
-      if (matchName.length === 1) {
-        use = matchName;
-      } else {
-        use = found.splice(0, 1);
-      }
-    }
-    return use;
-  }
-
   safeDeleteCache(f) {
     if (/after-work.js\/*(commands|command-utils)\/*(cli|transform)\/src\/index.js$/.test(f)) {
       return;
     }
-    if (require.cache[f]) {
-      delete require.cache[f];
-    }
-  }
-
-  safeRequireCache(f) {
-    try {
-      require(`${f}`);
-      return require.cache[f];
-    } catch (_) { } //eslint-disable-line
-    return { children: [] };
+    utils.safeDeleteCache(f);
   }
 
   setOnlyFilesFromTestFile(testFile) {
     const testName = path.basename(testFile).split('.').shift();
     this.safeDeleteCache(testFile);
     deleteTransform(testFile);
-    const mod = this.safeRequireCache(testFile);
+    const mod = utils.safeRequireCache(testFile);
     const found = mod
       .children
       .filter(m => this.srcFiles.indexOf(m.id) !== -1)
       .map(m => m.id);
-    const use = this.matchDependency(found, testName);
+    const use = utils.matchDependency(found, testName);
     this.onlyTestFiles = [testFile];
     this.onlySrcFiles = [...new Set([...use])];
   }
@@ -171,12 +148,12 @@ class Runner extends EventEmitter {
   setOnlyFilesFromSrcFile(srcFile) {
     const srcName = path.basename(srcFile).split('.').shift();
     const found = this.testFiles.filter((f) => {
-      const mod = this.safeRequireCache(f);
+      const mod = utils.safeRequireCache(f);
       return mod
         .children
         .filter(m => m.id === srcFile).length !== 0;
     });
-    const use = this.matchDependency(found, srcName);
+    const use = utils.matchDependency(found, srcName);
     this.onlyTestFiles = [...new Set([...use])];
     this.onlySrcFiles = [srcFile];
   }
@@ -204,7 +181,7 @@ class Runner extends EventEmitter {
   }
 
   deleteCoverage() {
-    delete global.__coverage__; // eslint-disable-line
+    delete global.__coverage__;
     return this;
   }
 
@@ -423,8 +400,8 @@ const node = {
       .coerce('babel', utils.coerceBabel)
       .coerce('nyc', (opt) => {
         if (opt.babel) {
-          opt.sourceMap = false; // eslint-disable-line no-param-reassign
-          opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
+          opt.sourceMap = false;
+          opt.instrumenter = './lib/instrumenters/noop';
         }
         return opt;
       });

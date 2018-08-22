@@ -50,7 +50,7 @@ const utils = {
     let found = importCwd.silent(name);
     if (!found) {
       try {
-        found = require(name); // eslint-disable-line
+        found = require(name);
       } catch (err) {
         found = null;
       }
@@ -59,7 +59,7 @@ const utils = {
   },
   coerceBabel(opt) {
     if (opt.enable && opt.core && typeof opt.core === 'string') {
-      opt.babel = importCwd(opt.core); // eslint-disable-line no-param-reassign
+      opt.babel = importCwd(opt.core);
     } else if (opt.enable && !opt.core) {
       let core = utils.safeGetModule('@babel/core');
       if (!core) {
@@ -68,13 +68,13 @@ const utils = {
           throw new Error('Can not get babel core module');
         }
       }
-      opt.babel = core; // eslint-disable-line no-param-reassign
+      opt.babel = core;
     }
     if (typeof opt.babelPluginIstanbul === 'string') {
-      opt.babelPluginIstanbul = importCwd(opt.babelPluginIstanbul).default; // eslint-disable-line no-param-reassign, max-len
+      opt.babelPluginIstanbul = importCwd(opt.babelPluginIstanbul).default;
     }
     if (typeof opt.typescript === 'string') {
-      opt.typescript = importCwd.silent(opt.typescript); // eslint-disable-line no-param-reassign
+      opt.typescript = importCwd.silent(opt.typescript);
     }
     return opt;
   },

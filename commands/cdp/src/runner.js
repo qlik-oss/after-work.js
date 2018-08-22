@@ -82,7 +82,7 @@ class Runner {
       if (!this.client) {
         return;
       }
-      const columns = parseInt(process.env.COLUMNS || process.stdout.columns) * 0.75 | 0; // eslint-disable-line
+      const columns = parseInt(process.env.COLUMNS || process.stdout.columns) * 0.75 | 0;
       const expression = `Mocha.reporters.Base.window.width = ${columns};`;
       this.client.Runtime.evaluate({ expression });
     });
@@ -128,10 +128,10 @@ class Runner {
         return;
       }
       if (type === 'warning') {
-        type = 'warn'; // eslint-disable-line no-param-reassign
+        type = 'warn';
       }
       if (!(type in console)) {
-        type = 'log'; // eslint-disable-line no-param-reassign
+        type = 'log';
       }
       const data = args.map(arg => (arg.type === 'string' ? arg.value : unmirror(arg)));
       console[type](...data);
@@ -339,13 +339,13 @@ class Runner {
   setUrl(url) {
     if (!/^(file|http(s?)):\/\//.test(url)) {
       if (!fs.existsSync(url)) {
-        url = `file://${path.resolve(path.join(process.cwd(), url))}`; // eslint-disable-line no-param-reassign
+        url = `file://${path.resolve(path.join(process.cwd(), url))}`;
       }
       if (!fs.existsSync(url)) {
         console.error('You must specify an existing url.');
         process.exit(1);
       }
-      url = `file://${fs.realpathSync(url)}`; // eslint-disable-line no-param-reassign
+      url = `file://${fs.realpathSync(url)}`;
     }
     this.argv.url = url;
     return this;

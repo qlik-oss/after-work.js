@@ -65,7 +65,7 @@ describe('Reporter index', () => {
       runner.on.withArgs('pass').callsArgWith(1, test);
       uiReport.call(uiReport, runner, options);
       expect(runner.on).to.be.calledWith('pass', sinon.match.func);
-      expect(console.log).to.be.calledWith(sinon.match(' √ PASSED:')); // eslint-disable-line no-console
+      expect(console.log).to.be.calledWith(sinon.match(' √ PASSED:'));
       log.restore();
     });
 
@@ -90,7 +90,7 @@ describe('Reporter index', () => {
       runner.on.withArgs('fail').callsArgWith(1, test, err);
       uiReport.call(uiReport, runner, options);
       expect(runner.on).to.be.calledWith('fail', sinon.match.func);
-      expect(console.log).to.be.calledWith(sinon.match(' X FAILED:')); // eslint-disable-line no-console
+      expect(console.log).to.be.calledWith(sinon.match(' X FAILED:'));
       log.restore();
     });
 
@@ -99,7 +99,7 @@ describe('Reporter index', () => {
       runner.once.withArgs('end').callsArgOn(1, runner);
       uiReport.call(uiReport, runner, options);
       expect(runner.once).to.be.calledWith('end', sinon.match.func);
-      expect(console.log).to.be.calledWith(sinon.match(' Σ SUMMARY:')); // eslint-disable-line no-console
+      expect(console.log).to.be.calledWith(sinon.match(' Σ SUMMARY:'));
       log.restore();
     });
   });

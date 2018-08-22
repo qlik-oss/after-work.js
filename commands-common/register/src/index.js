@@ -1,4 +1,4 @@
-/* eslint global-require: 0, import/no-dynamic-require: 0, class-methods-use-this: 0 */
+/* global aw */
 
 const path = require('path');
 const fs = require('fs');
@@ -10,7 +10,7 @@ const mod = require('module');
 const requireFromString = require('require-from-string');
 const utils = require('@after-work.js/utils');
 
-const originLoader = mod._load; //eslint-disable-line
+const originLoader = mod._load;
 let removeCompileHook = () => { };
 let removeLoadHook = () => { };
 
@@ -55,13 +55,13 @@ function compile(value, filename, options, injectReact) {
 function hookedLoader(options, request, parent, isMain) {
   let filename;
   try {
-    filename = mod._resolveFilename(request, parent); // eslint-disable-line
+    filename = mod._resolveFilename(request, parent);
   } catch (err) {
     filename = request;
   }
 
   // Explicit mocks in modules e.g aw.mock(...)
-  for (let [key, [value, injectReact]] of aw.mocks) { // eslint-disable-line
+  for (let [key, [value, injectReact]] of aw.mocks) {
     if (minimatch(filename, key)) {
       if (value === undefined && fs.existsSync(filename)) {
         const src = fs.readFileSync(filename, 'utf8');
@@ -72,8 +72,8 @@ function hookedLoader(options, request, parent, isMain) {
   }
 
   // Global config mocks
-  for (const item of options.mocks || []) { // eslint-disable-line
-    let [key, value] = item; //eslint-disable-line
+  for (const item of options.mocks || []) {
+    let [key, value] = item;
     if (minimatch(filename, key)) {
       if (value === undefined && fs.existsSync(filename)) {
         const src = fs.readFileSync(filename, 'utf8');
@@ -87,9 +87,9 @@ function hookedLoader(options, request, parent, isMain) {
 
 function addLoadHook(options) {
   const loadHook = hookedLoader.bind(null, options);
-  mod._load = loadHook; //eslint-disable-line
+  mod._load = loadHook;
   return () => {
-    mod._load = originLoader; //eslint-disable-line
+    mod._load = originLoader;
   };
 }
 
@@ -143,7 +143,7 @@ class AW {
     const mods = reqs.map((r) => {
       const p = require.resolve(path.resolve(path.dirname(filename), r));
       const m = require(p);
-      return m.__esModule && m.default ? m.default : m; // eslint-disable-line no-underscore-dangle
+      return m.__esModule && m.default ? m.default : m;
     });
 
     mocks.forEach(([key]) => this.mocks.delete(key));

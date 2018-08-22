@@ -1,5 +1,3 @@
-/* eslint import/no-extraneous-dependencies: 0, prefer-destructuring: 0, no-param-reassign: 0, no-unused-expressions: 0, max-len: 0 */
-
 const yargs = require('yargs');
 const path = require('path');
 const globby = require('globby');
@@ -22,7 +20,7 @@ yargs
   .coerce('scope', (scope) => {
     const scopes = new Map();
     globby.sync(packages.map(p => `${p}/package.json`)).forEach((p) => {
-      const { name } = require(`./${p}`); //eslint-disable-line
+      const { name } = require(`./${p}`);
       const pkgPath = path.dirname(p);
       scopes.set(name, pkgPath);
     });

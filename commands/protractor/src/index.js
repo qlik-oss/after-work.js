@@ -30,7 +30,7 @@ const protractor = {
       .coerce('typescript', utils.coerceTypescript);
   },
   handler(argv) {
-    argv.instrument = { //eslint-disable-line
+    argv.instrument = {
       testExclude: {
         shouldInstrument() {
           return false;

@@ -1,4 +1,4 @@
-import virtual from './foobar-virtual.html'; // eslint-disable-line
+import virtual from './foobar-virtual.html';
 import template from './foobar.html';
 
 describe('html', () => {

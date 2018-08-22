@@ -80,10 +80,10 @@ describe('Node command', () => {
 
   it('should delete coverage', () => {
     const runner = new Runner({});
-    const cov = global.__coverage__ // eslint-disable-line
+    const cov = global.__coverage__;
     runner.deleteCoverage();
-    expect(global.__coverage__).to.eql(undefined); // eslint-disable-line
-    global.__coverage__ = cov; // eslint-disable-line
+    expect(global.__coverage__).to.eql(undefined);
+    global.__coverage__ = cov;
   });
 
   describe('Run tests', () => {

@@ -38,7 +38,7 @@ module.exports = function initConfig(baseConfig) {
     beforeLaunch() { },
     onComplete() {
       browser.manage().logs().get('browser').then((browserLog) => {
-        console.log(`log: ${util.inspect(browserLog)}`); //eslint-disable-line
+        console.log(`log: ${util.inspect(browserLog)}`);
       });
     },
   };

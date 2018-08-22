@@ -14,7 +14,7 @@ const tryAddCommand = (m) => {
   let cmd = null;
   try {
     // First try local (enables running aw from src)
-    cmd = require(m); //eslint-disable-line
+    cmd = require(m);
   } catch (e) {
     // Try installed
     cmd = importCwd.silent(m);

@@ -30,7 +30,7 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   }
   const transpileOpts = { fileName, compilerOptions };
   const res = typescript.transpileModule(tsContent, transpileOpts);
-  tsContent = res.outputText; // eslint-disable-line no-param-reassign
+  tsContent = res.outputText;
   let tsBabelOpts = {
     sourceMaps: 'both',
   };
@@ -48,12 +48,12 @@ function transformFile(filename, argv, content = null) {
     return cachedTransform.map;
   }
   if (!content) {
-    filename = ensureFilePath(filename); // eslint-disable-line no-param-reassign
+    filename = ensureFilePath(filename);
     const cachedTransform = fileCache.getSync(filename, argv);
     if (cachedTransform) {
       return cachedTransform.code;
     }
-    content = fs.readFileSync(filename, 'utf8'); // eslint-disable-line no-param-reassign
+    content = fs.readFileSync(filename, 'utf8');
   }
   const cachedTransform = fileCache.getSync(filename, argv);
   if (cachedTransform) {
@@ -61,8 +61,8 @@ function transformFile(filename, argv, content = null) {
   }
   let babelOpts = getBabelOpts(filename, argv);
   if (isTypescript(filename)) {
-    const { tsContent, tsBabelOpts } = transformTypescript(filename, babelOpts.sourceRoot, content, argv); // eslint-disable-line
-    content = tsContent; // eslint-disable-line no-param-reassign
+    const { tsContent, tsBabelOpts } = transformTypescript(filename, babelOpts.sourceRoot, content, argv);
+    content = tsContent;
     babelOpts = Object.assign({}, babelOpts, tsBabelOpts);
   }
   babelOpts.ast = false;
