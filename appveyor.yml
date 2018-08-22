@@ -6,18 +6,26 @@ environment:
 
 # Install scripts. (runs after repo cloning)
 install:
+  # Install latest chrome
+  - choco install googlechrome
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
-  # install modules
-  - npm install
-
-# Post-install test scripts.
-test_script:
   # Output useful info for debugging.
   - node --version
   - npm --version
+  # install modules
+  - npm install
+  - npm run bootstrap -- --no-ci
+
+# Post-install test scripts.
+test_script:
+  - npm run lint
   # run tests
-  - npm test
+  - npm run test:node
+  - npm run test:chrome
+  - npx webdriver-manager update --gecko false
+  - npm run test:protractor -- --directConnect
+  - npm run test:puppeteer
 
 # Don't actually build.
 build: off
