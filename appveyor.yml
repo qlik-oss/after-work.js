@@ -8,15 +8,15 @@ environment:
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
   # install modules
   - npm install
   - npm run bootstrap
 
 # Post-install test scripts.
 test_script:
-  # Output useful info for debugging.
-  - node --version
-  - npm --version
   # run tests
   - npm run test:node
 
