@@ -46,24 +46,7 @@ class Runner extends EventEmitter {
     if (chai) {
       // eslint-disable-next-line prefer-arrow-callback
       chai.Assertion.addMethod('toMatchSnapshot', function chaiToMatchSnapshot() {
-        // Magically figure out the current test from the stack trace (callsites not working with sourcemaps)
-        const s = new Error().stack
-          .split('\n')
-          .slice(1)
-          .map(c => c.split(/\(([^)]+)\)/)[1])
-          .filter(c => c !== undefined)
-          .map((c) => {
-            const parts = c.split(':');
-            const columnno = parts.pop();
-            const lineno = parts.pop();
-            const filename = path.resolve(parts.join(':'));
-            return [filename, lineno, columnno];
-          })
-          .filter(([filename]) => runner.testFiles.indexOf(filename) !== -1);
-        if (!s.length) {
-          throw new Error('Can not find test file');
-        }
-        const [filename, lineno] = s.shift();
+        const [filename, lineno] = utils.getCurrentFilenameStackInfo(runner.testFiles);
         const src = getSourceContent(filename);
         const lines = src.split('\n');
 
@@ -214,7 +197,7 @@ class Runner extends EventEmitter {
 
   require() {
     if (!this.argv.coverage) {
-      this.setupBabel();
+      this.register();
     }
     this.argv.require.forEach(m => this.libs.importCwd(m));
     return this;
@@ -285,9 +268,9 @@ class Runner extends EventEmitter {
     return this;
   }
 
-  setupBabel() {
+  register() {
     if (this.argv.hookRequire) {
-      require('@after-work.js/register')(this.argv);
+      require('@after-work.js/register')(this.argv, this.srcFiles, this.testFiles);
     }
   }
 
@@ -298,7 +281,7 @@ class Runner extends EventEmitter {
       if (!this.isWrapped) {
         this.nyc.wrap();
         this.isWrapped = true;
-        this.setupBabel();
+        this.register();
       }
     }
     testFiles.forEach((f) => {
@@ -440,7 +423,6 @@ const node = {
       .coerce('babel', utils.coerceBabel)
       .coerce('nyc', (opt) => {
         if (opt.babel) {
-          // opt.require.push('babel-register');
           opt.sourceMap = false; // eslint-disable-line no-param-reassign
           opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
         }

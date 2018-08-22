@@ -39,9 +39,10 @@ class FileCache {
       transform,
     } = options;
     transformItem.hash = this.getCacheHash(filename, { ...babelOptions, ...instrument, ...transform }); // eslint-disable-line no-param-reassign
-    if (!virtualMock) {
-      transformItem.mtime = +fs.statSync(filename).mtime; // eslint-disable-line no-param-reassign
+    if (virtualMock) {
+      return;
     }
+    transformItem.mtime = +fs.statSync(filename).mtime; // eslint-disable-line no-param-reassign
     this.transform.set(filename, transformItem);
     this.safeSaveCacheSync(filename);
   }
