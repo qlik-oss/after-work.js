@@ -1,7 +1,7 @@
 {
   "name": "@after-work.js/example-node-js",
   "private": true,
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.6",
   "description": "Node example with javascript",
   "scripts": {
     "lint": "eslint test"

@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/cdp",
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.6",
   "publishConfig": {
     "access": "public"
   },
@@ -20,9 +20,9 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/server": "5.0.0-beta.5",
-    "@after-work.js/transform": "5.0.0-beta.5",
-    "@after-work.js/utils": "5.0.0-beta.5",
+    "@after-work.js/server": "^5.0.0-beta.6",
+    "@after-work.js/transform": "^5.0.0-beta.6",
+    "@after-work.js/utils": "^5.0.0-beta.6",
     "chokidar": "2.0.4",
     "chrome-launcher": "0.10.2",
     "chrome-remote-interface": "0.26.1",

@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/puppeteer",
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.6",
   "publishConfig": {
     "access": "public"
   },
@@ -20,8 +20,8 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/node": "5.0.0-beta.5",
-    "@after-work.js/utils": "5.0.0-beta.5",
+    "@after-work.js/node": "^5.0.0-beta.6",
+    "@after-work.js/utils": "^5.0.0-beta.6",
     "chrome-launcher": "0.10.2",
     "puppeteer-core": "1.7.0"
   },
