@@ -20,13 +20,13 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/transform-middleware": "^5.0.0-beta.5",
-    "@after-work.js/utils": "^5.0.0-beta.5",
+    "@after-work.js/transform-middleware": "5.0.0-beta.5",
+    "@after-work.js/utils": "5.0.0-beta.5",
     "import-cwd": "2.1.0",
     "koa": "2.5.2",
     "koa-favicon": "2.0.1",
     "koa-rewrite": "3.0.1",
-    "koa-static": "4.0.3",
+    "koa-static": "5.0.0",
     "test-exclude": "4.2.1"
   },
   "files": [

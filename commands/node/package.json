@@ -20,15 +20,15 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/register": "^5.0.0-beta.5",
-    "@after-work.js/transform": "^5.0.0-beta.5",
-    "@after-work.js/utils": "^5.0.0-beta.5",
-    "chokidar": "2.0.3",
+    "@after-work.js/register": "5.0.0-beta.5",
+    "@after-work.js/transform": "5.0.0-beta.5",
+    "@after-work.js/utils": "5.0.0-beta.5",
+    "chokidar": "2.0.4",
     "globby": "8.0.1",
     "import-cwd": "2.1.0",
     "jest-snapshot": "23.5.0",
     "mocha": "5.2.0",
-    "nyc": "13.0.1"
+    "nyc": "12.0.2"
   },
   "files": [
     "/src"
