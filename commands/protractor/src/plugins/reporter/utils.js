@@ -22,7 +22,6 @@ const utils = {
     return repoInfo;
   },
   cleanCode(str) {
-    // eslint-disable-next-line no-param-reassign
     str = str
       .replace(/\r\n?|[\n\u2028\u2029]/g, '\n')
       .replace(/^\uFEFF/, '')
@@ -33,8 +32,8 @@ const utils = {
     const tabs = str.match(/^\n?(\t*)/)[1].length;
     const re = new RegExp(`^\n?${tabs ? '\t' : ' '}{${tabs || spaces}}`, 'gm');
 
-    str = str.replace(re, ''); // eslint-disable-line no-param-reassign
-    str = str.replace(/^\s+|\s+$/g, ''); // eslint-disable-line no-param-reassign
+    str = str.replace(re, '');
+    str = str.replace(/^\s+|\s+$/g, '');
     return str;
   },
   errorJSON(err) {

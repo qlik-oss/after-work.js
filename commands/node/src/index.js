@@ -46,24 +46,7 @@ class Runner extends EventEmitter {
     if (chai) {
       // eslint-disable-next-line prefer-arrow-callback
       chai.Assertion.addMethod('toMatchSnapshot', function chaiToMatchSnapshot() {
-        // Magically figure out the current test from the stack trace (callsites not working with sourcemaps)
-        const s = new Error().stack
-          .split('\n')
-          .slice(1)
-          .map(c => c.split(/\(([^)]+)\)/)[1])
-          .filter(c => c !== undefined)
-          .map((c) => {
-            const parts = c.split(':');
-            const columnno = parts.pop();
-            const lineno = parts.pop();
-            const filename = path.resolve(parts.join(':'));
-            return [filename, lineno, columnno];
-          })
-          .filter(([filename]) => runner.testFiles.indexOf(filename) !== -1);
-        if (!s.length) {
-          throw new Error('Can not find test file');
-        }
-        const [filename, lineno] = s.shift();
+        const [filename, lineno] = utils.getCurrentFilenameStackInfo(runner.testFiles);
         const src = getSourceContent(filename);
         const lines = src.split('\n');
 
@@ -95,7 +78,7 @@ class Runner extends EventEmitter {
           snapshotState,
           currentTestName,
         });
-        const result = matcher(this._obj); // eslint-disable-line no-underscore-dangle
+        const result = matcher(this._obj);
         snapshotState.save();
         this.assert(
           result.pass,
@@ -141,46 +124,23 @@ class Runner extends EventEmitter {
     utils.clearLine();
   }
 
-  matchDependency(found, testName) {
-    let use = found;
-    if (found.length > 1) {
-      const matchName = found.filter(id => path.basename(id).split('.').shift() === testName);
-      if (matchName.length === 1) {
-        use = matchName;
-      } else {
-        use = found.splice(0, 1);
-      }
-    }
-    return use;
-  }
-
   safeDeleteCache(f) {
     if (/after-work.js\/*(commands|command-utils)\/*(cli|transform)\/src\/index.js$/.test(f)) {
       return;
     }
-    if (require.cache[f]) {
-      delete require.cache[f];
-    }
-  }
-
-  safeRequireCache(f) {
-    try {
-      require(`${f}`);
-      return require.cache[f];
-    } catch (_) { } //eslint-disable-line
-    return { children: [] };
+    utils.safeDeleteCache(f);
   }
 
   setOnlyFilesFromTestFile(testFile) {
     const testName = path.basename(testFile).split('.').shift();
     this.safeDeleteCache(testFile);
     deleteTransform(testFile);
-    const mod = this.safeRequireCache(testFile);
+    const mod = utils.safeRequireCache(testFile);
     const found = mod
       .children
       .filter(m => this.srcFiles.indexOf(m.id) !== -1)
       .map(m => m.id);
-    const use = this.matchDependency(found, testName);
+    const use = utils.matchDependency(found, testName);
     this.onlyTestFiles = [testFile];
     this.onlySrcFiles = [...new Set([...use])];
   }
@@ -188,12 +148,12 @@ class Runner extends EventEmitter {
   setOnlyFilesFromSrcFile(srcFile) {
     const srcName = path.basename(srcFile).split('.').shift();
     const found = this.testFiles.filter((f) => {
-      const mod = this.safeRequireCache(f);
+      const mod = utils.safeRequireCache(f);
       return mod
         .children
         .filter(m => m.id === srcFile).length !== 0;
     });
-    const use = this.matchDependency(found, srcName);
+    const use = utils.matchDependency(found, srcName);
     this.onlyTestFiles = [...new Set([...use])];
     this.onlySrcFiles = [srcFile];
   }
@@ -214,14 +174,14 @@ class Runner extends EventEmitter {
 
   require() {
     if (!this.argv.coverage) {
-      this.setupBabel();
+      this.register();
     }
     this.argv.require.forEach(m => this.libs.importCwd(m));
     return this;
   }
 
   deleteCoverage() {
-    delete global.__coverage__; // eslint-disable-line
+    delete global.__coverage__;
     return this;
   }
 
@@ -285,9 +245,9 @@ class Runner extends EventEmitter {
     return this;
   }
 
-  setupBabel() {
+  register() {
     if (this.argv.hookRequire) {
-      require('@after-work.js/register')(this.argv);
+      require('@after-work.js/register')(this.argv, this.srcFiles, this.testFiles);
     }
   }
 
@@ -298,7 +258,7 @@ class Runner extends EventEmitter {
       if (!this.isWrapped) {
         this.nyc.wrap();
         this.isWrapped = true;
-        this.setupBabel();
+        this.register();
       }
     }
     testFiles.forEach((f) => {
@@ -440,9 +400,8 @@ const node = {
       .coerce('babel', utils.coerceBabel)
       .coerce('nyc', (opt) => {
         if (opt.babel) {
-          // opt.require.push('babel-register');
-          opt.sourceMap = false; // eslint-disable-line no-param-reassign
-          opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
+          opt.sourceMap = false;
+          opt.instrumenter = './lib/instrumenters/noop';
         }
         return opt;
       });

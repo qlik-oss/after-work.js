@@ -1,0 +1,137 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`'renders fancy with button as is from import' 1`] = `
+<div>
+  <button>
+    fancy1
+  </button>
+</div>
+`;
+
+exports[`'renders fancy with button as is from import' 2`] = `
+<div>
+  <button>
+    fancy1
+  </button>
+</div>
+`;
+
+exports[`'renders fancy with button as is from import' 3`] = `
+<div>
+  <button>
+    fancy1
+  </button>
+</div>
+`;
+
+exports[`'renders fancy with button as is' 1`] = `
+<div>
+  <button>
+    pancy
+  </button>
+</div>
+`;
+
+exports[`'renders fancy with button as is' 2`] = `
+<div>
+  <button>
+    pancy
+  </button>
+</div>
+`;
+
+exports[`'renders fancy with button as is' 3`] = `
+<div>
+  <button>
+    pancy
+  </button>
+</div>
+`;
+
+exports[`'renders fancy with button as span or div' 1`] = `
+<div>
+  <span>
+    hhhhh
+  </span>
+</div>
+`;
+
+exports[`'renders fancy with button as span or div' 2`] = `
+<div>
+  <div>
+    ggggg
+  </div>
+</div>
+`;
+
+exports[`'renders fancy with button as span or div' 3`] = `
+<div>
+  <span>
+    hhhhh
+  </span>
+</div>
+`;
+
+exports[`'renders fancy with button as span or div' 4`] = `
+<div>
+  <div>
+    ggggg
+  </div>
+</div>
+`;
+
+exports[`'renders fancy with button as span or div' 5`] = `
+<div>
+  <span>
+    hhhhh
+  </span>
+</div>
+`;
+
+exports[`'renders fancy with button as span or div' 6`] = `
+<div>
+  <div>
+    ggggg
+  </div>
+</div>
+`;
+
+exports[`'renders fancy with button as span' 1`] = `
+<div>
+  <span>
+    hhhhh
+  </span>
+</div>
+`;
+
+exports[`'renders fancy with button as span' 2`] = `
+<div>
+  <div>
+    ggggg
+  </div>
+</div>
+`;
+
+exports[`'renders fancy with button mock from file' 1`] = `
+<div>
+  <span>
+    file mock
+  </span>
+</div>
+`;
+
+exports[`'renders fancy with button mock from file' 2`] = `
+<div>
+  <span>
+    file mock
+  </span>
+</div>
+`;
+
+exports[`'renders fancy with button mock from file' 3`] = `
+<div>
+  <span>
+    file mock
+  </span>
+</div>
+`;

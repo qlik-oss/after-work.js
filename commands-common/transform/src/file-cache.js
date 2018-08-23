@@ -38,10 +38,11 @@ class FileCache {
       instrument,
       transform,
     } = options;
-    transformItem.hash = this.getCacheHash(filename, { ...babelOptions, ...instrument, ...transform }); // eslint-disable-line no-param-reassign
-    if (!virtualMock) {
-      transformItem.mtime = +fs.statSync(filename).mtime; // eslint-disable-line no-param-reassign
+    transformItem.hash = this.getCacheHash(filename, { ...babelOptions, ...instrument, ...transform });
+    if (virtualMock) {
+      return;
     }
+    transformItem.mtime = +fs.statSync(filename).mtime;
     this.transform.set(filename, transformItem);
     this.safeSaveCacheSync(filename);
   }
@@ -92,7 +93,7 @@ class FileCache {
       const gz = zlib.gzipSync(str);
       fs.writeFileSync(this.getCacheFilename(filename), gz, 'utf8');
     } catch (err) {
-      console.log(err); // eslint-disable-line no-console
+      console.log(err);
     }
   }
 }

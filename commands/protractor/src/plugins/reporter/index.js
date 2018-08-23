@@ -1,5 +1,3 @@
-/* eslint-disable no-plusplus */
-
 /* Acknowledgements:
  This reporter is highly influenced by mochawesome (http://adamgruber.github.io/mochawesome) but
  with some modifications to suite our reporting format.
@@ -34,8 +32,8 @@ function uiReport(runner, options) {
 
     if (options.reporterOptions) {
       if (options.reporterOptions.xunit) {
-        options.reporterOptions.output = path.resolve(artifactsPath, `${reportName}.xml`); // eslint-disable-line no-param-reassign
-        new mocha.reporters.XUnit(runner, options); // eslint-disable-line no-new
+        options.reporterOptions.output = path.resolve(artifactsPath, `${reportName}.xml`);
+        new mocha.reporters.XUnit(runner, options);
       }
     }
   });
@@ -48,12 +46,12 @@ function uiReport(runner, options) {
   // generating the report before the process is shutdown
   // This is handled by a inline dummy plugins
   // and hooking into the `teardown` function
-  options.reporterPlugin.teardown = function teardown() { // eslint-disable-line no-param-reassign
+  options.reporterPlugin.teardown = function teardown() {
     return Promise.all(waitForPromises);
   };
 
   runner.on('pass', (test) => {
-    console.log('\u001b[32m √ PASSED: %s ( %sms )\u001b[0m', test.fullTitle(), test.duration); // eslint-disable-line no-console
+    console.log('\u001b[32m √ PASSED: %s ( %sms )\u001b[0m', test.fullTitle(), test.duration);
     tests.push(test);
     passes++;
   });
@@ -65,23 +63,23 @@ function uiReport(runner, options) {
 
   runner.on('fail', (test, err) => {
     try {
-      err.expected = JSON.parse(err.expected); // eslint-disable-line no-param-reassign
+      err.expected = JSON.parse(err.expected);
     } catch (e) {
       // Empty catch
     }
-    test.consoleEntries = []; // eslint-disable-line no-param-reassign
+    test.consoleEntries = [];
     waitForPromises.push(utils.saveScreenshot(browser, test.fullTitle()));
 
-    console.log('\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n' // eslint-disable-line no-console
+    console.log('\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n'
             + '\u001b[33m     %s\u001b[0m\n'
             + '\u001b[34m     %s\u001b[0m', test.fullTitle(), test.duration, err.message, test.file);
 
     if (browser.reporterInfo.browserName === 'chrome') {
       browser.manage().logs().get('browser').then((browserLog) => {
         if (browserLog && browserLog.length) {
-          console.log('\u001b[91m     %s\u001b[0m', 'Errors reported in the chrome console - see log for more information'); // eslint-disable-line no-console
+          console.log('\u001b[91m     %s\u001b[0m', 'Errors reported in the chrome console - see log for more information');
           browserLog.forEach((log) => {
-            if (log.level.value_ >= 1000) { // eslint-disable-line no-underscore-dangle
+            if (log.level.value_ >= 1000) {
               test.consoleEntries.push(log.message);
             }
           });
@@ -89,7 +87,7 @@ function uiReport(runner, options) {
       });
     }
 
-    test.screenshot = (`screenshots/${utils.screenshotName(test.fullTitle(), browser.reporterInfo.browserName, browser.reporterInfo.startTime)}`); // eslint-disable-line no-param-reassign
+    test.screenshot = (`screenshots/${utils.screenshotName(test.fullTitle(), browser.reporterInfo.browserName, browser.reporterInfo.startTime)}`);
     tests.push(test);
     failures++;
   });
@@ -119,9 +117,9 @@ function uiReport(runner, options) {
       },
     };
 
-    runner.testResults = obj; // eslint-disable-line no-param-reassign
+    runner.testResults = obj;
 
-    console.log('\u001b[35m Σ SUMMARY: %s testcases runned. \u001b[32m%s passed, \u001b[36m%s pending, \u001b[31m%s failed\u001b[0m', obj.stats.tests, obj.stats.passes, obj.stats.pending, obj.stats.failures); // eslint-disable-line no-console
+    console.log('\u001b[35m Σ SUMMARY: %s testcases runned. \u001b[32m%s passed, \u001b[36m%s pending, \u001b[31m%s failed\u001b[0m', obj.stats.tests, obj.stats.passes, obj.stats.pending, obj.stats.failures);
 
     const fileName = path.resolve(artifactsPath, `${reportName}.json`);
     utils.createArtifactsFolder(browser);

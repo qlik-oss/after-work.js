@@ -1,4 +1,6 @@
+/* eslint max-len: 0, import/no-dynamic-require: 0, global-require: 0 */
 const fs = require('fs');
+const path = require('path');
 const readline = require('readline');
 const importCwd = require('import-cwd');
 
@@ -48,7 +50,7 @@ const utils = {
     let found = importCwd.silent(name);
     if (!found) {
       try {
-        found = require(name); // eslint-disable-line
+        found = require(name);
       } catch (err) {
         found = null;
       }
@@ -57,7 +59,7 @@ const utils = {
   },
   coerceBabel(opt) {
     if (opt.enable && opt.core && typeof opt.core === 'string') {
-      opt.babel = importCwd(opt.core); // eslint-disable-line no-param-reassign
+      opt.babel = importCwd(opt.core);
     } else if (opt.enable && !opt.core) {
       let core = utils.safeGetModule('@babel/core');
       if (!core) {
@@ -66,15 +68,81 @@ const utils = {
           throw new Error('Can not get babel core module');
         }
       }
-      opt.babel = core; // eslint-disable-line no-param-reassign
+      opt.babel = core;
     }
     if (typeof opt.babelPluginIstanbul === 'string') {
-      opt.babelPluginIstanbul = importCwd(opt.babelPluginIstanbul).default; // eslint-disable-line no-param-reassign, max-len
+      opt.babelPluginIstanbul = importCwd(opt.babelPluginIstanbul).default;
     }
     if (typeof opt.typescript === 'string') {
-      opt.typescript = importCwd.silent(opt.typescript); // eslint-disable-line no-param-reassign
+      opt.typescript = importCwd.silent(opt.typescript);
     }
     return opt;
+  },
+  getCurrentFilenameStackInfo(testFiles) {
+    // Magically figure out the current test from the stack trace (callsites not working with sourcemaps)
+    const s = new Error().stack
+      .split('\n')
+      .slice(1)
+      .map(c => c.split(/\(([^)]+)\)/)[1])
+      .filter(c => c !== undefined)
+      .map((c) => {
+        const parts = c.split(':');
+        const columnno = parts.pop();
+        const lineno = parts.pop();
+        const filename = path.resolve(parts.join(':'));
+        return [filename, lineno, columnno];
+      })
+      .filter(([filename]) => testFiles.indexOf(filename) !== -1);
+    if (!s.length) {
+      throw new Error('Can not find test file');
+    }
+    return s.shift();
+  },
+  safeDeleteCache(f) {
+    if (require.cache[f]) {
+      delete require.cache[f];
+    }
+  },
+  safeRequireCache(f) {
+    try {
+      require(f);
+      return require.cache[f];
+    } catch (_) { } //eslint-disable-line
+    return { children: [] };
+  },
+  matchDependency(found, testName) {
+    let use = found;
+    if (found.length > 1) {
+      const matchName = found.filter(id => path.basename(id).split('.').shift() === testName);
+      if (matchName.length === 1) {
+        use = matchName;
+      } else {
+        use = found.splice(0, 1);
+      }
+    }
+    return use;
+  },
+  getDependencies(files, file) {
+    const name = path.basename(file).split('.').shift();
+    const mod = this.safeRequireCache(file);
+    const found = mod
+      .children
+      .filter(m => files.indexOf(m.id) !== -1)
+      .map(m => m.id);
+    return this.matchDependency(found, name);
+  },
+  getAllDependencies(files, file) {
+    let all = [];
+    const deps = this.getDependencies(files, file);
+    const walk = (currentDeps) => {
+      all = all.concat(currentDeps);
+      currentDeps.forEach((d) => {
+        const childDeps = this.getDependencies(files, d);
+        walk(childDeps, files, d);
+      });
+    };
+    walk(deps, files, file);
+    return all;
   },
 };
 

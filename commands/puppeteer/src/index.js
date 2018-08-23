@@ -68,8 +68,8 @@ const puppet = {
       .coerce('babel', utils.coerceBabel)
       .coerce('nyc', (opt) => {
         if (opt.babel) {
-          opt.sourceMap = false; // eslint-disable-line no-param-reassign
-          opt.instrumenter = './lib/instrumenters/noop'; // eslint-disable-line no-param-reassign
+          opt.sourceMap = false;
+          opt.instrumenter = './lib/instrumenters/noop';
         }
         return opt;
       });

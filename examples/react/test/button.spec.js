@@ -1,4 +1,4 @@
-/* eslint import/no-unresolved: 0, react/jsx-one-expression-per-line: 0 */
+/* eslint import/no-unresolved: 0 */
 
 import React from 'react';
 import renderer from 'react-test-renderer';

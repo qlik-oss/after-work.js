@@ -1,3 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`'should ' 1`] = `true`;
+
+exports[`'should ' 2`] = `true`;
+
+exports[`'should ' 3`] = `true`;

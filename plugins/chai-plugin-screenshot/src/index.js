@@ -95,7 +95,7 @@ const plugin = {
       artifactsPath,
       tolerance,
     } = resolveArgs(opts, t);
-    const promise = this._obj.then ? this._obj : Promise.resolve(this._obj); // eslint-disable-line
+    const promise = this._obj.then ? this._obj : Promise.resolve(this._obj);
     return promise.then((meta) => {
       // TODO takeImageOf is an after-work specific context. Should do a more generic solution.
       const isTakeImageOf = typeof meta === 'object' && typeof meta.artifactsPath === 'string';

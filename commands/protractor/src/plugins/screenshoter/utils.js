@@ -44,10 +44,10 @@ const utils = {
     selector = 'body', offsetX = 0, offsetY = 0, offsetWidth = 0, offsetHeight = 0,
   } = {}) {
     return browser.executeAsyncScript(getBoundingClientRect, selector).then((rect) => {
-      rect.left += offsetX; // eslint-disable-line no-param-reassign
-      rect.top += offsetY; // eslint-disable-line no-param-reassign
-      rect.width += offsetWidth; // eslint-disable-line no-param-reassign
-      rect.height += offsetHeight; // eslint-disable-line no-param-reassign
+      rect.left += offsetX;
+      rect.top += offsetY;
+      rect.width += offsetWidth;
+      rect.height += offsetHeight;
       return browser.takeScreenshot().then(base64 => jimp.read(new Buffer(base64, 'base64')).then((img) => { // eslint-disable-line no-buffer-constructor
         if (rect.ratio > 1) {
           img.scale(1 / rect.ratio);

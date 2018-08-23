@@ -100,7 +100,7 @@ describe('chai-plugin-screenshot', () => {
     });
 
     it('should create an image from a instance of Jimp', () => {
-      const img = new jimp(256, 256, () => {}); // eslint-disable-line
+      const img = new jimp(256, 256, () => {});
       plugin.toImage(img).then((out) => {
         expect(out).to.equal(img);
       });
