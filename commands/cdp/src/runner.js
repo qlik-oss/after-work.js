@@ -99,12 +99,12 @@ class Runner {
       }
     });
 
-    this.mediator.on('ended', async (stats) => {
+    this.mediator.on('ended', (stats) => {
       this.log('Runner ended\n');
       this.started = false;
       this.ended = true;
       this.isRunning = false;
-      await this.exit(stats.failures);
+      this.exit(stats.failures);
     });
   }
 
@@ -371,28 +371,33 @@ class Runner {
     return value;
   }
 
-  async exit(code, force) {
-    if (!force && this.argv.coverage) {
-      const coverage = await this.extractCoverage();
-      fs.writeFileSync(
-        path.resolve(this.nyc.tempDirectory(), `${Date.now()}.json`),
-        JSON.stringify(coverage, null, 2),
-        'utf8',
-      );
-      this.nyc.report();
-    }
-    // safeSaveCache();
-    if (!force && this.argv.watch) {
-      const mode = this.all ? 'All' : 'Only';
-      const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
-      this.logInfo(mode, testFiles);
-      return;
-    }
-    await this.client.close();
-    if (this.argv.chrome.launch) {
-      await this.chrome.kill();
-    }
-    this.mediator.emit('exit', code);
+  exit(code, force) {
+    (async () => {
+      if (!force && this.argv.coverage) {
+        const coverage = await this.extractCoverage();
+        fs.writeFileSync(
+          path.resolve(this.nyc.tempDirectory(), `${Date.now()}.json`),
+          JSON.stringify(coverage, null, 2),
+          'utf8',
+        );
+        this.nyc.report();
+      }
+      if (!force && this.argv.watch) {
+        const mode = this.all ? 'All' : 'Only';
+        const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
+        this.logInfo(mode, testFiles);
+        return;
+      }
+      try {
+        await this.client.close();
+        if (this.argv.chrome.launch) {
+          await this.chrome.kill();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+      this.mediator.emit('exit', code);
+    })();
   }
 }
 
