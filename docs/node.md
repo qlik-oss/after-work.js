@@ -12,6 +12,21 @@ npx aw -c ./path/to/aw.config.js -w --coverage
 and start testing. It will only rerun affected tests and generate coverage accordingly.
 Add files, remove files as you go and change your tests to rapidly build up a test coverage.
 
+## Mocking
+
+Built-in mocking. You can mock globally via the [**mocks**](#mocks) option or locally by using:
+
+```javascript
+const [FancyButton] = aw.mock(
+  [ // Mock components
+    ['**/react/src/button.js', '() => (<span>hhhhh</span>)']
+  ],
+  // Require components
+  ['../src/fancy-button']);
+```
+
+Look at the React [example](https://github.com/qlik-oss/after-work.js/tree/master/examples/react) and especially [**here**](https://github.com/qlik-oss/after-work.js/blob/master/examples/react/test/fancy-button.spec.js) for more details.
+
 ## Snapshot Testing
 
 We are using the awesome 📸 [**jest-snapshot**](https://github.com/facebook/jest/tree/master/packages/jest-snapshot) package.
@@ -48,6 +63,9 @@ describe('button', () => {
 
 When using the preset-env option. A screenshot assertion plugin is added to Chai. This allows comparisons of images.
 
+<details><summary>Example</summary>
+<p>
+
 ```javascript
 describe('screenshot', () => {
   it('image should be equal', async () => {
@@ -59,6 +77,9 @@ describe('screenshot', () => {
   });
 });
 ```
+
+</p>
+</details>
 
 ## Options
 
