@@ -21,7 +21,7 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
     "@after-work.js/utils": "^5.0.0-beta.6",
-    "jimp": "0.3.5",
+    "jimp": "0.3.9",
     "mkdirp": "0.5.1"
   },
   "files": [
