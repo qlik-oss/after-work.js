@@ -24,7 +24,7 @@
     "@babel/preset-env": "7.0.0",
     "@types/chai": "4.1.4",
     "@types/mocha": "5.2.5",
-    "babel-plugin-istanbul": "4.1.6",
+    "babel-plugin-istanbul": "5.0.1",
     "coveralls": "3.0.2",
     "eslint": "5.4.0",
     "eslint-config-airbnb": "17.1.0",
