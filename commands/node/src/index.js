@@ -125,9 +125,6 @@ class Runner extends EventEmitter {
   }
 
   safeDeleteCache(f) {
-    if (/after-work.js\/*(commands|command-utils)\/*(cli|transform)\/src\/index.js$/.test(f)) {
-      return;
-    }
     utils.safeDeleteCache(f);
   }
 
