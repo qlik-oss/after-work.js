@@ -21,7 +21,7 @@
     "@after-work.js/cli": "file:commands/cli",
     "@babel/core": "7.0.0-rc.3",
     "@babel/plugin-transform-react-jsx": "7.0.0-rc.2",
-    "@babel/preset-env": "7.0.0-rc.2",
+    "@babel/preset-env": "7.0.0-rc.4",
     "@babel/register": "7.0.0-rc.2",
     "@types/chai": "4.1.4",
     "@types/mocha": "5.2.5",
