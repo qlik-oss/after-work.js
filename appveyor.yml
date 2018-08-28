@@ -13,6 +13,8 @@ install:
   # Output useful info for debugging.
   - node --version
   - npm --version
+  # Workaround for https://github.com/appveyor/ci/issues/2420
+  - set "PATH=%PATH%;C:\Program Files\Git\mingw64\libexec\git-core"
   # install modules
   - npm install
 
