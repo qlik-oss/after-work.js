@@ -27,7 +27,7 @@
     "koa-favicon": "2.0.1",
     "koa-rewrite": "3.0.1",
     "koa-static": "5.0.0",
-    "test-exclude": "4.2.1"
+    "test-exclude": "5.0.0"
   },
   "files": [
     "/src",
