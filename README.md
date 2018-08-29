@@ -1,4 +1,4 @@
-![after-work.js](commands-common/server/aw.png)
+![after-work.js](packages/server/aw.png)
 
 [![CircleCI](https://circleci.com/gh/qlik-oss/after-work.js.svg?style=shield)](https://circleci.com/gh/qlik-oss/after-work.js)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&identifier=76359281)](https://dependabot.com)
