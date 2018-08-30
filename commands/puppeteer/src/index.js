@@ -16,7 +16,7 @@ class PuppetRunner extends Runner {
     this.on('forceExit', () => this.closeBrowser());
   }
 
-  async getChromeExecutablePath() {
+  static async getChromeExecutablePath() {
     const installations = await chromeFinder[getPlatform()]();
     if (installations.length === 0) {
       throw new Error('Chrome not installed');
@@ -25,9 +25,6 @@ class PuppetRunner extends Runner {
   }
 
   async launch() {
-    if (!this.argv.chrome.executablePath) {
-      this.argv.chrome.executablePath = await this.getChromeExecutablePath();
-    }
     if (this.argv.chrome.slowMo && this.argv.chrome.slowMo > 0) {
       this.argv.mocha.enableTimeouts = false;
     }
@@ -77,6 +74,10 @@ const puppet = {
   handler(argv) {
     (async function launchAndRun() {
       const puppeteer = require('puppeteer-core');
+      const launcher = require('puppeteer-core/lib/Launcher');
+      if (!argv.chrome.executablePath) {
+        argv.chrome.executablePath = await (argv.chrome.stable ? PuppetRunner.getChromeExecutablePath() : launcher.executablePath());
+      }
       if (argv.presetEnv) {
         require(argv.presetEnv);
       }
