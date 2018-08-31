@@ -25,4 +25,9 @@ module.exports = {
     default: [],
     type: 'array',
   },
+  'chrome.stable': {
+    description: 'Use stable Chrome',
+    default: true,
+    type: 'boolean',
+  },
 };
