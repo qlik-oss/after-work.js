@@ -9,6 +9,7 @@
     "installation": "Installation",
     "node": "Node",
     "protractor": "Protractor",
+    "puppeteer": "Puppeteer",
     "requirements": "Requirements",
     "strategy": "strategy",
     "Blog": "Blog",
