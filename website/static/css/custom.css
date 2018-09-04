@@ -15,6 +15,21 @@
   display: block;
 }
 
+#footer {
+  background: #5d5d5d;
+  color: #fff;
+}
+
+#footer .qlikOpenSource {
+  margin: 1em auto;
+  width: 200px;
+  display: block;
+  opacity: 0.6;
+}
+
+#footer .qlikOpenSource:hover {
+  opacity: 0.9;
+}
 footer.nav-footer {
   background: #5d5d5d;
 }

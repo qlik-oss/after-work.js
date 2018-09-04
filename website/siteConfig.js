@@ -9,6 +9,7 @@ const siteConfig = {
   // cname: 'aw.com',
   organizationName: 'qlik-oss',
   headerLinks: [
+    { blog: true, label: 'Blog' },
     { doc: 'installation', label: 'Docs' },
     { search: true },
     { href: 'https://github.com/qlik-oss/after-work.js', label: '\uf09b' },
