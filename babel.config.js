@@ -12,6 +12,9 @@ module.exports = (api) => {
             modules: 'amd',
           }],
         ],
+        ignore: [
+          '**/ignore.js',
+        ],
       };
     default:
       return {
