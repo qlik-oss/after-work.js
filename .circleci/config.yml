@@ -26,6 +26,7 @@ jobs:
   lint:
     <<: *defaults
     steps:
+      - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
       - run: npm run lint
@@ -33,6 +34,7 @@ jobs:
   test-node:
     <<: *defaults
     steps:
+      - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
       - run: npm run test:node
@@ -40,6 +42,7 @@ jobs:
   test-chrome:
     <<: *defaults
     steps:
+      - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
       - run: npm run test:chrome
@@ -47,6 +50,7 @@ jobs:
   test-protractor:
     <<: *defaults
     steps:
+      - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
       - run : node_modules/protractor/bin/webdriver-manager update --gecko false --versions.chrome 2.37
@@ -55,6 +59,7 @@ jobs:
   test-puppeteer:
     <<: *defaults
     steps:
+      - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
       - run: npm run test:puppeteer
@@ -62,6 +67,7 @@ jobs:
   test-node-coverage:
     <<: *defaults
     steps:
+      - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
       - run: npm run test:coveralls
