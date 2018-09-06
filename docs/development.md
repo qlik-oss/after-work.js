@@ -13,16 +13,16 @@ git clone git@github.com:qlik-oss/after-work.js.git
 
 ### Installation
 
+Ensure you have `yarn` installed globally:
+
+```sh
+npm i -g yarn
+```
+
 Go into the cloned folder:
 
 ```sh
-npm i
-```
-
-Since we are using [Lerna](https://lernajs.io/) with hoisting run:
-
-```sh
-npm run bootstrap
+yarn
 ```
 
 ### Testing
