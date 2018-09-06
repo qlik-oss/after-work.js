@@ -1,79 +1,75 @@
 version: 2
 
+aliases:
+  - &restore_yarn_cache
+    keys:
+      - v1-yarn-deps-{{ checksum "yarn.lock" }}
+  - &save_yarn_cache
+    paths:
+      - ~/.cache/yarn
+    key: v1-yarn-deps-{{ checksum "yarn.lock" }}
+
 defaults: &defaults
   working_directory: ~/after-work.js
   docker:
-    - image: circleci/node:8.9.4-browsers
+    - image: circleci/node:8.10.0-browsers
 
 jobs:
   install:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install dependencies 
-          command: npm i
-      - run:
-          name: Bootstrap
-          command: npm run bootstrap
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-      - persist_to_workspace:
-          root: ~/after-work.js
-          paths:
-            - .
+      - restore_cache: *restore_yarn_cache
+      - run: yarn
+      - save_cache: *save_yarn_cache
 
   lint:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/after-work.js
-      - run: npm run bootstrap
+      - checkout
+      - restore_cache: *restore_yarn_cache
+      - run: yarn
       - run: npm run lint
 
   test-node:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/after-work.js
-      - run: npm run bootstrap
+      - checkout
+      - restore_cache: *restore_yarn_cache
+      - run: yarn
       - run: npm run test:node
 
   test-chrome:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/after-work.js
-      - run: npm run bootstrap
+      - checkout
+      - restore_cache: *restore_yarn_cache
+      - run: yarn
       - run: npm run test:chrome
 
   test-protractor:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/after-work.js
-      - run: npm run bootstrap
+      - checkout
+      - restore_cache: *restore_yarn_cache
+      - run: yarn
       - run : node_modules/protractor/bin/webdriver-manager update --gecko false --versions.chrome 2.37
       - run: npm run test:protractor
 
   test-puppeteer:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/after-work.js
-      - run: npm run bootstrap
+      - checkout
+      - restore_cache: *restore_yarn_cache
+      - run: yarn
       - run: npm run test:puppeteer
 
   test-node-coverage:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: ~/after-work.js
-      - run: npm run bootstrap
+      - checkout
+      - restore_cache: *restore_yarn_cache
+      - run: yarn
       - run: npm run test:coveralls
       - store_artifacts:
           path: ./coverage

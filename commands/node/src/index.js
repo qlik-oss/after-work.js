@@ -1,4 +1,3 @@
-/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0 */
 const EventEmitter = require('events');
 const readline = require('readline');
 const globby = require('globby');
@@ -9,20 +8,16 @@ const NYC = require('nyc');
 const fs = require('fs');
 const path = require('path');
 const utils = require('@after-work.js/utils');
-const { getTransform, deleteTransform } = require('@after-work.js/transform');
-const { SnapshotState, toMatchSnapshot } = require('jest-snapshot');
+const { deleteTransform } = require('@after-work.js/transform');
 const options = require('./options');
 
-const getSourceContent = (filename) => {
-  const { map } = getTransform(filename) || {};
-  if (map) {
-    return map.sourcesContent[0];
-  }
-  return fs.readFileSync(filename, 'utf8');
-};
-
 class Runner extends EventEmitter {
-  constructor(argv, libs = { Mocha, NYC, importCwd, chokidar }) {
+  constructor(argv, libs = {
+    Mocha,
+    NYC,
+    importCwd,
+    chokidar,
+  }) {
     super();
     this.argv = argv;
     this.testFiles = [];
@@ -38,58 +33,6 @@ class Runner extends EventEmitter {
     this.libs = libs;
     this.debugging = false;
     this.snapshotStates = new Map();
-  }
-
-  addToMatchSnapshot() {
-    const runner = this;
-    const chai = importCwd.silent('chai');
-    if (chai) {
-      // eslint-disable-next-line prefer-arrow-callback
-      chai.Assertion.addMethod('toMatchSnapshot', function chaiToMatchSnapshot() {
-        const [filename, lineno] = utils.getCurrentFilenameStackInfo(runner.testFiles);
-        const src = getSourceContent(filename);
-        const lines = src.split('\n');
-
-        let currentTestName = null;
-        for (let i = lineno - 1; i >= 0; i -= 1) {
-          const line = lines[i];
-          if (line.trimLeft().startsWith('it')) {
-            [, currentTestName] = line.match(/it.*\((.*),/);
-            break;
-          }
-        }
-        if (currentTestName === null) {
-          throw new Error('Can not find current test name');
-        }
-
-        let snapshotState = runner.snapshotStates.get(filename);
-        if (!snapshotState) {
-          const snapshotPath = `${path.join(
-            path.join(path.dirname(filename), '__snapshots__'),
-            `${path.join(path.basename(filename))}.snap`,
-          )}`;
-          snapshotState = new SnapshotState(currentTestName, {
-            updateSnapshot: runner.argv.updateSnapshot ? 'all' : 'new',
-            snapshotPath,
-          });
-          runner.snapshotStates.set(filename, snapshotState);
-        }
-        const matcher = toMatchSnapshot.bind({
-          snapshotState,
-          currentTestName,
-        });
-        const result = matcher(this._obj);
-        snapshotState.save();
-        this.assert(
-          result.pass,
-          result.message,
-          result.message,
-          result.expected,
-          result.actual,
-        );
-      });
-    }
-    return this;
   }
 
   log(mode, testFiles, srcFiles) {
@@ -404,12 +347,11 @@ const node = {
       });
   },
   handler(argv) {
-    if (argv.presetEnv) {
-      require(argv.presetEnv);
-    }
     const runner = new node.Runner(argv);
+    if (argv.presetEnv) {
+      require(argv.presetEnv)(runner);
+    }
     runner
-      .addToMatchSnapshot()
       .autoDetectDebug()
       .setupKeyPress()
       .setTestFiles()

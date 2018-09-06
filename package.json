@@ -4,14 +4,12 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist --no-ci",
     "test:node": "aw -c aw.config.js",
     "test:chrome": "aw chrome -c aw.config.js",
     "test:protractor": "aw protractor -c examples/protractor/aw.config.js",
     "test:puppeteer": "aw puppeteer -c examples/puppeteer/aw.config.js",
     "test:coveralls": "aw -c aw.config.js --coverage && cat coverage/lcov.info | coveralls",
-    "lint": "lerna run lint",
-    "postinstall": "npm run bootstrap"
+    "lint": "lerna run lint"
   },
   "repository": {
     "type": "git",
@@ -37,5 +35,11 @@
     "requirejs": "2.3.6",
     "typescript": "3.0.3",
     "yargs": "12.0.1"
-  }
+  },
+  "workspaces": [
+    "commands/*",
+    "examples/*",
+    "packages/*",
+    "plugins/*"
+  ]
 }

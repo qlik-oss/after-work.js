@@ -1,7 +1,7 @@
 const yargs = require('yargs');
 const path = require('path');
 const globby = require('globby');
-const { packages } = require('./lerna.json');
+const { workspaces } = require('./package.json');
 
 const cmd = process.argv.slice(2).shift();
 
@@ -19,7 +19,7 @@ yargs
   })
   .coerce('scope', (scope) => {
     const scopes = new Map();
-    globby.sync(packages.map(p => `${p}/package.json`)).forEach((p) => {
+    globby.sync(workspaces.map(p => `${p}/package.json`)).forEach((p) => {
       const { name } = require(`./${p}`);
       const pkgPath = path.dirname(p);
       scopes.set(name, pkgPath);

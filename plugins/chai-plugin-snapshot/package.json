@@ -1,13 +1,13 @@
 {
-  "name": "@after-work.js/node",
-  "version": "5.0.1",
+  "name": "@after-work.js/chai-plugin-snapshot",
+  "version": "5.0.0",
   "publishConfig": {
     "access": "public"
   },
-  "description": "Run tests in Node",
+  "description": "Chai assertion plugin for snapshots",
   "main": "src/index.js",
   "scripts": {
-    "lint": "eslint src test"
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",
@@ -20,14 +20,9 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/register": "5.0.1",
     "@after-work.js/transform": "5.0.1",
     "@after-work.js/utils": "5.0.0",
-    "chokidar": "2.0.4",
-    "globby": "8.0.1",
-    "import-cwd": "2.1.0",
-    "mocha": "5.2.0",
-    "nyc": "13.0.1"
+    "jest-snapshot": "23.5.0"
   },
   "files": [
     "/src"

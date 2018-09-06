@@ -1,16 +1,6 @@
 {
-  "lerna": "3.2.1",
-  "packages": [
-    "commands/*",
-    "examples/*",
-    "packages/*",
-    "plugins/*"
-  ],
-  "npmClient": "npm",
-  "npmClientArgs": [
-    "--no-optional",
-    "--no-package-lock"
-  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
   "command": {
     "publish": {
       "message": "chore(release): publish %s"

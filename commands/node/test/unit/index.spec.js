@@ -73,7 +73,6 @@ describe('Node command', () => {
     const importCwd = sandbox.stub();
     const runner = new Runner(argv, { importCwd });
     runner.setupBabel = sandbox.stub();
-    runner.addToMatchSnapshot = sandbox.stub();
     runner.require();
     expect(importCwd).to.have.been.calledWithExactly('foo');
   });
@@ -248,7 +247,6 @@ describe('Node command', () => {
 
     it('should call the runner functions', () => {
       const origRunner = cmd.Runner;
-      const addToMatchSnapshot = sandbox.stub().returnsThis();
       const autoDetectDebug = sandbox.stub().returnsThis();
       const setupKeyPress = sandbox.stub().returnsThis();
       const setTestFiles = sandbox.stub().returnsThis();
@@ -256,7 +254,6 @@ describe('Node command', () => {
       const req = sandbox.stub().returnsThis();
       const run = sandbox.stub().returnsThis();
       class Dummy { }
-      Dummy.prototype.addToMatchSnapshot = addToMatchSnapshot;
       Dummy.prototype.autoDetectDebug = autoDetectDebug;
       Dummy.prototype.setupKeyPress = setupKeyPress;
       Dummy.prototype.setTestFiles = setTestFiles;
@@ -265,7 +262,6 @@ describe('Node command', () => {
       Dummy.prototype.run = run;
       cmd.Runner = Dummy;
       handler({ mocha: {} });
-      expect(addToMatchSnapshot).to.have.been.calledImmediatelyBefore(autoDetectDebug);
       expect(autoDetectDebug).to.have.been.calledImmediatelyBefore(setupKeyPress);
       expect(setupKeyPress).to.have.been.calledImmediatelyBefore(setTestFiles);
       expect(setTestFiles).to.have.been.calledImmediatelyBefore(setSrcFiles);
