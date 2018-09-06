@@ -8,17 +8,8 @@ const NYC = require('nyc');
 const fs = require('fs');
 const path = require('path');
 const utils = require('@after-work.js/utils');
-const { getTransform, deleteTransform } = require('@after-work.js/transform');
-const { SnapshotState, toMatchSnapshot } = require('jest-snapshot');
+const { deleteTransform } = require('@after-work.js/transform');
 const options = require('./options');
-
-const getSourceContent = (filename) => {
-  const { map } = getTransform(filename) || {};
-  if (map) {
-    return map.sourcesContent[0];
-  }
-  return fs.readFileSync(filename, 'utf8');
-};
 
 class Runner extends EventEmitter {
   constructor(argv, libs = {
