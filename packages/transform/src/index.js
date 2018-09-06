@@ -68,6 +68,9 @@ function transformFile(filename, argv, content = null) {
   babelOpts.ast = false;
   const { babel } = argv.babel;
   const transform = babel.transform(content, babelOpts);
+  if (!transform) {
+    return content;
+  }
   fileCache.setSync(filename, transform, argv);
   return transform.code;
 }
