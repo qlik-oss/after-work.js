@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/cli",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "publishConfig": {
     "access": "public"
   },
@@ -34,11 +34,11 @@
     "yargs": "12.0.1"
   },
   "devDependencies": {
-    "@after-work.js/cdp": "5.0.0",
-    "@after-work.js/node": "5.0.0",
-    "@after-work.js/protractor": "5.0.0",
-    "@after-work.js/puppeteer": "5.0.0",
-    "@after-work.js/serve": "5.0.0"
+    "@after-work.js/cdp": "5.0.1",
+    "@after-work.js/node": "5.0.1",
+    "@after-work.js/protractor": "5.0.1",
+    "@after-work.js/puppeteer": "5.0.1",
+    "@after-work.js/serve": "5.0.1"
   },
   "files": [
     "/src"
