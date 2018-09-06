@@ -12,7 +12,7 @@ aliases:
 defaults: &defaults
   working_directory: ~/after-work.js
   docker:
-    - image: circleci/node:8.9.4-browsers
+    - image: circleci/node:8.10.0-browsers
 
 jobs:
   install:
