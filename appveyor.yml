@@ -12,11 +12,11 @@ install:
   - ps: Install-Product node $env:nodejs_version
   # Output useful info for debugging.
   - node --version
-  - npm --version
+  - yarn --version
   # Workaround for https://github.com/appveyor/ci/issues/2420
   - set "PATH=%PATH%;C:\Program Files\Git\mingw64\libexec\git-core"
   # install modules
-  - npm install
+  - yarn
 
 # Post-install test scripts.
 test_script:
