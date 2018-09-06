@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "test": "npm run test:node && npm run test:chrome && npm run test:protractor && npm run test:puppeteer",
     "test:node": "aw -c aw.config.js",
     "test:chrome": "aw chrome -c aw.config.js",
     "test:protractor": "aw protractor -c examples/protractor/aw.config.js",

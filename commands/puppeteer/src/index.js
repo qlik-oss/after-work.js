@@ -84,7 +84,7 @@ const puppet = {
     (async function launchAndRun() {
       const puppeteer = require('puppeteer-core');
       if (!argv.chrome.executablePath) {
-        argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath();
+        argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath(argv.chrome.stable);
       }
       if (argv.presetEnv) {
         require(argv.presetEnv)();
