@@ -23,6 +23,7 @@
     "@after-work.js/node": "5.0.0",
     "@after-work.js/utils": "5.0.0",
     "chrome-launcher": "0.10.2",
+    "import-cwd": "2.1.0",
     "puppeteer-core": "1.7.0"
   },
   "files": [

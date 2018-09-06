@@ -1,4 +1,5 @@
 /* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0, max-len: 0 */
+const importCwd = require('import-cwd');
 const chromeFinder = require('chrome-launcher/dist/chrome-finder');
 const { getPlatform } = require('chrome-launcher/dist/utils');
 const { Runner, configure } = require('@after-work.js/node/src/');
@@ -16,7 +17,15 @@ class PuppetRunner extends Runner {
     this.on('forceExit', () => this.closeBrowser());
   }
 
-  static async getChromeExecutablePath() {
+  static async getChromeExecutablePath(stable) {
+    if (!stable) {
+      const launcher = importCwd.silent('puppeteer');
+      if (!launcher) {
+        throw new Error('Cannot find Chromium. Make sure you have puppeteer installed');
+      }
+      const exePath = launcher.executablePath();
+      return exePath;
+    }
     const installations = await chromeFinder[getPlatform()]();
     if (installations.length === 0) {
       throw new Error('Chrome not installed');
@@ -74,9 +83,8 @@ const puppet = {
   handler(argv) {
     (async function launchAndRun() {
       const puppeteer = require('puppeteer-core');
-      const launcher = require('puppeteer-core/lib/Launcher');
       if (!argv.chrome.executablePath) {
-        argv.chrome.executablePath = await (argv.chrome.stable ? PuppetRunner.getChromeExecutablePath() : launcher.executablePath());
+        argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath();
       }
       if (argv.presetEnv) {
         require(argv.presetEnv);
