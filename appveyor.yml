@@ -4,6 +4,9 @@ environment:
     - nodejs_version: "LTS"
     - nodejs_version: "Current"
 
+cache:
+ - "%LOCALAPPDATA%\\Yarn"
+
 # Install scripts. (runs after repo cloning)
 install:
   # Install latest chrome
