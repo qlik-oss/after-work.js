@@ -1,4 +1,3 @@
-/* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0 */
 const EventEmitter = require('events');
 const readline = require('readline');
 const globby = require('globby');
@@ -22,7 +21,12 @@ const getSourceContent = (filename) => {
 };
 
 class Runner extends EventEmitter {
-  constructor(argv, libs = { Mocha, NYC, importCwd, chokidar }) {
+  constructor(argv, libs = {
+    Mocha,
+    NYC,
+    importCwd,
+    chokidar,
+  }) {
     super();
     this.argv = argv;
     this.testFiles = [];
@@ -404,12 +408,11 @@ const node = {
       });
   },
   handler(argv) {
-    if (argv.presetEnv) {
-      require(argv.presetEnv);
-    }
     const runner = new node.Runner(argv);
+    if (argv.presetEnv) {
+      require(argv.presetEnv)(runner);
+    }
     runner
-      .addToMatchSnapshot()
       .autoDetectDebug()
       .setupKeyPress()
       .setTestFiles()
