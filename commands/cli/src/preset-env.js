@@ -15,5 +15,7 @@ module.exports = (runner) => {
   chai.use(chaiAsPromised);
   chai.use(chaiSubset);
   chai.Assertion.addMethod('matchImageOf', screenshotPlugin.matchImageOf);
-  chai.Assertion.addMethod('toMatchSnapshot', snapshotPlugin(runner));
+  if (runner) {
+    chai.Assertion.addMethod('toMatchSnapshot', snapshotPlugin(runner));
+  }
 };

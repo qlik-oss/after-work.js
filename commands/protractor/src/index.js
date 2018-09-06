@@ -38,7 +38,7 @@ const protractor = {
       },
     };
     if (argv.presetEnv) {
-      require(argv.presetEnv);
+      require(argv.presetEnv)();
     }
     let launcher;
     try {

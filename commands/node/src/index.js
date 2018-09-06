@@ -44,58 +44,6 @@ class Runner extends EventEmitter {
     this.snapshotStates = new Map();
   }
 
-  addToMatchSnapshot() {
-    const runner = this;
-    const chai = importCwd.silent('chai');
-    if (chai) {
-      // eslint-disable-next-line prefer-arrow-callback
-      chai.Assertion.addMethod('toMatchSnapshot', function chaiToMatchSnapshot() {
-        const [filename, lineno] = utils.getCurrentFilenameStackInfo(runner.testFiles);
-        const src = getSourceContent(filename);
-        const lines = src.split('\n');
-
-        let currentTestName = null;
-        for (let i = lineno - 1; i >= 0; i -= 1) {
-          const line = lines[i];
-          if (line.trimLeft().startsWith('it')) {
-            [, currentTestName] = line.match(/it.*\((.*),/);
-            break;
-          }
-        }
-        if (currentTestName === null) {
-          throw new Error('Can not find current test name');
-        }
-
-        let snapshotState = runner.snapshotStates.get(filename);
-        if (!snapshotState) {
-          const snapshotPath = `${path.join(
-            path.join(path.dirname(filename), '__snapshots__'),
-            `${path.join(path.basename(filename))}.snap`,
-          )}`;
-          snapshotState = new SnapshotState(currentTestName, {
-            updateSnapshot: runner.argv.updateSnapshot ? 'all' : 'new',
-            snapshotPath,
-          });
-          runner.snapshotStates.set(filename, snapshotState);
-        }
-        const matcher = toMatchSnapshot.bind({
-          snapshotState,
-          currentTestName,
-        });
-        const result = matcher(this._obj);
-        snapshotState.save();
-        this.assert(
-          result.pass,
-          result.message,
-          result.message,
-          result.expected,
-          result.actual,
-        );
-      });
-    }
-    return this;
-  }
-
   log(mode, testFiles, srcFiles) {
     if (this.debugging) {
       return this;

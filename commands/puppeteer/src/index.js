@@ -87,12 +87,11 @@ const puppet = {
         argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath();
       }
       if (argv.presetEnv) {
-        require(argv.presetEnv);
+        require(argv.presetEnv)();
       }
       const runner = new PuppetRunner(puppeteer, argv);
       await runner.launch();
       runner
-        .addToMatchSnapshot()
         .autoDetectDebug()
         .setupKeyPress()
         .setTestFiles()
