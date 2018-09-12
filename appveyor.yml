@@ -10,7 +10,7 @@ cache:
 # Install scripts. (runs after repo cloning)
 install:
   # Install latest chrome
-  - choco install googlechrome
+  - choco install googlechrome --ignore-checksums
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # Output useful info for debugging.
