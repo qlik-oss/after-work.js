@@ -218,6 +218,7 @@ class Runner extends EventEmitter {
   }
 
   setupAndRunTests(testFiles, srcFiles) {
+    this.snapshotStates.clear();
     process.removeAllListeners();
     if (this.mochaRunner) {
       this.mochaRunner.removeAllListeners();

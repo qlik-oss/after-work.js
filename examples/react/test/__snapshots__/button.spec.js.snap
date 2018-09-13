@@ -12,43 +12,7 @@ exports[`'renders correctly' 2`] = `
 </button>
 `;
 
-exports[`'renders correctly' 3`] = `
-<button>
-  Text
-</button>
-`;
-
-exports[`'renders correctly' 4`] = `
-<button>
-  Text1
-</button>
-`;
-
-exports[`'renders correctly' 5`] = `
-<button>
-  Text
-</button>
-`;
-
-exports[`'renders correctly' 6`] = `
-<button>
-  Text1
-</button>
-`;
-
 exports[`'renders fancy' 1`] = `
-<button>
-  fancy1
-</button>
-`;
-
-exports[`'renders fancy' 2`] = `
-<button>
-  fancy1
-</button>
-`;
-
-exports[`'renders fancy' 3`] = `
 <button>
   fancy1
 </button>
