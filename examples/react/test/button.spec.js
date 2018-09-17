@@ -5,6 +5,8 @@ import renderer from 'react-test-renderer';
 import 'foo.scss';
 import 'bar.less';
 import 'baz.css';
+import 'mocked-special';
+
 import Button from '../src/button';
 
 describe('button', () => {

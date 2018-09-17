@@ -102,6 +102,14 @@ const utils = {
     if (require.cache[f]) {
       delete require.cache[f];
     }
+    if (require.cache[f] && require.cache[f].parent) {
+      let i = require.cache[f].parent.children.length;
+      while (i--) {
+        if (require.cache[f].parent.children[i].id === f) {
+          require.cache[f].parent.children.splice(i, 1);
+        }
+      }
+    }
   },
   safeRequireCache(f) {
     try {

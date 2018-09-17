@@ -7,7 +7,7 @@ const fileCache = new FileCache();
 
 function getBabelOpts(filename, argv) {
   const { options: { sourceRoot, only, ignore } = {}, babelPluginIstanbul } = argv.babel;
-  const addCoverage = argv.instrument.testExclude.shouldInstrument(filename);
+  const addCoverage = argv.instrument.testExclude.shouldInstrument(filename) && argv.virtualMock === false;
   const plugins = addCoverage
     ? [[babelPluginIstanbul, {}]]
     : [];
