@@ -53,7 +53,7 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
-      - run : node_modules/protractor/bin/webdriver-manager update --gecko false --versions.chrome 2.37
+      - run : npx webdriver-manager update --gecko false --standalone false
       - run: npm run test:protractor
 
   test-puppeteer:
