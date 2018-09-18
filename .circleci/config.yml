@@ -12,7 +12,7 @@ aliases:
 defaults: &defaults
   working_directory: ~/after-work.js
   docker:
-    - image: circleci/node:8.10.0-browsers
+    - image: circleci/node:8-stretch-browsers
 
 jobs:
   install:
@@ -53,8 +53,7 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
-      - run : npx webdriver-manager update --gecko false --standalone false
-      - run: npm run test:protractor
+      - run: npm run test:protractor -- --chromeDriver /usr/local/bin/chromedriver
 
   test-puppeteer:
     <<: *defaults
