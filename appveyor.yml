@@ -27,9 +27,8 @@ test_script:
   # run tests
   - npm run test:node
   - npm run test:chrome
-  - npx webdriver-manager clean 
   - npx webdriver-manager update --gecko false --standalone false
-  - npm run test:protractor -- --directConnect
+  - npm run test:protractor
   - npm run test:puppeteer
 
 # Don't actually build.
