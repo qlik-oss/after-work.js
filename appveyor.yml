@@ -10,7 +10,7 @@ cache:
 # Install scripts. (runs after repo cloning)
 install:
   # Install latest chrome
-  - choco install googlechrome --ignore-checksums
+  # - choco install googlechrome --ignore-checksums
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # Output useful info for debugging.
@@ -27,7 +27,7 @@ test_script:
   # run tests
   - npm run test:node
   - npm run test:chrome
-  - npm run test:protractor -- --chromeDriver 'C:\Tools\WebDriver\chromedriver.exe'
+  - npm run test:protractor -- --chromeDriver '../../Tools/WebDriver/chromedriver.exe'
   - npm run test:puppeteer
 
 # Don't actually build.
