@@ -37,9 +37,7 @@ const protractor = {
         },
       },
     };
-    if (argv.presetEnv) {
-      require(argv.presetEnv)();
-    }
+    require(argv.presetEnv.require)({ argv });
     let launcher;
     try {
       launcher = require('protractor/built/launcher');

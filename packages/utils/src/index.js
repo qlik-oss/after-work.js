@@ -3,10 +3,39 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const importCwd = require('import-cwd');
+const debug = require('debug');
+const globby = require('globby');
 
-const isCI = !!process.env.CI;
+const pkg = importCwd('./package.json');
+const findPkgs = g => globby.sync(`${g}/package.json`);
+const reducePkgs = (acc, curr) => acc.concat(curr.map(c => c.slice(0, -13)));
+const lerna = importCwd.silent('./lerna.json');
+const workspaces = (pkg.workspaces || []).map(findPkgs).reduce(reducePkgs, []);
+const lernaPackages = ((lerna && lerna.packages) || []).map(findPkgs).reduce(reducePkgs, []);
+const packagesPath = [...workspaces, ...lernaPackages];
+let packages = [];
+const packagesMap = new Map();
+packagesPath.forEach((root) => {
+  const { name } = importCwd(`./${root}/package.json`);
+  packages = [...packages, name];
+  packagesMap.set(name, root);
+});
+const DEFAULT_TEST_GLOB_PATTERN = 'test/**/*.spec.{js,ts}';
+const DEFAULT_TEST_GLOB = [DEFAULT_TEST_GLOB_PATTERN];
+const DEFAULT_SRC_PATTERN = 'src/**/*.{js,ts}';
+const DEFAULT_SRC = [DEFAULT_SRC_PATTERN];
+const TEST_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : DEFAULT_TEST_GLOB;
+const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_PATTERN}`) : DEFAULT_SRC;
+const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 const utils = {
+  packages,
+  packagesMap,
+  workspaces,
+  lernaPackages,
+  TEST_GLOB,
+  SRC_GLOB,
+  WATCH_GLOB,
   isSourceMap(f) {
     return !fs.existsSync(f) && f.endsWith('.map');
   },
@@ -33,18 +62,12 @@ const utils = {
     return js;
   },
   clearLine() {
-    if (isCI) {
-      return;
-    }
-    readline.clearLine(process.stdout, 0);
-    readline.cursorTo(process.stdout, 0, null);
+    readline.clearLine(process.stderr, 0);
+    readline.cursorTo(process.stderr, 0, null);
   },
-  writeLine(msg) {
-    if (isCI) {
-      return;
-    }
+  writeLine(prefix, msg) {
     this.clearLine();
-    process.stdout.write(`${msg}`);
+    process.stderr.write(`${prefix} ${msg.length > 60 ? '...' : ''}${msg.slice(-59)}`);
   },
   safeGetModule(name) {
     let found = importCwd.silent(name);
@@ -151,6 +174,9 @@ const utils = {
     };
     walk(deps, files, file);
     return all;
+  },
+  debug(ns) {
+    return debug(ns);
   },
 };
 

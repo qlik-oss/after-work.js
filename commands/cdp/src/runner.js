@@ -1,5 +1,5 @@
 /* eslint no-console: 0, class-methods-use-this: 0, no-restricted-syntax: 0 */
-const readline = require('readline');
+const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
 const chromeLauncher = require('chrome-launcher');
@@ -7,7 +7,6 @@ const unmirror = require('chrome-unmirror');
 const chokidar = require('chokidar');
 const globby = require('globby');
 const precinct = require('precinct');
-// const createHttpServer = require('./http-server');
 const createServer = require('@after-work.js/server');
 const NYC = require('nyc');
 const utils = require('@after-work.js/utils');
@@ -16,8 +15,9 @@ const Mediator = require('./mediator');
 const connect = require('./connect');
 
 
-class Runner {
-  constructor(argv = { chrome: { chromeFlags: [] }, client: {} }) {
+class Runner extends EventEmitter {
+  constructor(argv) {
+    super();
     this.argv = argv;
     this.nyc = new NYC(argv.nyc);
     this.mediator = new Mediator();
@@ -30,47 +30,23 @@ class Runner {
     this.depMap = new Map();
     this.srcTestMap = new Map();
     this.onlyTestFiles = [];
-    this.onlyTestFilesBrowser = [];
     this.all = true;
     this.bind();
+    this.bindWatch();
     this.debugging = false;
-  }
-
-  logInfo(mode, testFiles) {
-    if (this.debugging) {
-      return this;
-    }
-    if (this.argv.outputReporterOnly) {
-      return this;
-    }
-    console.log(`${mode}`);
-    console.log('  test');
-    testFiles.forEach((f) => {
-      console.log(`    \u001b[90m${f}\u001b[0m`);
-    });
-    console.log('\nSave\u001b[90m a test file or source file to run only affected tests\u001b[0m');
-    console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
-    return this;
+    this.snapshotStates = new Map();
+    this.server = { close: () => { } };
   }
 
   log(msg) {
-    if (this.argv.outputReporterOnly) {
-      return;
-    }
-    console.log(msg);
+    console.error(msg);
   }
 
-  logLine(msg) {
-    if (this.argv.outputReporterOnly) {
-      return;
-    }
-    utils.writeLine(msg);
+  logLine(prefix, msg) {
+    utils.writeLine(prefix, msg);
   }
 
   logClearLine() {
-    if (this.argv.outputReporterOnly) {
-      return;
-    }
     utils.clearLine();
   }
 
@@ -108,18 +84,14 @@ class Runner {
     });
   }
 
-  on(event, callback) {
-    this.mediator.on(event, callback);
-  }
-
   fail(msg) {
-    console.error(msg);
+    this.log(msg);
     this.exit(1);
   }
 
   pipeOut(Runtime) {
     Runtime.exceptionThrown((exception) => {
-      console.error('[chrome-exception]', exception);
+      this.log('[chrome-exception]', exception);
     });
 
     Runtime.consoleAPICalled(({ type, args }) => {
@@ -142,14 +114,14 @@ class Runner {
     Network.requestWillBeSent((info) => {
       this.requests.set(info.requestId, info.request);
       if (!this.started && info.request.url.match(/^(file|http(s?)):\/\//)) {
-        this.logLine(info.request.url);
+        this.logLine('Loading', info.request.url);
       }
     });
     Network.loadingFailed((info) => {
       const { errorText } = info;
       const { url, method } = this.requests.get(info.requestId);
       const msg = JSON.stringify({ url, method, errorText });
-      console.error('Resource Failed to Load:', msg);
+      this.log('Resource Failed to Load:', msg);
       this.mediator.emit('resourceFailed', msg);
       this.loadError = true;
     });
@@ -165,7 +137,8 @@ class Runner {
       const { port } = this.chrome;
       this.argv.client.port = port;
     }
-    this.client = await connect(this.argv, this.testFilesBrowser, this.debugging);
+    const awFiles = this.relativeBaseUrlFiles(this.testFiles);
+    this.client = await connect(this.argv, awFiles, this.debugging);
     if (!this.client) {
       this.fail('CDP Client could not connect');
       return;
@@ -215,7 +188,7 @@ class Runner {
     }
     const srcName = path.basename(srcFile).split('.').shift();
     for (const f of this.testFiles) {
-      this.logLine(`Scanning ${f}`);
+      this.logLine('Scanning', f);
       const deps = this.getDependencies(f);
       const found = this.matchDependencyName(srcName, deps);
       if (found) {
@@ -228,13 +201,20 @@ class Runner {
     return [];
   }
 
-  async reloadAndRunTests(relativeFiles) {
+  setupAndRunTests(testFiles) {
     this.isRunning = true;
-    const injectAwFiles = `window.awFiles = ${JSON.stringify(relativeFiles)};`;
-    await this.client.Page.reload({ ignoreCache: true, scriptToEvaluateOnLoad: injectAwFiles });
+    (async () => {
+      if (!this.client) {
+        await this.run();
+        return;
+      }
+      const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
+      const injectAwFiles = `window.awFiles = ${JSON.stringify(awFiles)};`;
+      await this.client.Page.reload({ ignoreCache: true, scriptToEvaluateOnLoad: injectAwFiles });
+    })();
   }
 
-  async onWatch(virtualAbs, virtualRel) {
+  onWatch(virtualAbs, virtualRel) {
     if (this.isRunning) {
       return;
     }
@@ -256,41 +236,13 @@ class Runner {
       this.nyc = new NYC(this.argv.nyc);
     }
     this.onlyTestFiles = testFiles.map(f => utils.getPathWithExt(f, ext));
-    this.onlyTestFilesBrowser = this.relativeBaseUrlFiles(testFiles);
-    await this.reloadAndRunTests(this.onlyTestFilesBrowser);
+    this.setupAndRunTests(this.onlyTestFiles);
   }
 
-  watch() {
-    chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f), f));
-  }
-
-  setupKeyPress() {
-    if (!this.argv.watch) {
-      return this;
+  bindWatch() {
+    if (this.argv.watch) {
+      chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f), f));
     }
-    if (typeof process.stdin.setRawMode !== 'function') {
-      return this;
-    }
-    readline.emitKeypressEvents(process.stdin);
-    process.stdin.setRawMode(true);
-    process.stdin.setEncoding('utf8');
-    process.stdin.on('keypress', (str) => {
-      if (str === '\u0003') {
-        this.exit(0, true);
-      }
-      if (this.isRunning) {
-        return;
-      }
-      switch (str) {
-        case 'a':
-          this.all = true;
-          this.nyc = new NYC(this.argv.nyc);
-          this.reloadAndRunTests(this.testFilesBrowser);
-          break;
-        default: break;
-      }
-    });
-    return this;
   }
 
   autoDetectDebug() {
@@ -300,39 +252,29 @@ class Runner {
       this.argv.mocha.timeout = 0;
       this.debugging = true;
     }
-  }
-
-  relativeRootFile(file) {
-    return path.relative(path.relative(this.argv.url, process.cwd()), file);
-  }
-
-  relativeRootFiles(files) {
-    return files.map(file => this.relativeRootFile(file));
+    return this;
   }
 
   relativeBaseUrlFile(file) {
-    return path.relative(path.dirname(this.argv.url), path.resolve(file));
+    return path.relative(path.dirname(this.argv.url), path.resolve(file))
+      .replace(/\\/g, '/')
+      .replace(/.ts$/, '.js');
   }
 
   relativeBaseUrlFiles(files) {
     return files.map(file => this.relativeBaseUrlFile(file));
   }
 
+  findFiles(glob) {
+    return globby.sync(glob).map(f => path.resolve(f));
+  }
+
   setTestFiles() {
-    this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f)).map((f) => {
-      const parts = f.split('.');
-      const ext = parts.pop();
-      if (ext === 'ts') {
-        return `${parts.join('.')}.js`;
-      }
-      return f;
-    });
+    this.testFiles = this.argv.filter.chrome.files.reduce((acc, curr) => acc.filter(curr), this.findFiles(this.argv.glob));
     if (!this.testFiles.length) {
       this.log('No files found for:', this.argv.glob);
-      process.exit(1);
+      this.exit(1);
     }
-    this.testFilesBrowser = this.relativeBaseUrlFiles(this.testFiles)
-      .map(f => f.split('\\').join('/'));
     return this;
   }
 
@@ -342,8 +284,8 @@ class Runner {
         url = `file://${path.resolve(path.join(process.cwd(), url))}`;
       }
       if (!fs.existsSync(url)) {
-        console.error('You must specify an existing url.');
-        process.exit(1);
+        this.log('You must specify an existing url.');
+        this.exit(1);
       }
       url = `file://${fs.realpathSync(url)}`;
     }
@@ -353,17 +295,16 @@ class Runner {
 
   maybeCreateServer() {
     if (/^(http(s?)):\/\//.test(this.argv.url)) {
-      createServer(this.argv);
+      this.server = createServer(this.argv);
     }
     return this;
   }
 
-  async run() {
-    await this.setup();
-    await this.navigate();
-    if (this.argv.watch) {
-      this.watch();
-    }
+  run() {
+    (async () => {
+      await this.setup();
+      await this.navigate();
+    })();
   }
 
   async extractCoverage() {
@@ -371,9 +312,9 @@ class Runner {
     return value;
   }
 
-  exit(code, force) {
+  exit(code) {
     (async () => {
-      if (!force && this.argv.coverage) {
+      if (this.argv.coverage) {
         const coverage = await this.extractCoverage();
         fs.writeFileSync(
           path.resolve(this.nyc.tempDirectory(), `${Date.now()}.json`),
@@ -382,10 +323,12 @@ class Runner {
         );
         this.nyc.report();
       }
-      if (!force && this.argv.watch) {
-        const mode = this.all ? 'All' : 'Only';
-        const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
-        this.logInfo(mode, testFiles);
+      if (this.argv.watch) {
+        this.emit('watchEnd');
+        return;
+      }
+      if (this.argv.interactive) {
+        this.emit('interactive');
         return;
       }
       try {
@@ -394,9 +337,10 @@ class Runner {
           await this.chrome.kill();
         }
       } catch (err) {
-        console.log(err);
+        this.log(err);
       }
-      this.mediator.emit('exit', code);
+      this.server.close();
+      process.exitCode = code;
     })();
   }
 }

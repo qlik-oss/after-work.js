@@ -5,12 +5,13 @@ const testExclude = require('test-exclude');
 const importCwd = require('import-cwd');
 const utils = require('@after-work.js/utils');
 const options = require('./options');
-
-process.on('unhandledRejection', (err) => {
-  console.error(`Promise Rejection:${err}`);
-});
+const Runner = require('./runner');
+// process.on('unhandledRejection', (err) => {
+//   console.error(`Promise Rejection:${err}`);
+// });
 
 const cdp = {
+  Runner,
   command: ['cdp', 'chrome'],
   desc: 'Run tests with cdp (chrome devtools protocol)',
   builder(yargs) {
@@ -33,11 +34,6 @@ const cdp = {
         return config;
       })
       .coerce('babel', utils.coerceBabel)
-      .coerce('nyc', (opt) => {
-        opt.sourceMap = false;
-        opt.instrumenter = './lib/instrumenters/noop';
-        return opt;
-      })
       .coerce('instrument', (opt) => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.testExclude = testExclude({ include: opt.include, exclude });
@@ -58,19 +54,20 @@ const cdp = {
       });
   },
   handler(argv) {
-    const Runner = require('./runner');
-    const runner = new Runner(argv);
-    runner.on('exit', code => process.exit(code));
+    const runner = new cdp.Runner(argv);
+    argv.presetEnv.enable = false;
+    require(argv.presetEnv.require)(runner, argv.filter.chrome);
     runner
+      .autoDetectDebug()
       .setTestFiles()
       .setUrl(argv.url)
-      .maybeCreateServer()
-      .setupKeyPress()
-      .autoDetectDebug();
-
-    (async () => {
-      await runner.run();
-    })();
+      .maybeCreateServer();
+    if (argv.interactive) {
+      runner.emit('interactive');
+      return runner;
+    }
+    runner.run();
+    return runner;
   },
 };
 

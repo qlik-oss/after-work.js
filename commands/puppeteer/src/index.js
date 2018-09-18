@@ -13,8 +13,6 @@ class PuppetRunner extends Runner {
   constructor(puppeteer, argv, libs) {
     super(argv, libs);
     this.puppeteer = puppeteer;
-    this.on('onFinished', failures => this.exit(failures));
-    this.on('forceExit', () => this.closeBrowser());
   }
 
   static async getChromeExecutablePath(stable) {
@@ -60,11 +58,12 @@ class PuppetRunner extends Runner {
   }
 
   exit(code) {
-    if (this.argv.watch) {
-      return;
-    }
-    process.exitCode = code;
     this.closeBrowser();
+    super.exit(code);
+  }
+
+  getFilter() {
+    return this.argv.filter.puppeteer;
   }
 }
 
@@ -76,14 +75,7 @@ const puppet = {
     return yargs
       .options(options)
       .config('config', configure)
-      .coerce('babel', utils.coerceBabel)
-      .coerce('nyc', (opt) => {
-        if (opt.babel) {
-          opt.sourceMap = false;
-          opt.instrumenter = './lib/instrumenters/noop';
-        }
-        return opt;
-      });
+      .coerce('babel', utils.coerceBabel);
   },
   handler(argv) {
     (async function launchAndRun() {
@@ -91,18 +83,20 @@ const puppet = {
       if (argv.launch && !argv.chrome.executablePath) {
         argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath(argv.chrome.stable);
       }
-      if (argv.presetEnv) {
-        require(argv.presetEnv)();
-      }
       const runner = new PuppetRunner(puppeteer, argv);
+      require(argv.presetEnv.require)(runner, argv.filter.puppeteer);
       await runner.launch();
       runner
         .autoDetectDebug()
-        .setupKeyPress()
         .setTestFiles()
         .setSrcFiles()
-        .require()
-        .run();
+        .require();
+      if (argv.interactive) {
+        runner.emit('interactive');
+        return runner;
+      }
+      runner.run();
+      return runner;
     }());
   },
 };
