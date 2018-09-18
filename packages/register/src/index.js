@@ -10,8 +10,6 @@ const mod = require('module');
 const requireFromString = require('require-from-string');
 const utils = require('@after-work.js/utils');
 
-// const prependPaths = mod._nodeModulePaths(process.cwd());
-
 const originLoader = mod._load;
 let removeCompileHook = () => { };
 let removeLoadHook = () => { };
