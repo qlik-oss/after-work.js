@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/chai-plugin-screenshot",
-  "version": "5.0.0",
+  "version": "5.0.2",
   "publishConfig": {
     "access": "public"
   },
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/utils": "5.0.0",
+    "@after-work.js/utils": "5.0.2",
     "jimp": "0.3.11",
     "mkdirp": "0.5.1"
   },
