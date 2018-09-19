@@ -45,14 +45,26 @@ function compile(value, filename, options, injectReact) {
   let src;
   if (fs.existsSync(value)) {
     src = fs.readFileSync(value, 'utf8');
+    filename = value;
   } else {
     src = `${injectReact ? 'import React from "react";\n' : ''}export default ${value}`;
   }
   src = compileHook(options, src, filename, true);
-  return requireFromString(src);
+  return requireFromString(src, filename);
 }
 
-function hookedLoader(options, request, parent, isMain) {
+function compileMock(options, filename, value, injectReact) {
+  if (typeof value === 'function') {
+    return value();
+  }
+  if (value === undefined && fs.existsSync(filename)) {
+    const src = fs.readFileSync(filename, 'utf8');
+    value = `${JSON.stringify(src)}`;
+  }
+  return compile(value, filename, options, injectReact);
+}
+
+function hookedLoader(options, configMocks, request, parent, isMain) {
   let filename;
   try {
     filename = mod._resolveFilename(request, parent);
@@ -60,33 +72,21 @@ function hookedLoader(options, request, parent, isMain) {
     filename = request;
   }
 
-  // Explicit mocks in modules e.g aw.mock(...)
-  for (let [key, [value, injectReact]] of aw.mocks) {
+  const mocks = [...aw.mocks, ...configMocks];
+  // 1. Explicit mocks in modules e.g aw.mock(...)
+  // 2. Global config mocks from aw.config.js
+  for (const [key, [value, injectReact = false]] of mocks) {
     if (minimatch(filename, key)) {
-      if (value === undefined && fs.existsSync(filename)) {
-        const src = fs.readFileSync(filename, 'utf8');
-        value = `${JSON.stringify(src)}`;
-      }
-      return compile(value, filename, options, injectReact);
-    }
-  }
-
-  // Global config mocks
-  for (const item of options.mocks || []) {
-    let [key, value] = item;
-    if (minimatch(filename, key)) {
-      if (value === undefined && fs.existsSync(filename)) {
-        const src = fs.readFileSync(filename, 'utf8');
-        value = `${JSON.stringify(src)}`;
-      }
-      return compile(value, filename, options);
+      return compileMock(options, filename, value, injectReact);
     }
   }
   return originLoader(request, parent, isMain);
 }
 
 function addLoadHook(options) {
-  const loadHook = hookedLoader.bind(null, options);
+  const configMocks = new Map();
+  (options.mocks || []).forEach(([key, value]) => configMocks.set(key, [value, false]));
+  const loadHook = hookedLoader.bind(null, options, configMocks);
   mod._load = loadHook;
   return () => {
     mod._load = originLoader;
@@ -136,14 +136,12 @@ class AW {
     mocks.forEach(([key, value]) => this.mocks.set(key, [value, injectReact]));
     const [filename] = utils.getCurrentFilenameStackInfo(this.testFiles);
     const deps = utils.getAllDependencies(this.srcFiles, filename);
-    deps.forEach((d) => {
-      utils.safeDeleteCache(d);
-    });
+    deps.forEach(d => utils.safeDeleteCache(d));
+    Object.keys(require.cache).filter(f => f !== filename && this.testFiles.indexOf(f) === -1).forEach(f => utils.safeDeleteCache(f));
 
     const mods = reqs.map((r) => {
       const p = require.resolve(path.resolve(path.dirname(filename), r));
-      const m = require(p);
-      return m.__esModule && m.default ? m.default : m;
+      return require(p);
     });
 
     mocks.forEach(([key]) => this.mocks.delete(key));

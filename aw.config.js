@@ -68,6 +68,7 @@ module.exports = {
     ['**/cdp/src/browser-shim.js', '{}'],
     ['**/*.{scss,less,css,html}'],
     ['./foobar-virtual.html', '"<div>hello world</div>"'],
+    ['mocked-special', './examples/react/test/button-mock.js'],
   ],
   nyc: {
     include: src,
