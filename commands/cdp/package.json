@@ -33,7 +33,7 @@
     "koa-favicon": "2.0.1",
     "koa-static": "5.0.0",
     "nyc": "13.0.1",
-    "precinct": "4.2.0",
+    "precinct": "5.0.1",
     "source-map-support": "0.5.9",
     "test-exclude": "5.0.0"
   },
