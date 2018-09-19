@@ -137,7 +137,7 @@ class AW {
     const [filename] = utils.getCurrentFilenameStackInfo(this.testFiles);
     const deps = utils.getAllDependencies(this.srcFiles, filename);
     deps.forEach(d => utils.safeDeleteCache(d));
-    Object.keys(require.cache).filter(f => f !== filename).forEach(f => utils.safeDeleteCache(f));
+    Object.keys(require.cache).filter(f => f !== filename && this.testFiles.indexOf(f) === -1).forEach(f => utils.safeDeleteCache(f));
 
     const mods = reqs.map((r) => {
       const p = require.resolve(path.resolve(path.dirname(filename), r));
