@@ -22,7 +22,7 @@
   "dependencies": {
     "@after-work.js/node": "5.0.2",
     "@after-work.js/utils": "5.0.2",
-    "chrome-launcher": "0.10.2",
+    "chrome-launcher": "0.10.4",
     "import-cwd": "2.1.0",
     "puppeteer-core": "1.7.0"
   },
