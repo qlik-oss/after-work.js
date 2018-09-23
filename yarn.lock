@@ -3,10 +3,10 @@
 
 
 "@after-work.js/cli@file:commands/cli":
-  version "5.0.1"
+  version "5.0.2"
   dependencies:
-    "@after-work.js/chai-plugin-screenshot" "5.0.0"
-    "@after-work.js/chai-plugin-snapshot" "5.0.0"
+    "@after-work.js/chai-plugin-screenshot" "5.0.2"
+    "@after-work.js/chai-plugin-snapshot" "5.0.2"
     chai "4.1.2"
     chai-as-promised "7.1.1"
     chai-subset "1.6.0"
@@ -1401,9 +1401,9 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-2.0.0.tgz#9163742ac35c12d3602dece74317643b35db6a80"
 
-"@types/chai@4.1.4":
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.4.tgz#5ca073b330d90b4066d6ce18f60d57f2084ce8ca"
+"@types/chai@4.1.5":
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.5.tgz#6163dc60078d215ec46186dc76062ef6ed68d39c"
 
 "@types/core-js@^0.9.41":
   version "0.9.46"
