@@ -24,7 +24,7 @@
     "@after-work.js/transform": "5.0.2",
     "@after-work.js/utils": "5.0.2",
     "chokidar": "2.0.4",
-    "chrome-launcher": "0.10.2",
+    "chrome-launcher": "0.10.4",
     "chrome-remote-interface": "0.26.1",
     "chrome-unmirror": "0.1.0",
     "globby": "8.0.1",
