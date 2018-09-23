@@ -19,6 +19,6 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "devDependencies": {
     "react": "16.5.0",
-    "react-test-renderer": "16.5.0"
+    "react-test-renderer": "16.5.2"
   }
 }
