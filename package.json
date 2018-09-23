@@ -21,7 +21,7 @@
     "@babel/core": "7.0.0",
     "@babel/plugin-transform-react-jsx": "7.0.0",
     "@babel/preset-env": "7.0.0",
-    "@types/chai": "4.1.4",
+    "@types/chai": "4.1.5",
     "@types/mocha": "5.2.5",
     "babel-plugin-istanbul": "5.0.1",
     "coveralls": "3.0.2",
