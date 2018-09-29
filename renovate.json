@@ -1,5 +1,17 @@
 {
   "extends": [
-    "config:base"
-  ]
+    "qlik-oss",
+    "docker:disable"
+  ],
+  "semanticCommits": true,
+  "rangeStrategy": "bump",
+  "schedule": [],
+  "prHourlyLimit": 0,
+  "packageRules": [{
+    "groupName": "one update to rule them all",
+    "packagePatterns": ["*"],
+    "updateTypes": ["minor", "patch", "pin"],
+    "automerge": true
+  }],
+  "rebaseStalePrs": true
 }
