@@ -3,10 +3,10 @@
 
 
 "@after-work.js/cli@file:commands/cli":
-  version "5.0.1"
+  version "5.0.2"
   dependencies:
-    "@after-work.js/chai-plugin-screenshot" "5.0.0"
-    "@after-work.js/chai-plugin-snapshot" "5.0.0"
+    "@after-work.js/chai-plugin-screenshot" "5.0.2"
+    "@after-work.js/chai-plugin-snapshot" "5.0.2"
     chai "4.1.2"
     chai-as-promised "7.1.1"
     chai-subset "1.6.0"
@@ -2059,9 +2059,9 @@ chownr@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.0.1.tgz#e2a75042a9551908bebd25b8523d5f9769d79181"
 
-chrome-launcher@0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/chrome-launcher/-/chrome-launcher-0.10.2.tgz#f7d860ddec627b6f01015736b5ae1e33b3d165b1"
+chrome-launcher@0.10.5:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/chrome-launcher/-/chrome-launcher-0.10.5.tgz#d0aa72c11f1653e6a60dfebea171522447470ef1"
   dependencies:
     "@types/core-js" "^0.9.41"
     "@types/mkdirp" "^0.3.29"
