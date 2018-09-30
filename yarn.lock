@@ -3,10 +3,10 @@
 
 
 "@after-work.js/cli@file:commands/cli":
-  version "5.0.1"
+  version "5.0.2"
   dependencies:
-    "@after-work.js/chai-plugin-screenshot" "5.0.0"
-    "@after-work.js/chai-plugin-snapshot" "5.0.0"
+    "@after-work.js/chai-plugin-screenshot" "5.0.2"
+    "@after-work.js/chai-plugin-snapshot" "5.0.2"
     chai "4.1.2"
     chai-as-promised "7.1.1"
     chai-subset "1.6.0"
@@ -1671,6 +1671,10 @@ ast-module-types@^2.3.1, ast-module-types@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/ast-module-types/-/ast-module-types-2.3.2.tgz#4bb1de2d729678824429e22a628d03e87df4ad11"
 
+ast-module-types@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/ast-module-types/-/ast-module-types-2.4.0.tgz#b7164dcdaa15d80832f4573b2ea53374ebf76538"
+
 ast-types-flow@0.0.7, ast-types-flow@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/ast-types-flow/-/ast-types-flow-0.0.7.tgz#f70b735c6bca1a5c9c22d982c3e39e7feba3bdad"
@@ -1723,7 +1727,7 @@ babel-plugin-istanbul@5.0.1:
     istanbul-lib-instrument "^2.2.0"
     test-exclude "^5.0.0"
 
-babel-runtime@^6.0.0, babel-runtime@^6.26.0:
+babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   dependencies:
@@ -1742,12 +1746,6 @@ babel-types@^6.0.0:
 babylon@^6.17.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
-
-babylon@~6.8.1:
-  version "6.8.4"
-  resolved "http://registry.npmjs.org/babylon/-/babylon-6.8.4.tgz#097306b8dabae95159225cf29b3ea55912053180"
-  dependencies:
-    babel-runtime "^6.0.0"
 
 balanced-match@^1.0.0:
   version "1.0.0"
@@ -2187,6 +2185,10 @@ commander@^2.11.0, commander@~2.17.1:
   version "2.17.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
 
+commander@^2.17.0:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.18.0.tgz#2bf063ddee7c7891176981a2cc798e5754bc6970"
+
 commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
@@ -2438,7 +2440,7 @@ debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.8, debug@^2.6.
   dependencies:
     ms "2.0.0"
 
-debug@3.1.0, debug@^3.0.1, debug@^3.1.0:
+debug@3.1.0, debug@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
   dependencies:
@@ -2564,27 +2566,27 @@ detect-libc@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
 
-detective-amd@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/detective-amd/-/detective-amd-2.4.0.tgz#5eb0df4ef5c18a94033b07daf136dbcd5fc75cd5"
+detective-amd@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/detective-amd/-/detective-amd-3.0.0.tgz#40c8e21e229df8bca1ee2d4b952a7b67b01e2a5a"
   dependencies:
     ast-module-types "^2.3.1"
     escodegen "^1.8.0"
-    get-amd-module-type "^2.0.4"
-    node-source-walk "^3.0.0"
+    get-amd-module-type "^3.0.0"
+    node-source-walk "^4.0.0"
 
-detective-cjs@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/detective-cjs/-/detective-cjs-2.0.1.tgz#d721b83a61a37048aa1b72328b409dbf7a55431e"
+detective-cjs@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/detective-cjs/-/detective-cjs-3.1.0.tgz#493c1be2c74af1566f5c0902d5ba4c4a2fee1d3c"
   dependencies:
-    ast-module-types "^2.3.2"
-    node-source-walk "^3.0.0"
+    ast-module-types "^2.4.0"
+    node-source-walk "^4.0.0"
 
-detective-es6@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/detective-es6/-/detective-es6-1.2.0.tgz#6b9b3bd547fd8f21f89502f626e45ed2a3276fdc"
+detective-es6@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/detective-es6/-/detective-es6-2.0.0.tgz#e2919c33140cca54013b934cafa83c6e01509247"
   dependencies:
-    node-source-walk "^3.3.0"
+    node-source-walk "^4.0.0"
 
 detective-less@^1.0.1:
   version "1.0.1"
@@ -2594,42 +2596,42 @@ detective-less@^1.0.1:
     gonzales-pe "^3.4.4"
     node-source-walk "^3.2.0"
 
-detective-postcss@^2.1.0:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/detective-postcss/-/detective-postcss-2.1.2.tgz#4b0014e7a87dd650726b8bbe5366268789b1d8ef"
+detective-postcss@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/detective-postcss/-/detective-postcss-3.0.0.tgz#d7effb236fedbae823721eb9ebaefabefe13d02c"
   dependencies:
     debug "^3.1.0"
     is-url "^1.2.4"
-    postcss "^6.0.21"
+    postcss "^7.0.2"
     postcss-values-parser "^1.5.0"
 
-detective-sass@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/detective-sass/-/detective-sass-2.0.1.tgz#05660aa1b95cfd87f574643bface3e8a268112a1"
+detective-sass@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/detective-sass/-/detective-sass-3.0.0.tgz#832c80fc076dfd1f8250b73b7e98e1f388f47649"
   dependencies:
     debug "^3.1.0"
-    gonzales-pe "^3.4.4"
-    node-source-walk "^3.2.0"
+    gonzales-pe "^4.2.3"
+    node-source-walk "^4.0.0"
 
-detective-scss@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/detective-scss/-/detective-scss-1.0.1.tgz#743246a0dd358d9d91ff4125417f6a77fbcf270f"
+detective-scss@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/detective-scss/-/detective-scss-2.0.0.tgz#32fda21a655c60b6f2b88ae82a33a3a0869b2e73"
   dependencies:
     debug "^3.1.0"
-    gonzales-pe "^3.4.4"
-    node-source-walk "^3.2.0"
+    gonzales-pe "^4.2.3"
+    node-source-walk "^4.0.0"
 
 detective-stylus@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/detective-stylus/-/detective-stylus-1.0.0.tgz#50aee7db8babb990381f010c63fabba5b58e54cd"
 
-detective-typescript@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/detective-typescript/-/detective-typescript-2.0.0.tgz#dc619fc3d69ccd59021412c5855a6ff22f41a710"
+detective-typescript@^4.0.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/detective-typescript/-/detective-typescript-4.1.1.tgz#fa7e11cdff9ed38c3cf45dc19d369c34b33b324a"
   dependencies:
-    node-source-walk "3.2.0"
-    typescript "^2.6.1"
-    typescript-eslint-parser "^9.0.0"
+    node-source-walk "^4.0.0"
+    typescript "^3.0.3"
+    typescript-eslint-parser "^18.0.0"
 
 dezalgo@^1.0.0:
   version "1.0.3"
@@ -3317,12 +3319,12 @@ genfun@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/genfun/-/genfun-4.0.1.tgz#ed10041f2e4a7f1b0a38466d17a5c3e27df1dfc1"
 
-get-amd-module-type@^2.0.4:
-  version "2.0.5"
-  resolved "http://registry.npmjs.org/get-amd-module-type/-/get-amd-module-type-2.0.5.tgz#e671ec5a96ad5fbf53a3a22a289e9238c772ddb0"
+get-amd-module-type@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/get-amd-module-type/-/get-amd-module-type-3.0.0.tgz#bb334662fa04427018c937774570de495845c288"
   dependencies:
     ast-module-types "^2.3.2"
-    node-source-walk "^3.2.0"
+    node-source-walk "^4.0.0"
 
 get-caller-file@^1.0.1:
   version "1.0.3"
@@ -3483,6 +3485,12 @@ globby@^5.0.0:
 gonzales-pe@^3.4.4:
   version "3.4.7"
   resolved "https://registry.yarnpkg.com/gonzales-pe/-/gonzales-pe-3.4.7.tgz#17c7be67ad6caff6277a3e387ac736e983d280ec"
+  dependencies:
+    minimist "1.1.x"
+
+gonzales-pe@^4.2.3:
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/gonzales-pe/-/gonzales-pe-4.2.3.tgz#41091703625433285e0aee3aa47829fc1fbeb6f2"
   dependencies:
     minimist "1.1.x"
 
@@ -4831,12 +4839,12 @@ modify-values@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
 
-module-definition@^2.2.4:
-  version "2.2.4"
-  resolved "http://registry.npmjs.org/module-definition/-/module-definition-2.2.4.tgz#c0a3771de58cf6bcf12aed2476706c596ad4b2cb"
+module-definition@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/module-definition/-/module-definition-3.1.0.tgz#201c062b89f81ed18018e1a2f15afc0c8089a126"
   dependencies:
-    ast-module-types "^2.3.2"
-    node-source-walk "^3.0.0"
+    ast-module-types "^2.4.0"
+    node-source-walk "^4.0.0"
 
 moment@2.22.2:
   version "2.22.2"
@@ -4982,17 +4990,17 @@ node-releases@^1.0.0-alpha.11:
   dependencies:
     semver "^5.3.0"
 
-node-source-walk@3.2.0:
-  version "3.2.0"
-  resolved "http://registry.npmjs.org/node-source-walk/-/node-source-walk-3.2.0.tgz#3c605cc53abdee4b45ab65e947dfb1db7c90f0e3"
-  dependencies:
-    babylon "~6.8.1"
-
-node-source-walk@^3.0.0, node-source-walk@^3.2.0, node-source-walk@^3.3.0:
+node-source-walk@^3.2.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/node-source-walk/-/node-source-walk-3.3.0.tgz#ad18e35bfdb3d0b6f7e0e4aff1e78f846a3b8873"
   dependencies:
     babylon "^6.17.0"
+
+node-source-walk@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/node-source-walk/-/node-source-walk-4.0.0.tgz#0f50f678f1e4121cd6f4ed9eac4fb90668425ab8"
+  dependencies:
+    "@babel/parser" "^7.0.0"
 
 "nopt@2 || 3":
   version "3.0.6"
@@ -5566,31 +5574,31 @@ postcss-values-parser@^1.5.0:
     indexes-of "^1.0.1"
     uniq "^1.0.1"
 
-postcss@^6.0.21:
-  version "6.0.23"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-6.0.23.tgz#61c82cc328ac60e677645f979054eb98bc0e3324"
+postcss@^7.0.2:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.4.tgz#b5a059597d2c1a8a9916cb6efb0b294f70b4f309"
   dependencies:
     chalk "^2.4.1"
     source-map "^0.6.1"
-    supports-color "^5.4.0"
+    supports-color "^5.5.0"
 
-precinct@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/precinct/-/precinct-4.2.0.tgz#f8a88015d96d5844a79bf8b0813d70798acf37f0"
+precinct@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/precinct/-/precinct-5.1.0.tgz#fdcea2c66852d42e4e1c749b1f9c6a462fdd4952"
   dependencies:
-    commander "^2.11.0"
-    debug "^3.0.1"
-    detective-amd "^2.4.0"
-    detective-cjs "^2.0.0"
-    detective-es6 "^1.2.0"
+    commander "^2.17.0"
+    debug "^3.1.0"
+    detective-amd "^3.0.0"
+    detective-cjs "^3.1.0"
+    detective-es6 "^2.0.0"
     detective-less "^1.0.1"
-    detective-postcss "^2.1.0"
-    detective-sass "^2.0.0"
-    detective-scss "^1.0.0"
+    detective-postcss "^3.0.0"
+    detective-sass "^3.0.0"
+    detective-scss "^2.0.0"
     detective-stylus "^1.0.0"
-    detective-typescript "^2.0.0"
-    module-definition "^2.2.4"
-    node-source-walk "^3.3.0"
+    detective-typescript "^4.0.0"
+    module-definition "^3.1.0"
+    node-source-walk "^4.0.0"
 
 prelude-ls@~1.1.2:
   version "1.1.2"
@@ -6199,9 +6207,9 @@ selenium-webdriver@3.6.0, selenium-webdriver@^3.0.1:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.1.tgz#7dfdd8814bdb7cabc7be0fb1d734cfb66c940477"
 
-semver@5.4.1:
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.4.1.tgz#e059c09d8571f0540823733433505d3a2f00b18e"
+semver@5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
 semver@~5.3.0:
   version "5.3.0"
@@ -6561,7 +6569,7 @@ supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
 
-supports-color@^5.3.0, supports-color@^5.4.0:
+supports-color@^5.3.0, supports-color@^5.4.0, supports-color@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-5.5.0.tgz#e2e69a44ac8772f78a1ec0b35b689df6530efc8f"
   dependencies:
@@ -6779,20 +6787,20 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript-eslint-parser@^9.0.0:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/typescript-eslint-parser/-/typescript-eslint-parser-9.0.1.tgz#1497a565d192ca2a321bc5bbf89dcab0a2da75e8"
+typescript-eslint-parser@^18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/typescript-eslint-parser/-/typescript-eslint-parser-18.0.0.tgz#3e5055a44980d69e4154350fc5d8b1ab4e2332a8"
   dependencies:
     lodash.unescape "4.0.1"
-    semver "5.4.1"
+    semver "5.5.0"
 
 typescript@3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.0.3.tgz#4853b3e275ecdaa27f78fda46dc273a7eb7fc1c8"
 
-typescript@^2.6.1:
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
+typescript@^3.0.3:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.1.tgz#3362ba9dd1e482ebb2355b02dfe8bcd19a2c7c96"
 
 uglify-js@^2.6:
   version "2.8.29"
