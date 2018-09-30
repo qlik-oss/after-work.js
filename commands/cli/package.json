@@ -25,7 +25,7 @@
   "dependencies": {
     "@after-work.js/chai-plugin-screenshot": "5.0.2",
     "@after-work.js/chai-plugin-snapshot": "5.0.2",
-    "chai": "4.1.2",
+    "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
     "import-cwd": "2.1.0",
