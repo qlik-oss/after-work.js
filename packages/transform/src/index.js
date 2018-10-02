@@ -8,10 +8,9 @@ const fileCache = new FileCache();
 function getBabelOpts(filename, argv) {
   const { options: { sourceRoot, only, ignore } = {}, babelPluginIstanbul } = argv.babel;
   const virtualMock = !!argv.virtualMock;
-  const addCoverage = argv.instrument.testExclude.shouldInstrument(filename) && virtualMock === false;
-
+  const addCoverage = virtualMock === false;
   const plugins = addCoverage
-    ? [[babelPluginIstanbul, {}]]
+    ? [[babelPluginIstanbul, argv.nyc]]
     : [];
   const sourceMaps = 'both';
   const retainLines = true;

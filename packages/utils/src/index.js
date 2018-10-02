@@ -5,6 +5,7 @@ const readline = require('readline');
 const importCwd = require('import-cwd');
 const debug = require('debug');
 const globby = require('globby');
+const minimatch = require('minimatch');
 
 const pkg = importCwd('./package.json');
 const findPkgs = g => globby.sync(`${g}/package.json`);
@@ -177,6 +178,9 @@ const utils = {
   },
   debug(ns) {
     return debug(ns);
+  },
+  filter(arr, initialValue) {
+    return arr.reduce((acc, curr) => acc.filter(file => minimatch(file, curr)), initialValue);
   },
 };
 

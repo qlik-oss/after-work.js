@@ -10,24 +10,22 @@ const testExclude = require('test-exclude');
 module.exports = function createServer(options) {
   const http = Object.assign({ port: 9000, root: ['./'], rewrite: {} }, options.http);
   const instrument = Object.assign({ exclude: '**' }, options.instrument);
+  const instrumentExclude = testExclude({ include: instrument.include, exclude: instrument.exclude });
+  const shouldInstrument = f => instrumentExclude.shouldInstrument(f);
   const transform = Object.assign({ exclude: '**' }, options.transform);
+  const transformExclude = testExclude({ include: transform.include, exclude: transform.exclude });
+  const shouldTransform = f => transformExclude.shouldInstrument(f);
   const babel = utils.coerceBabel({
     enable: true,
     babelPluginIstanbul: 'babel-plugin-istanbul',
     ...options.babel,
   });
   const opts = {
+    shouldInstrument,
+    shouldTransform,
     ...options,
     http: {
       ...http,
-    },
-    instrument: {
-      testExclude: testExclude({ include: instrument.include, exclude: instrument.exclude }),
-      ...instrument,
-    },
-    transform: {
-      testExclude: testExclude({ include: transform.include, exclude: transform.exclude }),
-      ...transform,
     },
     babel: {
       ...babel,

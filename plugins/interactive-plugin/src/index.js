@@ -1,12 +1,14 @@
 const inquirer = require('inquirer');
 const checkboxPlus = require('inquirer-checkbox-plus-prompt');
 const fuzzy = require('fuzzy');
+const utils = require('@after-work.js/utils');
+
 const {
   packages,
   packagesMap,
   workspaces,
   lernaPackages,
-} = require('@after-work.js/utils');
+} = utils;
 
 let test = [];
 let src = [];
@@ -110,7 +112,7 @@ const onInteractive = (runner, filter) => {
     if (interactive === 'workspaces' || interactive === 'scopes') {
       const message = interactive === 'workspaces' ? 'Which workspaces?' : 'Which scopes';
       const inputPackages = (runner.argv.scope.length ? runner.argv.scope : packages);
-      const filteredPackages = filter.packages.reduce((acc, curr) => acc.filter(curr), inputPackages);
+      const filteredPackages = utils.filter(filter.packages, inputPackages);
       const pkgs = await promptPackages(message, filteredPackages);
       if (!Array.isArray(pkgs)) {
         onInteractive(runner, filter);
@@ -130,7 +132,7 @@ const onInteractive = (runner, filter) => {
       }
     }
     if (interactive === 'filter') {
-      const filteredTestFiles = filter.files.reduce((acc, curr) => acc.filter(curr), runner.testFiles);
+      const filteredTestFiles = utils.filter(filter.files, runner.testFiles);
       test = await promptTestFiles(filteredTestFiles);
       src = [];
       if (Array.isArray(test) && test.length) {

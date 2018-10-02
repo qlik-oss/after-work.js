@@ -8,8 +8,8 @@ module.exports = function transform(argv) {
     if (ctx.url.length && ctx.url.startsWith('/')) {
       url = ctx.url.substring(1);
     }
-    const shouldInstrument = argv.coverage && argv.instrument && argv.instrument.testExclude.shouldInstrument(url);
-    const shouldTransform = argv.transform && argv.transform.testExclude.shouldInstrument(url);
+    const shouldInstrument = argv.coverage && argv.shouldInstrument(url);
+    const shouldTransform = argv.shouldTransform(url);
 
     if (shouldInstrument || shouldTransform) {
       const { response } = ctx;

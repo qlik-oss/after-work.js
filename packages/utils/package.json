@@ -26,6 +26,7 @@
     "npmlog": "4.1.2",
     "debug": "4.0.1",
     "import-cwd": "2.1.0",
-    "globby": "8.0.1"
+    "globby": "8.0.1",
+    "minimatch": "3.0.4"
   }
 }

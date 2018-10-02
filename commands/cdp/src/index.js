@@ -34,11 +34,6 @@ const cdp = {
         return config;
       })
       .coerce('babel', utils.coerceBabel)
-      .coerce('instrument', (opt) => {
-        const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
-        opt.testExclude = testExclude({ include: opt.include, exclude });
-        return opt;
-      })
       .coerce('transform', (opt) => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.testExclude = testExclude({ include: opt.include, exclude });

@@ -47,13 +47,8 @@ const protractor = {
       .coerce('typescript', utils.coerceTypescript);
   },
   handler(argv) {
-    argv.instrument = {
-      testExclude: {
-        shouldInstrument() {
-          return false;
-        },
-      },
-    };
+    argv.shouldInstrument = () => false;
+    argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
     require(argv.presetEnv.require)({ argv });
     let launcher;
     try {
@@ -74,7 +69,7 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    const specs = argv.filter.protractor.files.reduce((acc, curr) => acc.filter(file => curr(file.replace(/\\/g, '/'))), globby.sync(argv.glob));
+    const specs = utils.filter(argv.filter.protractor.files, globby.sync(argv.glob));
     if (specs.length) {
       config.specs = specs;
     }

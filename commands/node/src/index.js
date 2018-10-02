@@ -80,7 +80,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = this.getFilter().files.reduce((acc, curr) => acc.filter(file => curr(file.replace(/\\/g, '/'))), this.findFiles(this.argv.glob));
+    this.testFiles = utils.filter(this.getFilter().files, this.findFiles(this.argv.glob));
     if (!this.testFiles.length) {
       console.error('No files found for:', this.argv.glob);
       if (!this.argv.interactive) {
@@ -91,7 +91,7 @@ class Runner extends EventEmitter {
   }
 
   setSrcFiles() {
-    this.srcFiles = this.findFiles(this.argv.src);
+    this.srcFiles = utils.filter(this.getFilter().files, this.findFiles(this.argv.src));
     return this;
   }
 
@@ -158,7 +158,7 @@ class Runner extends EventEmitter {
     });
     if (this.argv.coverage) {
       srcFiles.forEach((f) => {
-        if (!this.nyc.exclude.shouldInstrument(f)) {
+        if (!this.argv.shouldInstrument(f)) {
           return;
         }
         this.logLine('Loading', f);
@@ -179,9 +179,7 @@ class Runner extends EventEmitter {
       this.logLine('Loading', file);
     });
     this.nyc = new this.libs.NYC(this.argv.nyc);
-    this.argv.instrument = {
-      testExclude: this.nyc.exclude,
-    };
+    this.argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
     try {
       this
         .deleteCoverage()

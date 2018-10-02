@@ -20,6 +20,8 @@ class Runner extends EventEmitter {
     super();
     this.argv = argv;
     this.nyc = new NYC(argv.nyc);
+    argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
+    argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
     this.mediator = new Mediator();
     this.chromeLauncher = chromeLauncher;
     this.ended = false;
@@ -131,13 +133,13 @@ class Runner extends EventEmitter {
     return this.chromeLauncher.launch(options);
   }
 
-  async setup() {
+  async setup(testFiles) {
     if (this.argv.chrome.launch) {
       this.chrome = await this.launch(this.argv.chrome);
       const { port } = this.chrome;
       this.argv.client.port = port;
     }
-    const awFiles = this.relativeBaseUrlFiles(this.testFiles);
+    const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
     this.client = await connect(this.argv, awFiles, this.debugging);
     if (!this.client) {
       this.fail('CDP Client could not connect');
@@ -205,7 +207,8 @@ class Runner extends EventEmitter {
     this.isRunning = true;
     (async () => {
       if (!this.client) {
-        await this.run();
+        await this.setup(testFiles);
+        await this.navigate();
         return;
       }
       const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
@@ -269,8 +272,12 @@ class Runner extends EventEmitter {
     return globby.sync(glob).map(f => path.resolve(f));
   }
 
+  getFilter() {
+    return this.argv.filter.chrome;
+  }
+
   setTestFiles() {
-    this.testFiles = this.argv.filter.chrome.files.reduce((acc, curr) => acc.filter(file => curr(file.replace(/\\/g, '/'))), this.findFiles(this.argv.glob));
+    this.testFiles = utils.filter(this.getFilter().files, this.findFiles(this.argv.glob));
     if (!this.testFiles.length) {
       this.log('No files found for:', this.argv.glob);
       this.exit(1);
@@ -314,7 +321,7 @@ class Runner extends EventEmitter {
 
   exit(code) {
     (async () => {
-      if (this.argv.coverage) {
+      if (code === 0 && this.argv.coverage) {
         const coverage = await this.extractCoverage();
         fs.writeFileSync(
           path.resolve(this.nyc.tempDirectory(), `${Date.now()}.json`),
@@ -325,10 +332,6 @@ class Runner extends EventEmitter {
       }
       if (this.argv.watch) {
         this.emit('watchEnd');
-        return;
-      }
-      if (this.argv.interactive) {
-        this.emit('interactive');
         return;
       }
       try {

@@ -1,6 +1,7 @@
 const cmd = process.argv.slice(2).shift();
 
 module.exports = {
+  coverage: true,
   url: 'http://localhost:9676/examples/index.html',
   mocks: [
     ['**/cdp/src/browser-shim.js', '{}'],
@@ -9,7 +10,7 @@ module.exports = {
     ['mocked-special', './examples/react/test/button-mock.js'],
   ],
   nyc: {
-    exclude: ['**/cli/src/index.js', '**/transform/src/index.js', '**/browser-shim.js', '**/commands/aw'],
+    exclude: ['**/*.html', '**/*.spec.*', '**/cli/src/index.js', '**/transform/src/index.js', '**/browser-shim.js', '**/commands/aw', '**/examples/main.js'],
   },
   mocha: {
     reporter: 'spec',
@@ -25,33 +26,29 @@ module.exports = {
       }],
     ],
   },
-  'instrument.exclude': [
-    '**/main.js',
-  ],
   'filter.node.packages': [
-    name => !name.includes('example-chrome'),
-    name => !name.includes('example-protractor'),
-    name => !name.includes('example-puppeteer'),
+    '!@after-work.js/example-*(protractor|puppeteer)',
+    '!@after-work.js/example-chrome-*',
   ],
   'filter.node.files': [
-    file => !file.includes('examples/chrome'),
-    file => !file.includes('examples/protractor'),
-    file => !file.includes('examples/puppeteer'),
+    '!**/examples/chrome-*/**',
+    '!**/examples/protractor/**',
+    '!**/examples/puppeteer/**',
   ],
   'filter.chrome.packages': [
-    name => name.includes('example-chrome'),
+    '@after-work.js/example-chrome-*',
   ],
   'filter.chrome.files': [
-    file => file.includes('examples/chrome'),
+    '**/examples/chrome-*/**',
   ],
   'filter.puppeteer.packages': [
-    name => name.includes('example-puppeteer'),
+    '@after-work.js/example-puppeteer',
   ],
   'filter.puppeteer.files': [
-    file => file.includes('examples/puppeteer'),
+    '**/examples/puppeteer/**',
   ],
   'filter.protractor.files': [
-    file => file.includes('examples/protractor'),
+    '**/examples/protractor/**',
   ],
-  artifactsPath: 'examples/protractor/test/__artifacts__',
+  artifactsPath: 'examples/protractor/test/__artifacts__', // rename to protractorArtifactsPath
 };

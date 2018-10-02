@@ -52,7 +52,7 @@ describe('Node command', () => {
   });
 
   it('should set srcFiles', () => {
-    const argv = {};
+    const argv = { filter: { node: { files: [] } } };
     const runner = new Runner(argv);
     sandbox.stub(globby, 'sync').returns(['foo.js']);
     runner.setSrcFiles();
