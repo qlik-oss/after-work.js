@@ -18,6 +18,11 @@ module.exports = {
     default: path.resolve(__dirname, 'preset-env.js'),
     type: 'string',
   },
+  require: {
+    description: 'Require path',
+    default: [],
+    type: 'array',
+  },
   scope: {
     description: 'Scope to package',
     default: [],
@@ -118,6 +123,11 @@ module.exports = {
   'filter.puppeteer.files': {
     description: 'Filter files shown in interactive mode in Node',
     default: [() => true],
+    type: 'array',
+  },
+  'filter.protractor.files': {
+    description: 'Filter files shown in interactive mode in Node',
+    default: [() => false],
     type: 'array',
   },
 };

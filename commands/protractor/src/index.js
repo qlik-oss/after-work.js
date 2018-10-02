@@ -3,6 +3,7 @@ const path = require('path');
 const extend = require('extend');
 const fs = require('fs');
 const utils = require('@after-work.js/utils');
+const globby = require('globby');
 const options = require('./options');
 
 const protractor = {
@@ -25,6 +26,22 @@ const protractor = {
   },
   builder(yargs) {
     return yargs
+      .config('config', (configPath) => {
+        if (configPath === null) {
+          return {};
+        }
+        if (!fs.existsSync(configPath)) {
+          throw new Error(`Config ${configPath} not found`);
+        }
+        let config = {};
+        const foundConfig = require(configPath);
+        if (typeof foundConfig === 'function') {
+          config = Object.assign({}, foundConfig());
+        } else {
+          config = Object.assign({}, foundConfig);
+        }
+        return config;
+      })
       .options(options)
       .coerce('babel', utils.coerceBabel)
       .coerce('typescript', utils.coerceTypescript);
@@ -57,8 +74,9 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    if (argv.glob.length) {
-      config.specs = argv.glob;
+    const specs = argv.filter.protractor.files.reduce((acc, curr) => acc.filter(curr), globby.sync(argv.glob));
+    if (specs.length) {
+      config.specs = specs;
     }
 
     launcher.init('', config);

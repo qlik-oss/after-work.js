@@ -1,9 +1,4 @@
 module.exports = {
-  require: {
-    description: 'Require path',
-    default: [],
-    type: 'array',
-  },
   exit: {
     description: 'Force its own process to exit once it was finished executing all tests',
     default: false,

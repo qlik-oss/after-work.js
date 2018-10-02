@@ -1,12 +1,7 @@
 const cmd = process.argv.slice(2).shift();
 
-let url = null;
-if (cmd === 'chrome') {
-  url = 'http://localhost:9676/examples/index.html';
-}
-
 module.exports = {
-  url,
+  url: 'http://localhost:9676/examples/index.html',
   mocks: [
     ['**/cdp/src/browser-shim.js', '{}'],
     ['**/*.{scss,less,css,html}'],
@@ -55,4 +50,8 @@ module.exports = {
   'filter.puppeteer.files': [
     file => file.includes('examples/puppeteer'),
   ],
+  'filter.protractor.files': [
+    file => file.includes('examples/protractor'),
+  ],
+  artifactsPath: 'examples/protractor/test/__artifacts__',
 };
