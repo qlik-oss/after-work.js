@@ -18,7 +18,6 @@ install:
   - yarn --version
   # Workaround for https://github.com/appveyor/ci/issues/2420
   - set "PATH=%PATH%;C:\Program Files\Git\mingw64\libexec\git-core"
-  - yarn cache clean
   # install modules
   - yarn
 

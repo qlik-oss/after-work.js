@@ -80,7 +80,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = this.getFilter().files.reduce((acc, curr) => acc.filter(curr), this.findFiles(this.argv.glob));
+    this.testFiles = this.getFilter().files.reduce((acc, curr) => acc.filter(file => curr(file.replace(/\\/g, '/'))), this.findFiles(this.argv.glob));
     if (!this.testFiles.length) {
       console.error('No files found for:', this.argv.glob);
       if (!this.argv.interactive) {

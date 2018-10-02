@@ -74,7 +74,7 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    const specs = argv.filter.protractor.files.reduce((acc, curr) => acc.filter(curr), globby.sync(argv.glob));
+    const specs = argv.filter.protractor.files.reduce((acc, curr) => acc.filter(file => curr(file.replace(/\\/g, '/'))), globby.sync(argv.glob));
     if (specs.length) {
       config.specs = specs;
     }
