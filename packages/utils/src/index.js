@@ -21,22 +21,13 @@ packagesPath.forEach((root) => {
   packages = [...packages, name];
   packagesMap.set(name, root);
 });
-const DEFAULT_TEST_GLOB_PATTERN = 'test/**/*.spec.{js,ts}';
-const DEFAULT_TEST_GLOB = [DEFAULT_TEST_GLOB_PATTERN];
-const DEFAULT_SRC_PATTERN = 'src/**/*.{js,ts}';
-const DEFAULT_SRC = [DEFAULT_SRC_PATTERN];
-const TEST_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : DEFAULT_TEST_GLOB;
-const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_PATTERN}`) : DEFAULT_SRC;
-const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 const utils = {
   packages,
+  packagesPath,
   packagesMap,
   workspaces,
   lernaPackages,
-  TEST_GLOB,
-  SRC_GLOB,
-  WATCH_GLOB,
   isSourceMap(f) {
     return !fs.existsSync(f) && f.endsWith('.map');
   },
@@ -181,6 +172,10 @@ const utils = {
   },
   filter(arr, initialValue) {
     return arr.reduce((acc, curr) => acc.filter(file => minimatch(file, curr)), initialValue);
+  },
+  isTestFile(filePath, extPattern) {
+    const base = path.basename(filePath);
+    return minimatch(base, extPattern);
   },
 };
 

@@ -32,7 +32,6 @@ class Runner extends EventEmitter {
     this.depMap = new Map();
     this.srcTestMap = new Map();
     this.onlyTestFiles = [];
-    this.all = true;
     this.bind();
     this.bindWatch();
     this.debugging = false;
@@ -40,22 +39,11 @@ class Runner extends EventEmitter {
     this.server = { close: () => { } };
   }
 
-  log(msg) {
-    console.error(msg);
-  }
-
-  logLine(prefix, msg) {
-    utils.writeLine(prefix, msg);
-  }
-
-  logClearLine() {
-    utils.clearLine();
+  log(...args) {
+    console.error(...args);
   }
 
   bind() {
-    if (!this.argv.url) {
-      this.fail('`options.url` must be specified to run tests');
-    }
     this.mediator.on('width', () => {
       if (!this.client) {
         return;
@@ -69,11 +57,11 @@ class Runner extends EventEmitter {
       if (this.argv.coverage) {
         this.nyc.reset();
       }
-      this.logClearLine();
+      utils.clearLine();
       this.log('Runner started\n');
 
       if (tests === 0) {
-        this.fail('mocha.run() was called with no tests');
+        this.log('mocha.run() was called with no tests');
       }
     });
 
@@ -82,18 +70,14 @@ class Runner extends EventEmitter {
       this.started = false;
       this.ended = true;
       this.isRunning = false;
-      this.exit(stats.failures);
+      this.exit(stats.tests ? stats.failures : 1);
     });
-  }
-
-  fail(msg) {
-    this.log(msg);
-    this.exit(1);
   }
 
   pipeOut(Runtime) {
     Runtime.exceptionThrown((exception) => {
       this.log('[chrome-exception]', exception);
+      this.exit(1);
     });
 
     Runtime.consoleAPICalled(({ type, args }) => {
@@ -116,7 +100,7 @@ class Runner extends EventEmitter {
     Network.requestWillBeSent((info) => {
       this.requests.set(info.requestId, info.request);
       if (!this.started && info.request.url.match(/^(file|http(s?)):\/\//)) {
-        this.logLine('Loading', info.request.url);
+        utils.writeLine('Loading', info.request.url);
       }
     });
     Network.loadingFailed((info) => {
@@ -142,7 +126,7 @@ class Runner extends EventEmitter {
     const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
     this.client = await connect(this.argv, awFiles, this.debugging);
     if (!this.client) {
-      this.fail('CDP Client could not connect');
+      this.log('CDP Client could not connect');
       return;
     }
     const { DOMStorage, Runtime, Network } = this.client;
@@ -153,11 +137,17 @@ class Runner extends EventEmitter {
   }
 
   async navigate() {
-    if (this.loadError) {
-      this.fail(`Failed to load the url: ${this.argv.url}`);
+    if (!this.argv.url) {
+      this.log('`options.url` must be specified to run tests');
+      this.exit(1);
       return;
     }
-    this.log(`Navigating to ${this.argv.url}`);
+    const url = this.getUrl(this.argv.url);
+    if (this.loadError) {
+      this.log(`Failed to load the url: ${url}`);
+      return;
+    }
+    this.log(`Navigating to ${url}`);
     this.isRunning = true;
     await this.client.Page.navigate({ url: this.argv.url });
   }
@@ -183,32 +173,30 @@ class Runner extends EventEmitter {
     return false;
   }
 
-  matchDependency(srcFile) {
-    const cache = this.srcTestMap.get(srcFile);
+  matchDependency(file) {
+    const cache = this.srcTestMap.get(file);
     if (cache) {
       return cache;
     }
-    const srcName = path.basename(srcFile).split('.').shift();
-    for (const f of this.testFiles) {
-      this.logLine('Scanning', f);
-      const deps = this.getDependencies(f);
+    const srcName = path.basename(file).split('.').shift();
+    for (const testFile of this.testFiles) {
+      utils.writeLine('Scanning', testFile);
+      const deps = this.getDependencies(testFile);
       const found = this.matchDependencyName(srcName, deps);
       if (found) {
-        this.srcTestMap.set(srcFile, [f]);
-        return [f];
+        this.srcTestMap.set(file, [testFile]);
+        return [testFile];
       }
     }
-    this.logClearLine();
-    this.log(`Couldn't find a test file for ${srcFile}`);
-    return [];
+    utils.clearLine();
+    return this.testFiles;
   }
 
   setupAndRunTests(testFiles) {
     this.isRunning = true;
     (async () => {
       if (!this.client) {
-        await this.setup(testFiles);
-        await this.navigate();
+        await this.run(testFiles);
         return;
       }
       const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
@@ -217,34 +205,40 @@ class Runner extends EventEmitter {
     })();
   }
 
-  onWatch(virtualAbs, virtualRel) {
+  onWatchAdd(f) {
+    if (utils.isTestFile(f, this.argv.ext)) {
+      this.testFiles.push(f);
+    }
+  }
+
+  onWatchUnlink(f) {
+    const tIx = this.testFiles.indexOf(f);
+    if (tIx !== -1) {
+      this.testFiles.splice(tIx, 1);
+    }
+    deleteTransform(f);
+  }
+
+  onWatch(f) {
     if (this.isRunning) {
       return;
     }
-    deleteTransform(virtualAbs);
-    const ext = utils.getExt(virtualAbs);
-    const abs = utils.getPathWithExt(virtualAbs, 'js');
-    const rel = utils.getPathWithExt(virtualRel, 'js');
-    let testFiles = [rel];
-    if (this.depMap.get(abs)) {
-      this.depMap.delete(abs);
-    }
-    this.all = false;
-    const isTestFile = this.testFiles.indexOf(abs) !== -1;
-    if (!isTestFile) {
-      testFiles = this.matchDependency(abs);
-      const nycOpts = Object.assign({}, this.argv.nyc, { exclude: ['**', `!${rel}`] });
-      this.nyc = new NYC(nycOpts);
+    const isTestFile = this.testFiles.indexOf(f) !== -1;
+    if (isTestFile) {
+      this.onlyTestFiles = [f];
     } else {
-      this.nyc = new NYC(this.argv.nyc);
+      this.onlyTestFiles = this.matchDependency(f);
     }
-    this.onlyTestFiles = testFiles.map(f => utils.getPathWithExt(f, ext));
     this.setupAndRunTests(this.onlyTestFiles);
   }
 
   bindWatch() {
     if (this.argv.watch) {
-      chokidar.watch(this.argv.watchGlob).on('change', f => this.onWatch(path.resolve(f), f));
+      chokidar.watch(this.argv.watchGlob, { ignoreInitial: true })
+        .on('change', f => this.onWatch(path.resolve(f)))
+        .on('add', f => this.onWatchAdd(path.resolve(f)))
+        .on('unlink', f => this.onWatchUnlink(path.resolve(f)));
+      this.isWatching = true;
     }
   }
 
@@ -279,25 +273,22 @@ class Runner extends EventEmitter {
   setTestFiles() {
     this.testFiles = utils.filter(this.getFilter().files, this.findFiles(this.argv.glob));
     if (!this.testFiles.length) {
-      this.log('No files found for:', this.argv.glob);
+      this.log(`No files found for glob: ${this.argv.glob} with filter: ${this.getFilter().files}`);
       this.exit(1);
     }
     return this;
   }
 
-  setUrl(url) {
+  getUrl(url) {
     if (!/^(file|http(s?)):\/\//.test(url)) {
       if (!fs.existsSync(url)) {
         url = `file://${path.resolve(path.join(process.cwd(), url))}`;
       }
-      if (!fs.existsSync(url)) {
-        this.log('You must specify an existing url.');
-        this.exit(1);
+      if (fs.existsSync(url)) {
+        url = `file://${fs.realpathSync(url)}`;
       }
-      url = `file://${fs.realpathSync(url)}`;
     }
-    this.argv.url = url;
-    return this;
+    return url;
   }
 
   maybeCreateServer() {
@@ -307,9 +298,9 @@ class Runner extends EventEmitter {
     return this;
   }
 
-  run() {
+  run(testFiles) {
     (async () => {
-      await this.setup();
+      await this.setup(testFiles);
       await this.navigate();
     })();
   }
@@ -334,15 +325,19 @@ class Runner extends EventEmitter {
         this.emit('watchEnd');
         return;
       }
-      try {
-        await this.client.close();
-        if (this.argv.chrome.launch) {
-          await this.chrome.kill();
+      if (this.client) {
+        try {
+          await this.client.close();
+          if (this.argv.chrome.launch) {
+            await this.chrome.kill();
+          }
+        } catch (err) {
+          this.log(err);
         }
-      } catch (err) {
-        this.log(err);
       }
-      this.server.close();
+      if (this.server) {
+        this.server.close();
+      }
       process.exitCode = code;
     })();
   }

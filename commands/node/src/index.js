@@ -32,7 +32,6 @@ class Runner extends EventEmitter {
     this.libs = libs;
     this.debugging = false;
     this.snapshotStates = new Map();
-    this.isWatching = false;
     this.bindWatch();
   }
 
@@ -197,9 +196,7 @@ class Runner extends EventEmitter {
   }
 
   onWatchAdd(f) {
-    const base = path.basename(f);
-    const parts = base.split('.');
-    if (parts.length > 1) {
+    if (utils.isTestFile(f, this.argv.ext)) {
       this.testFiles.push(f);
     } else {
       this.srcFiles.push(f);
@@ -243,7 +240,6 @@ class Runner extends EventEmitter {
         .on('change', f => this.onWatch(path.resolve(f)))
         .on('add', f => this.onWatchAdd(path.resolve(f)))
         .on('unlink', f => this.onWatchUnlink(path.resolve(f)));
-      this.isWatching = true;
     }
   }
 

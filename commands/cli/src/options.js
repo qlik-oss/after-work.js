@@ -1,10 +1,14 @@
 const path = require('path');
-const {
-  packages,
-  TEST_GLOB,
-  SRC_GLOB,
-  WATCH_GLOB,
-} = require('@after-work.js/utils');
+const { packages, packagesPath } = require('@after-work.js/utils');
+
+const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,ts}';
+const DEFAULT_TEST_GLOB_PATTERN = `test/**/${DEFAULT_TEST_EXT_PATTERN}`;
+const DEFAULT_TEST_GLOB = [DEFAULT_TEST_GLOB_PATTERN];
+const DEFAULT_SRC_PATTERN = 'src/**/*.{js,ts}';
+const DEFAULT_SRC = [DEFAULT_SRC_PATTERN];
+const TEST_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : DEFAULT_TEST_GLOB;
+const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_PATTERN}`) : DEFAULT_SRC;
+const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 module.exports = {
   'presetEnv.enable': {
@@ -17,6 +21,18 @@ module.exports = {
     hidden: true,
     default: path.resolve(__dirname, 'preset-env.js'),
     type: 'string',
+  },
+  'g.test': {
+    description: '',
+    default: 'test',
+  },
+  'g.src': {
+    description: '',
+    default: 'src',
+  },
+  'g.watch': {
+    description: '',
+    default: 'watch',
   },
   require: {
     description: 'Require path',
@@ -42,6 +58,11 @@ module.exports = {
     type: 'array',
     alias: 'glob',
   },
+  ext: {
+    description: 'Test file extensions glob pattern',
+    default: DEFAULT_TEST_EXT_PATTERN,
+    type: 'string',
+  },
   src: {
     description: 'Glob pattern for all source files',
     default: SRC_GLOB,
@@ -58,6 +79,7 @@ module.exports = {
     default: WATCH_GLOB,
     type: 'array',
     alias: 'wg',
+    coerce: opt => [...opt, ...WATCH_GLOB],
   },
   coverage: {
     description: 'Generate coverage',

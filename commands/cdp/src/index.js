@@ -55,7 +55,6 @@ const cdp = {
     runner
       .autoDetectDebug()
       .setTestFiles()
-      .setUrl(argv.url)
       .maybeCreateServer();
     if (argv.interactive) {
       runner.emit('interactive');

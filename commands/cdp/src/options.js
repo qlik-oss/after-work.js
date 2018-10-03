@@ -1,67 +1,8 @@
 module.exports = {
-  config: {
-    description: 'Path to config file',
-    type: 'string',
-    default: null,
-    alias: 'c',
-  },
   url: {
     description: 'Url to html file',
     type: 'string',
     default: null,
-  },
-  glob: {
-    description: 'Glob pattern',
-    default: ['test/**/*.spec.js'],
-    type: 'array',
-  },
-  watch: {
-    description: 'Watch changes',
-    default: false,
-    type: 'boolean',
-    alias: 'w',
-  },
-  watchGlob: {
-    description: 'Watch glob',
-    default: ['src/**/*.{js,ts}', 'test/**/*.{js,ts}'],
-    type: 'array',
-    alias: 'wg',
-  },
-  coverage: {
-    description: 'Generate coverage?',
-    default: false,
-    type: 'boolean',
-  },
-  hookRequire: {
-    description: 'Hook require to be able to mock and transform files',
-    default: true,
-    type: 'boolean',
-  },
-  'babel.enable': {
-    description: 'Enable babel',
-    default: true,
-    type: 'boolean',
-  },
-  'babel.core': {
-    description: 'Path to babel core module',
-    default: '',
-    type: 'string',
-  },
-  'babel.babelPluginIstanbul': {
-    description: 'Path to babel plugin istanbul module',
-    default: 'babel-plugin-istanbul',
-    type: 'string',
-  },
-  'babel.options': {
-    description: 'Babel options',
-    default: {
-    },
-    type: 'object',
-  },
-  'babel.typescript': {
-    description: 'Path to typescript compiler module',
-    default: 'typescript',
-    type: 'string',
   },
   'transform.typescript.config': {
     description: 'Typescript config file',
