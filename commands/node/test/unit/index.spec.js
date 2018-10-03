@@ -188,7 +188,6 @@ describe('Node command', () => {
     });
 
     it('should run with watching', () => {
-      sandbox.stub(console, 'log');
       const watchGlob = ['foo.js'];
       const on = sandbox.stub().returnsThis();
       const watch = sandbox.stub().returns({ on });
@@ -197,6 +196,8 @@ describe('Node command', () => {
       runner.setupBabel = sandbox.stub();
       runner.setupAndRunTests = sandbox.stub();
       runner.onWatch = sandbox.stub();
+      runner.onWatchAdd = sandbox.stub();
+      runner.onWatchUnlink = sandbox.stub();
       runner.run();
       on.callArg(1, 'foo.js');
       expect(runner.onWatch).to.have.been.calledWithExactly(path.resolve('foo.js'));

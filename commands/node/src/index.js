@@ -28,7 +28,6 @@ class Runner extends EventEmitter {
     this.nyc = undefined;
     this.isWrapped = false;
     this.isRunning = false;
-    this.all = true;
     this.libs = libs;
     this.debugging = false;
     this.snapshotStates = new Map();
@@ -196,7 +195,7 @@ class Runner extends EventEmitter {
   }
 
   onWatchAdd(f) {
-    if (utils.isTestFile(f, this.argv.ext)) {
+    if (utils.isTestFile(f)) {
       this.testFiles.push(f);
     } else {
       this.srcFiles.push(f);
@@ -222,7 +221,6 @@ class Runner extends EventEmitter {
     }
     const isTestFile = this.testFiles.indexOf(f) !== -1;
     const isSrcFile = this.srcFiles.indexOf(f) !== -1;
-    this.all = false;
     if (isTestFile) {
       this.setOnlyFilesFromTestFile(f);
     } else if (isSrcFile) {
