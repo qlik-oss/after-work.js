@@ -49,5 +49,12 @@ module.exports = async function connect(argv, files, debugging) {
   await Page.addScriptToEvaluateOnNewDocument({ source: injectAwDevtools });
   await Page.addScriptToEvaluateOnNewDocument({ source: injectAwDebugging });
   await Page.addScriptToEvaluateOnNewDocument({ source: getContent(path.join(__dirname, 'browser-shim.js')) });
+  if (argv.presetEnv.enable) {
+    await Page.addScriptToEvaluateOnNewDocument({ source: getContent(require.resolve('chai/chai')) });
+    await Page.addScriptToEvaluateOnNewDocument({ source: 'expect = chai.expect;' });
+    await Page.addScriptToEvaluateOnNewDocument({ source: getContent(require.resolve('chai-subset/lib/chai-subset')) });
+    await Page.addScriptToEvaluateOnNewDocument({ source: getContent(require.resolve('sinon-chai/lib/sinon-chai')) });
+    await Page.addScriptToEvaluateOnNewDocument({ source: getContent(require.resolve('sinon/pkg/sinon')) });
+  }
   return client;
 };

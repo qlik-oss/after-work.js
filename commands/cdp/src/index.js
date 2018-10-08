@@ -50,7 +50,6 @@ const cdp = {
   },
   handler(argv) {
     const runner = new cdp.Runner(argv);
-    argv.presetEnv.enable = false;
     require(argv.presetEnv.require)(runner, argv.filter.chrome);
     runner
       .autoDetectDebug()

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import getA from '../src/a';
 
 describe('chrome-js A', () => {
