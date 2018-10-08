@@ -1,7 +1,7 @@
 ![after-work.js](packages/server/aw.png)
 
 [![CircleCI](https://circleci.com/gh/qlik-oss/after-work.js.svg?style=shield)](https://circleci.com/gh/qlik-oss/after-work.js)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&identifier=76359281)](https://dependabot.com)
+[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![Coverage Status](https://coveralls.io/repos/github/qlik-oss/after-work.js/badge.svg?branch=master)](https://coveralls.io/github/qlik-oss/after-work.js?branch=master)
 
 `after-work.js` is an unified test framework highly configurable through cli and configuration files allowing tests to be executed in the desired context.
