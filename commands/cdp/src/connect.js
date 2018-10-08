@@ -20,7 +20,7 @@ function getContent(filePath) {
   return fs.readFileSync(filePath, 'utf-8');
 }
 
-module.exports = async function connect(argv, files, debugging) {
+module.exports = async function connect(argv, files, presetEnv, debugging) {
   const client = await CDP(argv.client);
   const { DOM, DOMStorage, Console, Network, Page, Runtime } = client;
 
@@ -49,7 +49,7 @@ module.exports = async function connect(argv, files, debugging) {
   await Page.addScriptToEvaluateOnNewDocument({ source: injectAwDevtools });
   await Page.addScriptToEvaluateOnNewDocument({ source: injectAwDebugging });
   await Page.addScriptToEvaluateOnNewDocument({ source: getContent(path.join(__dirname, 'browser-shim.js')) });
-  if (argv.presetEnv.enable) {
+  if (presetEnv) {
     await Page.addScriptToEvaluateOnNewDocument({ source: getContent(require.resolve('chai/chai')) });
     await Page.addScriptToEvaluateOnNewDocument({ source: 'expect = chai.expect;' });
     await Page.addScriptToEvaluateOnNewDocument({ source: getContent(require.resolve('chai-subset/lib/chai-subset')) });

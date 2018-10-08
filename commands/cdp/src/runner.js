@@ -124,7 +124,7 @@ class Runner extends EventEmitter {
       this.argv.client.port = port;
     }
     const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
-    this.client = await connect(this.argv, awFiles, this.debugging);
+    this.client = await connect(this.argv, awFiles, this.argv.presetEnv.enable, this.debugging);
     if (!this.client) {
       this.log('CDP Client could not connect');
       return;

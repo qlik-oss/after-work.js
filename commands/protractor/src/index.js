@@ -49,7 +49,7 @@ const protractor = {
   handler(argv) {
     argv.shouldInstrument = () => false;
     argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
-    require(argv.presetEnv.require)({ argv });
+    require(argv.presetEnv.require)({ argv }, true);
     let launcher;
     try {
       launcher = require('protractor/built/launcher');

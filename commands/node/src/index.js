@@ -290,7 +290,7 @@ const node = {
   },
   handler(argv) {
     const runner = new node.Runner(argv);
-    require(argv.presetEnv.require)(runner, argv.filter.node);
+    require(argv.presetEnv.require)(runner, argv.presetEnv.enable, argv.filter.node);
     runner
       .autoDetectDebug()
       .setTestFiles()

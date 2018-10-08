@@ -1,5 +1,5 @@
-module.exports = (runner, filter) => {
-  if (runner.argv.presetEnv.enable) {
+module.exports = (runner, presetEnv, filter) => {
+  if (presetEnv) {
     const sinon = require('sinon');
     const chai = require('chai');
     const sinonChai = require('sinon-chai');

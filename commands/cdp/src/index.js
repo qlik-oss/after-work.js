@@ -50,7 +50,7 @@ const cdp = {
   },
   handler(argv) {
     const runner = new cdp.Runner(argv);
-    require(argv.presetEnv.require)(runner, argv.filter.chrome);
+    require(argv.presetEnv.require)(runner, false, argv.filter.chrome);
     runner
       .autoDetectDebug()
       .setTestFiles()
