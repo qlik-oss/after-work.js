@@ -31,7 +31,6 @@ class Runner extends EventEmitter {
     this.libs = libs;
     this.debugging = false;
     this.snapshotStates = new Map();
-    this.bindWatch();
   }
 
   logLine(prefix, msg) {
@@ -40,6 +39,7 @@ class Runner extends EventEmitter {
 
   safeDeleteCache(f) {
     utils.safeDeleteCache(f);
+    deleteTransform(f);
   }
 
   setOnlyFilesFromTestFile(testFile) {
@@ -194,53 +194,6 @@ class Runner extends EventEmitter {
     }
   }
 
-  onWatchAdd(f) {
-    if (utils.isTestFile(f)) {
-      this.testFiles.push(f);
-    } else {
-      this.srcFiles.push(f);
-    }
-  }
-
-  onWatchUnlink(f) {
-    const tIx = this.testFiles.indexOf(f);
-    const sIx = this.srcFiles.indexOf(f);
-    if (tIx !== -1) {
-      this.testFiles.splice(tIx, 1);
-    }
-    if (sIx !== -1) {
-      this.srcFiles.splice(sIx, 1);
-    }
-    this.safeDeleteCache(f);
-    deleteTransform(f);
-  }
-
-  onWatch(f) {
-    if (this.isRunning) {
-      return;
-    }
-    const isTestFile = this.testFiles.indexOf(f) !== -1;
-    const isSrcFile = this.srcFiles.indexOf(f) !== -1;
-    if (isTestFile) {
-      this.setOnlyFilesFromTestFile(f);
-    } else if (isSrcFile) {
-      this.setOnlyFilesFromSrcFile(f);
-    } else {
-      this.onlySrcFiles = this.srcFiles;
-      this.onlyTestFiles = this.testFiles;
-    }
-    this.setupAndRunTests(this.onlyTestFiles, this.onlySrcFiles);
-  }
-
-  bindWatch() {
-    if (this.argv.watch) {
-      this.libs.chokidar.watch(this.argv.watchGlob, { ignoreInitial: true })
-        .on('change', f => this.onWatch(path.resolve(f)))
-        .on('add', f => this.onWatchAdd(path.resolve(f)))
-        .on('unlink', f => this.onWatchUnlink(path.resolve(f)));
-    }
-  }
-
   run() {
     this.setupAndRunTests(this.testFiles, this.srcFiles);
   }
@@ -290,13 +243,26 @@ const node = {
   },
   handler(argv) {
     const runner = new node.Runner(argv);
-    require(argv.presetEnv.require)(runner, argv.presetEnv.enable, argv.filter.node);
+    if (argv.presetEnv) {
+      require('@after-work.js/preset-plugin')(runner);
+    }
+    let skipInitialInteractive = false;
+    if (argv.watch && !argv.interactive) {
+      skipInitialInteractive = true;
+      argv.interactive = true;
+    }
+    if (argv.interactive) {
+      require('@after-work.js/interactive-plugin')(runner);
+    }
+    if (argv.watch) {
+      require('@after-work.js/watch-plugin')(runner);
+    }
     runner
       .autoDetectDebug()
       .setTestFiles()
       .setSrcFiles()
       .require();
-    if (argv.interactive) {
+    if (!skipInitialInteractive && argv.interactive) {
       runner.emit('interactive');
       return runner;
     }

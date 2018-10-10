@@ -3,7 +3,6 @@
 
 const yargs = require('yargs');
 const importCwd = require('import-cwd');
-const options = require('./options');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 
@@ -35,6 +34,5 @@ const tryAddCommand = (m) => {
 
 yargs
   .alias('h', 'help')
-  .options(options)
   .wrap(Math.min(120, yargs.terminalWidth()))
   .argv;

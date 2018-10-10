@@ -4,7 +4,6 @@ const path = require('path');
 const fs = require('fs');
 const chromeLauncher = require('chrome-launcher');
 const unmirror = require('chrome-unmirror');
-const chokidar = require('chokidar');
 const globby = require('globby');
 const precinct = require('precinct');
 const createServer = require('@after-work.js/server');
@@ -31,9 +30,11 @@ class Runner extends EventEmitter {
     this.isRunning = false;
     this.depMap = new Map();
     this.srcTestMap = new Map();
+    this.testFiles = [];
     this.onlyTestFiles = [];
+    this.srcFiles = [];
+    this.onlySrcFiles = [];
     this.bind();
-    this.bindWatch();
     this.debugging = false;
     this.snapshotStates = new Map();
     this.server = { close: () => { } };
@@ -124,7 +125,7 @@ class Runner extends EventEmitter {
       this.argv.client.port = port;
     }
     const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
-    this.client = await connect(this.argv, awFiles, this.argv.presetEnv.enable, this.debugging);
+    this.client = await connect(this.argv, awFiles, this.argv.presetEnv, this.debugging);
     if (!this.client) {
       this.log('CDP Client could not connect');
       return;
@@ -205,41 +206,12 @@ class Runner extends EventEmitter {
     })();
   }
 
-  onWatchAdd(f) {
-    if (utils.isTestFile(f, this.argv.ext)) {
-      this.testFiles.push(f);
-    }
+  setOnlyFilesFromTestFile(f) {
+    this.onlyTestFiles = [f];
   }
 
-  onWatchUnlink(f) {
-    const tIx = this.testFiles.indexOf(f);
-    if (tIx !== -1) {
-      this.testFiles.splice(tIx, 1);
-    }
-    deleteTransform(f);
-  }
-
-  onWatch(f) {
-    if (this.isRunning) {
-      return;
-    }
-    const isTestFile = this.testFiles.indexOf(f) !== -1;
-    if (isTestFile) {
-      this.onlyTestFiles = [f];
-    } else {
-      this.onlyTestFiles = this.matchDependency(f);
-    }
-    this.setupAndRunTests(this.onlyTestFiles);
-  }
-
-  bindWatch() {
-    if (this.argv.watch) {
-      chokidar.watch(this.argv.watchGlob, { ignoreInitial: true })
-        .on('change', f => this.onWatch(path.resolve(f)))
-        .on('add', f => this.onWatchAdd(path.resolve(f)))
-        .on('unlink', f => this.onWatchUnlink(path.resolve(f)));
-      this.isWatching = true;
-    }
+  setOnlyFilesFromSrcFile(f) {
+    this.onlyTestFiles = this.matchDependency(f);
   }
 
   autoDetectDebug() {
@@ -340,6 +312,10 @@ class Runner extends EventEmitter {
       }
       process.exitCode = code;
     })();
+  }
+
+  safeDeleteCache(f) {
+    deleteTransform(f);
   }
 }
 

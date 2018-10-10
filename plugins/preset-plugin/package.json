@@ -1,10 +1,10 @@
 {
-  "name": "@after-work.js/puppeteer",
-  "version": "5.1.1",
+  "name": "@after-work.js/preset-plugin",
+  "version": "5.0.2",
   "publishConfig": {
     "access": "public"
   },
-  "description": "Run tests with Puppeteer",
+  "description": "Preset environment plugin",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src"
@@ -20,13 +20,14 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
+    "@after-work.js/chai-plugin-screenshot": "5.0.2",
+    "@after-work.js/chai-plugin-snapshot": "5.0.2",
     "@after-work.js/interactive-plugin": "5.0.2",
-    "@after-work.js/preset-plugin": "5.0.2",
-    "@after-work.js/node": "5.0.2",
-    "@after-work.js/utils": "5.0.2",
-    "chrome-launcher": "0.10.5",
-    "import-cwd": "2.1.0",
-    "puppeteer-core": "1.10.0"
+    "chai": "4.1.2",
+    "chai-as-promised": "7.1.1",
+    "chai-subset": "1.6.0",
+    "sinon": "6.1.5",
+    "sinon-chai": "3.2.0"
   },
   "files": [
     "/src"

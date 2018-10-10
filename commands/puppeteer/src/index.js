@@ -84,7 +84,12 @@ const puppet = {
         argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath(argv.chrome.stable);
       }
       const runner = new PuppetRunner(puppeteer, argv);
-      require(argv.presetEnv.require)(runner, argv.presetEnv.enable, argv.filter.puppeteer);
+      if (argv.presetEnv) {
+        require('@after-work.js/preset-plugin')(runner);
+      }
+      if (argv.interactive) {
+        require('@after-work.js/interactive-plugin')(runner);
+      }
       await runner.launch();
       runner
         .autoDetectDebug()

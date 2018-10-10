@@ -22,12 +22,26 @@ packagesPath.forEach((root) => {
   packagesMap.set(name, root);
 });
 
+const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,ts}';
+const DEFAULT_TEST_GLOB_PATTERN = `test/**/${DEFAULT_TEST_EXT_PATTERN}`;
+const DEFAULT_TEST_GLOB = [DEFAULT_TEST_GLOB_PATTERN];
+const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts}';
+const DEFAULT_SRC_PATTERN = `src/**/${DEFAULT_SRC_EXT_PATTERN}`;
+const DEFAULT_SRC = [DEFAULT_SRC_PATTERN];
+const TEST_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : DEFAULT_TEST_GLOB;
+const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_PATTERN}`) : DEFAULT_SRC;
+const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
+
 const utils = {
   packages,
   packagesPath,
   packagesMap,
   workspaces,
   lernaPackages,
+  DEFAULT_TEST_EXT_PATTERN,
+  TEST_GLOB,
+  SRC_GLOB,
+  WATCH_GLOB,
   isSourceMap(f) {
     return !fs.existsSync(f) && f.endsWith('.map');
   },
@@ -173,7 +187,7 @@ const utils = {
   filter(arr, initialValue) {
     return arr.reduce((acc, curr) => acc.filter(file => minimatch(file, curr)), initialValue);
   },
-  isTestFile(filePath, extPattern) {
+  isMatchingExtPattern(filePath, extPattern) {
     const base = path.basename(filePath);
     return minimatch(base, extPattern);
   },

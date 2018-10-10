@@ -187,21 +187,21 @@ describe('Node command', () => {
       expect(runner.setupAndRunTests).to.have.been.calledWithExactly(testFiles, srcFiles);
     });
 
-    it('should run with watching', () => {
-      const watchGlob = ['foo.js'];
-      const on = sandbox.stub().returnsThis();
-      const watch = sandbox.stub().returns({ on });
-      const chokidar = { watch };
-      const runner = new Runner({ watch: true, watchGlob }, { chokidar });
-      runner.setupBabel = sandbox.stub();
-      runner.setupAndRunTests = sandbox.stub();
-      runner.onWatch = sandbox.stub();
-      runner.onWatchAdd = sandbox.stub();
-      runner.onWatchUnlink = sandbox.stub();
-      runner.run();
-      on.callArg(1, 'foo.js');
-      expect(runner.onWatch).to.have.been.calledWithExactly(path.resolve('foo.js'));
-    });
+    // it('should run with watching', () => {
+    //   const watchGlob = ['foo.js'];
+    //   const on = sandbox.stub().returnsThis();
+    //   const watch = sandbox.stub().returns({ on });
+    //   const chokidar = { watch };
+    //   const runner = new Runner({ watch: true, watchGlob }, { chokidar });
+    //   runner.setupBabel = sandbox.stub();
+    //   runner.setupAndRunTests = sandbox.stub();
+    //   runner.onWatch = sandbox.stub();
+    //   runner.onWatchAdd = sandbox.stub();
+    //   runner.onWatchUnlink = sandbox.stub();
+    //   runner.run();
+    //   on.callArg(1, 'foo.js');
+    //   expect(runner.onWatch).to.have.been.calledWithExactly(path.resolve('foo.js'));
+    // });
 
     describe('configure', () => {
       it('should return empty object when no config option is passed', () => {

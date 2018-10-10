@@ -50,12 +50,22 @@ const cdp = {
   },
   handler(argv) {
     const runner = new cdp.Runner(argv);
-    require(argv.presetEnv.require)(runner, false, argv.filter.chrome);
+    let skipInitialInteractive = false;
+    if (argv.watch && !argv.interactive) {
+      skipInitialInteractive = true;
+      argv.interactive = true;
+    }
+    if (argv.interactive) {
+      require('@after-work.js/interactive-plugin')(runner);
+    }
+    if (argv.watch) {
+      require('@after-work.js/watch-plugin')(runner);
+    }
     runner
       .autoDetectDebug()
       .setTestFiles()
       .maybeCreateServer();
-    if (argv.interactive) {
+    if (!skipInitialInteractive && argv.interactive) {
       runner.emit('interactive');
       return runner;
     }

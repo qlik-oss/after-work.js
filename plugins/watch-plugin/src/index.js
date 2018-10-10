@@ -1,0 +1,47 @@
+const path = require('path');
+const chokidar = require('chokidar');
+const utils = require('@after-work.js/utils');
+
+const onWatchAdd = (runner, f) => {
+  if (utils.isMatchingExtPattern(f, runner.argv.testExt)) {
+    runner.testFiles.push(f);
+  } else if (utils.isMatchingExtPattern(f, runner.argv.srcExt)) {
+    runner.srcFiles.push(f);
+  }
+};
+
+const onWatchUnlink = (runner, f) => {
+  const tIx = runner.testFiles.indexOf(f);
+  const sIx = runner.srcFiles.indexOf(f);
+  if (tIx !== -1) {
+    runner.testFiles.splice(tIx, 1);
+  }
+  if (sIx !== -1) {
+    runner.srcFiles.splice(sIx, 1);
+  }
+  runner.safeDeleteCache(f);
+};
+
+const onWatch = (runner, f) => {
+  if (runner.isRunning) {
+    return;
+  }
+  const isTestFile = runner.testFiles.indexOf(f) !== -1;
+  const isSrcFile = runner.srcFiles.indexOf(f) !== -1;
+  if (isTestFile) {
+    runner.setOnlyFilesFromTestFile(f);
+  } else if (isSrcFile) {
+    runner.setOnlyFilesFromSrcFile(f);
+  } else {
+    runner.onlySrcFiles = runner.srcFiles;
+    runner.onlyTestFiles = runner.testFiles;
+  }
+  runner.setupAndRunTests(runner.onlyTestFiles, runner.onlySrcFiles);
+};
+
+module.exports = (runner) => {
+  chokidar.watch(runner.argv.watchGlob, { ignoreInitial: true })
+    .on('change', f => onWatch(runner, path.resolve(f)))
+    .on('add', f => onWatchAdd(runner, path.resolve(f)))
+    .on('unlink', f => onWatchUnlink(runner, path.resolve(f)));
+};

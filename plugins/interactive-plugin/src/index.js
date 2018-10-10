@@ -99,7 +99,9 @@ const promptTestFiles = async (inputTestFiles) => {
   return testFiles;
 };
 
-const onInteractive = (runner, filter) => {
+const onInteractive = (runner) => {
+  const filter = runner.getFilter();
+
   (async () => {
     const interactive = await promptMainMenu(runner);
     if (interactive === 'quit') {
@@ -152,7 +154,7 @@ const onInteractive = (runner, filter) => {
   })();
 };
 
-module.exports = function interactivePlugin(runner, filter) {
-  runner.on('watchEnd', () => onInteractive(runner, filter));
-  runner.on('interactive', () => onInteractive(runner, filter));
+module.exports = function interactivePlugin(runner) {
+  runner.on('watchEnd', () => onInteractive(runner));
+  runner.on('interactive', () => onInteractive(runner));
 };

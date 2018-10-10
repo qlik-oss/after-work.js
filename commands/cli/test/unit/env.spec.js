@@ -1,5 +1,3 @@
-require('../../src/preset-env');
-
 describe('Environment', () => {
   describe('chai extensions', () => {
     it('chai-subset should be used', () => {
