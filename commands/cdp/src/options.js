@@ -2,7 +2,6 @@ const {
   packages,
   DEFAULT_TEST_EXT_PATTERN,
   TEST_GLOB,
-  SRC_GLOB,
   WATCH_GLOB,
 } = require('@after-work.js/utils');
 

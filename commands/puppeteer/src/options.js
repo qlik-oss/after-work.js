@@ -95,13 +95,13 @@ module.exports = {
     default: 'typescript',
     type: 'string',
   },
-  'filter.node.packages': {
-    description: 'Filter packages for Node runner',
+  'filter.puppeteer.packages': {
+    description: 'Filter packages for Puppeteer runner',
     default: [() => true],
     type: 'array',
   },
-  'filter.node.files': {
-    description: 'Filter files for Node runner',
+  'filter.puppeteer.files': {
+    description: 'Filter files for Puppeteer runner',
     default: [() => true],
     type: 'array',
   },

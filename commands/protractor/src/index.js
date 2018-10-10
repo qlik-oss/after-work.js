@@ -49,7 +49,9 @@ const protractor = {
   handler(argv) {
     argv.shouldInstrument = () => false;
     argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
-    require(argv.presetEnv.require)({ argv }, true);
+    if (argv.presetEnv) {
+      require('@after-work.js/preset-plugin')();
+    }
     let launcher;
     try {
       launcher = require('protractor/built/launcher');
@@ -69,7 +71,7 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    const specs = utils.filter(argv.filter.protractor.files, globby.sync(argv.glob));
+    const specs = utils.filter(argv.filter.protractor.files, globby.sync(argv.test));
     if (specs.length) {
       config.specs = specs;
     }
