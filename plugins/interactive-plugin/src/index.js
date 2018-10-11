@@ -8,6 +8,8 @@ const {
   packagesMap,
   workspaces,
   lernaPackages,
+  DEFAULT_TEST_GLOB_PATTERN,
+  DEFAULT_SRC_GLOB_PATTERN,
 } = utils;
 
 let test = [];
@@ -124,8 +126,8 @@ const onInteractive = (runner) => {
       src = [];
       pkgs.forEach((name) => {
         const p = packagesMap.get(name);
-        test = [...test, ...runner.findFiles(`${p}/test/**/*.spec.{js,ts}`)];
-        src = [...src, ...runner.findFiles(`${p}/src/**/*.{js,ts}`)];
+        test = [...test, ...runner.findFiles(`${p}/${DEFAULT_TEST_GLOB_PATTERN}`)];
+        src = [...src, ...runner.findFiles(`${p}/${DEFAULT_SRC_GLOB_PATTERN}`)];
       });
       if (test.length) {
         runner.setupAndRunTests(test, src);

@@ -103,12 +103,12 @@ module.exports = {
   },
   'filter.node.packages': {
     description: 'Filter packages for Node runner',
-    default: [() => true],
+    default: ['**'],
     type: 'array',
   },
   'filter.node.files': {
     description: 'Filter files for Node runner',
-    default: [() => true],
+    default: ['**'],
     type: 'array',
   },
   exit: {

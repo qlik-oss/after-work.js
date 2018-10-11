@@ -23,13 +23,13 @@ packagesPath.forEach((root) => {
 });
 
 const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,ts}';
-const DEFAULT_TEST_GLOB_PATTERN = `test/**/${DEFAULT_TEST_EXT_PATTERN}`;
+const DEFAULT_TEST_GLOB_PATTERN = `**/${DEFAULT_TEST_EXT_PATTERN}`;
 const DEFAULT_TEST_GLOB = [DEFAULT_TEST_GLOB_PATTERN];
 const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts}';
-const DEFAULT_SRC_PATTERN = `src/**/${DEFAULT_SRC_EXT_PATTERN}`;
-const DEFAULT_SRC = [DEFAULT_SRC_PATTERN];
+const DEFAULT_SRC_GLOB_PATTERN = `**/${DEFAULT_SRC_EXT_PATTERN}`;
+const DEFAULT_SRC_GLOB = [DEFAULT_SRC_GLOB_PATTERN];
 const TEST_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : DEFAULT_TEST_GLOB;
-const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_PATTERN}`) : DEFAULT_SRC;
+const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_GLOB_PATTERN}`) : DEFAULT_SRC_GLOB;
 const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 const utils = {
@@ -39,6 +39,8 @@ const utils = {
   workspaces,
   lernaPackages,
   DEFAULT_TEST_EXT_PATTERN,
+  DEFAULT_TEST_GLOB_PATTERN,
+  DEFAULT_SRC_GLOB_PATTERN,
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
