@@ -17,6 +17,7 @@ let src = [];
 
 const promptModule = inquirer.createPromptModule({ output: process.stderr });
 promptModule.registerPrompt('checkbox-plus', checkboxPlus);
+
 let currentPrompt;
 const prompt = (questions) => {
   if (currentPrompt) {
@@ -54,7 +55,7 @@ const promptMainMenu = async (runner) => {
   const unmatchedSnapshots = runner.argv.updateSnapshot === false && [...runner.snapshotStates.values()].filter(v => v.unmatched > 0).length;
   const snapshotChoice = unmatchedSnapshots ? [{ key: 'u', name: 'Update failing snapshots', value: 'snapshots' }] : [];
   const workspacesChoice = workspaces.length ? [{ key: 'w', name: 'Workspaces', value: 'workspaces' }] : [];
-  const lernaPkgsChoice = lernaPackages.length ? [{ key: 'p', name: 'Scopes', value: 'scopes' }] : [];
+  const lernaPkgsChoice = lernaPackages.length ? [{ key: 's', name: 'Scopes', value: 'scopes' }] : [];
   const { interactive } = await prompt([{
     type: 'expand',
     name: 'interactive',
@@ -112,7 +113,9 @@ const onInteractive = (runner) => {
     }
     if (interactive === 'all') {
       runner.run();
+      return;
     }
+
     if (interactive === 'workspaces' || interactive === 'scopes') {
       const message = interactive === 'workspaces' ? 'Which workspaces?' : 'Which scopes';
       const inputPackages = (runner.argv.scope.length ? runner.argv.scope : packages);
@@ -129,12 +132,14 @@ const onInteractive = (runner) => {
         test = [...test, ...runner.findFiles(`${p}/${DEFAULT_TEST_GLOB_PATTERN}`)];
         src = [...src, ...runner.findFiles(`${p}/${DEFAULT_SRC_GLOB_PATTERN}`)];
       });
-      if (test.length) {
+      if (Array.isArray(test) && test.length) {
         runner.setupAndRunTests(test, src);
       } else {
         onInteractive(runner, filter);
       }
+      return;
     }
+
     if (interactive === 'filter') {
       const filteredTestFiles = utils.filter(filter.files, runner.testFiles);
       test = await promptTestFiles(filteredTestFiles);
@@ -144,7 +149,9 @@ const onInteractive = (runner) => {
       } else {
         onInteractive(runner, filter);
       }
+      return;
     }
+
     if (interactive === 'snapshots') {
       runner.argv.updateSnapshot = true;
       runner.snapshotStates.clear();
