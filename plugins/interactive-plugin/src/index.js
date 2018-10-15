@@ -20,6 +20,7 @@ promptModule.registerPrompt('checkbox-plus', checkboxPlus);
 let currentPrompt;
 const prompt = (questions) => {
   if (currentPrompt) {
+    console.error('closing ui prompt')
     currentPrompt.ui.close();
   }
   currentPrompt = promptModule(questions);
@@ -118,6 +119,7 @@ const onInteractive = (runner) => {
       const inputPackages = (runner.argv.scope.length ? runner.argv.scope : packages);
       const filteredPackages = utils.filter(filter.packages, inputPackages);
       const pkgs = await promptPackages(message, filteredPackages);
+      console.error(pkgs)
       if (!Array.isArray(pkgs)) {
         onInteractive(runner, filter);
         return;

@@ -24,12 +24,12 @@ packagesPath.forEach((root) => {
 
 const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,ts}';
 const DEFAULT_TEST_GLOB_PATTERN = `**/${DEFAULT_TEST_EXT_PATTERN}`;
-const DEFAULT_TEST_GLOB = [DEFAULT_TEST_GLOB_PATTERN];
+
 const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts}';
 const DEFAULT_SRC_GLOB_PATTERN = `**/${DEFAULT_SRC_EXT_PATTERN}`;
-const DEFAULT_SRC_GLOB = [DEFAULT_SRC_GLOB_PATTERN];
-const TEST_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : DEFAULT_TEST_GLOB;
-const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_GLOB_PATTERN}`) : DEFAULT_SRC_GLOB;
+
+const TEST_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : [DEFAULT_TEST_GLOB_PATTERN];
+const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_GLOB_PATTERN}`) : [DEFAULT_SRC_GLOB_PATTERN];
 const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 const utils = {
