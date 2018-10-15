@@ -108,7 +108,12 @@ class Runner extends EventEmitter {
 
   onFinished(failures) {
     this.isRunning = false;
+    if (failures === 0 && this.argv.coverage) {
+      this.nyc.writeCoverageFile();
+      this.nyc.report();
+    }
     if (this.argv.watch) {
+      this.emit('watchEnd');
       return;
     }
     this.exit(failures);
@@ -117,21 +122,10 @@ class Runner extends EventEmitter {
     }
   }
 
-  onEnd() {
-    if (this.argv.coverage) {
-      this.nyc.writeCoverageFile();
-      this.nyc.report();
-    }
-    if (this.argv.watch) {
-      this.emit('watchEnd');
-    }
-  }
-
   runTests() {
     this.isRunning = true;
     this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
     this.mochaRunner.once('start', () => utils.clearLine());
-    this.mochaRunner.once('end', () => this.onEnd());
   }
 
   register() {

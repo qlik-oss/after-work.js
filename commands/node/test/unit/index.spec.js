@@ -90,11 +90,7 @@ describe('Node command', () => {
       const report = sandbox.stub();
       const runner = new Runner({ coverage: true });
       runner.nyc = { writeCoverageFile, report };
-      const once = sandbox.stub();
-      const run = sandbox.stub().returns({ once });
-      runner.mocha = { run };
-      runner.runTests();
-      once.callArgWith(1);
+      runner.onFinished(0);
       expect(runner.nyc.writeCoverageFile).to.have.been.calledWithExactly();
       expect(runner.nyc.report).to.have.been.calledWithExactly();
     });
