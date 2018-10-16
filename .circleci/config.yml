@@ -29,7 +29,7 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
-      - run: npm run lint
+      - run: yarn lint
 
   test-node:
     <<: *defaults
@@ -37,7 +37,7 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
-      - run: npm run test:node
+      - run: yarn test:node
 
   test-chrome:
     <<: *defaults
@@ -45,7 +45,7 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
-      - run: npm run test:chrome
+      - run: yarn test:chrome
 
   test-protractor:
     <<: *defaults
@@ -53,7 +53,7 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
-      - run: npm run test:protractor -- --chromeDriver /usr/local/bin/chromedriver
+      - run: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
 
   test-puppeteer:
     <<: *defaults
@@ -61,7 +61,7 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
-      - run: npm run test:puppeteer
+      - run: yarn test:puppeteer
 
   test-node-coverage:
     <<: *defaults
@@ -69,7 +69,7 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run: yarn
-      - run: npm run test:coveralls
+      - run: yarn test:coveralls
       - store_artifacts:
           path: ./coverage
 
