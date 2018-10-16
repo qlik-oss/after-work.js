@@ -59,15 +59,6 @@ describe('Node command', () => {
     expect(runner.srcFiles).to.eql([path.resolve('foo.js')]);
   });
 
-  it('should require', () => {
-    const argv = { require: ['foo'] };
-    const importCwd = sandbox.stub();
-    const runner = new Runner(argv, { importCwd });
-    runner.setupBabel = sandbox.stub();
-    runner.require();
-    expect(importCwd).to.have.been.calledWithExactly('foo');
-  });
-
   it('should delete coverage', () => {
     const runner = new Runner({});
     const cov = global.__coverage__;

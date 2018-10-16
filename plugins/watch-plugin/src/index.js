@@ -29,14 +29,14 @@ const onWatch = (runner, f) => {
   const isTestFile = runner.testFiles.indexOf(f) !== -1;
   const isSrcFile = runner.srcFiles.indexOf(f) !== -1;
   if (isTestFile) {
-    runner.setOnlyFilesFromTestFile(f);
+    const srcFiles = runner.getSrcFilesFromTestFiles([f]);
+    runner.setupAndRunTests([f], srcFiles);
   } else if (isSrcFile) {
-    runner.setOnlyFilesFromSrcFile(f);
+    const testFiles = runner.getTestFilesFromSrcFiles([f]);
+    runner.setupAndRunTests(testFiles, [f]);
   } else {
-    runner.onlySrcFiles = runner.srcFiles;
-    runner.onlyTestFiles = runner.testFiles;
+    runner.run();
   }
-  runner.setupAndRunTests(runner.onlyTestFiles, runner.onlySrcFiles);
 };
 
 module.exports = (runner) => {

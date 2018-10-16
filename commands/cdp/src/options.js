@@ -2,6 +2,8 @@ const {
   packages,
   DEFAULT_TEST_EXT_PATTERN,
   TEST_GLOB,
+  SRC_GLOB,
+  DEFAULT_SRC_EXT_PATTERN,
   WATCH_GLOB,
 } = require('@after-work.js/utils');
 
@@ -35,10 +37,22 @@ module.exports = {
     type: 'array',
     alias: 'glob',
   },
-  ext: {
+  testExt: {
     description: 'Test file extensions glob pattern',
     default: DEFAULT_TEST_EXT_PATTERN,
     type: 'string',
+  },
+  src: {
+    description: 'Glob pattern for all source files',
+    default: SRC_GLOB,
+    type: 'array',
+    hidden: true,
+  },
+  srcExt: {
+    description: 'Test file extensions glob pattern',
+    default: DEFAULT_SRC_EXT_PATTERN,
+    type: 'string',
+    hidden: true,
   },
   watch: {
     description: 'Watch changes',
@@ -231,5 +245,15 @@ module.exports = {
     default: false,
     type: 'boolean',
     alias: 'i',
+  },
+  'filter.chrome.packages': {
+    description: 'Filter packages for Chrome runner',
+    default: ['**'],
+    type: 'array',
+  },
+  'filter.chrome.files': {
+    description: 'Filter files for Chrome runner',
+    default: ['**'],
+    type: 'array',
   },
 };

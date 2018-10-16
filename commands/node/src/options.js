@@ -2,6 +2,7 @@ const {
   packages,
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_SRC_EXT_PATTERN,
+  DEFAULT_SRC_EXCLUDE_PATTERN,
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
@@ -169,7 +170,7 @@ module.exports = {
   },
   'nyc.exclude': {
     description: 'Exclude glob',
-    default: ['**/coverage/**', '**/dist/**', '**/*.spec.{js,ts}'],
+    default: DEFAULT_SRC_EXCLUDE_PATTERN,
     type: 'array',
   },
   'nyc.sourceMap': {

@@ -31,9 +31,7 @@ class Runner extends EventEmitter {
     this.depMap = new Map();
     this.srcTestMap = new Map();
     this.testFiles = [];
-    this.onlyTestFiles = [];
     this.srcFiles = [];
-    this.onlySrcFiles = [];
     this.bind();
     this.debugging = false;
     this.snapshotStates = new Map();
@@ -174,14 +172,13 @@ class Runner extends EventEmitter {
     return false;
   }
 
-  matchDependency(file) {
+  getMatchedTestDependency(file) {
     const cache = this.srcTestMap.get(file);
     if (cache) {
       return cache;
     }
     const srcName = path.basename(file).split('.').shift();
     for (const testFile of this.testFiles) {
-      utils.writeLine('Scanning', testFile);
       const deps = this.getDependencies(testFile);
       const found = this.matchDependencyName(srcName, deps);
       if (found) {
@@ -189,7 +186,6 @@ class Runner extends EventEmitter {
         return [testFile];
       }
     }
-    utils.clearLine();
     return this.testFiles;
   }
 
@@ -206,12 +202,12 @@ class Runner extends EventEmitter {
     })();
   }
 
-  setOnlyFilesFromTestFile(f) {
-    this.onlyTestFiles = [f];
+  getTestFilesFromSrcFiles(srcFiles) {
+    return srcFiles.reduce((acc, curr) => [...acc, ...this.getMatchedTestDependency(curr)], []);
   }
 
-  setOnlyFilesFromSrcFile(f) {
-    this.onlyTestFiles = this.matchDependency(f);
+  getSrcFilesFromTestFiles() {
+    return [];
   }
 
   autoDetectDebug() {

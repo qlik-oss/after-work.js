@@ -1,34 +1,24 @@
 const EventEmitter = require('events');
 const globby = require('globby');
-const Mocha = require('mocha');
-const chokidar = require('chokidar');
-const importCwd = require('import-cwd');
-const NYC = require('nyc');
 const fs = require('fs');
 const path = require('path');
+const Mocha = require('mocha');
+const NYC = require('nyc');
 const utils = require('@after-work.js/utils');
 const { deleteTransform } = require('@after-work.js/transform');
 const options = require('./options');
 
 class Runner extends EventEmitter {
-  constructor(argv, libs = {
-    Mocha,
-    NYC,
-    importCwd,
-    chokidar,
-  }) {
+  constructor(argv) {
     super();
     this.argv = argv;
     this.testFiles = [];
-    this.onlyTestFiles = [];
     this.srcFiles = [];
-    this.onlySrcFiles = [];
     this.mochaRunner = undefined;
     this.mocha = undefined;
     this.nyc = undefined;
     this.isWrapped = false;
     this.isRunning = false;
-    this.libs = libs;
     this.debugging = false;
     this.snapshotStates = new Map();
   }
@@ -42,7 +32,7 @@ class Runner extends EventEmitter {
     deleteTransform(f);
   }
 
-  setOnlyFilesFromTestFile(testFile) {
+  getMatchedSrcDependency(testFile) {
     const testName = path.basename(testFile).split('.').shift();
     this.safeDeleteCache(testFile);
     deleteTransform(testFile);
@@ -52,11 +42,10 @@ class Runner extends EventEmitter {
       .filter(m => this.srcFiles.indexOf(m.id) !== -1)
       .map(m => m.id);
     const use = utils.matchDependency(found, testName);
-    this.onlyTestFiles = [testFile];
-    this.onlySrcFiles = [...new Set([...use])];
+    return use;
   }
 
-  setOnlyFilesFromSrcFile(srcFile) {
+  getMatchedTestDependency(srcFile) {
     const srcName = path.basename(srcFile).split('.').shift();
     const found = this.testFiles.filter((f) => {
       const mod = utils.safeRequireCache(f);
@@ -65,8 +54,15 @@ class Runner extends EventEmitter {
         .filter(m => m.id === srcFile).length !== 0;
     });
     const use = utils.matchDependency(found, srcName);
-    this.onlyTestFiles = [...new Set([...use])];
-    this.onlySrcFiles = [srcFile];
+    return use;
+  }
+
+  getSrcFilesFromTestFiles(testFiles) {
+    return testFiles.reduce((acc, curr) => [...acc, ...this.getMatchedSrcDependency(curr)], []);
+  }
+
+  getTestFilesFromSrcFiles(srcFiles) {
+    return srcFiles.reduce((acc, curr) => [...acc, ...this.getMatchedTestDependency(curr)], []);
   }
 
   findFiles(glob) {
@@ -97,7 +93,8 @@ class Runner extends EventEmitter {
     if (!this.argv.coverage) {
       this.register();
     }
-    this.argv.require.forEach(m => this.libs.importCwd(m));
+    const importCwd = require('import-cwd');
+    this.argv.require.forEach(m => importCwd(m));
     return this;
   }
 
@@ -126,6 +123,8 @@ class Runner extends EventEmitter {
     this.isRunning = true;
     this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
     this.mochaRunner.once('start', () => utils.clearLine());
+    // this.runnedTestFiles = [];
+    // this.mochaRunner.on('test end', (t) => { this.runnedTestFiles = [...this.runnedTestFiles, t.file]; });
   }
 
   register() {
@@ -166,11 +165,11 @@ class Runner extends EventEmitter {
     if (this.mochaRunner) {
       this.mochaRunner.removeAllListeners();
     }
-    this.mocha = new this.libs.Mocha(this.argv.mocha);
+    this.mocha = new Mocha(this.argv.mocha);
     this.mocha.suite.on('pre-require', (_, file) => {
       this.logLine('Loading', file);
     });
-    this.nyc = new this.libs.NYC(this.argv.nyc);
+    this.nyc = new NYC(this.argv.nyc);
     this.argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
     try {
       this

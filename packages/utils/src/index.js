@@ -27,9 +27,9 @@ const DEFAULT_TEST_GLOB_PATTERN = `**/${DEFAULT_TEST_EXT_PATTERN}`;
 
 const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts}';
 const DEFAULT_SRC_GLOB_PATTERN = `**/${DEFAULT_SRC_EXT_PATTERN}`;
-
-const TEST_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : [DEFAULT_TEST_GLOB_PATTERN];
-const SRC_GLOB = packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_GLOB_PATTERN}`) : [DEFAULT_SRC_GLOB_PATTERN];
+const DEFAULT_SRC_EXCLUDE_PATTERN = ['**/coverage/**', '**/scripts/**', '**/docs/**', '**/tools/**', '**/__*__/**', '**/test/**', '**/mocks/**', '**/dist/**', `**/${DEFAULT_TEST_EXT_PATTERN}`, '**/*.config.*'];
+const TEST_GLOB = [...(packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : [DEFAULT_TEST_GLOB_PATTERN])];
+const SRC_GLOB = [...(packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_GLOB_PATTERN}`) : [DEFAULT_SRC_GLOB_PATTERN])];
 const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 const utils = {
@@ -41,6 +41,7 @@ const utils = {
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_TEST_GLOB_PATTERN,
   DEFAULT_SRC_GLOB_PATTERN,
+  DEFAULT_SRC_EXCLUDE_PATTERN,
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
@@ -146,7 +147,9 @@ const utils = {
     try {
       require(f);
       return require.cache[f];
-    } catch (_) { } //eslint-disable-line
+    } catch (_) {
+      // console.error(_)
+    }
     return { children: [] };
   },
   matchDependency(found, testName) {
