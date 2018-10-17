@@ -12,7 +12,9 @@ const findPkgs = g => globby.sync(`${g}/package.json`);
 const reducePkgs = (acc, curr) => acc.concat(curr.map(c => c.slice(0, -13)));
 const lerna = importCwd.silent('./lerna.json');
 const workspaces = (pkg.workspaces || []).map(findPkgs).reduce(reducePkgs, []);
-const lernaPackages = ((lerna && lerna.packages) || []).map(findPkgs).reduce(reducePkgs, []);
+const lernaPackages = ((lerna && lerna.packages) || [])
+  .map(findPkgs)
+  .reduce(reducePkgs, []);
 const packagesPath = [...workspaces, ...lernaPackages];
 let packages = [];
 const packagesMap = new Map();
@@ -27,9 +29,32 @@ const DEFAULT_TEST_GLOB_PATTERN = `**/${DEFAULT_TEST_EXT_PATTERN}`;
 
 const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts}';
 const DEFAULT_SRC_GLOB_PATTERN = `**/${DEFAULT_SRC_EXT_PATTERN}`;
-const DEFAULT_SRC_EXCLUDE_PATTERN = ['**/coverage/**', '**/scripts/**', '**/docs/**', '**/tools/**', '**/__*__/**', '**/test/**', '**/mocks/**', '**/dist/**', `**/${DEFAULT_TEST_EXT_PATTERN}`, '**/*.config.*'];
-const TEST_GLOB = [...(packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`) : [DEFAULT_TEST_GLOB_PATTERN])];
-const SRC_GLOB = [...(packagesPath.length ? packagesPath.map(p => `${p}/${DEFAULT_SRC_GLOB_PATTERN}`) : [DEFAULT_SRC_GLOB_PATTERN])];
+const DEFAULT_SRC_EXCLUDE_PATTERN = [
+  '**/coverage/**',
+  '**/scripts/**',
+  '**/docs/**',
+  '**/tools/**',
+  '**/__*__/**',
+  '**/test/**',
+  '**/mocks/**',
+  '**/dist/**',
+  `**/${DEFAULT_TEST_EXT_PATTERN}`,
+  '**/*.config.*',
+];
+const TEST_GLOB = [
+  ...(packagesPath.length
+    ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`)
+    : [DEFAULT_TEST_GLOB_PATTERN]),
+  '!**/node_modules/**',
+  '!./node_modules/**',
+];
+const SRC_GLOB = [
+  ...(packagesPath.length
+    ? packagesPath.map(p => `${p}/${DEFAULT_SRC_GLOB_PATTERN}`)
+    : [DEFAULT_SRC_GLOB_PATTERN]),
+  '!**/node_modules/**',
+  '!./node_modules/**',
+];
 const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 const utils = {
@@ -76,7 +101,9 @@ const utils = {
   },
   writeLine(prefix, msg) {
     this.clearLine();
-    process.stderr.write(`${prefix} ${msg.length > 60 ? '...' : ''}${msg.slice(-59)}`);
+    process.stderr.write(
+      `${prefix} ${msg.length > 60 ? '...' : ''}${msg.slice(-59)}`,
+    );
   },
   safeGetModule(name) {
     let found = importCwd.silent(name);
@@ -155,7 +182,12 @@ const utils = {
   matchDependency(found, testName) {
     let use = found;
     if (found.length > 1) {
-      const matchName = found.filter(id => path.basename(id).split('.').shift() === testName);
+      const matchName = found.filter(
+        id => path
+          .basename(id)
+          .split('.')
+          .shift() === testName,
+      );
       if (matchName.length === 1) {
         use = matchName;
       } else {
@@ -165,10 +197,12 @@ const utils = {
     return use;
   },
   getDependencies(files, file) {
-    const name = path.basename(file).split('.').shift();
+    const name = path
+      .basename(file)
+      .split('.')
+      .shift();
     const mod = this.safeRequireCache(file);
-    const found = mod
-      .children
+    const found = mod.children
       .filter(m => files.indexOf(m.id) !== -1)
       .map(m => m.id);
     return this.matchDependency(found, name);
@@ -190,7 +224,10 @@ const utils = {
     return debug(ns);
   },
   filter(arr, initialValue) {
-    return arr.reduce((acc, curr) => acc.filter(file => minimatch(file, curr)), initialValue);
+    return arr.reduce(
+      (acc, curr) => acc.filter(file => minimatch(file, curr)),
+      initialValue,
+    );
   },
   isMatchingExtPattern(filePath, extPattern) {
     const base = path.basename(filePath);
