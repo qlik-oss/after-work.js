@@ -25,7 +25,7 @@
     "@after-work.js/utils": "5.0.2",
     "extend": "3.0.2",
     "handlebars": "4.0.12",
-    "highlight.js": "9.13.0",
+    "highlight.js": "9.13.1",
     "jimp": "0.5.4",
     "mkdirp": "0.5.1",
     "mocha": "5.2.0",
