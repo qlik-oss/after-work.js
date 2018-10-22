@@ -231,7 +231,7 @@ class Runner extends EventEmitter {
   }
 
   findFiles(glob) {
-    return globby.sync(glob).map(f => path.resolve(f));
+    return utils.filter(this.getFilter().files, globby.sync(glob).map(f => path.resolve(f)));
   }
 
   getFilter() {
@@ -239,7 +239,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = utils.filter(this.getFilter().files, this.findFiles(this.argv.glob));
+    this.testFiles = this.findFiles(this.argv.glob);
     if (!this.testFiles.length) {
       this.log(`No files found for glob: ${this.argv.glob} with filter: ${this.getFilter().files}`);
       this.exit(1);

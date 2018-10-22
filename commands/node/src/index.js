@@ -33,12 +33,14 @@ class Runner extends EventEmitter {
   }
 
   getMatchedSrcDependency(testFile) {
-    const testName = path.basename(testFile).split('.').shift();
+    const testName = path
+      .basename(testFile)
+      .split('.')
+      .shift();
     this.safeDeleteCache(testFile);
     deleteTransform(testFile);
     const mod = utils.safeRequireCache(testFile);
-    const found = mod
-      .children
+    const found = mod.children
       .filter(m => this.srcFiles.indexOf(m.id) !== -1)
       .map(m => m.id);
     const use = utils.matchDependency(found, testName);
@@ -46,27 +48,37 @@ class Runner extends EventEmitter {
   }
 
   getMatchedTestDependency(srcFile) {
-    const srcName = path.basename(srcFile).split('.').shift();
+    const srcName = path
+      .basename(srcFile)
+      .split('.')
+      .shift();
     const found = this.testFiles.filter((f) => {
       const mod = utils.safeRequireCache(f);
-      return mod
-        .children
-        .filter(m => m.id === srcFile).length !== 0;
+      return mod.children.filter(m => m.id === srcFile).length !== 0;
     });
     const use = utils.matchDependency(found, srcName);
     return use;
   }
 
   getSrcFilesFromTestFiles(testFiles) {
-    return testFiles.reduce((acc, curr) => [...acc, ...this.getMatchedSrcDependency(curr)], []);
+    return testFiles.reduce(
+      (acc, curr) => [...acc, ...this.getMatchedSrcDependency(curr)],
+      [],
+    );
   }
 
   getTestFilesFromSrcFiles(srcFiles) {
-    return srcFiles.reduce((acc, curr) => [...acc, ...this.getMatchedTestDependency(curr)], []);
+    return srcFiles.reduce(
+      (acc, curr) => [...acc, ...this.getMatchedTestDependency(curr)],
+      [],
+    );
   }
 
   findFiles(glob) {
-    return globby.sync(glob).map(f => path.resolve(f));
+    return utils.filter(
+      this.getFilter().files,
+      globby.sync(glob).map(f => path.resolve(f)),
+    );
   }
 
   getFilter() {
@@ -74,7 +86,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = utils.filter(this.getFilter().files, this.findFiles(this.argv.glob));
+    this.testFiles = this.findFiles(this.argv.glob);
     if (!this.testFiles.length) {
       console.error('No files found for:', this.argv.glob);
       if (!this.argv.interactive) {
@@ -85,7 +97,10 @@ class Runner extends EventEmitter {
   }
 
   setSrcFiles() {
-    this.srcFiles = utils.filter(this.getFilter().files, this.findFiles(this.argv.src));
+    this.srcFiles = utils.filter(
+      this.getFilter().files,
+      this.findFiles(this.argv.src),
+    );
     return this;
   }
 
@@ -129,7 +144,11 @@ class Runner extends EventEmitter {
 
   register() {
     if (this.argv.hookRequire) {
-      require('@after-work.js/register')(this.argv, this.srcFiles, this.testFiles);
+      require('@after-work.js/register')(
+        this.argv,
+        this.srcFiles,
+        this.testFiles,
+      );
     }
   }
 
@@ -172,8 +191,7 @@ class Runner extends EventEmitter {
     this.nyc = new NYC(this.argv.nyc);
     this.argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
     try {
-      this
-        .deleteCoverage()
+      this.deleteCoverage()
         .setup(testFiles, srcFiles)
         .runTests();
     } catch (err) {
@@ -236,6 +254,7 @@ const node = {
   },
   handler(argv) {
     const runner = new node.Runner(argv);
+    argv.__isNodeRunner = true;
     if (argv.presetEnv) {
       require('@after-work.js/preset-plugin')(runner);
     }

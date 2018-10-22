@@ -130,10 +130,10 @@ const utils = {
       opt.babel = core;
     }
     if (typeof opt.babelPluginIstanbul === 'string') {
-      opt.babelPluginIstanbul = importCwd(opt.babelPluginIstanbul).default;
+      opt.babelPluginIstanbul = utils.safeGetModule(opt.babelPluginIstanbul).default;
     }
     if (typeof opt.typescript === 'string') {
-      opt.typescript = importCwd.silent(opt.typescript);
+      opt.typescript = utils.safeGetModule(opt.typescript);
     }
     return opt;
   },
@@ -220,8 +220,8 @@ const utils = {
     walk(deps, files, file);
     return all;
   },
-  debug(ns) {
-    return debug(ns);
+  createDebug(p) {
+    return debug(`@after-work.js:${p}`);
   },
   filter(arr, initialValue) {
     return arr.reduce(

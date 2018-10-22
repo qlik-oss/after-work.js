@@ -4,10 +4,12 @@ const {
   isSourceMap,
   isTypescript,
   ensureFilePath,
+  createDebug,
 } = require('@after-work.js/utils');
 const FileCache = require('./file-cache');
 
 const fileCache = new FileCache();
+const debug = createDebug('transform');
 
 function getBabelOpts(filename, argv) {
   const {
@@ -19,7 +21,7 @@ function getBabelOpts(filename, argv) {
   const plugins = addCoverage ? [[babelPluginIstanbul, argv.nyc]] : [];
   const sourceMaps = 'both';
   const retainLines = true;
-  return {
+  const opts = {
     filename,
     sourceRoot,
     plugins,
@@ -28,11 +30,14 @@ function getBabelOpts(filename, argv) {
     sourceMaps,
     retainLines,
   };
+  debug('getBabelOpts', opts);
+  return opts;
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
   const {
     babel: { typescript },
+    __isNodeRunner = false,
   } = argv;
   const {
     transform: {
@@ -46,7 +51,7 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
     compilerOptions.inlineSourceMap = true;
   }
   if (!compilerOptions.module) {
-    compilerOptions.module = 'esnext';
+    compilerOptions.module = __isNodeRunner ? 'commonjs' : 'exnext';
   }
   const transpileOpts = { fileName, compilerOptions };
   const res = typescript.transpileModule(tsContent, transpileOpts);
@@ -60,26 +65,31 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
     tsBabelOpts = { inputSourceMap };
   }
   tsBabelOpts = Object.assign(babelOptions, tsBabelOpts);
+  debug(':transformTypescript', tsContent, tsBabelOpts);
   return { tsContent, tsBabelOpts };
 }
 function transformFile(filename, argv, content = null) {
+  debug(':transformFile');
   if (!content && isSourceMap(filename)) {
     const cachedTransform = fileCache.getSync(
       filename.split('.map').join(''),
       argv,
     );
+    debug(':transformFile cached source map', cachedTransform);
     return cachedTransform.map;
   }
   if (!content) {
     filename = ensureFilePath(filename);
     const cachedTransform = fileCache.getSync(filename, argv);
     if (cachedTransform) {
+      debug(':transformFile cached transform', cachedTransform);
       return cachedTransform.code;
     }
     content = fs.readFileSync(filename, 'utf8');
   }
   const cachedTransform = fileCache.getSync(filename, argv);
   if (cachedTransform) {
+    debug(':transformFile cached transform', cachedTransform);
     return cachedTransform.code;
   }
   let babelOpts = getBabelOpts(filename, argv);
@@ -96,7 +106,9 @@ function transformFile(filename, argv, content = null) {
   babelOpts.ast = false;
   const { babel } = argv.babel;
   const transform = babel.transform(content, babelOpts);
+  debug(':transformFile transform', transform);
   if (!transform) {
+    debug(':transformFile transform null');
     return content;
   }
   fileCache.setSync(filename, transform, argv);

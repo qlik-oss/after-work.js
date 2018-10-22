@@ -9,8 +9,11 @@ const {
   lernaPackages,
   DEFAULT_TEST_GLOB_PATTERN,
   DEFAULT_SRC_GLOB_PATTERN,
+  DEFAULT_SRC_EXCLUDE_PATTERN,
+  createDebug,
 } = utils;
 
+const debug = createDebug('interactive');
 let test = [];
 let src = [];
 
@@ -57,10 +60,26 @@ const onInteractive = (runner) => {
         const p = packagesMap.get(name);
         test = [
           ...test,
-          ...runner.findFiles(`${p}/${DEFAULT_TEST_GLOB_PATTERN}`),
+          ...runner.findFiles([
+            `${p}/${DEFAULT_TEST_GLOB_PATTERN}`,
+            '!**/node_modules/**',
+            '!./node_modules/**',
+          ]),
         ];
-        src = [...src, ...runner.findFiles(`${p}/${DEFAULT_SRC_GLOB_PATTERN}`)];
+        src = [
+          ...src,
+          ...runner.findFiles([
+            `${p}/${DEFAULT_SRC_GLOB_PATTERN}`,
+            '!**/node_modules/**',
+            '!./node_modules/**',
+            ...DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
+              (acc, curr) => [...acc, `!**/${curr}/**`, `!./${curr}/**`],
+              [],
+            ),
+          ]),
+        ];
       });
+      debug('packages', test, src);
       if (Array.isArray(test) && test.length) {
         runner.setupAndRunTests(test, src);
       } else {

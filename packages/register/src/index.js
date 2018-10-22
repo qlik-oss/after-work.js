@@ -4,20 +4,25 @@ const path = require('path');
 const fs = require('fs');
 const { addHook } = require('pirates');
 const sourceMapSupport = require('source-map-support');
-const { transformFile, getTransform, deleteTransform } = require('@after-work.js/transform');
+const {
+  transformFile,
+  getTransform,
+  deleteTransform,
+} = require('@after-work.js/transform');
 const minimatch = require('minimatch');
 const mod = require('module');
 const requireFromString = require('require-from-string');
 const utils = require('@after-work.js/utils');
 
 const originLoader = mod._load;
-let removeCompileHook = () => { };
-let removeLoadHook = () => { };
+let removeCompileHook = () => {};
+let removeLoadHook = () => {};
 
 function compileHook(argv, code, filename, virtualMock = false) {
   if (!argv.babel.enable) {
     return code;
   }
+
   const sourceRoot = path.dirname(filename);
   const { babel, options } = argv.babel;
   const opts = new babel.OptionManager().init({
@@ -47,7 +52,9 @@ function compile(value, filename, options, injectReact) {
     src = fs.readFileSync(value, 'utf8');
     filename = value;
   } else {
-    src = `${injectReact ? 'import React from "react";\n' : ''}export default ${value}`;
+    src = `${
+      injectReact ? 'import React from "react";\n' : ''
+    }export default ${value}`;
   }
   src = compileHook(options, src, filename, true);
   return requireFromString(src, filename);
@@ -137,9 +144,9 @@ class AW {
     const [filename] = utils.getCurrentFilenameStackInfo(this.testFiles);
     const deps = utils.getAllDependencies(this.srcFiles, filename);
     deps.forEach(d => utils.safeDeleteCache(d));
-
-    const isTestLibFile = f => f.indexOf('node_modules') > -1 && (f.indexOf('sinon') > -1 || f.indexOf('chai') > -1);
-    Object.keys(require.cache).filter(f => f !== filename && this.testFiles.indexOf(f) === -1 && !isTestLibFile(f)).forEach(f => utils.safeDeleteCache(f));
+    Object.keys(require.cache)
+      .filter(f => f !== filename && this.testFiles.indexOf(f) === -1)
+      .forEach(f => utils.safeDeleteCache(f));
 
     const mods = reqs.map((r) => {
       const p = require.resolve(path.resolve(path.dirname(filename), r));
@@ -160,7 +167,16 @@ module.exports = function register(options = {}, srcFiles, testFiles) {
   installSourceMapSupport();
   removeCompileHook();
   removeLoadHook();
-  const exts = [...new Set(options.extensions || []), '.js', '.ts', '.jsx', '.scss', '.less', '.css', '.html'];
+  const exts = [
+    ...new Set(options.extensions || []),
+    '.js',
+    '.ts',
+    '.jsx',
+    '.scss',
+    '.less',
+    '.css',
+    '.html',
+  ];
   removeCompileHook = addHook(compileHook.bind(null, options), { exts });
   removeLoadHook = addLoadHook(options);
 };
