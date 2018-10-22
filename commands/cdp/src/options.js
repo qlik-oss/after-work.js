@@ -9,7 +9,8 @@ const {
 
 module.exports = {
   presetEnv: {
-    description: 'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai subset',
+    description:
+      'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai subset',
     default: true,
     type: 'boolean',
   },
@@ -94,8 +95,7 @@ module.exports = {
   },
   'babel.options': {
     description: 'Babel options',
-    default: {
-    },
+    default: {},
     type: 'object',
   },
   'babel.typescript': {

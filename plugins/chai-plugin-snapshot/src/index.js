@@ -14,7 +14,9 @@ const getSourceContent = (filename) => {
 
 module.exports = function snapshot(runner) {
   return function chaiToMatchSnapshot() {
-    const [filename, lineno] = utils.getCurrentFilenameStackInfo(runner.testFiles);
+    const [filename, lineno] = utils.getCurrentFilenameStackInfo(
+      runner.testFiles,
+    );
     const src = getSourceContent(filename);
     const lines = src.split('\n');
 

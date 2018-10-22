@@ -6,8 +6,7 @@ const importCwd = require('import-cwd');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 
-yargs
-  .usage('aw <command>');
+yargs.usage('aw <command>');
 
 const tryAddCommand = (m) => {
   let cmd = null;
@@ -19,8 +18,7 @@ const tryAddCommand = (m) => {
     cmd = importCwd.silent(m);
   }
   if (cmd !== null) {
-    yargs
-      .command(cmd);
+    yargs.command(cmd);
   }
 };
 
@@ -32,7 +30,4 @@ const tryAddCommand = (m) => {
   '@after-work.js/serve',
 ].forEach(tryAddCommand);
 
-yargs
-  .alias('h', 'help')
-  .wrap(Math.min(120, yargs.terminalWidth()))
-  .argv;
+yargs.alias('h', 'help').wrap(Math.min(120, yargs.terminalWidth())).argv;

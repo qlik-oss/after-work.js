@@ -40,7 +40,8 @@ const onWatch = (runner, f) => {
 };
 
 module.exports = (runner) => {
-  chokidar.watch(runner.argv.watchGlob, { ignoreInitial: true })
+  chokidar
+    .watch(runner.argv.watchGlob, { ignoreInitial: true })
     .on('change', f => onWatch(runner, path.resolve(f)))
     .on('add', f => onWatchAdd(runner, path.resolve(f)))
     .on('unlink', f => onWatchUnlink(runner, path.resolve(f)));

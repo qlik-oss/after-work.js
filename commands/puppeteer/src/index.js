@@ -19,7 +19,9 @@ class PuppetRunner extends Runner {
     if (!stable) {
       const launcher = importCwd.silent('puppeteer');
       if (!launcher) {
-        throw new Error('Cannot find Chromium. Make sure you have puppeteer installed');
+        throw new Error(
+          'Cannot find Chromium. Make sure you have puppeteer installed',
+        );
       }
       const exePath = launcher.executablePath();
       return exePath;
@@ -80,8 +82,10 @@ const puppet = {
   handler(argv) {
     (async function launchAndRun() {
       const puppeteer = require('puppeteer-core');
-      if (argv.launch && !argv.chrome.executablePath) {
-        argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath(argv.chrome.stable);
+      if (!argv.chrome.executablePath) {
+        argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath(
+          argv.chrome.stable,
+        );
       }
       const runner = new PuppetRunner(puppeteer, argv);
       if (argv.presetEnv) {

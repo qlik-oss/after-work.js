@@ -1,25 +1,44 @@
 /* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0, max-len: 0 */
 const fs = require('fs');
-const { isSourceMap, isTypescript, ensureFilePath } = require('@after-work.js/utils');
+const {
+  isSourceMap,
+  isTypescript,
+  ensureFilePath,
+} = require('@after-work.js/utils');
 const FileCache = require('./file-cache');
 
 const fileCache = new FileCache();
 
 function getBabelOpts(filename, argv) {
-  const { options: { sourceRoot, only, ignore } = {}, babelPluginIstanbul } = argv.babel;
+  const {
+    options: { sourceRoot, only, ignore } = {},
+    babelPluginIstanbul,
+  } = argv.babel;
   const virtualMock = !!argv.virtualMock;
   const addCoverage = virtualMock === false;
-  const plugins = addCoverage
-    ? [[babelPluginIstanbul, argv.nyc]]
-    : [];
+  const plugins = addCoverage ? [[babelPluginIstanbul, argv.nyc]] : [];
   const sourceMaps = 'both';
   const retainLines = true;
-  return { filename, sourceRoot, plugins, only, ignore, sourceMaps, retainLines };
+  return {
+    filename,
+    sourceRoot,
+    plugins,
+    only,
+    ignore,
+    sourceMaps,
+    retainLines,
+  };
 }
 
 function transformTypescript(filePath, sourceRoot, tsContent, argv) {
-  const { babel: { typescript } } = argv;
-  const { transform: { typescript: { compilerOptions = {}, babelOptions = {} } = {} } = {} } = argv;
+  const {
+    babel: { typescript },
+  } = argv;
+  const {
+    transform: {
+      typescript: { compilerOptions = {}, babelOptions = {} } = {},
+    } = {},
+  } = argv;
   const fileName = filePath;
   compilerOptions.sourceRoot = sourceRoot;
   compilerOptions.inlineSources = true;
@@ -45,7 +64,10 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
 }
 function transformFile(filename, argv, content = null) {
   if (!content && isSourceMap(filename)) {
-    const cachedTransform = fileCache.getSync(filename.split('.map').join(''), argv);
+    const cachedTransform = fileCache.getSync(
+      filename.split('.map').join(''),
+      argv,
+    );
     return cachedTransform.map;
   }
   if (!content) {
@@ -62,7 +84,12 @@ function transformFile(filename, argv, content = null) {
   }
   let babelOpts = getBabelOpts(filename, argv);
   if (isTypescript(filename)) {
-    const { tsContent, tsBabelOpts } = transformTypescript(filename, babelOpts.sourceRoot, content, argv);
+    const { tsContent, tsBabelOpts } = transformTypescript(
+      filename,
+      babelOpts.sourceRoot,
+      content,
+      argv,
+    );
     content = tsContent;
     babelOpts = Object.assign({}, babelOpts, tsBabelOpts);
   }

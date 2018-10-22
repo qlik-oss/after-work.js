@@ -35,7 +35,9 @@ const onInteractive = (runner) => {
 
     if (interactive === 'workspaces' || interactive === 'scopes') {
       const message = interactive === 'workspaces' ? 'Which workspaces?' : 'Which scopes';
-      const inputPackages = (runner.argv.scope.length ? runner.argv.scope : packages);
+      const inputPackages = runner.argv.scope.length
+        ? runner.argv.scope
+        : packages;
       const filteredPackages = utils.filter(filter.packages, inputPackages);
       const promptPackages = require('./prompt-packages');
       const searchPackages = require('./search-packages');
@@ -53,7 +55,10 @@ const onInteractive = (runner) => {
       src = [];
       pkgs.forEach((name) => {
         const p = packagesMap.get(name);
-        test = [...test, ...runner.findFiles(`${p}/${DEFAULT_TEST_GLOB_PATTERN}`)];
+        test = [
+          ...test,
+          ...runner.findFiles(`${p}/${DEFAULT_TEST_GLOB_PATTERN}`),
+        ];
         src = [...src, ...runner.findFiles(`${p}/${DEFAULT_SRC_GLOB_PATTERN}`)];
       });
       if (Array.isArray(test) && test.length) {

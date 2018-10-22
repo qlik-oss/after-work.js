@@ -8,12 +8,21 @@ const utils = require('@after-work.js/utils');
 const testExclude = require('test-exclude');
 
 module.exports = function createServer(options) {
-  const http = Object.assign({ port: 9000, root: ['./'], rewrite: {} }, options.http);
+  const http = Object.assign(
+    { port: 9000, root: ['./'], rewrite: {} },
+    options.http,
+  );
   const instrument = Object.assign({ exclude: '**' }, options.instrument);
-  const instrumentExclude = testExclude({ include: instrument.include, exclude: instrument.exclude });
+  const instrumentExclude = testExclude({
+    include: instrument.include,
+    exclude: instrument.exclude,
+  });
   const shouldInstrument = f => instrumentExclude.shouldInstrument(f);
   const transform = Object.assign({ exclude: '**' }, options.transform);
-  const transformExclude = testExclude({ include: transform.include, exclude: transform.exclude });
+  const transformExclude = testExclude({
+    include: transform.include,
+    exclude: transform.exclude,
+  });
   const shouldTransform = f => transformExclude.shouldInstrument(f);
   const babel = utils.coerceBabel({
     enable: true,
@@ -35,6 +44,8 @@ module.exports = function createServer(options) {
   app.use(favicon(path.resolve(__dirname, '../aw.png')));
   Object.keys(opts.http.rewrite).forEach(key => app.use(rewrite(key, opts.http.rewrite[key])));
   app.use(transformFiles(opts));
-  app.use(...opts.http.root.map(root => serve(path.resolve(process.cwd(), root))));
+  app.use(
+    ...opts.http.root.map(root => serve(path.resolve(process.cwd(), root))),
+  );
   return app.listen(opts.http.port);
 };

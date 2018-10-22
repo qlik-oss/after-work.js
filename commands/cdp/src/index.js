@@ -37,7 +37,10 @@ const cdp = {
       .coerce('transform', (opt) => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.testExclude = testExclude({ include: opt.include, exclude });
-        opt.typescript.compilerOptions = Object.assign({ compilerOptions: {} }, importCwd.silent(path.resolve(opt.typescript.config))).compilerOptions;
+        opt.typescript.compilerOptions = Object.assign(
+          { compilerOptions: {} },
+          importCwd.silent(path.resolve(opt.typescript.config)),
+        ).compilerOptions;
         return opt;
       })
       .coerce('chrome', (opt) => {

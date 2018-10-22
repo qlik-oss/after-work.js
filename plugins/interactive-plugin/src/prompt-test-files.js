@@ -1,4 +1,8 @@
-const promptTestFiles = async ({ prompt, searchTestFiles, filteredTestFiles }) => {
+const promptTestFiles = async ({
+  prompt,
+  searchTestFiles,
+  filteredTestFiles,
+}) => {
   const { testFiles } = await prompt([
     {
       type: 'checkbox-plus',
