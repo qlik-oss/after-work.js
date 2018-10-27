@@ -23,7 +23,7 @@
     "@after-work.js/transform-middleware": "5.0.2",
     "@after-work.js/utils": "5.0.2",
     "import-cwd": "2.1.0",
-    "koa": "2.5.3",
+    "koa": "2.6.1",
     "koa-favicon": "2.0.1",
     "koa-rewrite": "3.0.1",
     "koa-static": "5.0.0",

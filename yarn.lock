@@ -11,7 +11,7 @@
     chai-as-promised "7.1.1"
     chai-subset "1.6.0"
     import-cwd "2.1.0"
-    sinon "7.0.0"
+    sinon "7.1.0"
     sinon-chai "3.2.0"
     source-map-support "0.5.9"
     yargs "12.0.2"
@@ -673,9 +673,9 @@
     "@jimp/utils" "^0.5.0"
     core-js "^2.5.7"
 
-"@jimp/plugin-color@^0.5.4":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@jimp/plugin-color/-/plugin-color-0.5.4.tgz#a85b106533f832cf09da521f469fea0e5bd52872"
+"@jimp/plugin-color@^0.5.5":
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@jimp/plugin-color/-/plugin-color-0.5.5.tgz#68f9652d5065d3380a9967911a7e529325d230d6"
   dependencies:
     "@jimp/utils" "^0.5.0"
     core-js "^2.5.7"
@@ -780,13 +780,13 @@
     "@jimp/utils" "^0.5.0"
     core-js "^2.5.7"
 
-"@jimp/plugins@^0.5.4":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@jimp/plugins/-/plugins-0.5.4.tgz#03b73fdf021e9b46ad842782be079794d5f07ddb"
+"@jimp/plugins@^0.5.5":
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@jimp/plugins/-/plugins-0.5.5.tgz#e97fa368d69ad7718d5a2a9b6ffa8e6cc1e4264d"
   dependencies:
     "@jimp/plugin-blit" "^0.5.4"
     "@jimp/plugin-blur" "^0.5.0"
-    "@jimp/plugin-color" "^0.5.4"
+    "@jimp/plugin-color" "^0.5.5"
     "@jimp/plugin-contain" "^0.5.4"
     "@jimp/plugin-cover" "^0.5.4"
     "@jimp/plugin-crop" "^0.5.4"
@@ -2835,9 +2835,9 @@ eslint-visitor-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
 
-eslint@5.7.0:
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.7.0.tgz#55c326d6fb2ad45fcbd0ce17c3846f025d1d819c"
+eslint@5.8.0:
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.8.0.tgz#91fbf24f6e0471e8fdf681a4d9dd1b2c9f28309b"
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.5.3"
@@ -4140,13 +4140,13 @@ jest-snapshot@23.6.0:
     pretty-format "^23.6.0"
     semver "^5.5.0"
 
-jimp@0.5.4:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/jimp/-/jimp-0.5.4.tgz#f0d32bf06f77f3af61f2830f18ab82a3df689c70"
+jimp@0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/jimp/-/jimp-0.5.6.tgz#dd114decd060927ae439f2e0980df619c179f912"
   dependencies:
     "@babel/polyfill" "^7.0.0"
     "@jimp/custom" "^0.5.4"
-    "@jimp/plugins" "^0.5.4"
+    "@jimp/plugins" "^0.5.5"
     "@jimp/types" "^0.5.4"
     core-js "^2.5.7"
 
@@ -4322,9 +4322,9 @@ koa-static@5.0.0:
     debug "^3.1.0"
     koa-send "^5.0.0"
 
-koa@2.5.3:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/koa/-/koa-2.5.3.tgz#0b0c37eee3aac807a0a6ad36bc0b8660f12d83f1"
+koa@2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/koa/-/koa-2.6.1.tgz#88cabb18cd297e0577a37e40f400c4b6f1699fef"
   dependencies:
     accepts "^1.3.5"
     cache-content-type "^1.0.0"
@@ -4912,9 +4912,9 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
 
-nise@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/nise/-/nise-1.4.5.tgz#979a97a19c48d627bb53703726ae8d53ce8d4b3e"
+nise@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/nise/-/nise-1.4.6.tgz#76cc3915925056ae6c405dd8ad5d12bde570c19f"
   dependencies:
     "@sinonjs/formatio" "3.0.0"
     just-extend "^3.0.0"
@@ -6223,9 +6223,9 @@ sinon-chai@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-3.2.0.tgz#ed995e13a8a3cfccec18f218d9b767edc47e0715"
 
-sinon@7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.0.0.tgz#99f2e5198d90a01ccbcebd4dc181a24827cb90dd"
+sinon@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.1.0.tgz#819b63002ee09a90a3b50a0da4e0bdecb2e3f345"
   dependencies:
     "@sinonjs/commons" "^1.0.2"
     "@sinonjs/formatio" "^3.0.0"
@@ -6233,7 +6233,7 @@ sinon@7.0.0:
     diff "^3.5.0"
     lodash.get "^4.4.2"
     lolex "^3.0.0"
-    nise "^1.4.5"
+    nise "^1.4.6"
     supports-color "^5.5.0"
     type-detect "^4.0.8"
 
