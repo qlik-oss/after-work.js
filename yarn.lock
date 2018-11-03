@@ -11,7 +11,7 @@
     chai-as-promised "7.1.1"
     chai-subset "1.6.0"
     import-cwd "2.1.0"
-    sinon "7.1.0"
+    sinon "7.1.1"
     sinon-chai "3.2.0"
     source-map-support "0.5.9"
     yargs "12.0.2"
@@ -1359,9 +1359,9 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.2.tgz#54c5a964462be3d4d78af631363c18d6fa91ac26"
 
-"@sinonjs/commons@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.0.2.tgz#3e0ac737781627b8844257fadc3d803997d0526e"
+"@sinonjs/commons@^1.2.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.3.0.tgz#50a2754016b6f30a994ceda6d9a0a8c36adda849"
   dependencies:
     type-detect "4.0.8"
 
@@ -5730,9 +5730,9 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer-core@1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-1.9.0.tgz#3859a4ebfc4b8a965bfdd4cc6c4ee93087142024"
+puppeteer-core@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-1.10.0.tgz#5f25fca1139a4ee41a324192cd8a62f9c7cac281"
   dependencies:
     debug "^3.1.0"
     extract-zip "^1.6.6"
@@ -6223,11 +6223,11 @@ sinon-chai@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-3.2.0.tgz#ed995e13a8a3cfccec18f218d9b767edc47e0715"
 
-sinon@7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.1.0.tgz#819b63002ee09a90a3b50a0da4e0bdecb2e3f345"
+sinon@7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.1.1.tgz#1202f317aa14d93cb9b69ff50b6bd49c0e05ffc9"
   dependencies:
-    "@sinonjs/commons" "^1.0.2"
+    "@sinonjs/commons" "^1.2.0"
     "@sinonjs/formatio" "^3.0.0"
     "@sinonjs/samsam" "^2.1.2"
     diff "^3.5.0"
@@ -6746,9 +6746,9 @@ typescript-eslint-parser@^18.0.0:
     lodash.unescape "4.0.1"
     semver "5.5.0"
 
-typescript@3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.3.tgz#01b70247a6d3c2467f70c45795ef5ea18ce191d5"
+typescript@3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.6.tgz#b6543a83cfc8c2befb3f4c8fba6896f5b0c9be68"
 
 typescript@^3.0.3:
   version "3.1.1"
