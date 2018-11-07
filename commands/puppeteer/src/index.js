@@ -38,10 +38,10 @@ class PuppetRunner extends Runner {
       this.argv.mocha.enableTimeouts = false;
     }
 
-    if (this.argv.browserWSEndpoint) {
-      this.browser = await this.puppeteer.connect({ browserWSEndpoint: this.argv.browserWSEndpoint });
-    } else {
+    if (this.argv.launch) {
       this.browser = await this.puppeteer.launch(this.argv.chrome);
+    } else {
+      this.browser = await this.puppeteer.connect(this.argv.chrome);
     }
 
     global.browser = this.browser;
