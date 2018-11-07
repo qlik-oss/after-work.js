@@ -10,6 +10,11 @@ module.exports = {
     default: ['test/**/*.spec.js'],
     type: 'array',
   },
+  browserWSEndpoint: {
+    description: 'Connect to external chrome WS endpoint (`ws://localhost:3000`)',
+    type: 'string',
+    default: null,
+  },
   'mocha.enableTimeouts': {
     description: 'Enable timeouts',
     default: false,
