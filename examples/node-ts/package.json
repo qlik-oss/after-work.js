@@ -1,7 +1,7 @@
 {
   "name": "@after-work.js/example-node-ts",
   "private": true,
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Node example with typescript",
   "repository": {
     "type": "git",

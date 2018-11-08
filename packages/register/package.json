@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/register",
-  "version": "5.0.3",
+  "version": "5.1.0",
   "publishConfig": {
     "access": "public"
   },
@@ -20,8 +20,8 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/transform": "5.0.2",
-    "@after-work.js/utils": "5.0.2",
+    "@after-work.js/transform": "5.1.0",
+    "@after-work.js/utils": "5.1.0",
     "find-cache-dir": "2.0.0",
     "import-cwd": "2.1.0",
     "minimatch": "3.0.4",
