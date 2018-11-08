@@ -10,6 +10,11 @@ module.exports = {
     default: ['test/**/*.spec.js'],
     type: 'array',
   },
+  launch: {
+    description: 'Launch or connect to Chrome',
+    default: true,
+    type: 'boolean',
+  },
   'mocha.enableTimeouts': {
     description: 'Enable timeouts',
     default: false,
