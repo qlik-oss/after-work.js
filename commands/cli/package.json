@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/cli",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "publishConfig": {
     "access": "public"
   },
@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/chai-plugin-screenshot": "5.1.0",
-    "@after-work.js/chai-plugin-snapshot": "5.1.0",
+    "@after-work.js/chai-plugin-screenshot": "5.1.1",
+    "@after-work.js/chai-plugin-snapshot": "5.1.1",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
@@ -35,11 +35,11 @@
     "yargs": "12.0.2"
   },
   "devDependencies": {
-    "@after-work.js/cdp": "5.1.0",
-    "@after-work.js/node": "5.1.0",
-    "@after-work.js/protractor": "5.1.0",
-    "@after-work.js/puppeteer": "5.1.0",
-    "@after-work.js/serve": "5.1.0"
+    "@after-work.js/cdp": "5.1.1",
+    "@after-work.js/node": "5.1.1",
+    "@after-work.js/protractor": "5.1.1",
+    "@after-work.js/puppeteer": "5.1.1",
+    "@after-work.js/serve": "5.1.1"
   },
   "files": [
     "/src"

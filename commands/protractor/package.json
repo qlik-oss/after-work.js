@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/protractor",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "publishConfig": {
     "access": "public"
   },
@@ -20,9 +20,9 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/register": "5.1.0",
-    "@after-work.js/server": "5.1.0",
-    "@after-work.js/utils": "5.1.0",
+    "@after-work.js/register": "5.1.1",
+    "@after-work.js/server": "5.1.1",
+    "@after-work.js/utils": "5.1.1",
     "extend": "3.0.2",
     "handlebars": "4.0.12",
     "highlight.js": "9.13.1",
