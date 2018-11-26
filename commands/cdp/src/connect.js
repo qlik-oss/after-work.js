@@ -24,20 +24,45 @@ module.exports = async function connect(argv, files, debugging) {
   const client = await CDP(argv.client);
   const { DOM, DOMStorage, Console, Network, Page, Runtime } = client;
 
-  const injectMochaOptions = `window.mochaOptions = ${JSON.stringify(argv.mocha)}`;
+  const { bail, useColors, reporter, ui, timeout } = argv.mocha;
+  const injectMochaOptions = `window.mochaOptions = ${JSON.stringify({
+    bail,
+    useColors,
+    reporter,
+    ui,
+    timeout,
+  })}`;
+  console.log(argv.mocha);
   const injectAwFiles = `window.awFiles = ${JSON.stringify(files)}`;
-  const injectAwDevtools = `window.awDevtools = ${JSON.stringify(argv.chrome.devtools)}`;
+  const injectAwDevtools = `window.awDevtools = ${JSON.stringify(
+    argv.chrome.devtools,
+  )}`;
   const injectAwDebugging = `window.awDebugging = ${JSON.stringify(debugging)}`;
 
-  await Promise.all([DOM.enable(), DOMStorage.enable(), Network.enable(), Page.enable(), Runtime.enable(), Console.enable()]);
-  const sourceMapSupport = `${path.dirname(require.resolve('source-map-support'))}/browser-source-map-support.js`;
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: `${getContent(sourceMapSupport)};` });
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: 'sourceMapSupport.install();' });
+  await Promise.all([
+    DOM.enable(),
+    DOMStorage.enable(),
+    Network.enable(),
+    Page.enable(),
+    Runtime.enable(),
+    Console.enable(),
+  ]);
+  const sourceMapSupport = `${path.dirname(
+    require.resolve('source-map-support'),
+  )}/browser-source-map-support.js`;
+  await Page.addScriptToEvaluateOnLoad({
+    scriptSource: `${getContent(sourceMapSupport)};`,
+  });
+  await Page.addScriptToEvaluateOnLoad({
+    scriptSource: 'sourceMapSupport.install();',
+  });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMediator });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMochaOptions });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwFiles });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwDevtools });
   await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwDebugging });
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: getContent(path.join(__dirname, 'browser-shim.js')) });
+  await Page.addScriptToEvaluateOnLoad({
+    scriptSource: getContent(path.join(__dirname, 'browser-shim.js')),
+  });
   return client;
 };
