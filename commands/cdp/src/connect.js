@@ -32,7 +32,7 @@ module.exports = async function connect(argv, files, debugging) {
     ui,
     timeout,
   })}`;
-  console.log(argv.mocha);
+
   const injectAwFiles = `window.awFiles = ${JSON.stringify(files)}`;
   const injectAwDevtools = `window.awDevtools = ${JSON.stringify(
     argv.chrome.devtools,
