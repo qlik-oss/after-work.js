@@ -1,15 +1,18 @@
 const path = require('path');
-const Koa = require('koa');
-const serve = require('koa-static');
-const favicon = require('koa-favicon');
-const rewrite = require('koa-rewrite');
+const express = require('express');
+const favicon = require('serve-favicon');
 const transformFiles = require('@after-work.js/transform-middleware');
 const utils = require('@after-work.js/utils');
 const testExclude = require('test-exclude');
 
 module.exports = function createServer(options) {
   const http = Object.assign(
-    { port: 9000, root: ['./'], rewrite: {} },
+    {
+      host: '0.0.0.0',
+      port: 9000,
+      root: ['./'],
+      rewrite: {},
+    },
     options.http,
   );
   const instrument = Object.assign({ exclude: '**' }, options.instrument);
@@ -40,12 +43,15 @@ module.exports = function createServer(options) {
       ...babel,
     },
   };
-  const app = new Koa();
+  const app = express();
   app.use(favicon(path.resolve(__dirname, '../aw.png')));
-  Object.keys(opts.http.rewrite).forEach(key => app.use(rewrite(key, opts.http.rewrite[key])));
   app.use(transformFiles(opts));
-  app.use(
-    ...opts.http.root.map(root => serve(path.resolve(process.cwd(), root))),
-  );
-  return app.listen(opts.http.port);
+  app.use('/', express.static(process.cwd()));
+  return app.listen(opts.http.port, opts.http.host, (err) => {
+    if (err) {
+      throw err;
+    }
+    // eslint-disable-next-line no-console
+    console.log(`Listening on http://${opts.http.host}:${opts.http.port}`);
+  });
 };

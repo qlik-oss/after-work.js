@@ -1,19 +1,18 @@
 const { transformFile } = require('@after-work.js/transform');
 
 module.exports = function transform(argv) {
-  return async (ctx, next) => {
-    await next();
-    let { url } = ctx;
+  return (req, res, next) => {
+    next();
+    let { url } = req;
     // We need to remove the leading slash else it will be excluded by default
-    if (ctx.url.length && ctx.url.startsWith('/')) {
-      url = ctx.url.substring(1);
+    if (req.url.length && req.url.startsWith('/')) {
+      url = req.url.substring(1);
     }
     const shouldInstrument = argv.coverage && argv.shouldInstrument(url);
     const shouldTransform = argv.shouldTransform(url);
-
     if (shouldInstrument || shouldTransform) {
-      const { response } = ctx;
-      response.body = transformFile(url, argv);
+      const file = transformFile(url, argv);
+      res.send(file);
     }
   };
 };

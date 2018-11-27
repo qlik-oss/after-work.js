@@ -130,7 +130,9 @@ const utils = {
       opt.babel = core;
     }
     if (typeof opt.babelPluginIstanbul === 'string') {
-      opt.babelPluginIstanbul = utils.safeGetModule(opt.babelPluginIstanbul).default;
+      opt.babelPluginIstanbul = utils.safeGetModule(
+        opt.babelPluginIstanbul,
+      ).default;
     }
     if (typeof opt.typescript === 'string') {
       opt.typescript = utils.safeGetModule(opt.typescript);

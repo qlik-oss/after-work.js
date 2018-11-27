@@ -24,9 +24,14 @@ module.exports = async function connect(argv, files, presetEnv, debugging) {
   const client = await CDP(argv.client);
   const { DOM, DOMStorage, Console, Network, Page, Runtime } = client;
 
-  const injectMochaOptions = `window.mochaOptions = ${JSON.stringify(
-    argv.mocha,
-  )}`;
+  const { bail, useColors, reporter, ui, timeout } = argv.mocha;
+  const injectMochaOptions = `window.mochaOptions = ${JSON.stringify({
+    bail,
+    useColors,
+    reporter,
+    ui,
+    timeout,
+  })}`;
   const injectAwFiles = `window.awFiles = ${JSON.stringify(files)}`;
   const injectAwDevtools = `window.awDevtools = ${JSON.stringify(
     argv.chrome.devtools,
@@ -51,10 +56,16 @@ module.exports = async function connect(argv, files, presetEnv, debugging) {
     source: 'sourceMapSupport.install();',
   });
   await Page.addScriptToEvaluateOnNewDocument({ source: injectMediator });
-  await Page.addScriptToEvaluateOnNewDocument({ source: injectMochaOptions });
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: injectMochaOptions,
+  });
   await Page.addScriptToEvaluateOnNewDocument({ source: injectAwFiles });
-  await Page.addScriptToEvaluateOnNewDocument({ source: injectAwDevtools });
-  await Page.addScriptToEvaluateOnNewDocument({ source: injectAwDebugging });
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: injectAwDevtools,
+  });
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: injectAwDebugging,
+  });
   await Page.addScriptToEvaluateOnNewDocument({
     source: getContent(path.join(__dirname, 'browser-shim.js')),
   });

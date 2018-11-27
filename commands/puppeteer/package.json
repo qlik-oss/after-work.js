@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/interactive-plugin": "5.0.2",
-    "@after-work.js/preset-plugin": "5.0.2",
-    "@after-work.js/node": "5.0.2",
-    "@after-work.js/utils": "5.0.2",
+    "@after-work.js/interactive-plugin": "5.1.1",
+    "@after-work.js/preset-plugin": "5.1.1",
+    "@after-work.js/node": "5.1.1",
+    "@after-work.js/utils": "5.1.1",
     "chrome-launcher": "0.10.5",
     "import-cwd": "2.1.0",
     "puppeteer-core": "1.10.0"

@@ -65,6 +65,11 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  launch: {
+    description: 'Launch or connect to Chrome',
+    default: true,
+    type: 'boolean',
+  },
   hookRequire: {
     description: 'Hook require to be able to mock and transform files',
     default: true,
