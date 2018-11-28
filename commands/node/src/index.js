@@ -21,6 +21,9 @@ class Runner extends EventEmitter {
     this.isRunning = false;
     this.debugging = false;
     this.snapshotStates = new Map();
+    this.warnings = [];
+    this.startCallbacks = [];
+    this.finishedCallbacks = [];
   }
 
   logLine(prefix, msg) {
@@ -119,10 +122,22 @@ class Runner extends EventEmitter {
   }
 
   onFinished(failures) {
+    if (!this.isRunning) {
+      return;
+    }
+    this.finishedCallbacks.forEach(fn => fn());
     this.isRunning = false;
     if (failures === 0 && this.argv.coverage) {
       this.nyc.writeCoverageFile();
       this.nyc.report();
+    }
+
+    if (this.warnings.length) {
+      console.error('\u001b[33mwarnings:\u001b[0m');
+      this.warnings.forEach((w) => {
+        console.error('');
+        w();
+      });
     }
     if (this.argv.watch) {
       this.emit('watchEnd');
@@ -136,10 +151,10 @@ class Runner extends EventEmitter {
 
   runTests() {
     this.isRunning = true;
+    this.warnings = [];
+    this.startCallbacks.forEach(fn => fn());
     this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
     this.mochaRunner.once('start', () => utils.clearLine());
-    // this.runnedTestFiles = [];
-    // this.mochaRunner.on('test end', (t) => { this.runnedTestFiles = [...this.runnedTestFiles, t.file]; });
   }
 
   register() {
@@ -148,6 +163,9 @@ class Runner extends EventEmitter {
         this.argv,
         this.srcFiles,
         this.testFiles,
+        fn => this.warnings.push(fn),
+        fn => this.startCallbacks.push(fn),
+        fn => this.finishedCallbacks.push(fn),
       );
     }
   }

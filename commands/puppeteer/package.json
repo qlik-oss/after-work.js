@@ -23,6 +23,7 @@
     "@after-work.js/interactive-plugin": "5.1.1",
     "@after-work.js/preset-plugin": "5.1.1",
     "@after-work.js/node": "5.1.1",
+    "@after-work.js/register": "5.1.1",
     "@after-work.js/utils": "5.1.1",
     "chrome-launcher": "0.10.5",
     "import-cwd": "2.1.0",

@@ -151,7 +151,7 @@ const utils = {
         const columnno = parts.pop();
         const lineno = parts.pop();
         const filename = path.resolve(parts.join(':'));
-        return [filename, lineno, columnno];
+        return [filename, lineno, columnno, c];
       })
       .filter(([filename]) => testFiles.indexOf(filename) !== -1);
     if (!s.length) {

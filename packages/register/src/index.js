@@ -71,7 +71,7 @@ function compileMock(options, filename, value, injectReact) {
   return compile(value, filename, options, injectReact);
 }
 
-function hookedLoader(options, configMocks, request, parent, isMain) {
+function hookedLoader(options, request, parent, isMain) {
   let filename;
   try {
     filename = mod._resolveFilename(request, parent);
@@ -79,11 +79,17 @@ function hookedLoader(options, configMocks, request, parent, isMain) {
     filename = request;
   }
 
-  const mocks = [...aw.mocks, ...configMocks];
   // 1. Explicit mocks in modules e.g aw.mock(...)
   // 2. Global config mocks from aw.config.js
-  for (const [key, [value, injectReact = false]] of mocks) {
+  for (const [key, [value, injectReact = false]] of aw.mocks) {
     if (minimatch(filename, key)) {
+      aw.mocks.delete(key);
+      return compileMock(options, filename, value, injectReact);
+    }
+  }
+  for (const [key, [value, injectReact = false]] of aw.globalMocks) {
+    if (minimatch(filename, key)) {
+      aw.usedGlobalMocks.set(key);
       return compileMock(options, filename, value, injectReact);
     }
   }
@@ -91,9 +97,7 @@ function hookedLoader(options, configMocks, request, parent, isMain) {
 }
 
 function addLoadHook(options) {
-  const configMocks = new Map();
-  (options.mocks || []).forEach(([key, value]) => configMocks.set(key, [value, false]));
-  const loadHook = hookedLoader.bind(null, options, configMocks);
+  const loadHook = hookedLoader.bind(null, options);
   mod._load = loadHook;
   return () => {
     mod._load = originLoader;
@@ -123,10 +127,29 @@ function installSourceMapSupport() {
 }
 
 class AW {
-  constructor(srcFiles, testFiles) {
+  constructor(srcFiles, testFiles, warn, onStart, onFinished, mocks = []) {
     this.srcFiles = srcFiles;
     this.testFiles = testFiles;
     this.mocks = new Map();
+    this.globalMocks = new Map();
+    this.usedGlobalMocks = new Map();
+    mocks.forEach(([key, value]) => this.globalMocks.set(key, [value, false]));
+    this.warn = warn;
+    onStart(() => this.usedGlobalMocks.clear());
+    onFinished(() => {
+      const globalMocksKeys = [...this.globalMocks.keys()];
+      const usedGlobalMocksKeys = [...this.usedGlobalMocks.keys()];
+      const unusedGlobalMocksKeys = globalMocksKeys.filter(
+        k => !usedGlobalMocksKeys.includes(k),
+      );
+      for (const key of unusedGlobalMocksKeys) {
+        const [value] = this.globalMocks.get(key);
+        const warning = () => console.error(
+          `\u001b[33mCouldn't match global mock with pattern:\u001b[0m \u001b[31m${key}\u001b[0m \u001b[33mand value:\u001b[0m \u001b[34m${value}\u001b[0m\n\u001b[90mat (Check your config file)\u001b[0m`,
+        );
+        this.warn(warning);
+      }
+    });
   }
 
   canInjectReact() {
@@ -141,7 +164,7 @@ class AW {
   mock(mocks, reqs) {
     const injectReact = this.canInjectReact();
     mocks.forEach(([key, value]) => this.mocks.set(key, [value, injectReact]));
-    const [filename] = utils.getCurrentFilenameStackInfo(this.testFiles);
+    const [filename, , , c] = utils.getCurrentFilenameStackInfo(this.testFiles);
     const deps = utils.getAllDependencies(this.srcFiles, filename);
     deps.forEach(d => utils.safeDeleteCache(d));
     Object.keys(require.cache)
@@ -153,7 +176,13 @@ class AW {
       return require(p);
     });
 
-    mocks.forEach(([key]) => this.mocks.delete(key));
+    for (const [key, [value]] of this.mocks) {
+      const warning = () => console.error(
+        `\u001b[33mCouldn't match local mock with pattern:\u001b[0m \u001b[31m${key}\u001b[0m \u001b[33mand value:\u001b[0m \u001b[34m${value}\u001b[0m\n\u001b[90mat (${c})\u001b[0m`,
+      );
+      this.warn(warning);
+      this.mocks.delete(key);
+    }
     deps.forEach((d) => {
       utils.safeDeleteCache(d);
       deleteTransform(d);
@@ -162,8 +191,22 @@ class AW {
   }
 }
 
-module.exports = function register(options = {}, srcFiles, testFiles) {
-  global.aw = new AW(srcFiles, testFiles);
+module.exports = function register(
+  options = {},
+  srcFiles,
+  testFiles,
+  warn = () => {},
+  onStart = () => {},
+  onFinished = () => {},
+) {
+  global.aw = new AW(
+    srcFiles,
+    testFiles,
+    warn,
+    onStart,
+    onFinished,
+    options.mocks,
+  );
   installSourceMapSupport();
   removeCompileHook();
   removeLoadHook();

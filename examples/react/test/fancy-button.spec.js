@@ -8,11 +8,14 @@ import FancyButton from '../src/fancy-button';
 describe('FancyButton', () => {
   it('renders fancy with button as span or div', () => {
     const [{ default: FancySpan }] = aw.mock(
-      [['**/react/src/button.jsx', '() => (<span>hhhhh</span>)']],
+      [['**/react/src/button.jsx', () => () => <span>hhhhh</span>]],
       ['../src/fancy-button'],
     );
     const [{ default: FancyDiv }] = aw.mock(
-      [['**/react/src/button.jsx', '() => (<div>ggggg</div>)']],
+      [
+        ['**/react/src/button.jsx', '() => (<div>ggggg</div>)'],
+        ['**/muppet', () => {}],
+      ],
       ['../src/fancy-button'],
     );
     const tree1 = renderer.create(<FancySpan>span</FancySpan>).toJSON();
@@ -34,7 +37,10 @@ describe('FancyButton', () => {
 
   it('renders fancy with button mock from file', () => {
     const [{ default: FancyFileMock }] = aw.mock(
-      [['**/react/src/button.jsx', './examples/react/test/button-mock.js']],
+      [
+        ['**/react/src/button.jsx', './examples/react/test/button-mock.js'],
+        ['foo', () => {}],
+      ],
       ['../src/fancy-button'],
     );
     const tree1 = renderer

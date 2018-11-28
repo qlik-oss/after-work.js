@@ -4,10 +4,10 @@ module.exports = {
   coverage: true,
   url: 'http://localhost:9676/examples/index.html',
   mocks: [
-    ['**/cdp/src/browser-shim.js', '{}'],
     ['**/*.{scss,less,css,html}'],
     ['./foobar-virtual.html', '"<div>hello world</div>"'],
     ['mocked-special', './examples/react/test/button-mock.js'],
+    ['bar', () => {}],
   ],
   nyc: {
     exclude: [

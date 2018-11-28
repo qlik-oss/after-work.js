@@ -67,6 +67,17 @@ class PuppetRunner extends Runner {
   getFilter() {
     return this.argv.filter.puppeteer;
   }
+
+  // Override register and skip warnings
+  register() {
+    if (this.argv.hookRequire) {
+      require('@after-work.js/register')(
+        this.argv,
+        this.srcFiles,
+        this.testFiles,
+      );
+    }
+  }
 }
 
 const puppet = {

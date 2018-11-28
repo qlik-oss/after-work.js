@@ -80,6 +80,7 @@ describe('Node command', () => {
       const writeCoverageFile = sandbox.stub();
       const report = sandbox.stub();
       const runner = new Runner({ coverage: true });
+      runner.isRunning = true;
       runner.nyc = { writeCoverageFile, report };
       runner.onFinished(0);
       expect(runner.nyc.writeCoverageFile).to.have.been.calledWithExactly();
@@ -125,7 +126,10 @@ describe('Node command', () => {
     });
 
     it('should remove all listeners', () => {
-      const procRemoveAllListeners = sandbox.stub(process, 'removeAllListeners');
+      const procRemoveAllListeners = sandbox.stub(
+        process,
+        'removeAllListeners',
+      );
       const removeAllListeners = sandbox.stub();
       const mochaRunner = { removeAllListeners };
       class Dummy {
@@ -171,7 +175,10 @@ describe('Node command', () => {
       runner.testFiles = testFiles;
       runner.srcFiles = srcFiles;
       runner.run();
-      expect(runner.setupAndRunTests).to.have.been.calledWithExactly(testFiles, srcFiles);
+      expect(runner.setupAndRunTests).to.have.been.calledWithExactly(
+        testFiles,
+        srcFiles,
+      );
     });
 
     // it('should run with watching', () => {
@@ -206,7 +213,9 @@ describe('Node command', () => {
 
       it('should apply passed config file', () => {
         const configPath = path.resolve(__dirname, 'aw.config.js');
-        expect(configure(configPath).src).to.eql(['src/**/!(browser-shim|cli|env)*.js']);
+        expect(configure(configPath).src).to.eql([
+          'src/**/!(browser-shim|cli|env)*.js',
+        ]);
       });
     });
 
@@ -227,14 +236,20 @@ describe('Node command', () => {
       const setSrcFiles = sandbox.stub().returnsThis();
       const req = sandbox.stub().returnsThis();
       const run = sandbox.stub().returnsThis();
-      class Dummy { }
+      class Dummy {}
       Dummy.prototype.autoDetectDebug = autoDetectDebug;
       Dummy.prototype.setTestFiles = setTestFiles;
       Dummy.prototype.setSrcFiles = setSrcFiles;
       Dummy.prototype.require = req;
       Dummy.prototype.run = run;
       cmd.Runner = Dummy;
-      handler({ mocha: {}, presetEnv: { require: path.resolve(__dirname, './preset-env-dummy.js'), enable: false } });
+      handler({
+        mocha: {},
+        presetEnv: {
+          require: path.resolve(__dirname, './preset-env-dummy.js'),
+          enable: false,
+        },
+      });
       expect(setTestFiles).to.have.been.calledImmediatelyBefore(setSrcFiles);
       expect(setTestFiles).to.have.been.calledImmediatelyBefore(setSrcFiles);
       expect(req).to.have.been.calledImmediatelyBefore(run);
