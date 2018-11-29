@@ -108,7 +108,7 @@ class FileCache {
       const gz = zlib.gzipSync(str);
       fs.writeFileSync(this.getCacheFilename(filename), gz, 'utf8');
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 }

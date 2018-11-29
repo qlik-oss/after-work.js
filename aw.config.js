@@ -38,13 +38,14 @@ module.exports = {
     ],
   },
   'filter.node.packages': [
-    '!@after-work.js/example-*(protractor|puppeteer)',
+    '!@after-work.js/example-*(protractor|puppeteer|webpack-dev-server)',
     '!@after-work.js/example-chrome-*',
   ],
   'filter.node.files': [
     '!**/examples/chrome-*/**',
     '!**/examples/protractor/**',
     '!**/examples/puppeteer/**',
+    '!**/examples/webpack-dev-server/**',
   ],
   'filter.chrome.packages': ['@after-work.js/example-chrome-*'],
   'filter.chrome.files': ['**/examples/chrome-*/**'],

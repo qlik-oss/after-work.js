@@ -28,6 +28,7 @@ const onWatch = (runner, f) => {
   }
   const isTestFile = runner.testFiles.indexOf(f) !== -1;
   const isSrcFile = runner.srcFiles.indexOf(f) !== -1;
+
   if (isTestFile) {
     const srcFiles = runner.getSrcFilesFromTestFiles([f]);
     runner.setupAndRunTests([f], srcFiles);

@@ -3,13 +3,14 @@ const path = require('path');
 const createServer = require('@after-work.js/server');
 const { getIPaddress, logSeleniumNodeInfo } = require('./utils');
 
-
 const reporterPath = path.resolve(__dirname, './plugins/reporter/index.js');
-const screenshoterPath = path.resolve(__dirname, './plugins/screenshoter/index.js');
+const screenshoterPath = path.resolve(
+  __dirname,
+  './plugins/screenshoter/index.js',
+);
 
 module.exports = function initConfig() {
-  const reporterPlugin = {
-  };
+  const reporterPlugin = {};
   const config = {
     artifactsPath: 'test/component/artifacts',
     // ---------------------------------------------------------------------------
@@ -192,13 +193,16 @@ module.exports = function initConfig() {
 
     setViewport(browser, viewport) {
       const {
-        x,
-        y,
-        width,
-        height,
+        x, y, width, height,
       } = viewport;
-      return browser.driver.manage().window().setPosition(x, y)
-        .then(() => browser.driver.manage().window().setSize(width, height));
+      return browser.driver
+        .manage()
+        .window()
+        .setPosition(x, y)
+        .then(() => browser.driver
+          .manage()
+          .window()
+          .setSize(width, height));
     },
     logSeleniumNodeInfo(browser) {
       browser.getProcessedConfig().then((processedConfig) => {
@@ -222,12 +226,14 @@ module.exports = function initConfig() {
     },
     setBaseUrl(browser) {
       if (!config.baseUrl) {
-        return getIPaddress().then((ip) => { browser.baseUrl = `http://${ip}:9000`; });
+        return getIPaddress().then((ip) => {
+          browser.baseUrl = `http://${ip}:9000`;
+        });
       }
       return Promise.resolve(config.baseUrl);
     },
     configureHttpServer() {
-      return {};
+      return { http: { port: 9000 } };
     },
     // A callback function called once configs are read but before any environment
     // setup. This will only run once, and before onPrepare.
@@ -267,9 +273,12 @@ module.exports = function initConfig() {
       config.setOnPrepareGlobals(browser, config.artifactsPath);
       config.logSeleniumNodeInfo(browser);
 
-      return config.setBaseUrl(browser)
+      return config
+        .setBaseUrl(browser)
         .then(config.setViewport(browser, config.viewport))
-        .then(() => { browser.ignoreSynchronization = true; });
+        .then(() => {
+          browser.ignoreSynchronization = true;
+        });
     },
 
     // A callback function called once tests are finished.
@@ -281,13 +290,13 @@ module.exports = function initConfig() {
     // A callback function called once the tests have finished running and
     // the WebDriver instance has been shut down. It is passed the exit code
     // (0 if the tests passed). This is called once per capability.
-    onCleanUp(/* exitCode */) { },
+    onCleanUp(/* exitCode */) {},
 
     // A callback function called once all tests have finished running and
     // the WebDriver instance has been shut down. It is passed the exit code
     // (0 if the tests passed). This is called only once before the program
     // exits (after onCleanUp).
-    afterLaunch() { },
+    afterLaunch() {},
 
     // The params object will be passed directly to the Protractor instance,
     // and can be accessed from your test as browser.params. It is an arbitrary
@@ -344,11 +353,14 @@ module.exports = function initConfig() {
       },
     },
 
-    plugins: [{
-      path: screenshoterPath,
-    }, {
-      inline: reporterPlugin,
-    }],
+    plugins: [
+      {
+        path: screenshoterPath,
+      },
+      {
+        inline: reporterPlugin,
+      },
+    ],
   };
   return config;
 };
