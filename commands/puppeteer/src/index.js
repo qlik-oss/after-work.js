@@ -102,8 +102,16 @@ const puppet = {
       if (argv.presetEnv) {
         require('@after-work.js/preset-plugin')(runner);
       }
+      let skipInitialInteractive = false;
+      if (argv.watch && !argv.interactive) {
+        skipInitialInteractive = true;
+        argv.interactive = true;
+      }
       if (argv.interactive) {
         require('@after-work.js/interactive-plugin')(runner);
+      }
+      if (argv.watch) {
+        require('@after-work.js/watch-plugin')(runner);
       }
       await runner.launch();
       runner
@@ -111,7 +119,7 @@ const puppet = {
         .setTestFiles()
         .setSrcFiles()
         .require();
-      if (argv.interactive) {
+      if (!skipInitialInteractive && argv.interactive) {
         runner.emit('interactive');
         return runner;
       }

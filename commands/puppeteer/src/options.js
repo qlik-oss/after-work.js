@@ -102,12 +102,12 @@ module.exports = {
   },
   'filter.puppeteer.packages': {
     description: 'Filter packages for Puppeteer runner',
-    default: [() => true],
+    default: ['**'],
     type: 'array',
   },
   'filter.puppeteer.files': {
     description: 'Filter files for Puppeteer runner',
-    default: [() => true],
+    default: ['**'],
     type: 'array',
   },
   exit: {
