@@ -3,10 +3,10 @@ const express = require('express');
 const favicon = require('serve-favicon');
 const transformFiles = require('@after-work.js/transform-middleware');
 
-module.exports = function createServer(options, skipParse = false) {
+module.exports = function createServer(options) {
   const app = express();
   app.use(favicon(path.resolve(__dirname, '../aw.png')));
-  app.use(transformFiles(options, skipParse));
+  app.use(transformFiles(options));
   app.use('/', express.static(process.cwd()));
   return app.listen(options.http.port, '0.0.0.0', (err) => {
     if (err) {
