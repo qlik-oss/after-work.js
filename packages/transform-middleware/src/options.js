@@ -4,6 +4,7 @@ const {
   TEST_GLOB,
   SRC_GLOB,
   DEFAULT_SRC_EXT_PATTERN,
+  DEFAULT_SRC_EXCLUDE_PATTERN,
   WATCH_GLOB,
 } = require('@after-work.js/utils');
 
@@ -224,6 +225,16 @@ module.exports = {
     description: 'Rewrite url(s)',
     default: {},
     type: 'object',
+  },
+  'nyc.include': {
+    description: 'Include glob',
+    default: [],
+    type: 'array',
+  },
+  'nyc.exclude': {
+    description: 'Exclude glob',
+    default: DEFAULT_SRC_EXCLUDE_PATTERN,
+    type: 'array',
   },
   'nyc.tempDirectory': {
     description: 'Directory to output raw coverage information to',
