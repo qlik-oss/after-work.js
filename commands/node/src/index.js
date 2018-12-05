@@ -152,7 +152,6 @@ class Runner extends EventEmitter {
   runTests() {
     this.isRunning = true;
     this.warnings = [];
-    this.startCallbacks.forEach(fn => fn());
     this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
     this.mochaRunner.once('start', () => utils.clearLine());
   }
@@ -224,6 +223,7 @@ class Runner extends EventEmitter {
   }
 
   run() {
+    this.startCallbacks.forEach(fn => fn());
     this.setupAndRunTests(this.testFiles, this.srcFiles);
   }
 
