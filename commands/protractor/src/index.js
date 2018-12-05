@@ -11,12 +11,12 @@ const protractor = {
   desc: 'Run protractor',
   getConfig(argv) {
     const baseConfig = require('./config')();
-    if (!fs.existsSync(argv.config)) {
-      throw new Error(`Config ${argv.config} not found`);
+    let foundConfig = {};
+    if (fs.existsSync(argv.config)) {
+      const p = path.resolve(process.cwd(), argv.config);
+      foundConfig = require(p);
     }
     let config = {};
-    const p = path.resolve(process.cwd(), argv.config);
-    const foundConfig = require(p);
     if (typeof foundConfig === 'function') {
       config = extend(true, baseConfig, argv, foundConfig(baseConfig));
     } else {
@@ -57,12 +57,16 @@ const protractor = {
       launcher = require('protractor/built/launcher');
     } catch (_) {
       console.log('Could not load protractor/built/launcher');
-      const p = `${path.resolve(process.cwd())}/node_modules/protractor/built/launcher`;
+      const p = `${path.resolve(
+        process.cwd(),
+      )}/node_modules/protractor/built/launcher`;
       console.log(`Trying: ${p}`);
       try {
         launcher = require(p);
       } catch (__) {
-        console.log('Protractor could not be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json');
+        console.log(
+          'Protractor could not be found by after-work.js! Please verify that it has been added as a devDependencies in your package.json',
+        );
         process.exit(1);
       }
     }
@@ -71,7 +75,10 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    const specs = utils.filter(argv.filter.protractor.files, globby.sync(argv.test));
+    const specs = utils.filter(
+      argv.filter.protractor.files,
+      globby.sync(argv.test),
+    );
     if (specs.length) {
       config.specs = specs;
     }
