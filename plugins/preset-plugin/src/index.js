@@ -1,11 +1,15 @@
+const { safeGetModule } = require('@after-work.js/utils');
+
 module.exports = (runner) => {
-  const sinon = require('sinon');
-  const chai = require('chai');
-  const sinonChai = require('sinon-chai');
-  const chaiAsPromised = require('chai-as-promised');
-  const chaiSubset = require('chai-subset');
-  const screenshotPlugin = require('@after-work.js/chai-plugin-screenshot');
-  const snapshotPlugin = require('@after-work.js/chai-plugin-snapshot');
+  const sinon = safeGetModule('sinon');
+  const chai = safeGetModule('chai');
+  const sinonChai = safeGetModule('sinon-chai');
+  const chaiAsPromised = safeGetModule('chai-as-promised');
+  const chaiSubset = safeGetModule('chai-subset');
+  const screenshotPlugin = safeGetModule(
+    '@after-work.js/chai-plugin-screenshot',
+  );
+  const snapshotPlugin = safeGetModule('@after-work.js/chai-plugin-snapshot');
   global.sinon = sinon;
   global.chai = chai;
   global.expect = chai.expect;
