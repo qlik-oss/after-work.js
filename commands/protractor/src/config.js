@@ -241,12 +241,6 @@ module.exports = function initConfig() {
     // the filename string.
     beforeLaunch() {
       return createServer(config.configureHttpServer());
-      // return getFullQualifiedDNSName().then( fqdn => {
-      //     config.baseUrl = "http://" + fqdn + ":9000";
-      //     console.log(config.baseUrl);
-      // } ).then( () => {
-      //     return httpServer();
-      // } );
     },
 
     // A callback function called once protractor is ready and available, and
