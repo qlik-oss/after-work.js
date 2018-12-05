@@ -13,18 +13,20 @@ const debug = createDebug('transform');
 
 function getBabelOpts(filename, argv) {
   const {
-    options: { sourceRoot, only, ignore } = {},
+    options: { sourceRoot, only, ignore, plugins = [] } = {},
     babelPluginIstanbul,
   } = argv.babel;
   const virtualMock = !!argv.virtualMock;
   const addCoverage = virtualMock === false;
-  const plugins = addCoverage ? [[babelPluginIstanbul, argv.nyc]] : [];
+  const usePlugins = addCoverage
+    ? [...plugins, [babelPluginIstanbul, argv.nyc]]
+    : plugins;
   const sourceMaps = 'both';
   const retainLines = true;
   const opts = {
     filename,
     sourceRoot,
-    plugins,
+    plugins: usePlugins,
     only,
     ignore,
     sourceMaps,
@@ -51,7 +53,7 @@ function transformTypescript(filePath, sourceRoot, tsContent, argv) {
     compilerOptions.inlineSourceMap = true;
   }
   if (!compilerOptions.module) {
-    compilerOptions.module = __isNodeRunner ? 'commonjs' : 'exnext';
+    compilerOptions.module = __isNodeRunner ? 'commonjs' : 'esnext';
   }
   const transpileOpts = { fileName, compilerOptions };
   const res = typescript.transpileModule(tsContent, transpileOpts);
