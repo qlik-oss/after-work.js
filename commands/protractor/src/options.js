@@ -1,10 +1,9 @@
-const {
-  TEST_GLOB,
-} = require('@after-work.js/utils');
+const { TEST_GLOB } = require('@after-work.js/utils');
 
 module.exports = {
   presetEnv: {
-    description: 'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset',
+    description:
+      'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset',
     default: true,
     type: 'boolean',
   },
@@ -52,8 +51,7 @@ module.exports = {
   },
   'babel.options': {
     description: 'Babel options',
-    default: {
-    },
+    default: {},
     type: 'object',
   },
   typescript: {
@@ -63,7 +61,7 @@ module.exports = {
   },
   'filter.protractor.files': {
     description: 'Filter files for Protractor runner',
-    default: [() => true],
+    default: ['**'],
     type: 'array',
   },
 };
