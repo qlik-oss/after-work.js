@@ -19,7 +19,7 @@ let removeCompileHook = () => {};
 let removeLoadHook = () => {};
 
 function compileHook(argv, code, filename, virtualMock = false) {
-  if (!argv.babel.enable) {
+  if (!argv.babel.enable && /after-work.js/.test(filename)) {
     return code;
   }
 
@@ -167,8 +167,16 @@ class AW {
     const [filename, , , c] = utils.getCurrentFilenameStackInfo(this.testFiles);
     const deps = utils.getAllDependencies(this.srcFiles, filename);
     deps.forEach(d => utils.safeDeleteCache(d));
+    const isTestLibFile = f => f.indexOf('node_modules') > -1
+      && (f.indexOf('sinon') > -1
+        || f.indexOf('chai') > -1
+        || f.indexOf('nise') > -1);
     Object.keys(require.cache)
-      .filter(f => f !== filename && this.testFiles.indexOf(f) === -1)
+      .filter(
+        f => f !== filename
+          && this.testFiles.indexOf(f) === -1
+          && !isTestLibFile(f),
+      )
       .forEach(f => utils.safeDeleteCache(f));
 
     const mods = reqs.map((r) => {
@@ -181,8 +189,8 @@ class AW {
         `\u001b[33mCouldn't match local mock with pattern:\u001b[0m \u001b[31m${key}\u001b[0m \u001b[33mand value:\u001b[0m \u001b[34m${value}\u001b[0m\n\u001b[90mat (${c})\u001b[0m`,
       );
       this.warn(warning);
-      this.mocks.delete(key);
     }
+    this.mocks.clear();
     deps.forEach((d) => {
       utils.safeDeleteCache(d);
       deleteTransform(d);
