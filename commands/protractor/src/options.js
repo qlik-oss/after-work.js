@@ -17,7 +17,7 @@ module.exports = {
     description: 'Glob pattern',
     type: 'string',
     default: TEST_GLOB,
-    alias: 'glob',
+    alias: ['glob', 'specs'],
   },
   coverage: {
     description: 'Generate coverage',

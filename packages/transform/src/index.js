@@ -13,7 +13,7 @@ const debug = createDebug('transform');
 
 function getBabelOpts(filename, argv) {
   const {
-    options: { sourceRoot, only, ignore, plugins = [] } = {},
+    options: { sourceRoot, only, ignore, plugins = [], presets = [] } = {},
     babelPluginIstanbul,
   } = argv.babel;
   const virtualMock = !!argv.virtualMock;
@@ -26,6 +26,7 @@ function getBabelOpts(filename, argv) {
   const opts = {
     filename,
     sourceRoot,
+    presets,
     plugins: usePlugins,
     only,
     ignore,
@@ -82,11 +83,15 @@ function transformFile(filename, argv, content = null) {
   }
   if (!content) {
     filename = ensureFilePath(filename);
+    if (!filename) {
+      return null;
+    }
     const cachedTransform = fileCache.getSync(filename, argv);
     if (cachedTransform) {
       debug(':transformFile cached transform', cachedTransform);
       return cachedTransform.code;
     }
+
     content = fs.readFileSync(filename, 'utf8');
   }
   const cachedTransform = fileCache.getSync(filename, argv);

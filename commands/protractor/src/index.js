@@ -75,14 +75,15 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    const specs = utils.filter(
-      argv.filter.protractor.files,
-      globby.sync(argv.test),
-    );
-    if (specs.length) {
-      config.specs = specs;
+    if (argv.glob.length) {
+      const specs = utils.filter(
+        argv.filter.protractor.files,
+        globby.sync(argv.glob),
+      );
+      if (specs.length) {
+        config.specs = specs;
+      }
     }
-
     launcher.init('', config);
   },
 };

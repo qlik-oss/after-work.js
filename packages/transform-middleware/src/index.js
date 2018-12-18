@@ -21,8 +21,8 @@ module.exports = function transformFiles(userArgv) {
     ],
   };
   const argv = {
-    ...userArgv,
     coverage: false,
+    ...userArgv,
     babel,
     nyc: {
       include: [],
@@ -47,11 +47,14 @@ module.exports = function transformFiles(userArgv) {
     }
     const shouldInstrument = argv.coverage && argv.shouldInstrument(url);
     const shouldTransform = argv.shouldTransform(url);
+
     if (shouldInstrument || shouldTransform) {
       const file = transformFile(url, argv);
-      res.send(file);
-    } else {
-      next();
+      if (file) {
+        res.send(file);
+        return;
+      }
     }
+    next();
   };
 };
