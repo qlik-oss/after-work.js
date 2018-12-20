@@ -158,7 +158,7 @@ function uiReport(runner, options) {
     );
 
     const fileName = path.resolve(artifactsPath, `${reportName}.json`);
-    utils.createArtifactsFolder(browser);
+    utils.createArtifactsFolder(artifactsPath);
     fs.writeFileSync(fileName, JSON.stringify(obj, null, '\t'));
     if (options.reporterOptions.html !== false) {
       report.generate(fileName);
