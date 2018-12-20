@@ -16,19 +16,22 @@ const protractor = {
       const p = path.resolve(process.cwd(), configPath);
       foundConfig = require(p);
     }
-    let config = {};
+    let protractorConfig = {};
     if (typeof foundConfig === 'function') {
-      config = extend(true, baseConfig, foundConfig(baseConfig));
+      protractorConfig = extend(true, baseConfig, foundConfig(baseConfig));
     } else {
-      config = extend(true, baseConfig, foundConfig);
+      protractorConfig = extend(true, baseConfig, foundConfig);
     }
-    return config;
+    return {
+      ...protractorConfig,
+      protractorConfig,
+    };
   },
   builder(yargs) {
     return yargs
       .options(options)
-      .coerce('babel', utils.coerceBabel)
-      .coerce('typescript', utils.coerceTypescript);
+      .config('config', protractor.getConfig)
+      .coerce('babel', utils.coerceBabel);
   },
   handler(argv) {
     argv.shouldInstrument = () => false;
@@ -58,20 +61,20 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    const config = protractor.getConfig(argv.config);
+    const { protractorConfig } = argv;
     if (
-      (!config.specs && argv.glob.length)
-      || (config.specs && config.specs.length === 0 && argv.glob.length)
+      (!protractorConfig.specs && argv.glob.length)
+      || (protractorConfig.specs
+        && protractorConfig.specs.length === 0
+        && argv.glob.length)
     ) {
       const specs = utils.filter(
         argv.filter.protractor.files,
         globby.sync(argv.glob),
       );
-      if (specs.length) {
-        config.specs = specs;
-      }
+      protractorConfig.specs = specs;
     }
-    launcher.init('', config);
+    launcher.init('', protractorConfig);
   },
 };
 

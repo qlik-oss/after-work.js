@@ -17,7 +17,7 @@ module.exports = {
     description: 'Glob pattern',
     type: 'string',
     default: TEST_GLOB,
-    alias: ['glob', 'specs'],
+    alias: ['glob'],
   },
   coverage: {
     description: 'Generate coverage',
@@ -54,7 +54,7 @@ module.exports = {
     default: {},
     type: 'object',
   },
-  typescript: {
+  'babel.typescript': {
     description: 'Path to typescript compiler module',
     default: 'typescript',
     type: 'string',
