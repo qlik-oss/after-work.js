@@ -9,39 +9,24 @@ const options = require('./options');
 const protractor = {
   command: ['protractor', 'ptor'],
   desc: 'Run protractor',
-  getConfig(argv) {
+  getConfig(configPath) {
     const baseConfig = require('./config')();
     let foundConfig = {};
-    if (fs.existsSync(argv.config)) {
-      const p = path.resolve(process.cwd(), argv.config);
+    if (fs.existsSync(configPath)) {
+      const p = path.resolve(process.cwd(), configPath);
       foundConfig = require(p);
     }
     let config = {};
     if (typeof foundConfig === 'function') {
-      config = extend(true, baseConfig, argv, foundConfig(baseConfig));
+      config = extend(true, baseConfig, foundConfig(baseConfig));
     } else {
-      config = extend(true, baseConfig, argv, foundConfig);
+      config = extend(true, baseConfig, foundConfig);
     }
     return config;
   },
   builder(yargs) {
     return yargs
-      .config('config', (configPath) => {
-        if (configPath === null) {
-          return {};
-        }
-        if (!fs.existsSync(configPath)) {
-          throw new Error(`Config ${configPath} not found`);
-        }
-        let config = {};
-        const foundConfig = require(configPath);
-        if (typeof foundConfig === 'function') {
-          config = Object.assign({}, foundConfig());
-        } else {
-          config = Object.assign({}, foundConfig);
-        }
-        return config;
-      })
+      .config('config', protractor.getConfig)
       .options(options)
       .coerce('babel', utils.coerceBabel)
       .coerce('typescript', utils.coerceTypescript);
@@ -70,7 +55,6 @@ const protractor = {
         process.exit(1);
       }
     }
-    const config = protractor.getConfig(argv);
     if (argv.hookRequire) {
       require('@after-work.js/register')(argv);
     }
@@ -81,10 +65,10 @@ const protractor = {
         globby.sync(argv.glob),
       );
       if (specs.length) {
-        config.specs = specs;
+        argv.specs = specs;
       }
     }
-    launcher.init('', config);
+    launcher.init('', argv);
   },
 };
 

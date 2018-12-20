@@ -6,7 +6,6 @@ const utils = require('../../../../src/plugins/reporter/utils');
 
 describe('Reporter index', () => {
   let sandbox;
-  let browser;
   const Capabilities = new Map();
   Capabilities.set('browserName', 'chrome');
   Capabilities.set('version', '62.0.3202.75');
@@ -22,7 +21,7 @@ describe('Reporter index', () => {
       description: 'description',
       version: 'x.y.z',
     });
-    browser = {
+    global.browser = {
       getCapabilities: sandbox.stub().returns(Promise.resolve(Capabilities)),
       artifactsPath: 'artifactsPath',
       reporterInfo: {},
@@ -30,6 +29,7 @@ describe('Reporter index', () => {
   });
 
   afterEach(() => {
+    delete global.browser;
     sandbox.restore();
   });
 
@@ -43,10 +43,9 @@ describe('Reporter index', () => {
         once: sandbox.stub(),
       };
       options = {
-        reporterPlugin: {
+        getReporterPlugin: () => ({
           teardown: sandbox.stub().returns(Promise.resolve(true)),
-          getBrowser: sandbox.stub().returns(browser),
-        },
+        }),
         reporterOptions: {
           xunit: true,
         },

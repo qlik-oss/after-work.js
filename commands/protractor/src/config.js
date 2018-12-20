@@ -213,7 +213,6 @@ module.exports = function initConfig() {
     },
     setOnPrepareGlobals(browser, aPath) {
       global.EC = protractor.ExpectedConditions;
-      reporterPlugin.getBrowser = () => browser;
       browser.artifactsPath = aPath;
       browser.reporterInfo = {
         mainTime: new Date(), // Unformated date used inside report
@@ -340,7 +339,7 @@ module.exports = function initConfig() {
     mochaOpts: {
       ui: 'bdd',
       reporter: reporterPath,
-      reporterPlugin,
+      getReporterPlugin: () => reporterPlugin,
       enableTimeouts: false,
       reporterOptions: {
         html: true,

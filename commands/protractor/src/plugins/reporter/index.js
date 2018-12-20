@@ -13,26 +13,34 @@ const report = require('./create-static');
 const { Base } = mocha.reporters;
 
 function uiReport(runner, options) {
+  const reporterPlugin = options.getReporterPlugin();
   const tests = [];
   let pending = 0;
   let failures = 0;
   let passes = 0;
-  const browser = options.reporterPlugin.getBrowser();
   const { artifactsPath } = browser;
   const waitForPromises = [];
   let reportName;
 
-  const { reporterInfo } = browser;
   browser.getCapabilities().then((cap) => {
+    const reporterInfo = browser.reporterInfo || {};
     reporterInfo.browserName = cap.get('browserName').replace(/ /g, '-');
     reporterInfo.browserVersion = cap.get('version');
-    reporterInfo.platform = cap.get('platform').replace(/ /g, '-').toLowerCase();
+    reporterInfo.platform = cap
+      .get('platform')
+      .replace(/ /g, '-')
+      .toLowerCase();
 
-    reportName = `${reporterInfo.browserName}-report-${reporterInfo.startTime}_${Math.floor(Math.random() * 10000000)}`;
+    reportName = `${reporterInfo.browserName}-report-${
+      reporterInfo.startTime
+    }_${Math.floor(Math.random() * 10000000)}`;
 
     if (options.reporterOptions) {
       if (options.reporterOptions.xunit) {
-        options.reporterOptions.output = path.resolve(artifactsPath, `${reportName}.xml`);
+        options.reporterOptions.output = path.resolve(
+          artifactsPath,
+          `${reportName}.xml`,
+        );
         new mocha.reporters.XUnit(runner, options);
       }
     }
@@ -46,12 +54,16 @@ function uiReport(runner, options) {
   // generating the report before the process is shutdown
   // This is handled by a inline dummy plugins
   // and hooking into the `teardown` function
-  options.reporterPlugin.teardown = function teardown() {
+  reporterPlugin.teardown = function teardown() {
     return Promise.all(waitForPromises);
   };
 
   runner.on('pass', (test) => {
-    console.log('\u001b[32m √ PASSED: %s ( %sms )\u001b[0m', test.fullTitle(), test.duration);
+    console.log(
+      '\u001b[32m √ PASSED: %s ( %sms )\u001b[0m',
+      test.fullTitle(),
+      test.duration,
+    );
     tests.push(test);
     passes++;
   });
@@ -70,24 +82,41 @@ function uiReport(runner, options) {
     test.consoleEntries = [];
     waitForPromises.push(utils.saveScreenshot(browser, test.fullTitle()));
 
-    console.log('\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n'
-            + '\u001b[33m     %s\u001b[0m\n'
-            + '\u001b[34m     %s\u001b[0m', test.fullTitle(), test.duration, err.message, test.file);
+    console.log(
+      '\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n'
+        + '\u001b[33m     %s\u001b[0m\n'
+        + '\u001b[34m     %s\u001b[0m',
+      test.fullTitle(),
+      test.duration,
+      err.message,
+      test.file,
+    );
 
     if (browser.reporterInfo.browserName === 'chrome') {
-      browser.manage().logs().get('browser').then((browserLog) => {
-        if (browserLog && browserLog.length) {
-          console.log('\u001b[91m     %s\u001b[0m', 'Errors reported in the chrome console - see log for more information');
-          browserLog.forEach((log) => {
-            if (log.level.value_ >= 1000) {
-              test.consoleEntries.push(log.message);
-            }
-          });
-        }
-      });
+      browser
+        .manage()
+        .logs()
+        .get('browser')
+        .then((browserLog) => {
+          if (browserLog && browserLog.length) {
+            console.log(
+              '\u001b[91m     %s\u001b[0m',
+              'Errors reported in the chrome console - see log for more information',
+            );
+            browserLog.forEach((log) => {
+              if (log.level.value_ >= 1000) {
+                test.consoleEntries.push(log.message);
+              }
+            });
+          }
+        });
     }
 
-    test.screenshot = (`screenshots/${utils.screenshotName(test.fullTitle(), browser.reporterInfo.browserName, browser.reporterInfo.startTime)}`);
+    test.screenshot = `screenshots/${utils.screenshotName(
+      test.fullTitle(),
+      browser.reporterInfo.browserName,
+      browser.reporterInfo.startTime,
+    )}`;
     tests.push(test);
     failures++;
   });
@@ -119,7 +148,13 @@ function uiReport(runner, options) {
 
     runner.testResults = obj;
 
-    console.log('\u001b[35m Σ SUMMARY: %s testcases runned. \u001b[32m%s passed, \u001b[36m%s pending, \u001b[31m%s failed\u001b[0m', obj.stats.tests, obj.stats.passes, obj.stats.pending, obj.stats.failures);
+    console.log(
+      '\u001b[35m Σ SUMMARY: %s testcases runned. \u001b[32m%s passed, \u001b[36m%s pending, \u001b[31m%s failed\u001b[0m',
+      obj.stats.tests,
+      obj.stats.passes,
+      obj.stats.pending,
+      obj.stats.failures,
+    );
 
     const fileName = path.resolve(artifactsPath, `${reportName}.json`);
     utils.createArtifactsFolder(browser);
