@@ -58,10 +58,7 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    if (
-      (!argv.specs && argv.glob.length)
-      || (argv.specs && argv.specs.length === 0 && argv.glob.length)
-    ) {
+    if (argv.glob.length) {
       const specs = utils.filter(
         argv.filter.protractor.files,
         globby.sync(argv.glob),
