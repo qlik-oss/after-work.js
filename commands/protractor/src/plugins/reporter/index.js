@@ -23,16 +23,17 @@ function uiReport(runner, options) {
   let reportName;
 
   browser.getCapabilities().then((cap) => {
-    const reporterInfo = browser.reporterInfo || {};
-    reporterInfo.browserName = cap.get('browserName').replace(/ /g, '-');
-    reporterInfo.browserVersion = cap.get('version');
-    reporterInfo.platform = cap
+    browser.reporterInfo.browserName = cap
+      .get('browserName')
+      .replace(/ /g, '-');
+    browser.reporterInfo.browserVersion = cap.get('version');
+    browser.reporterInfo.platform = cap
       .get('platform')
       .replace(/ /g, '-')
       .toLowerCase();
 
-    reportName = `${reporterInfo.browserName}-report-${
-      reporterInfo.startTime
+    reportName = `${browser.reporterInfo.browserName}-report-${
+      browser.reporterInfo.startTime
     }_${Math.floor(Math.random() * 10000000)}`;
 
     if (options.reporterOptions) {
