@@ -26,7 +26,6 @@ const protractor = {
   },
   builder(yargs) {
     return yargs
-      .config('config', protractor.getConfig)
       .options(options)
       .coerce('babel', utils.coerceBabel)
       .coerce('typescript', utils.coerceTypescript);
@@ -59,16 +58,20 @@ const protractor = {
       require('@after-work.js/register')(argv);
     }
     argv.require.map(require);
-    if (argv.glob.length) {
+    const config = protractor.getConfig(argv.config);
+    if (
+      (!config.specs && argv.glob.length)
+      || (config.specs && config.specs.length === 0 && argv.glob.length)
+    ) {
       const specs = utils.filter(
         argv.filter.protractor.files,
         globby.sync(argv.glob),
       );
       if (specs.length) {
-        argv.specs = specs;
+        config.specs = specs;
       }
     }
-    launcher.init('', argv);
+    launcher.init('', config);
   },
 };
 
