@@ -30,21 +30,6 @@ const setBaseUrl = browser =>
     }
   });
 
-const setViewport = async (browser) => {
-  const { viewport } = await browser.getProcessedConfig();
-  const {
-    x, y, width, height,
-  } = viewport;
-  return browser.driver
-    .manage()
-    .window()
-    .setPosition(x, y)
-    .then(() => browser.driver
-      .manage()
-      .window()
-      .setSize(width, height));
-};
-
 const setIgnoreSynchronization = async browser => browser.getProcessedConfig().then((argv) => {
   if (typeof argv.ignoreSynchronization !== 'undefined') {
     browser.ignoreSynchronization = argv.ignoreSynchronization;
@@ -255,13 +240,6 @@ module.exports = function initConfig() {
     // How long to wait for a page to load.
     getPageTimeout: 10000,
 
-    viewport: {
-      x: 0,
-      y: 0,
-      width: 1024,
-      height: 768,
-    },
-
     configureHttpServer() {
       return { http: { port: 9000 } };
     },
@@ -297,7 +275,6 @@ module.exports = function initConfig() {
       await setOnPrepareGlobals(browser);
       await setLogSeleniumNodeInfo(browser);
       await setBaseUrl(browser);
-      await setViewport(browser);
       await setIgnoreSynchronization(browser);
     },
 
@@ -307,7 +284,6 @@ module.exports = function initConfig() {
       // available.
       return browser.getProcessedConfig().then((argv) => {
         if (argv.__waitForPromises && Array.isArray(argv.__waitForPromises)) {
-          console.error('waitForPromises');
           return Promise.all(this.__waitForPromises);
         }
         return Promise.resolve();
