@@ -64,4 +64,9 @@ module.exports = {
     default: ['**'],
     type: 'array',
   },
+  artifactsPath: {
+    description: 'Base path to artifacts from the screenshoter plugin',
+    default: 'test/__artifacts__',
+    type: 'string',
+  },
 };

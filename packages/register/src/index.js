@@ -19,10 +19,9 @@ let removeCompileHook = () => {};
 let removeLoadHook = () => {};
 
 function compileHook(argv, code, filename, virtualMock = false) {
-  if (!argv.babel.enable && /after-work.js/.test(filename)) {
+  if (!argv.babel.enable) {
     return code;
   }
-
   const sourceRoot = path.dirname(filename);
   const { babel, options } = argv.babel;
   const opts = new babel.OptionManager().init({

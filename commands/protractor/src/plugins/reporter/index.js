@@ -13,52 +13,32 @@ const report = require('./create-static');
 const { Base } = mocha.reporters;
 
 function uiReport(runner, options) {
-  const reporterPlugin = options.getReporterPlugin();
   const tests = [];
   let pending = 0;
   let failures = 0;
   let passes = 0;
-  const { artifactsPath } = browser;
-  const waitForPromises = [];
-  let reportName;
-
-  browser.getCapabilities().then((cap) => {
-    browser.reporterInfo.browserName = cap
-      .get('browserName')
-      .replace(/ /g, '-');
-    browser.reporterInfo.browserVersion = cap.get('version');
-    browser.reporterInfo.platform = cap
-      .get('platform')
-      .replace(/ /g, '-')
-      .toLowerCase();
-
-    reportName = `${browser.reporterInfo.browserName}-report-${
-      browser.reporterInfo.startTime
-    }_${Math.floor(Math.random() * 10000000)}`;
-
-    if (options.reporterOptions) {
-      if (options.reporterOptions.xunit) {
-        options.reporterOptions.output = path.resolve(
-          artifactsPath,
-          `${reportName}.xml`,
-        );
-        new mocha.reporters.XUnit(runner, options);
-      }
-    }
-  });
+  let config;
 
   Base.call(this, runner);
-
+  browser.getProcessedConfig().then((argv) => {
+    config = argv;
+    config.__waitForPromises = [];
+  });
   // Since we can't extract the information from
   // protractor we need to hook up own reporter and
   // therefor we must make sure we have finished
   // generating the report before the process is shutdown
   // This is handled by a inline dummy plugins
   // and hooking into the `teardown` function
-  reporterPlugin.teardown = function teardown() {
-    return Promise.all(waitForPromises);
-  };
-
+  if (options.reporterOptions) {
+    if (options.reporterOptions.xunit) {
+      options.reporterOptions.output = path.resolve(
+        browser.reporterInfo.artifactsPath,
+        `${browser.reporterInfo.reportName}.xml`,
+      );
+      new mocha.reporters.XUnit(runner, options);
+    }
+  }
   runner.on('pass', (test) => {
     console.log(
       '\u001b[32m √ PASSED: %s ( %sms )\u001b[0m',
@@ -81,7 +61,9 @@ function uiReport(runner, options) {
       // Empty catch
     }
     test.consoleEntries = [];
-    waitForPromises.push(utils.saveScreenshot(browser, test.fullTitle()));
+    config.__waitForPromises.push(
+      utils.saveScreenshot(browser, test.fullTitle()),
+    );
 
     console.log(
       '\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n'
@@ -157,8 +139,11 @@ function uiReport(runner, options) {
       obj.stats.failures,
     );
 
-    const fileName = path.resolve(artifactsPath, `${reportName}.json`);
-    utils.createArtifactsFolder(artifactsPath);
+    const fileName = path.resolve(
+      browser.reporterInfo.artifactsPath,
+      `${browser.reporterInfo.reportName}.json`,
+    );
+    utils.createArtifactsFolder(browser.reporterInfo.artifactsPath);
     fs.writeFileSync(fileName, JSON.stringify(obj, null, '\t'));
     if (options.reporterOptions.html !== false) {
       report.generate(fileName);

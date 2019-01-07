@@ -52,5 +52,5 @@ module.exports = {
   'filter.puppeteer.packages': ['@after-work.js/example-puppeteer'],
   'filter.puppeteer.files': ['**/examples/puppeteer/**'],
   'filter.protractor.files': ['**/examples/protractor/**'],
-  artifactsPath: 'examples/protractor/test/__artifacts__', // rename to protractorArtifactsPath
+  artifactsPath: 'examples/protractor/test/__artifacts__',
 };

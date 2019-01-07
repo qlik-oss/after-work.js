@@ -9,10 +9,81 @@ const screenshoterPath = path.resolve(
   './plugins/screenshoter/index.js',
 );
 
+const setOnPrepareGlobals = browser => browser.getProcessedConfig().then(() => {
+  global.EC = protractor.ExpectedConditions;
+});
+
+const setLogSeleniumNodeInfo = browser => browser.getProcessedConfig().then((argv) => {
+  if (argv.logSeleniumInfo) {
+    logSeleniumNodeInfo(argv);
+  }
+});
+
+const setBaseUrl = browser =>
+  // eslint-disable-next-line
+  browser.getProcessedConfig().then(argv => {
+    if (!argv.baseUrl) {
+      return getIPaddress().then((ip) => {
+        const baseUrl = `http://${ip}:9000`;
+        browser.baseUrl = baseUrl;
+      });
+    }
+  });
+
+const setViewport = async (browser) => {
+  const { viewport } = await browser.getProcessedConfig();
+  const {
+    x, y, width, height,
+  } = viewport;
+  return browser.driver
+    .manage()
+    .window()
+    .setPosition(x, y)
+    .then(() => browser.driver
+      .manage()
+      .window()
+      .setSize(width, height));
+};
+
+const setIgnoreSynchronization = async browser => browser.getProcessedConfig().then((argv) => {
+  if (typeof argv.ignoreSynchronization !== 'undefined') {
+    browser.ignoreSynchronization = argv.ignoreSynchronization;
+  } else {
+    browser.ignoreSynchronization = true;
+  }
+});
+
+const setReporterInfo = async (browser) => {
+  const argv = await browser.getProcessedConfig();
+  browser.reporterInfo = {
+    mainTime: new Date(), // Unformated date used inside report
+    startTime: new Date()
+      .toISOString()
+      .replace(/T/, '_')
+      .replace(/:/g, '-')
+      .replace(/\..+/, ''),
+  };
+  browser.reporterInfo.artifactsPath = argv.artifactsPath;
+  browser.reporterInfo.browserName = argv.capabilities.browserName.replace(
+    / /g,
+    '-',
+  );
+  const cap = await browser.getCapabilities();
+  browser.reporterInfo.browserVersion = cap.get('version');
+  browser.reporterInfo.platform = cap
+    .get('platform')
+    .replace(/ /g, '-')
+    .toLowerCase();
+
+  browser.reporterInfo.reportName = `${
+    browser.reporterInfo.browserName
+  }-report-${browser.reporterInfo.startTime}_${Math.floor(
+    Math.random() * 10000000,
+  )}`;
+};
+
 module.exports = function initConfig() {
-  const reporterPlugin = {};
   const config = {
-    artifactsPath: 'test/component/artifacts',
     // ---------------------------------------------------------------------------
     // ----- How to connect to Browser Drivers -----------------------------------
     // ---------------------------------------------------------------------------
@@ -191,46 +262,6 @@ module.exports = function initConfig() {
       height: 768,
     },
 
-    setViewport(browser, viewport) {
-      const {
-        x, y, width, height,
-      } = viewport;
-      return browser.driver
-        .manage()
-        .window()
-        .setPosition(x, y)
-        .then(() => browser.driver
-          .manage()
-          .window()
-          .setSize(width, height));
-    },
-    logSeleniumNodeInfo(browser) {
-      browser.getProcessedConfig().then((processedConfig) => {
-        if (processedConfig.logSeleniumInfo) {
-          logSeleniumNodeInfo(processedConfig);
-        }
-      });
-    },
-    setOnPrepareGlobals(browser, aPath) {
-      global.EC = protractor.ExpectedConditions;
-      browser.artifactsPath = aPath;
-      browser.reporterInfo = {
-        mainTime: new Date(), // Unformated date used inside report
-        startTime: new Date()
-          .toISOString()
-          .replace(/T/, '_')
-          .replace(/:/g, '-')
-          .replace(/\..+/, ''),
-      };
-    },
-    setBaseUrl(browser) {
-      if (!config.baseUrl) {
-        return getIPaddress().then((ip) => {
-          browser.baseUrl = `http://${ip}:9000`;
-        });
-      }
-      return Promise.resolve(config.baseUrl);
-    },
     configureHttpServer() {
       return { http: { port: 9000 } };
     },
@@ -248,7 +279,7 @@ module.exports = function initConfig() {
     // capability.
     // You can specify a file containing code to run by setting onPrepare to
     // the filename string.
-    onPrepare() {
+    async onPrepare() {
       // At this point, global variable "protractor" object will be set up, and
       // globals from the test framework will be available. For example, if you
       // are using Jasmine, you can add a reporter with:
@@ -262,22 +293,25 @@ module.exports = function initConfig() {
       //       // you are using multiCapabilities.
       //       console.log("Executing capability", config.capabilities);
       //     });
-
-      config.setOnPrepareGlobals(browser, config.artifactsPath);
-      config.logSeleniumNodeInfo(browser);
-
-      return config
-        .setBaseUrl(browser)
-        .then(config.setViewport(browser, config.viewport))
-        .then(() => {
-          browser.ignoreSynchronization = true;
-        });
+      await setReporterInfo(browser);
+      await setOnPrepareGlobals(browser);
+      await setLogSeleniumNodeInfo(browser);
+      await setBaseUrl(browser);
+      await setViewport(browser);
+      await setIgnoreSynchronization(browser);
     },
 
     // A callback function called once tests are finished.
     onComplete() {
       // At this point, tests will be done but global objects will still be
       // available.
+      return browser.getProcessedConfig().then((argv) => {
+        if (argv.__waitForPromises && Array.isArray(argv.__waitForPromises)) {
+          console.error('waitForPromises');
+          return Promise.all(this.__waitForPromises);
+        }
+        return Promise.resolve();
+      });
     },
 
     // A callback function called once the tests have finished running and
@@ -339,7 +373,6 @@ module.exports = function initConfig() {
     mochaOpts: {
       ui: 'bdd',
       reporter: reporterPath,
-      getReporterPlugin: () => reporterPlugin,
       enableTimeouts: false,
       reporterOptions: {
         html: true,
@@ -349,9 +382,6 @@ module.exports = function initConfig() {
     plugins: [
       {
         path: screenshoterPath,
-      },
-      {
-        inline: reporterPlugin,
       },
     ],
   };

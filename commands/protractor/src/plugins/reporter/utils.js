@@ -97,7 +97,7 @@ const utils = {
   },
   saveScreenshot(browser, title) {
     const screenshot = path.resolve(
-      browser.artifactsPath,
+      browser.reporterInfo.artifactsPath,
       'screenshots',
       this.screenshotName(
         title,
@@ -106,7 +106,9 @@ const utils = {
       ),
     );
 
-    mkdirp.sync(path.resolve(browser.artifactsPath, 'screenshots'));
+    mkdirp.sync(
+      path.resolve(browser.reporterInfo.artifactsPath, 'screenshots'),
+    );
 
     return browser.takeScreenshot().then((png) => {
       fs.writeFileSync(screenshot, png, { encoding: 'base64' });

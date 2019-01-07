@@ -1,6 +1,5 @@
 /* eslint global-require: 0, no-console: 0, import/no-unresolved: 0, import/no-extraneous-dependencies: 0, import/no-dynamic-require: 0, max-len: 0 */
 const path = require('path');
-const extend = require('extend');
 const fs = require('fs');
 const utils = require('@after-work.js/utils');
 const globby = require('globby');
@@ -16,13 +15,15 @@ const protractor = {
       const p = path.resolve(process.cwd(), configPath);
       foundConfig = require(p);
     }
-    let protractorConfig = {};
+    let config = {};
     if (typeof foundConfig === 'function') {
-      protractorConfig = extend(true, baseConfig, foundConfig(baseConfig));
+      config = Object.assign(baseConfig, foundConfig(baseConfig));
     } else {
-      protractorConfig = extend(true, baseConfig, foundConfig);
+      config = Object.assign(baseConfig, foundConfig);
     }
-    return protractorConfig;
+    console.error(config.artifactsPath);
+
+    return config;
   },
   builder(yargs) {
     return yargs
@@ -65,6 +66,7 @@ const protractor = {
       );
       argv.specs = specs;
     }
+
     launcher.init('', argv);
   },
 };
