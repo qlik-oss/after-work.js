@@ -21,8 +21,6 @@ const protractor = {
     } else {
       config = Object.assign(baseConfig, foundConfig);
     }
-    console.error(config.artifactsPath);
-
     return config;
   },
   builder(yargs) {
