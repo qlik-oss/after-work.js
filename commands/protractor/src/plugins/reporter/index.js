@@ -12,6 +12,156 @@ const report = require('./create-static');
 
 const { Base } = mocha.reporters;
 
+const reporter = {
+  /**
+   * Sets up plugins before tests are run. This is called after the WebDriver
+   * session has been started, but before the test framework has been set up.
+   *
+   * @this {Object} bound to module.exports
+   *
+   * @throws {*} If this function throws an error, a failed assertion is added to
+   *     the test results.
+   *
+   * @return {q.Promise=} Can return a promise, in which case protractor will wait
+   *     for the promise to resolve before continuing.  If the promise is
+   *     rejected, a failed assertion is added to the test results.
+   */
+  async setup() {
+    const config = await browser.getProcessedConfig();
+    config.__waitForPromises = [];
+  },
+  /**
+   * This is called after the tests have been run, but before the WebDriver
+   * session has been terminated.
+   *
+   * @this {Object} bound to module.exports
+   *
+   * @throws {*} If this function throws an error, a failed assertion is added to
+   *     the test results.
+   *
+   * @return {q.Promise=} Can return a promise, in which case protractor will wait
+   *     for the promise to resolve before continuing.  If the promise is
+   *     rejected, a failed assertion is added to the test results.
+   */
+  async teardown() {
+    const config = await browser.getProcessedConfig();
+    return Promise.all(config.__waitForPromises);
+  },
+
+  /**
+   * Called after the test results have been finalized and any jobs have been
+   * updated (if applicable).
+   *
+   * @this {Object} bound to module.exports
+   *
+   * @throws {*} If this function throws an error, it is outputted to the console
+   *
+   * @return {q.Promise=} Can return a promise, in which case protractor will wait
+   *     for the promise to resolve before continuing.  If the promise is
+   *     rejected, an error is logged to the console.
+   */
+  // postResults() {},
+
+  /**
+   * Called after each test block (in Jasmine, this means an `it` block)
+   * completes.
+   *
+   * @param {boolean} passed True if the test passed.
+   * @param {Object} testInfo information about the test which just ran.
+   *
+   * @this {Object} bound to module.exports
+   *
+   * @throws {*} If this function throws an error, a failed assertion is added to
+   *     the test results.
+   *
+   * @return {q.Promise=} Can return a promise, in which case protractor will wait
+   *     for the promise to resolve before outputting test results.  Protractor
+   *     will *not* wait before executing the next test, however.  If the promise
+   *     is rejected, a failed assertion is added to the test results.
+   */
+  // postTest( passed, testInfo ) { console.log( passed, testInfo ); },
+
+  /**
+   * This is called inside browser.get() directly after the page loads, and before
+   * angular bootstraps.
+   *
+   * @this {Object} bound to module.exports
+   *
+   * @throws {*} If this function throws an error, a failed assertion is added to
+   *     the test results.
+   *
+   * @return {q.Promise=} Can return a promise, in which case protractor will wait
+   *     for the promise to resolve before continuing.  If the promise is
+   *     rejected, a failed assertion is added to the test results.
+   */
+  // onPageLoad() {},
+
+  /**
+   * This is called inside browser.get() directly after angular is done
+   * bootstrapping/synchronizing.  If browser.ignoreSynchronization is true, this
+   * will not be called.
+   *
+   * @this {Object} bound to module.exports
+   *
+   * @throws {*} If this function throws an error, a failed assertion is added to
+   *     the test results.
+   *
+   * @return {q.Promise=} Can return a promise, in which case protractor will wait
+   *     for the promise to resolve before continuing.  If the promise is
+   *     rejected, a failed assertion is added to the test results.
+   */
+  // onPageStable() {},
+
+  /**
+   * Between every webdriver action, Protractor calls browser.waitForAngular() to
+   * make sure that Angular has no outstanding $http or $timeout calls.
+   * You can use waitForPromise() to have Protractor additionally wait for your
+   * custom promise to be resolved inside of browser.waitForAngular().
+   *
+   * @this {Object} bound to module.exports
+   *
+   * @throws {*} If this function throws an error, a failed assertion is added to
+   *     the test results.
+   *
+   * @return {q.Promise=} Can return a promise, in which case protractor will wait
+   *     for the promise to resolve before continuing.  If the promise is
+   *     rejected, a failed assertion is added to the test results, and protractor
+   *     will continue onto the next command.  If nothing is returned or something
+   *     other than a promise is returned, protractor will continue onto the next
+   *     command.
+   */
+  // waitForPromise() {},
+
+  /**
+   * Between every webdriver action, Protractor calls browser.waitForAngular() to
+   * make sure that Angular has no outstanding $http or $timeout calls.
+   * You can use waitForCondition() to have Protractor additionally wait for your
+   * custom condition to be truthy.
+   *
+   * @this {Object} bound to module.exports
+   *
+   * @throws {*} If this function throws an error, a failed assertion is added to
+   *     the test results.
+   *
+   * @return {q.Promise<boolean>|boolean} If truthy, Protractor will continue onto
+   *     the next command.  If falsy, webdriver will continuously re-run this
+   *     function until it is truthy.  If a rejected promise is returned, a failed
+   *     assertion is added to the test results, and protractor will continue onto
+   *     the next command.
+   */
+  // waitForCondition() {},
+
+  /**
+   * Used when reporting results.
+   *
+   * If you do not specify this property, it will be filled in with something
+   * reasonable (e.g. the plugin's path)
+   *
+   * @type {string}
+   */
+  name: 'reporter',
+};
+
 function uiReport(runner, options) {
   const tests = [];
   let pending = 0;
@@ -20,16 +170,9 @@ function uiReport(runner, options) {
   let config;
 
   Base.call(this, runner);
-  browser.getProcessedConfig().then((argv) => {
-    config = argv;
-    config.__waitForPromises = [];
-  });
-  // Since we can't extract the information from
-  // protractor we need to hook up own reporter and
-  // therefor we must make sure we have finished
-  // generating the report before the process is shutdown
-  // This is handled by a inline dummy plugins
-  // and hooking into the `teardown` function
+  (async () => {
+    config = await browser.getProcessedConfig();
+  })();
   if (options.reporterOptions) {
     if (options.reporterOptions.xunit) {
       options.reporterOptions.output = path.resolve(
@@ -61,9 +204,11 @@ function uiReport(runner, options) {
       // Empty catch
     }
     test.consoleEntries = [];
-    config.__waitForPromises.push(
-      utils.saveScreenshot(browser, test.fullTitle()),
-    );
+    if (Array.isArray(config.__waitForPromises)) {
+      config.__waitForPromises.push(
+        utils.saveScreenshot(browser, test.fullTitle()),
+      );
+    }
 
     console.log(
       '\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n'
@@ -151,4 +296,7 @@ function uiReport(runner, options) {
   });
 }
 
-module.exports = uiReport;
+module.exports = {
+  uiReport,
+  reporter,
+};

@@ -4,10 +4,11 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "test": "yarn test:node && yarn test:chrome && yarn test:protractor && yarn test:puppeteer",
+    "test": "yarn test:node && yarn test:chrome && yarn test:protractor && yarn test:puppeteer && yarn test:protractor:multi",
     "test:node": "aw -c aw.config.js",
     "test:chrome": "aw chrome -c aw.config.js",
-    "test:protractor": "aw protractor -c aw.config.js --directConnect",
+    "test:protractor": "aw protractor -c aw.config.js",
+    "test:protractor:multi": "aw protractor -c examples/protractor/aw.config.multi.js",
     "test:puppeteer": "aw puppeteer -c aw.config.js",
     "test:coveralls": "aw -c aw.config.js --coverage && cat coverage/lcov.info | coveralls",
     "lint": "lerna run lint"

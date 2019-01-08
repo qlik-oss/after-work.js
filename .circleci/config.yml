@@ -54,7 +54,9 @@ jobs:
       - restore_cache: *restore_yarn_cache
       - run: yarn
       - run: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
-
+      - run: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
+      - store_artifacts:
+          path: 'examples/protractor/test/__artifacts__'
   test-puppeteer:
     <<: *defaults
     steps:

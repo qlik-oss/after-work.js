@@ -42,6 +42,7 @@ module.exports = {
     '!@after-work.js/example-chrome-*',
   ],
   'filter.node.files': [
+    '!**/commands/protractor/src/config.js',
     '!**/examples/chrome-*/**',
     '!**/examples/protractor/**',
     '!**/examples/puppeteer/**',

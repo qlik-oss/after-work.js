@@ -4,7 +4,7 @@ const mkdirp = require('mkdirp');
 const uiReport = require('../../../../src/plugins/reporter');
 const utils = require('../../../../src/plugins/reporter/utils');
 
-describe('Reporter index', () => {
+describe.skip('Reporter index', () => {
   let sandbox;
   const Capabilities = new Map();
   Capabilities.set('browserName', 'chrome');

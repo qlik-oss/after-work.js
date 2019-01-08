@@ -20,6 +20,7 @@ module.exports = function initConfig() {
         },
       },
     ],
-    specs: [path.resolve(__dirname, 'hello.spec.js')],
+    specs: [path.resolve(__dirname, 'test/hello.spec.js')],
+    'filter.protractor.files': ['**/examples/protractor/**'],
   };
 };
