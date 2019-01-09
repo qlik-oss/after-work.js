@@ -30,7 +30,7 @@
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-jsx-a11y": "6.1.2",
     "eslint-plugin-react": "7.11.1",
-    "globby": "8.0.1",
+    "globby": "8.0.2",
     "lerna": "3.4.3",
     "protractor": "5.4.1",
     "requirejs": "2.3.6",
