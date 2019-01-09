@@ -11,7 +11,7 @@ Highlight.configure({
 });
 
 const utils = {
-  getRepoInfo({ name, version, description }) {
+  getRepoInfo({ name, version, description } = {}) {
     const packageJSON = JSON.parse(
       fs.readFileSync(path.resolve(process.cwd(), 'package.json'), {
         encoding: 'utf8',
