@@ -11,7 +11,7 @@ Highlight.configure({
 });
 
 const utils = {
-  getRepoInfo() {
+  getRepoInfo({ name, version, description }) {
     const packageJSON = JSON.parse(
       fs.readFileSync(path.resolve(process.cwd(), 'package.json'), {
         encoding: 'utf8',
@@ -20,10 +20,13 @@ const utils = {
     const repoInfo = {};
 
     repoInfo.name = packageJSON.name
+      || name
       || 'No repository name found (please add to package.json)';
     repoInfo.description = packageJSON.description
+      || description
       || 'No repository description found (please add to package.json)';
     repoInfo.version = packageJSON.version
+      || version
       || 'No repository version found (please add to package.json)';
 
     return repoInfo;

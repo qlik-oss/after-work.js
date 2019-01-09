@@ -1,6 +1,6 @@
 /* global browser */
 const yargs = require('yargs');
-
+const extend = require('extend');
 const path = require('path');
 const fs = require('fs');
 const globby = require('globby');
@@ -374,9 +374,9 @@ const { argv } = yargs
     }
     let config = {};
     if (typeof foundConfig === 'function') {
-      config = Object.assign(baseConfig, foundConfig(baseConfig));
+      config = extend(true, baseConfig, foundConfig(baseConfig));
     } else {
-      config = Object.assign(baseConfig, foundConfig);
+      config = extend(true, baseConfig, foundConfig);
     }
     return config;
   })
@@ -393,10 +393,9 @@ if (argv.hookRequire) {
 
 argv.require.map(require);
 if (argv.glob.length) {
-  const specs = utils.filter(
-    argv.filter.protractor.files,
-    globby.sync(argv.glob),
-  ).map(s => path.resolve(s));
+  const specs = utils
+    .filter(argv.filter.protractor.files, globby.sync(argv.glob))
+    .map(s => path.resolve(s));
   argv.specs = specs;
 }
 

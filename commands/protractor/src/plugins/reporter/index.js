@@ -163,6 +163,7 @@ const reporter = {
 };
 
 function uiReport(runner, options) {
+  const { reporterOptions } = options;
   const tests = [];
   let pending = 0;
   let failures = 0;
@@ -173,9 +174,9 @@ function uiReport(runner, options) {
   (async () => {
     config = await browser.getProcessedConfig();
   })();
-  if (options.reporterOptions) {
-    if (options.reporterOptions.xunit) {
-      options.reporterOptions.output = path.resolve(
+  if (reporterOptions) {
+    if (reporterOptions.xunit) {
+      reporterOptions.output = path.resolve(
         browser.reporterInfo.artifactsPath,
         `${browser.reporterInfo.reportName}.xml`,
       );
@@ -250,7 +251,7 @@ function uiReport(runner, options) {
   });
 
   runner.once('end', function onEnd() {
-    const repoInfo = utils.getRepoInfo();
+    const repoInfo = utils.getRepoInfo(reporterOptions);
     const cleanTests = tests.map(utils.cleanTest.bind(utils));
 
     const obj = {
@@ -290,7 +291,7 @@ function uiReport(runner, options) {
     );
     utils.createArtifactsFolder(browser.reporterInfo.artifactsPath);
     fs.writeFileSync(fileName, JSON.stringify(obj, null, '\t'));
-    if (options.reporterOptions.html !== false) {
+    if (reporterOptions.html !== false) {
       report.generate(fileName);
     }
   });

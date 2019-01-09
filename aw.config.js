@@ -23,6 +23,13 @@ module.exports = {
   mocha: {
     reporter: 'spec',
   },
+  // Protractor mochaOpts
+  mochaOpts: {
+    reporterOptions: {
+      name: '@after-work.js',
+      version: 'next',
+    },
+  },
   'transform.typescript.babelOptions': {
     presets: [
       [
@@ -53,5 +60,5 @@ module.exports = {
   'filter.puppeteer.packages': ['@after-work.js/example-puppeteer'],
   'filter.puppeteer.files': ['**/examples/puppeteer/**'],
   'filter.protractor.files': ['**/examples/protractor/**'],
-  artifactsPath: 'examples/protractor/test/__artifacts__',
+  artifactsPath: 'test/__artifacts__',
 };
