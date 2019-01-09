@@ -7,6 +7,8 @@ const debug = require('debug');
 const globby = require('globby');
 const minimatch = require('minimatch');
 
+const isCI = !!process.env.CI;
+
 const pkg = importCwd('./package.json');
 const findPkgs = g => globby.sync(`${g}/package.json`);
 const reducePkgs = (acc, curr) => acc.concat(curr.map(c => c.slice(0, -13)));
@@ -112,10 +114,16 @@ const utils = {
     return exists ? js : '';
   },
   clearLine() {
+    if (isCI) {
+      return;
+    }
     readline.clearLine(process.stderr, 0);
     readline.cursorTo(process.stderr, 0, null);
   },
   writeLine(prefix, msg) {
+    if (isCI) {
+      return;
+    }
     this.clearLine();
     process.stderr.write(
       `${prefix} ${msg.length > 60 ? '...' : ''}${msg.slice(-59)}`,
