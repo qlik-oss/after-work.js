@@ -21,7 +21,7 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
     "@after-work.js/utils": "5.1.1",
-    "globby": "8.0.1",
+    "globby": "8.0.2",
     "inquirer": "6.2.0",
     "inquirer-checkbox-plus-prompt": "1.0.1",
     "import-cwd": "2.1.0",
