@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/server",
-  "version": "5.1.1",
+  "version": "5.1.3",
   "publishConfig": {
     "access": "public"
   },
