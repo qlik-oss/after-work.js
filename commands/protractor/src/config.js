@@ -393,13 +393,23 @@ if (argv.hookRequire) {
 
 argv.require.map(require);
 if (
-  (!argv.specs || (argv.specs && argv.specs.length === 0))
+  (!argv.multiCapabilities || argv.multiCapabilities.length === 0)
+  && (!argv.specs || (argv.specs && argv.specs.length === 0))
   && argv.glob.length
 ) {
   const specs = utils
     .filter(argv.filter.protractor.files, globby.sync(argv.glob))
     .map(s => path.resolve(s));
   argv.specs = specs;
+}
+
+// We need to change this relative to this config file so protractor can find it
+if (argv.seleniumServerJar) {
+  const jar = path.relative(
+    __dirname,
+    path.resolve(process.cwd(), argv.seleniumServerJar),
+  );
+  argv.seleniumServerJar = jar;
 }
 
 module.exports = {
