@@ -393,7 +393,8 @@ if (argv.hookRequire) {
 
 argv.require.map(require);
 if (
-  (!argv.multiCapabilities || argv.multiCapabilities.length === 0)
+  (!argv.multiCapabilities
+    || (argv.multiCapabilities && argv.multiCapabilities.length === 0))
   && (!argv.specs || (argv.specs && argv.specs.length === 0))
   && argv.glob.length
 ) {
