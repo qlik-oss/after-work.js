@@ -392,7 +392,10 @@ if (argv.hookRequire) {
 }
 
 argv.require.map(require);
-if (argv.glob.length) {
+if (
+  (!argv.specs || (argv.specs && argv.specs.length === 0))
+  && argv.glob.length
+) {
   const specs = utils
     .filter(argv.filter.protractor.files, globby.sync(argv.glob))
     .map(s => path.resolve(s));
