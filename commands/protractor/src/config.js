@@ -380,6 +380,7 @@ const { argv } = yargs
     }
     return config;
   })
+  .coerce('specs', a => globby.sync(a).map(p => path.resolve(p)))
   .coerce('babel', utils.coerceBabel);
 
 argv.shouldInstrument = () => false;
@@ -392,17 +393,6 @@ if (argv.hookRequire) {
 }
 
 argv.require.map(require);
-if (
-  (!argv.multiCapabilities
-    || (argv.multiCapabilities && argv.multiCapabilities.length === 0))
-  && (!argv.specs || (argv.specs && argv.specs.length === 0))
-  && argv.glob.length
-) {
-  const specs = utils
-    .filter(argv.filter.protractor.files, globby.sync(argv.glob))
-    .map(s => path.resolve(s));
-  argv.specs = specs;
-}
 
 // We need to change this relative to this config file so protractor can find it
 if (argv.seleniumServerJar) {
