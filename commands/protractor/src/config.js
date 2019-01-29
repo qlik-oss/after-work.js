@@ -403,6 +403,10 @@ if (argv.seleniumServerJar) {
   argv.seleniumServerJar = jar;
 }
 
+if (argv.glob.length) {
+  argv.specs = argv.glob.map(p => path.resolve(p));
+}
+
 module.exports = {
   config: argv,
 };
