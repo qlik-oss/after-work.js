@@ -404,7 +404,11 @@ if (argv.seleniumServerJar) {
 }
 
 if (argv.glob.length) {
-  argv.specs = argv.glob.map(p => path.resolve(p));
+  const specs = utils.filter(
+    argv.filter.protractor.files,
+    globby.sync(argv.glob),
+  ).map(p => path.resolve(p));
+  argv.specs = specs;
 }
 
 module.exports = {
