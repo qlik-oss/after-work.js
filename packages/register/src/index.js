@@ -22,6 +22,10 @@ function compileHook(argv, code, filename, virtualMock = false) {
   if (!argv.babel.enable) {
     return code;
   }
+  const matchedMocks = new Set(aw.usedMocks.values());
+  if (matchedMocks.has(filename)) {
+    virtualMock = true;
+  }
   const sourceRoot = path.dirname(filename);
   const { babel, options } = argv.babel;
   const opts = new babel.OptionManager().init({
@@ -82,13 +86,13 @@ function hookedLoader(options, request, parent, isMain) {
   // 2. Global config mocks from aw.config.js
   for (const [key, [value, injectReact = false]] of aw.mocks) {
     if (minimatch(filename, key)) {
-      aw.mocks.delete(key);
+      aw.usedMocks.set(key, filename);
       return compileMock(options, filename, value, injectReact);
     }
   }
   for (const [key, [value, injectReact = false]] of aw.globalMocks) {
     if (minimatch(filename, key)) {
-      aw.usedGlobalMocks.set(key);
+      aw.usedGlobalMocks.set(key, filename);
       return compileMock(options, filename, value, injectReact);
     }
   }
@@ -130,11 +134,15 @@ class AW {
     this.srcFiles = srcFiles;
     this.testFiles = testFiles;
     this.mocks = new Map();
+    this.usedMocks = new Map();
     this.globalMocks = new Map();
     this.usedGlobalMocks = new Map();
     mocks.forEach(([key, value]) => this.globalMocks.set(key, [value, false]));
     this.warn = warn;
-    onStart(() => this.usedGlobalMocks.clear());
+    onStart(() => {
+      this.usedMocks.clear();
+      this.usedGlobalMocks.clear();
+    });
     onFinished(() => {
       const globalMocksKeys = [...this.globalMocks.keys()];
       const usedGlobalMocksKeys = [...this.usedGlobalMocks.keys()];
@@ -183,7 +191,11 @@ class AW {
       return require(p);
     });
 
-    for (const [key, [value]] of this.mocks) {
+    const mocksKeys = [...this.mocks.keys()];
+    const usedMocksKeys = [...this.usedMocks.keys()];
+    const unusedMocksKeys = mocksKeys.filter(k => !usedMocksKeys.includes(k));
+    for (const key of unusedMocksKeys) {
+      const [value] = this.mocks.get(key);
       const warning = () => console.error(
         `\u001b[33mCouldn't match local mock with pattern:\u001b[0m \u001b[31m${key}\u001b[0m \u001b[33mand value:\u001b[0m \u001b[34m${value}\u001b[0m\n\u001b[90mat (${c})\u001b[0m`,
       );

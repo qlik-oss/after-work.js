@@ -259,6 +259,9 @@ const utils = {
     const base = path.basename(filePath);
     return minimatch(base, extPattern);
   },
+  isTestFile(filePath) {
+    return utils.isMatchingExtPattern(filePath, DEFAULT_TEST_EXT_PATTERN);
+  },
 };
 
 module.exports = utils;

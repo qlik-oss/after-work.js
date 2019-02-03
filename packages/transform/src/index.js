@@ -5,6 +5,7 @@ const {
   isTypescript,
   ensureFilePath,
   createDebug,
+  isTestFile,
 } = require('@after-work.js/utils');
 const FileCache = require('./file-cache');
 
@@ -17,7 +18,7 @@ function getBabelOpts(filename, argv) {
     babelPluginIstanbul,
   } = argv.babel;
   const virtualMock = !!argv.virtualMock;
-  const addCoverage = virtualMock === false;
+  const addCoverage = virtualMock === false && isTestFile(filename) === false;
   const usePlugins = addCoverage
     ? [...plugins, [babelPluginIstanbul, argv.nyc]]
     : plugins;
