@@ -2,6 +2,7 @@
 const importCwd = require('import-cwd');
 const chromeFinder = require('chrome-launcher/dist/chrome-finder');
 const { getPlatform } = require('chrome-launcher/dist/utils');
+const createServer = require('@after-work.js/server');
 const { Runner, configure } = require('@after-work.js/node/src/');
 const nodeOptions = require('@after-work.js/node/src/options');
 const utils = require('@after-work.js/utils');
@@ -34,6 +35,9 @@ class PuppetRunner extends Runner {
   }
 
   async launch() {
+    if (this.argv.httpServer) {
+      this.server = createServer(this.argv);
+    }
     if (this.argv.chrome.slowMo && this.argv.chrome.slowMo > 0) {
       this.argv.mocha.enableTimeouts = false;
     }
@@ -60,6 +64,9 @@ class PuppetRunner extends Runner {
   }
 
   exit(code) {
+    if (this.server) {
+      this.server.close();
+    }
     this.closeBrowser();
     super.exit(code);
   }
@@ -94,9 +101,15 @@ const puppet = {
     (async function launchAndRun() {
       const puppeteer = require('puppeteer-core');
       if (!argv.chrome.executablePath) {
-        argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath(
-          argv.chrome.stable,
-        );
+        try {
+          argv.chrome.executablePath = await PuppetRunner.getChromeExecutablePath(
+            argv.chrome.stable,
+          );
+        } catch (err) {
+          console.error(err);
+          process.exitCode = 1;
+          return null;
+        }
       }
       const runner = new PuppetRunner(puppeteer, argv);
       if (argv.presetEnv) {

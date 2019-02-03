@@ -213,4 +213,14 @@ module.exports = {
     default: true,
     type: 'boolean',
   },
+  'http.port': {
+    description: 'Listen on this http port',
+    default: 9677,
+    type: 'number',
+  },
+  httpServer: {
+    description: 'Configure a http server',
+    default: false,
+    type: 'boolean',
+  },
 };
