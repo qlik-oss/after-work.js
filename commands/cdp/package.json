@@ -27,7 +27,7 @@
     "chrome-launcher": "0.10.5",
     "chrome-remote-interface": "0.26.1",
     "chrome-unmirror": "0.1.0",
-    "globby": "8.0.2",
+    "globby": "9.0.0",
     "import-cwd": "2.1.0",
     "koa": "2.6.2",
     "koa-favicon": "2.0.1",
