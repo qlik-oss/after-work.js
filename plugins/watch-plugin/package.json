@@ -21,7 +21,8 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
     "@after-work.js/utils": "5.1.1",
-    "chokidar": "2.0.4"
+    "chokidar": "2.1.0",
+    "globby": "9.0.0"
   },
   "files": [
     "/src"

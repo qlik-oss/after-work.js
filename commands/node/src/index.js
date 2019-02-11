@@ -132,7 +132,7 @@ class Runner extends EventEmitter {
       this.nyc.report();
     }
 
-    if (this.warnings.length) {
+    if (this.argv.warnings && this.warnings.length) {
       console.error('\u001b[33mwarnings:\u001b[0m');
       this.warnings.forEach((w) => {
         console.error('');

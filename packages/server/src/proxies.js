@@ -48,8 +48,8 @@ const applyProxies = (app, options = []) => {
       websocketProxies.push(proxyMiddleware);
     }
 
+    // eslint-disable-next-line consistent-return
     app.use((req, res, next) => {
-      // eslint-disable-line
       if (typeof proxyConfigOrCallback === 'function') {
         const newProxyConfig = proxyConfigOrCallback();
 

@@ -65,7 +65,6 @@ module.exports = {
     default: WATCH_GLOB,
     type: 'array',
     alias: 'wg',
-    coerce: opt => [...opt, ...WATCH_GLOB],
   },
   coverage: {
     description: 'Generate coverage',
@@ -199,5 +198,10 @@ module.exports = {
     default: false,
     type: 'boolean',
     alias: 'i',
+  },
+  warnings: {
+    description: 'Log mock warnings to stderr',
+    default: true,
+    type: 'boolean',
   },
 };
