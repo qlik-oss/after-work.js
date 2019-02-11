@@ -15,9 +15,7 @@ const getProxyMiddleware = (proxyConfig) => {
 
 const normalize = options => Object.keys(options).map((context) => {
   let proxyOptions;
-  const correctedContext = context
-    .replace(/^\*$/, '**')
-    .replace(/\/\*$/, '');
+  const correctedContext = context.replace(/^\*$/, '**').replace(/\/\*$/, '');
   if (typeof options.proxy[context] === 'string') {
     proxyOptions = {
       context: correctedContext,
@@ -50,7 +48,8 @@ const applyProxies = (app, options = []) => {
       websocketProxies.push(proxyMiddleware);
     }
 
-    app.use((req, res, next) => { // eslint-disable-line
+    app.use((req, res, next) => {
+      // eslint-disable-line
       if (typeof proxyConfigOrCallback === 'function') {
         const newProxyConfig = proxyConfigOrCallback();
 

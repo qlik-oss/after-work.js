@@ -7,10 +7,10 @@ const applyProxies = require('./proxies');
 module.exports = function createServer(options) {
   const { middleware = () => {}, ...argv } = options;
   const app = express();
-  const websocketProxies = applyProxies(app, options.proxy);
   app.use(favicon(path.resolve(__dirname, '../aw.png')));
   app.use(transformFiles(argv));
   app.use('/', express.static(process.cwd()));
+  const websocketProxies = applyProxies(app, options.proxy);
   middleware(app, express);
   const server = app.listen(argv.http.port, '0.0.0.0', (err) => {
     if (err) {
