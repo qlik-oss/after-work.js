@@ -20,7 +20,7 @@ class Runner extends EventEmitter {
     this.isWrapped = false;
     this.isRunning = false;
     this.debugging = false;
-    this.snapshotStates = new Map();
+    this.snapshotContexts = new Map();
     this.warnings = [];
     this.startCallbacks = [];
     this.finishedCallbacks = [];
@@ -138,7 +138,22 @@ class Runner extends EventEmitter {
         console.error('');
         w();
       });
+      console.error('');
     }
+    this.snapshotContexts.forEach(({ currentTestName, snapshotState }) => {
+      const uncheckedCount = snapshotState.getUncheckedCount();
+      if (uncheckedCount) {
+        snapshotState.removeUncheckedKeys();
+      }
+      snapshotState.save();
+      if (uncheckedCount && !this.argv.updateSnapshot) {
+        console.error(
+          `\u001b[33mObsolete snapshot:\u001b[0m \u001b[31m${currentTestName}\u001b[0m \u001b[33m\n\u001b[90mat (${
+            snapshotState._snapshotPath
+          })\u001b[0m`,
+        );
+      }
+    });
     if (this.argv.watch) {
       this.emit('watchEnd');
       return;
@@ -196,7 +211,7 @@ class Runner extends EventEmitter {
   }
 
   setupAndRunTests(testFiles, srcFiles) {
-    this.snapshotStates.clear();
+    this.snapshotContexts.clear();
     process.removeAllListeners();
     if (this.mochaRunner) {
       this.mochaRunner.removeAllListeners();

@@ -16,8 +16,6 @@ module.exports = function createServer(options) {
     if (err) {
       throw err;
     }
-    // eslint-disable-next-line no-console
-    console.error(`Listening on http://0.0.0.0:${argv.http.port}`);
   });
   websocketProxies.forEach(wsProxy => server.on('upgrade', wsProxy.upgrade));
   return server;

@@ -13,7 +13,6 @@ const { deleteTransform } = require('@after-work.js/transform');
 const Mediator = require('./mediator');
 const connect = require('./connect');
 
-
 class Runner extends EventEmitter {
   constructor(argv) {
     super();
@@ -34,8 +33,7 @@ class Runner extends EventEmitter {
     this.srcFiles = [];
     this.bind();
     this.debugging = false;
-    this.snapshotStates = new Map();
-    this.server = { close: () => { } };
+    this.server = { close: () => {} };
   }
 
   log(...args) {
@@ -47,7 +45,7 @@ class Runner extends EventEmitter {
       if (!this.client) {
         return;
       }
-      const columns = parseInt(process.env.COLUMNS || process.stdout.columns) * 0.75 | 0;
+      const columns = (parseInt(process.env.COLUMNS || process.stdout.columns) * 0.75) | 0;
       const expression = `Mocha.reporters.Base.window.width = ${columns};`;
       this.client.Runtime.evaluate({ expression });
     });
@@ -123,7 +121,12 @@ class Runner extends EventEmitter {
       this.argv.client.port = port;
     }
     const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
-    this.client = await connect(this.argv, awFiles, this.argv.presetEnv, this.debugging);
+    this.client = await connect(
+      this.argv,
+      awFiles,
+      this.argv.presetEnv,
+      this.debugging,
+    );
     if (!this.client) {
       this.log('CDP Client could not connect');
       return;
@@ -157,7 +160,9 @@ class Runner extends EventEmitter {
       return cached;
     }
     const rf = utils.ensureFilePath(f);
-    const deps = precinct(fs.readFileSync(rf, 'utf8'), { amd: { skipLazyLoaded: true } });
+    const deps = precinct(fs.readFileSync(rf, 'utf8'), {
+      amd: { skipLazyLoaded: true },
+    });
     this.depMap.set(f, deps);
     return deps;
   }
@@ -177,7 +182,10 @@ class Runner extends EventEmitter {
     if (cache) {
       return cache;
     }
-    const srcName = path.basename(file).split('.').shift();
+    const srcName = path
+      .basename(file)
+      .split('.')
+      .shift();
     for (const testFile of this.testFiles) {
       const deps = this.getDependencies(testFile);
       const found = this.matchDependencyName(srcName, deps);
@@ -198,12 +206,18 @@ class Runner extends EventEmitter {
       }
       const awFiles = this.relativeBaseUrlFiles(testFiles || this.testFiles);
       const injectAwFiles = `window.awFiles = ${JSON.stringify(awFiles)};`;
-      await this.client.Page.reload({ ignoreCache: true, scriptToEvaluateOnLoad: injectAwFiles });
+      await this.client.Page.reload({
+        ignoreCache: true,
+        scriptToEvaluateOnLoad: injectAwFiles,
+      });
     })();
   }
 
   getTestFilesFromSrcFiles(srcFiles) {
-    return srcFiles.reduce((acc, curr) => [...acc, ...this.getMatchedTestDependency(curr)], []);
+    return srcFiles.reduce(
+      (acc, curr) => [...acc, ...this.getMatchedTestDependency(curr)],
+      [],
+    );
   }
 
   getSrcFilesFromTestFiles() {
@@ -221,7 +235,8 @@ class Runner extends EventEmitter {
   }
 
   relativeBaseUrlFile(file) {
-    return path.relative(path.dirname(this.argv.url), path.resolve(file))
+    return path
+      .relative(path.dirname(this.argv.url), path.resolve(file))
       .replace(/\\/g, '/')
       .replace(/.ts$/, '.js');
   }
@@ -231,7 +246,10 @@ class Runner extends EventEmitter {
   }
 
   findFiles(glob) {
-    return utils.filter(this.getFilter().files, globby.sync(glob).map(f => path.resolve(f)));
+    return utils.filter(
+      this.getFilter().files,
+      globby.sync(glob).map(f => path.resolve(f)),
+    );
   }
 
   getFilter() {
@@ -241,7 +259,11 @@ class Runner extends EventEmitter {
   setTestFiles() {
     this.testFiles = this.findFiles(this.argv.glob);
     if (!this.testFiles.length) {
-      this.log(`No files found for glob: ${this.argv.glob} with filter: ${this.getFilter().files}`);
+      this.log(
+        `No files found for glob: ${this.argv.glob} with filter: ${
+          this.getFilter().files
+        }`,
+      );
       this.exit(1);
     }
     return this;
@@ -274,7 +296,12 @@ class Runner extends EventEmitter {
   }
 
   async extractCoverage() {
-    const { result: { value } } = await this.client.Runtime.evaluate({ expression: 'window.__coverage__', returnByValue: true });
+    const {
+      result: { value },
+    } = await this.client.Runtime.evaluate({
+      expression: 'window.__coverage__',
+      returnByValue: true,
+    });
     return value;
   }
 

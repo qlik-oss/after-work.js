@@ -1,6 +1,9 @@
 const fs = require('fs');
-const path = require('path');
-const { SnapshotState, toMatchSnapshot } = require('jest-snapshot');
+const {
+  SnapshotState,
+  toMatchSnapshot,
+  buildSnapshotResolver,
+} = require('jest-snapshot');
 const { getTransform } = require('@after-work.js/transform');
 const utils = require('@after-work.js/utils');
 
@@ -32,30 +35,28 @@ module.exports = function snapshot(runner) {
       throw new Error('Can not find current test name');
     }
 
-    let snapshotState = runner.snapshotStates.get(filename);
+    let { snapshotState } = runner.snapshotContexts.get(filename) || {};
     if (!snapshotState) {
-      const snapshotPath = `${path.join(
-        path.join(path.dirname(filename), '__snapshots__'),
-        `${path.join(path.basename(filename))}.snap`,
-      )}`;
-      snapshotState = new SnapshotState(currentTestName, {
-        updateSnapshot: runner.argv.updateSnapshot ? 'all' : 'new',
-        snapshotPath,
+      const snapshotResolver = buildSnapshotResolver({
+        rootDir: process.cwd(),
       });
-      runner.snapshotStates.set(filename, snapshotState);
+      const snapshotPath = snapshotResolver.resolveSnapshotPath(filename);
+      snapshotState = new SnapshotState(snapshotPath, {
+        updateSnapshot: runner.argv.updateSnapshot ? 'all' : 'new',
+      });
+      runner.snapshotContexts.set(filename, { currentTestName, snapshotState });
     }
     const matcher = toMatchSnapshot.bind({
       snapshotState,
       currentTestName,
     });
     const result = matcher(this._obj);
-    snapshotState.save();
     this.assert(
       result.pass,
       result.message,
       result.message,
       result.expected,
-      result.actual,
+      result.report,
     );
   };
 };

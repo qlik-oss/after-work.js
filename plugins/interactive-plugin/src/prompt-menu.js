@@ -5,10 +5,14 @@ const prompMenu = async ({
   const allChoice = all
     ? [{ key: 'a', name: 'All (initial glob)', value: 'all' }]
     : [];
-  const unmatchedSnapshots = runner.argv.updateSnapshot === false
-    && [...runner.snapshotStates.values()].filter(v => v.unmatched > 0).length;
-  const snapshotChoice = unmatchedSnapshots
-    ? [{ key: 'u', name: 'Update failing snapshots', value: 'snapshots' }]
+  const snapshotsNeedUpdate = runner.argv.updateSnapshot === false
+    && [
+      ...((runner.snapshotContexts && runner.snapshotContexts.values()) || []),
+    ].filter(
+      ({ snapshotState }) => snapshotState.unmatched > 0 || snapshotState.getUncheckedCount() > 0,
+    ).length;
+  const snapshotChoice = snapshotsNeedUpdate
+    ? [{ key: 'u', name: 'Update snapshots', value: 'snapshots' }]
     : [];
   const workspacesChoice = workspaces.length
     ? [{ key: 'w', name: 'Workspaces', value: 'workspaces' }]

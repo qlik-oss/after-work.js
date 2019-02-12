@@ -107,7 +107,7 @@ const onInteractive = async (runner) => {
 
   if (interactive === 'snapshots') {
     runner.argv.updateSnapshot = true;
-    runner.snapshotStates.clear();
+    runner.snapshotContexts.clear();
     runner.setupAndRunTests(test, src);
     runner.once('watchEnd', () => {
       runner.argv.updateSnapshot = false;

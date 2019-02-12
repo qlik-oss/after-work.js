@@ -2,12 +2,4 @@
 
 exports[`'should import template' 1`] = `"<div>foobar</div>"`;
 
-exports[`'should import template' 2`] = `"<div>foobar</div>"`;
-
-exports[`'should import template' 3`] = `"<div>foobar</div>"`;
-
 exports[`'should import virtual template' 1`] = `"<div>hello world</div>"`;
-
-exports[`'should import virtual template' 2`] = `"<div>hello world</div>"`;
-
-exports[`'should import virtual template' 3`] = `"<div>hello world</div>"`;
