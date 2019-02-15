@@ -18,6 +18,7 @@ module.exports = {
       '**/browser-shim.js',
       '**/commands/aw',
       '**/examples/main.js',
+      '**/examples/react/src/full-match.js',
     ],
   },
   mocha: {

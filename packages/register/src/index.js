@@ -85,6 +85,11 @@ function hookedLoader(options, request, parent, isMain) {
   // 1. Explicit mocks in modules e.g aw.mock(...)
   // 2. Global config mocks from aw.config.js
   for (const [key, [value, injectReact = false]] of aw.mocks) {
+    // Try full match first exclude relative
+    if (request && request.length && request[0] !== '.' && request === key) {
+      aw.usedMocks.set(key, filename);
+      return compileMock(options, filename, value, injectReact);
+    }
     if (minimatch(filename, key)) {
       aw.usedMocks.set(key, filename);
       return compileMock(options, filename, value, injectReact);
