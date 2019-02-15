@@ -1,0 +1,27 @@
+{
+  "name": "@after-work.js/example-webpack-dev-server",
+  "private": true,
+  "version": "5.1.1",
+  "description": "Webpack dev server example",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme",
+  "dependencies": {
+    "@babel/core": "7.1.6",
+    "@babel/preset-env": "7.1.6",
+    "@babel/preset-react": "7.0.0",
+    "babel-loader": "8.0.4",
+    "@after-work.js/transform-middleware": "5.1.1",
+    "html-webpack-plugin": "3.2.0",
+    "react": "16.6.3",
+    "react-dom": "16.6.3"
+  }
+}

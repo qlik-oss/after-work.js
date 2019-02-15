@@ -20,7 +20,7 @@ function getContent(filePath) {
   return fs.readFileSync(filePath, 'utf-8');
 }
 
-module.exports = async function connect(argv, files, debugging) {
+module.exports = async function connect(argv, files, presetEnv, debugging) {
   const client = await CDP(argv.client);
   const { DOM, DOMStorage, Console, Network, Page, Runtime } = client;
 
@@ -32,7 +32,6 @@ module.exports = async function connect(argv, files, debugging) {
     ui,
     timeout,
   })}`;
-
   const injectAwFiles = `window.awFiles = ${JSON.stringify(files)}`;
   const injectAwDevtools = `window.awDevtools = ${JSON.stringify(
     argv.chrome.devtools,
@@ -50,19 +49,42 @@ module.exports = async function connect(argv, files, debugging) {
   const sourceMapSupport = `${path.dirname(
     require.resolve('source-map-support'),
   )}/browser-source-map-support.js`;
-  await Page.addScriptToEvaluateOnLoad({
-    scriptSource: `${getContent(sourceMapSupport)};`,
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: `${getContent(sourceMapSupport)};`,
   });
-  await Page.addScriptToEvaluateOnLoad({
-    scriptSource: 'sourceMapSupport.install();',
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: 'sourceMapSupport.install();',
   });
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMediator });
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: injectMochaOptions });
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwFiles });
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwDevtools });
-  await Page.addScriptToEvaluateOnLoad({ scriptSource: injectAwDebugging });
-  await Page.addScriptToEvaluateOnLoad({
-    scriptSource: getContent(path.join(__dirname, 'browser-shim.js')),
+  await Page.addScriptToEvaluateOnNewDocument({ source: injectMediator });
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: injectMochaOptions,
   });
+  await Page.addScriptToEvaluateOnNewDocument({ source: injectAwFiles });
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: injectAwDevtools,
+  });
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: injectAwDebugging,
+  });
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: getContent(path.join(__dirname, 'browser-shim.js')),
+  });
+  if (presetEnv) {
+    await Page.addScriptToEvaluateOnNewDocument({
+      source: getContent(require.resolve('chai/chai')),
+    });
+    await Page.addScriptToEvaluateOnNewDocument({
+      source: 'expect = chai.expect;',
+    });
+    await Page.addScriptToEvaluateOnNewDocument({
+      source: getContent(require.resolve('chai-subset/lib/chai-subset')),
+    });
+    await Page.addScriptToEvaluateOnNewDocument({
+      source: getContent(require.resolve('sinon-chai/lib/sinon-chai')),
+    });
+    await Page.addScriptToEvaluateOnNewDocument({
+      source: getContent(require.resolve('sinon/pkg/sinon')),
+    });
+  }
   return client;
 };

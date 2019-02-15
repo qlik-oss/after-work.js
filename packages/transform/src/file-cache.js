@@ -8,12 +8,18 @@ const crypto = require('crypto');
 
 class FileCache {
   constructor() {
-    this.cacheDir = findCacheDir({ name: '@after-work.js/transform', create: true });
+    this.cacheDir = findCacheDir({
+      name: '@after-work.js/transform',
+      create: true,
+    });
     this.transform = new Map();
   }
 
   getCacheFilename(filename) {
-    const hash = crypto.createHash('md5').update(filename).digest('hex');
+    const hash = crypto
+      .createHash('md5')
+      .update(filename)
+      .digest('hex');
     return path.join(this.cacheDir, `${hash}.json.gz`);
   }
 
@@ -22,7 +28,10 @@ class FileCache {
       filename,
       options,
     });
-    return crypto.createHash('md5').update(data).digest('hex');
+    return crypto
+      .createHash('md5')
+      .update(data)
+      .digest('hex');
   }
 
   getStringifiedValue(filename) {
@@ -33,12 +42,13 @@ class FileCache {
 
   setSync(filename, transformItem, options) {
     const {
-      virtualMock,
-      babelOptions,
-      instrument,
-      transform,
+      virtualMock, babelOptions, instrument, transform,
     } = options;
-    transformItem.hash = this.getCacheHash(filename, { ...babelOptions, ...instrument, ...transform });
+    transformItem.hash = this.getCacheHash(filename, {
+      ...babelOptions,
+      ...instrument,
+      ...transform,
+    });
     if (virtualMock) {
       return;
     }
@@ -64,13 +74,18 @@ class FileCache {
     if (ignoreCacheInvalidation) {
       return value;
     }
-    if (virtualMock) { // virtual mock always refresh
+    if (virtualMock) {
+      // virtual mock always refresh
       return null;
     }
     if (value && value.mtime && value.mtime !== +fs.statSync(filename).mtime) {
       return null;
     }
-    const hash = this.getCacheHash(filename, { ...babelOptions, ...instrument, ...transform });
+    const hash = this.getCacheHash(filename, {
+      ...babelOptions,
+      ...instrument,
+      ...transform,
+    });
     if (value && value.hash && value.hash !== hash) {
       return null;
     }
@@ -93,7 +108,7 @@ class FileCache {
       const gz = zlib.gzipSync(str);
       fs.writeFileSync(this.getCacheFilename(filename), gz, 'utf8');
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 }

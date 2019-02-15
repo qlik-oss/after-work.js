@@ -5,12 +5,13 @@ const testExclude = require('test-exclude');
 const importCwd = require('import-cwd');
 const utils = require('@after-work.js/utils');
 const options = require('./options');
-
-process.on('unhandledRejection', (err) => {
-  console.error(`Promise Rejection:${err}`);
-});
+const Runner = require('./runner');
+// process.on('unhandledRejection', (err) => {
+//   console.error(`Promise Rejection:${err}`);
+// });
 
 const cdp = {
+  Runner,
   command: ['cdp', 'chrome'],
   desc: 'Run tests with cdp (chrome devtools protocol)',
   builder(yargs) {
@@ -33,20 +34,13 @@ const cdp = {
         return config;
       })
       .coerce('babel', utils.coerceBabel)
-      .coerce('nyc', (opt) => {
-        opt.sourceMap = false;
-        opt.instrumenter = './lib/instrumenters/noop';
-        return opt;
-      })
-      .coerce('instrument', (opt) => {
-        const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
-        opt.testExclude = testExclude({ include: opt.include, exclude });
-        return opt;
-      })
       .coerce('transform', (opt) => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.testExclude = testExclude({ include: opt.include, exclude });
-        opt.typescript.compilerOptions = Object.assign({ compilerOptions: {} }, importCwd.silent(path.resolve(opt.typescript.config))).compilerOptions;
+        opt.typescript.compilerOptions = Object.assign(
+          { compilerOptions: {} },
+          importCwd.silent(path.resolve(opt.typescript.config)),
+        ).compilerOptions;
         return opt;
       })
       .coerce('chrome', (opt) => {
@@ -58,19 +52,28 @@ const cdp = {
       });
   },
   handler(argv) {
-    const Runner = require('./runner');
-    const runner = new Runner(argv);
-    runner.on('exit', code => process.exit(code));
+    const runner = new cdp.Runner(argv);
+    let skipInitialInteractive = false;
+    if (argv.watch && !argv.interactive) {
+      skipInitialInteractive = true;
+      argv.interactive = true;
+    }
+    if (argv.interactive) {
+      require('@after-work.js/interactive-plugin')(runner);
+    }
+    if (argv.watch) {
+      require('@after-work.js/watch-plugin')(runner);
+    }
     runner
+      .autoDetectDebug()
       .setTestFiles()
-      .setUrl(argv.url)
-      .maybeCreateServer()
-      .setupKeyPress()
-      .autoDetectDebug();
-
-    (async () => {
-      await runner.run();
-    })();
+      .maybeCreateServer();
+    if (!skipInitialInteractive && argv.interactive) {
+      runner.emit('interactive');
+      return runner;
+    }
+    runner.run();
+    return runner;
   },
 };
 

@@ -1,14 +1,23 @@
+const { TEST_GLOB } = require('@after-work.js/utils');
+
 module.exports = {
+  presetEnv: {
+    description:
+      'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset',
+    default: true,
+    type: 'boolean',
+  },
   config: {
     description: 'Path to config file',
     type: 'string',
     default: null,
     alias: 'c',
   },
-  glob: {
+  test: {
     description: 'Glob pattern',
-    type: 'string',
-    default: [],
+    type: 'array',
+    default: TEST_GLOB,
+    alias: ['glob'],
   },
   coverage: {
     description: 'Generate coverage',
@@ -42,13 +51,22 @@ module.exports = {
   },
   'babel.options': {
     description: 'Babel options',
-    default: {
-    },
+    default: {},
     type: 'object',
   },
-  typescript: {
+  'babel.typescript': {
     description: 'Path to typescript compiler module',
     default: 'typescript',
+    type: 'string',
+  },
+  'filter.protractor.files': {
+    description: 'Filter files for Protractor runner',
+    default: ['**'],
+    type: 'array',
+  },
+  artifactsPath: {
+    description: 'Base path to artifacts from the screenshoter plugin',
+    default: 'test/__artifacts__',
     type: 'string',
   },
 };

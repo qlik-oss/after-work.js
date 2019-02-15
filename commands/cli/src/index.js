@@ -3,12 +3,10 @@
 
 const yargs = require('yargs');
 const importCwd = require('import-cwd');
-const path = require('path');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 
-yargs
-  .usage('aw <command>');
+yargs.usage('aw <command>');
 
 const tryAddCommand = (m) => {
   let cmd = null;
@@ -32,12 +30,4 @@ const tryAddCommand = (m) => {
   '@after-work.js/serve',
 ].forEach(tryAddCommand);
 
-yargs
-  .alias('h', 'help')
-  .option('presetEnv', {
-    description: 'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset',
-    default: path.resolve(__dirname, 'preset-env.js'),
-    type: 'string',
-  })
-  .wrap(Math.min(120, yargs.terminalWidth()))
-  .argv;
+yargs.alias('h', 'help').wrap(Math.min(120, yargs.terminalWidth())).argv;

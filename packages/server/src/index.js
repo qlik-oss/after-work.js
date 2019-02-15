@@ -1,42 +1,22 @@
 const path = require('path');
-const Koa = require('koa');
-const serve = require('koa-static');
-const favicon = require('koa-favicon');
-const rewrite = require('koa-rewrite');
+const express = require('express');
+const favicon = require('serve-favicon');
 const transformFiles = require('@after-work.js/transform-middleware');
-const utils = require('@after-work.js/utils');
-const testExclude = require('test-exclude');
+const applyProxies = require('./proxies');
 
 module.exports = function createServer(options) {
-  const http = Object.assign({ port: 9000, root: ['./'], rewrite: {} }, options.http);
-  const instrument = Object.assign({ exclude: '**' }, options.instrument);
-  const transform = Object.assign({ exclude: '**' }, options.transform);
-  const babel = utils.coerceBabel({
-    enable: true,
-    babelPluginIstanbul: 'babel-plugin-istanbul',
-    ...options.babel,
-  });
-  const opts = {
-    ...options,
-    http: {
-      ...http,
-    },
-    instrument: {
-      testExclude: testExclude({ include: instrument.include, exclude: instrument.exclude }),
-      ...instrument,
-    },
-    transform: {
-      testExclude: testExclude({ include: transform.include, exclude: transform.exclude }),
-      ...transform,
-    },
-    babel: {
-      ...babel,
-    },
-  };
-  const app = new Koa();
+  const { middleware = () => {}, ...argv } = options;
+  const app = express();
   app.use(favicon(path.resolve(__dirname, '../aw.png')));
-  Object.keys(opts.http.rewrite).forEach(key => app.use(rewrite(key, opts.http.rewrite[key])));
-  app.use(transformFiles(opts));
-  app.use(...opts.http.root.map(root => serve(path.resolve(process.cwd(), root))));
-  return app.listen(opts.http.port);
+  app.use(transformFiles(argv));
+  app.use('/', express.static(process.cwd()));
+  const websocketProxies = applyProxies(app, options.proxy);
+  middleware(app, express);
+  const server = app.listen(argv.http.port, '0.0.0.0', (err) => {
+    if (err) {
+      throw err;
+    }
+  });
+  websocketProxies.forEach(wsProxy => server.on('upgrade', wsProxy.upgrade));
+  return server;
 };

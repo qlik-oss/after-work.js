@@ -1,24 +1,58 @@
+const {
+  packages,
+  DEFAULT_TEST_EXT_PATTERN,
+  DEFAULT_SRC_EXT_PATTERN,
+  DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
+  TEST_GLOB,
+  SRC_GLOB,
+  WATCH_GLOB,
+} = require('@after-work.js/utils');
+
 module.exports = {
+  presetEnv: {
+    description:
+      'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset',
+    default: true,
+    type: 'boolean',
+  },
+  require: {
+    description: 'Require path',
+    default: [],
+    type: 'array',
+  },
+  scope: {
+    description: 'Scope to package',
+    default: [],
+    choices: packages,
+    type: 'array',
+    alias: 's',
+  },
   config: {
     description: 'Path to config file',
     type: 'string',
     default: null,
     alias: 'c',
   },
-  glob: {
+  test: {
     description: 'Glob pattern',
-    default: ['test/**/*.spec.{js,ts}'],
+    default: TEST_GLOB,
     type: 'array',
+    alias: 'glob',
+  },
+  testExt: {
+    description: 'Test file extensions glob pattern',
+    default: DEFAULT_TEST_EXT_PATTERN,
+    type: 'string',
   },
   src: {
     description: 'Glob pattern for all source files',
-    default: ['src/**/*.{js,ts}'],
+    default: SRC_GLOB,
     type: 'array',
   },
-  require: {
-    description: 'Require path',
-    default: [],
-    type: 'array',
+  srcExt: {
+    description: 'Test file extensions glob pattern',
+    default: DEFAULT_SRC_EXT_PATTERN,
+    type: 'string',
   },
   watch: {
     description: 'Watch changes',
@@ -28,7 +62,7 @@ module.exports = {
   },
   watchGlob: {
     description: 'Watch glob',
-    default: ['src/**/*.{js,ts}', 'test/**/*.spec.{js,ts}'],
+    default: WATCH_GLOB,
     type: 'array',
     alias: 'wg',
   },
@@ -36,17 +70,6 @@ module.exports = {
     description: 'Generate coverage',
     default: false,
     type: 'boolean',
-  },
-  exit: {
-    description: 'Force its own process to exit once it was finished executing all tests',
-    default: false,
-    type: 'boolean',
-  },
-  updateSnapshot: {
-    description: 'Update snapshots',
-    default: false,
-    type: 'boolean',
-    alias: 'u',
   },
   hookRequire: {
     description: 'Hook require to be able to mock and transform files',
@@ -70,14 +93,35 @@ module.exports = {
   },
   'babel.options': {
     description: 'Babel options',
-    default: {
-    },
+    default: {},
     type: 'object',
   },
   'babel.typescript': {
     description: 'Path to typescript compiler module',
     default: 'typescript',
     type: 'string',
+  },
+  'filter.node.packages': {
+    description: 'Filter packages for Node runner',
+    default: ['**'],
+    type: 'array',
+  },
+  'filter.node.files': {
+    description: 'Filter files for Node runner',
+    default: ['**'],
+    type: 'array',
+  },
+  exit: {
+    description:
+      'Force its own process to exit once it was finished executing all tests',
+    default: false,
+    type: 'boolean',
+  },
+  updateSnapshot: {
+    description: 'Update snapshots',
+    default: false,
+    type: 'boolean',
+    alias: 'u',
   },
   mocks: {
     description: 'Automagically mock modules',
@@ -126,7 +170,7 @@ module.exports = {
   },
   'nyc.exclude': {
     description: 'Exclude glob',
-    default: ['**/coverage/**', '**/dist/**', '**/*.spec.{js,ts}'],
+    default: DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
     type: 'array',
   },
   'nyc.sourceMap': {
@@ -148,5 +192,16 @@ module.exports = {
     description: 'Directory to output coverage reports in',
     default: 'coverage',
     type: 'string',
+  },
+  interactive: {
+    description: 'Run in interactive mode',
+    default: false,
+    type: 'boolean',
+    alias: 'i',
+  },
+  warnings: {
+    description: 'Log mock warnings to stderr',
+    default: true,
+    type: 'boolean',
   },
 };

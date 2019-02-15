@@ -27,7 +27,11 @@ describe('Reporter Utils', () => {
     });
 
     it('should return a correct object', () => {
-      expect(utils.getRepoInfo()).to.deep.equal({ name: 'repo name', version: 'x.y.z', description: 'Descriptive text' });
+      expect(utils.getRepoInfo()).to.deep.equal({
+        name: 'repo name',
+        version: 'x.y.z',
+        description: 'Descriptive text',
+      });
     });
   });
 
@@ -59,7 +63,8 @@ describe('Reporter Utils', () => {
         diff: 'diff/variant.png',
         regression: 'regression/variant.png',
       },
-      stack: 'AssertionError: No baseline found! New baseline generated at ...)',
+      stack:
+        'AssertionError: No baseline found! New baseline generated at ...)',
     };
 
     it('should clean the error', () => {
@@ -70,11 +75,14 @@ describe('Reporter Utils', () => {
   describe('cleanTest', () => {
     const test = {
       title: 'should something',
-      fullTitle() { return 'Component: variant should match baseline'; },
+      fullTitle() {
+        return 'Component: variant should match baseline';
+      },
       fn: {
         toString() {},
       },
-      body: 'function () {return expect(browser.takeImageOf(settings)).to.eventually.matchImageOf(fixture);',
+      body:
+        'function () {return expect(browser.takeImageOf(settings)).to.eventually.matchImageOf(fixture);',
       async: 1,
       sync: false,
       timedOut: false,
@@ -95,7 +103,8 @@ describe('Reporter Utils', () => {
       passed: true,
       failed: false,
       pending: false,
-      code: '<span class="hljs-keyword">return</span> expect(browser.takeImageOf(settings)).to.eventually.matchImageOf(fixture);',
+      code:
+        '<span class="hljs-keyword">return</span> expect(browser.takeImageOf(settings)).to.eventually.matchImageOf(fixture);',
       timedOut: false,
       duration: 572,
       file: 'F:\\git\\after-workJS\\components.spec.js',
@@ -105,7 +114,11 @@ describe('Reporter Utils', () => {
     };
 
     beforeEach(() => {
-      sandbox.stub(test.fn, 'toString').returns('function () {return expect(browser.takeImageOf(settings)).to.eventually.matchImageOf(fixture);');
+      sandbox
+        .stub(test.fn, 'toString')
+        .returns(
+          'function () {return expect(browser.takeImageOf(settings)).to.eventually.matchImageOf(fixture);',
+        );
     });
 
     it('should clean the error', () => {
@@ -129,11 +142,15 @@ describe('Reporter Utils', () => {
     const result = 'component__variant_should_match_baseline-chrome-1970-12-24_08-00-00.png';
 
     beforeEach(() => {
-      sandbox.stub(utils, 'safeFileName').returns('component__variant_should_match_baseline');
+      sandbox
+        .stub(utils, 'safeFileName')
+        .returns('component__variant_should_match_baseline');
     });
 
     it('should return a safe screenshotname', () => {
-      expect(utils.screenshotName(title, browserName, startTime)).to.equal(result);
+      expect(utils.screenshotName(title, browserName, startTime)).to.equal(
+        result,
+      );
     });
   });
 
@@ -143,9 +160,9 @@ describe('Reporter Utils', () => {
 
     beforeEach(() => {
       global.browser = {
-        artifactsPath: 'foo',
         takeScreenshot() {},
         reporterInfo: {
+          artifactsPath: 'foo',
           browserName: 'browser',
           startTime: '2015-10-15_08-00-00',
         },
@@ -153,7 +170,9 @@ describe('Reporter Utils', () => {
       sandbox.stub(utils, 'screenshotName');
       sandbox.stub(path, 'resolve').returns('./foo/bar.png');
       sandbox.stub(mkdirp, 'sync');
-      sandbox.stub(global.browser, 'takeScreenshot').returns(Promise.resolve('base64'));
+      sandbox
+        .stub(global.browser, 'takeScreenshot')
+        .returns(Promise.resolve('base64'));
       writeFileSync = sandbox.stub(fs, 'writeFileSync');
     });
 
@@ -162,7 +181,11 @@ describe('Reporter Utils', () => {
     });
 
     it('should save screenshot to disk', () => utils.saveScreenshot(global.browser, title).then(() => {
-      expect(writeFileSync).to.have.been.calledWithExactly('./foo/bar.png', 'base64', { encoding: 'base64' });
+      expect(writeFileSync).to.have.been.calledWithExactly(
+        './foo/bar.png',
+        'base64',
+        { encoding: 'base64' },
+      );
     }));
   });
 });

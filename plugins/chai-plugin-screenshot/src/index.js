@@ -48,8 +48,7 @@ const plugin = {
           jimp.AUTO,
           (e, b) => (e ? reject(e) : resolve(b)),
         );
-        return new Promise(fn)
-          .then(buffer => jimp.read(buffer));
+        return new Promise(fn).then(buffer => jimp.read(buffer));
       }
     }
 
@@ -57,7 +56,9 @@ const plugin = {
       return jimp.read(input);
     }
 
-    return Promise.reject(new TypeError(`Unable to create image. Unsupported type '${type}'.`));
+    return Promise.reject(
+      new TypeError(`Unable to create image. Unsupported type '${type}'.`),
+    );
   },
   fileExists(filePath) {
     return new Promise((resolve) => {
@@ -80,7 +81,8 @@ const plugin = {
     const diff = jimp.diff(baselineImg, regressionImg);
     return Promise.resolve({
       diffImg: diff.image,
-      isEqual: distance <= Math.max(0.02, tolerance) && diff.percent <= tolerance,
+      isEqual:
+        distance <= Math.max(0.02, tolerance) && diff.percent <= tolerance,
       equality: `distance: ${distance}, percent: ${diff.percent}`,
     });
   },
@@ -90,20 +92,28 @@ const plugin = {
    * @param {number} t - Tolerance
    */
   matchImageOf(id, opts, t) {
-    const {
-      folder,
-      artifactsPath,
-      tolerance,
-    } = resolveArgs(opts, t);
+    const { folder, artifactsPath, tolerance } = resolveArgs(opts, t);
     const promise = this._obj.then ? this._obj : Promise.resolve(this._obj);
     return promise.then((meta) => {
       // TODO takeImageOf is an after-work specific context. Should do a more generic solution.
       const isTakeImageOf = typeof meta === 'object' && typeof meta.artifactsPath === 'string';
-      const imageName = isTakeImageOf ? `${id}-${meta.platform}-${meta.browserName}.png` : `${id}.png`;
+      const imageName = isTakeImageOf
+        ? `${id}-${meta.platform}-${meta.browserName}.png`
+        : `${id}.png`;
       const basePath = isTakeImageOf ? meta.artifactsPath : artifactsPath;
 
-      const baselinePath = path.resolve(basePath, 'baseline', folder, imageName);
-      const regressionPath = path.resolve(basePath, 'regression', folder, imageName);
+      const baselinePath = path.resolve(
+        basePath,
+        'baseline',
+        folder,
+        imageName,
+      );
+      const regressionPath = path.resolve(
+        basePath,
+        'regression',
+        folder,
+        imageName,
+      );
       const diffPath = path.resolve(basePath, 'diff', folder, imageName);
 
       const resolvedMeta = typeof meta === 'string' ? Buffer.from(meta, 'base64') : meta;
@@ -112,16 +122,17 @@ const plugin = {
         if (!exists) {
           mkdirp.sync(path.parse(baselinePath).dir);
 
-          return Promise.resolve(plugin.toImage(resolvedMeta))
-            .then(baselineImg => plugin.writeImage(baselineImg, baselinePath)
-              .then(() => {
-                const errStr = `No baseline found! New baseline generated at ${path.join(basePath, 'baseline', folder, imageName)}`;
-                this.assert(
-                  false,
-                  errStr,
-                  errStr,
-                );
-              }));
+          return Promise.resolve(plugin.toImage(resolvedMeta)).then(
+            baselineImg => plugin.writeImage(baselineImg, baselinePath).then(() => {
+              const errStr = `No baseline found! New baseline generated at ${path.join(
+                basePath,
+                'baseline',
+                folder,
+                imageName,
+              )}`;
+              this.assert(false, errStr, errStr);
+            }),
+          );
         }
 
         return Promise.all([
@@ -131,26 +142,32 @@ const plugin = {
           const baselineImg = images[0];
           const regressionImg = images[1];
 
-          return plugin.compare(baselineImg, regressionImg, tolerance).then((comparison) => {
-            if (comparison.isEqual) {
-              return comparison;
-            }
+          return plugin
+            .compare(baselineImg, regressionImg, tolerance)
+            .then((comparison) => {
+              if (comparison.isEqual) {
+                return comparison;
+              }
 
-            mkdirp.sync(path.parse(regressionPath).dir);
-            mkdirp.sync(path.parse(diffPath).dir);
+              mkdirp.sync(path.parse(regressionPath).dir);
+              mkdirp.sync(path.parse(diffPath).dir);
 
-            return Promise.all([
-              plugin.writeImage(regressionImg, regressionPath),
-              plugin.writeImage(comparison.diffImg, diffPath),
-            ]).then(() => {
-              this.assert(
-                comparison.isEqual === true,
-                `expected ${id} equality to be less than ${tolerance}, but was ${comparison.equality}`,
-                `expected ${id} equality to be greater than ${tolerance}, but was ${comparison.equality}`,
-              );
-              return comparison;
+              return Promise.all([
+                plugin.writeImage(regressionImg, regressionPath),
+                plugin.writeImage(comparison.diffImg, diffPath),
+              ]).then(() => {
+                this.assert(
+                  comparison.isEqual === true,
+                  `expected ${id} equality to be less than ${tolerance}, but was ${
+                    comparison.equality
+                  }`,
+                  `expected ${id} equality to be greater than ${tolerance}, but was ${
+                    comparison.equality
+                  }`,
+                );
+                return comparison;
+              });
             });
-          });
         });
       });
     });

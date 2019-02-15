@@ -11,13 +11,23 @@ Highlight.configure({
 });
 
 const utils = {
-  getRepoInfo() {
-    const packageJSON = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), { encoding: 'utf8' }));
+  getRepoInfo({ name, version, description } = {}) {
+    const packageJSON = JSON.parse(
+      fs.readFileSync(path.resolve(process.cwd(), 'package.json'), {
+        encoding: 'utf8',
+      }),
+    );
     const repoInfo = {};
 
-    repoInfo.name = packageJSON.name || 'No repository name found (please add to package.json)';
-    repoInfo.description = packageJSON.description || 'No repository description found (please add to package.json)';
-    repoInfo.version = packageJSON.version || 'No repository version found (please add to package.json)';
+    repoInfo.name = packageJSON.name
+      || name
+      || 'No repository name found (please add to package.json)';
+    repoInfo.description = packageJSON.description
+      || description
+      || 'No repository description found (please add to package.json)';
+    repoInfo.version = packageJSON.version
+      || version
+      || 'No repository version found (please add to package.json)';
 
     return repoInfo;
   },
@@ -78,8 +88,8 @@ const utils = {
       consoleEntries: test.consoleEntries || [],
     };
   },
-  createArtifactsFolder(browser) {
-    mkdirp.sync(path.resolve(browser.artifactsPath));
+  createArtifactsFolder(artifactsPath) {
+    mkdirp.sync(path.resolve(artifactsPath));
   },
   safeFileName(title) {
     return title.replace(/[^a-z0-9().]/gi, '_').toLowerCase();
@@ -89,9 +99,19 @@ const utils = {
     return util.format('%s-%s-%s.png', safeFileName, browserName, startTime);
   },
   saveScreenshot(browser, title) {
-    const screenshot = path.resolve(browser.artifactsPath, 'screenshots', this.screenshotName(title, browser.reporterInfo.browserName, browser.reporterInfo.startTime));
+    const screenshot = path.resolve(
+      browser.reporterInfo.artifactsPath,
+      'screenshots',
+      this.screenshotName(
+        title,
+        browser.reporterInfo.browserName,
+        browser.reporterInfo.startTime,
+      ),
+    );
 
-    mkdirp.sync(path.resolve(browser.artifactsPath, 'screenshots'));
+    mkdirp.sync(
+      path.resolve(browser.reporterInfo.artifactsPath, 'screenshots'),
+    );
 
     return browser.takeScreenshot().then((png) => {
       fs.writeFileSync(screenshot, png, { encoding: 'base64' });

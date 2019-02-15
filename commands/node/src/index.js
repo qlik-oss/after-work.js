@@ -1,114 +1,109 @@
 const EventEmitter = require('events');
-const readline = require('readline');
 const globby = require('globby');
-const Mocha = require('mocha');
-const chokidar = require('chokidar');
-const importCwd = require('import-cwd');
-const NYC = require('nyc');
 const fs = require('fs');
 const path = require('path');
+const Mocha = require('mocha');
+const NYC = require('nyc');
 const utils = require('@after-work.js/utils');
 const { deleteTransform } = require('@after-work.js/transform');
 const options = require('./options');
 
 class Runner extends EventEmitter {
-  constructor(argv, libs = {
-    Mocha,
-    NYC,
-    importCwd,
-    chokidar,
-  }) {
+  constructor(argv) {
     super();
     this.argv = argv;
     this.testFiles = [];
-    this.onlyTestFiles = [];
     this.srcFiles = [];
-    this.onlySrcFiles = [];
     this.mochaRunner = undefined;
     this.mocha = undefined;
     this.nyc = undefined;
     this.isWrapped = false;
     this.isRunning = false;
-    this.all = true;
-    this.libs = libs;
     this.debugging = false;
-    this.snapshotStates = new Map();
+    this.snapshotContexts = new Map();
+    this.warnings = [];
+    this.startCallbacks = [];
+    this.finishedCallbacks = [];
   }
 
-  log(mode, testFiles, srcFiles) {
-    if (this.debugging) {
-      return this;
-    }
-    console.log(mode);
-    console.log('  test');
-    testFiles.forEach((f) => {
-      console.log(`    \u001b[90m${f}\u001b[0m`);
-    });
-    console.log('  src');
-    srcFiles.forEach((f) => {
-      console.log(`    \u001b[90m${f}\u001b[0m`);
-    });
-    console.log('\nSave\u001b[90m a test file or source file to run only affected tests\u001b[0m');
-    console.log('\u001b[90mPress\u001b[0m a \u001b[90mto run all tests\u001b[0m');
-    return this;
-  }
-
-  logLine(msg) {
-    if (this.argv.outputReporterOnly) {
-      return;
-    }
-    utils.writeLine(msg);
-  }
-
-  logClearLine() {
-    if (this.argv.outputReporterOnly) {
-      return;
-    }
-    utils.clearLine();
+  logLine(prefix, msg) {
+    utils.writeLine(prefix, msg);
   }
 
   safeDeleteCache(f) {
     utils.safeDeleteCache(f);
+    deleteTransform(f);
   }
 
-  setOnlyFilesFromTestFile(testFile) {
-    const testName = path.basename(testFile).split('.').shift();
+  getMatchedSrcDependency(testFile) {
+    const testName = path
+      .basename(testFile)
+      .split('.')
+      .shift();
     this.safeDeleteCache(testFile);
     deleteTransform(testFile);
     const mod = utils.safeRequireCache(testFile);
-    const found = mod
-      .children
+    const found = mod.children
       .filter(m => this.srcFiles.indexOf(m.id) !== -1)
       .map(m => m.id);
     const use = utils.matchDependency(found, testName);
-    this.onlyTestFiles = [testFile];
-    this.onlySrcFiles = [...new Set([...use])];
+    return use;
   }
 
-  setOnlyFilesFromSrcFile(srcFile) {
-    const srcName = path.basename(srcFile).split('.').shift();
+  getMatchedTestDependency(srcFile) {
+    const srcName = path
+      .basename(srcFile)
+      .split('.')
+      .shift();
     const found = this.testFiles.filter((f) => {
       const mod = utils.safeRequireCache(f);
-      return mod
-        .children
-        .filter(m => m.id === srcFile).length !== 0;
+      return mod.children.filter(m => m.id === srcFile).length !== 0;
     });
     const use = utils.matchDependency(found, srcName);
-    this.onlyTestFiles = [...new Set([...use])];
-    this.onlySrcFiles = [srcFile];
+    return use;
+  }
+
+  getSrcFilesFromTestFiles(testFiles) {
+    return testFiles.reduce(
+      (acc, curr) => [...acc, ...this.getMatchedSrcDependency(curr)],
+      [],
+    );
+  }
+
+  getTestFilesFromSrcFiles(srcFiles) {
+    return srcFiles.reduce(
+      (acc, curr) => [...acc, ...this.getMatchedTestDependency(curr)],
+      [],
+    );
+  }
+
+  findFiles(glob) {
+    return utils.filter(
+      this.getFilter().files,
+      globby.sync(glob).map(f => path.resolve(f)),
+    );
+  }
+
+  getFilter() {
+    return this.argv.filter.node;
   }
 
   setTestFiles() {
-    this.testFiles = globby.sync(this.argv.glob).map(f => path.resolve(f));
+    this.testFiles = this.findFiles(this.argv.glob);
     if (!this.testFiles.length) {
-      console.log('No files found for:', this.argv.glob);
-      this.exit(1);
+      console.error('No files found for:', this.argv.glob);
+      if (!this.argv.interactive) {
+        this.exit(1);
+      }
     }
     return this;
   }
 
   setSrcFiles() {
-    this.srcFiles = globby.sync(this.argv.src).map(f => path.resolve(f));
+    this.srcFiles = utils.filter(
+      this.getFilter().files,
+      this.findFiles(this.argv.src),
+    );
     return this;
   }
 
@@ -116,7 +111,8 @@ class Runner extends EventEmitter {
     if (!this.argv.coverage) {
       this.register();
     }
-    this.argv.require.forEach(m => this.libs.importCwd(m));
+    const importCwd = require('import-cwd');
+    this.argv.require.forEach(m => importCwd(m));
     return this;
   }
 
@@ -126,68 +122,65 @@ class Runner extends EventEmitter {
   }
 
   onFinished(failures) {
-    this.isRunning = false;
-    this.emit('onFinished', failures);
-    process.on('exit', () => {
-      this.exit(failures);
-    });
-    if (this.argv.exit) {
-      this.exit();
+    if (!this.isRunning) {
+      return;
     }
-  }
-
-  onEnd() {
-    if (this.argv.coverage) {
+    this.finishedCallbacks.forEach(fn => fn());
+    this.isRunning = false;
+    if (failures === 0 && this.argv.coverage) {
       this.nyc.writeCoverageFile();
       this.nyc.report();
     }
+
+    if (this.argv.warnings && this.warnings.length) {
+      console.error('\u001b[33mwarnings:\u001b[0m');
+      this.warnings.forEach((w) => {
+        console.error('');
+        w();
+      });
+      console.error('');
+    }
+    this.snapshotContexts.forEach(({ currentTestName, snapshotState }) => {
+      const uncheckedCount = snapshotState.getUncheckedCount();
+      if (uncheckedCount) {
+        snapshotState.removeUncheckedKeys();
+      }
+      snapshotState.save();
+      if (uncheckedCount && !this.argv.updateSnapshot) {
+        console.error(
+          `\u001b[33mObsolete snapshot:\u001b[0m \u001b[31m${currentTestName}\u001b[0m \u001b[33m\n\u001b[90mat (${
+            snapshotState._snapshotPath
+          })\u001b[0m`,
+        );
+      }
+    });
     if (this.argv.watch) {
-      const mode = this.all ? 'All' : 'Only';
-      const testFiles = this.all ? [`${this.argv.glob}`] : this.onlyTestFiles;
-      const srcFiles = this.all ? [`${this.argv.src}`] : this.onlySrcFiles;
-      this.log(mode, testFiles, srcFiles);
+      this.emit('watchEnd');
+      return;
+    }
+    this.exit(failures);
+    if (this.argv.exit) {
+      process.exit();
     }
   }
 
   runTests() {
     this.isRunning = true;
+    this.warnings = [];
     this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
-    this.mochaRunner.once('start', () => this.logClearLine());
-    this.mochaRunner.once('end', () => this.onEnd());
-  }
-
-  setupKeyPress() {
-    if (!this.argv.watch) {
-      return this;
-    }
-    if (typeof process.stdin.setRawMode !== 'function') {
-      return this;
-    }
-    readline.emitKeypressEvents(process.stdin);
-    process.stdin.setRawMode(true);
-    process.stdin.setEncoding('utf8');
-    process.stdin.on('keypress', (str) => {
-      if (str === '\u0003') {
-        this.emit('forceExit');
-        process.exit(0);
-      }
-      if (this.isRunning) {
-        return;
-      }
-      switch (str) {
-        case 'a':
-          this.all = true;
-          this.setupAndRunTests(this.testFiles, this.srcFiles);
-          break;
-        default: break;
-      }
-    });
-    return this;
+    this.mochaRunner.once('start', () => utils.clearLine());
   }
 
   register() {
     if (this.argv.hookRequire) {
-      require('@after-work.js/register')(this.argv, this.srcFiles, this.testFiles);
+      require('@after-work.js/register')(
+        this.argv,
+        this.srcFiles,
+        this.testFiles,
+        fn => this.warnings.push(fn),
+        fn => this.startCallbacks.push(fn),
+        fn => this.finishedCallbacks.push(fn),
+      );
     }
   }
 
@@ -207,94 +200,46 @@ class Runner extends EventEmitter {
     });
     if (this.argv.coverage) {
       srcFiles.forEach((f) => {
-        if (!this.nyc.exclude.shouldInstrument(f)) {
+        if (!this.argv.shouldInstrument(f)) {
           return;
         }
-        this.logLine(`Loading ${f}`);
-        require(`${f}`);
+        this.logLine('Loading', f);
+        require(f);
       });
     }
     return this;
   }
 
   setupAndRunTests(testFiles, srcFiles) {
-    this.snapshotStates.clear();
+    this.snapshotContexts.clear();
     process.removeAllListeners();
     if (this.mochaRunner) {
       this.mochaRunner.removeAllListeners();
     }
-    this.mocha = new this.libs.Mocha(this.argv.mocha);
+    this.mocha = new Mocha(this.argv.mocha);
     this.mocha.suite.on('pre-require', (_, file) => {
-      this.logLine(`Loading ${file}`);
+      this.logLine('Loading', file);
     });
-    this.nyc = new this.libs.NYC(this.argv.nyc);
-    this.argv.instrument = {
-      testExclude: this.nyc.exclude,
-    };
+    this.nyc = new NYC(this.argv.nyc);
+    this.argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
     try {
-      this
-        .deleteCoverage()
+      this.deleteCoverage()
         .setup(testFiles, srcFiles)
         .runTests();
     } catch (err) {
       this.isRunning = false;
-      console.log(err);
+      console.error(err);
       if (this.argv.watch) {
+        this.emit('interactive');
         return;
       }
       this.exit(1);
     }
   }
 
-  onWatchAdd(f) {
-    const base = path.basename(f);
-    const parts = base.split('.');
-    if (parts.length > 1) {
-      this.testFiles.push(f);
-    } else {
-      this.srcFiles.push(f);
-    }
-  }
-
-  onWatchUnlink(f) {
-    const tIx = this.testFiles.indexOf(f);
-    const sIx = this.srcFiles.indexOf(f);
-    if (tIx !== -1) {
-      this.testFiles.splice(tIx, 1);
-    }
-    if (sIx !== -1) {
-      this.srcFiles.splice(sIx, 1);
-    }
-    this.safeDeleteCache(f);
-    deleteTransform(f);
-  }
-
-  onWatch(f) {
-    if (this.isRunning) {
-      return;
-    }
-    const isTestFile = this.testFiles.indexOf(f) !== -1;
-    const isSrcFile = this.srcFiles.indexOf(f) !== -1;
-    this.all = false;
-    if (isTestFile) {
-      this.setOnlyFilesFromTestFile(f);
-    } else if (isSrcFile) {
-      this.setOnlyFilesFromSrcFile(f);
-    } else {
-      this.onlySrcFiles = this.srcFiles;
-      this.onlyTestFiles = this.testFiles;
-    }
-    this.setupAndRunTests(this.onlyTestFiles, this.onlySrcFiles);
-  }
-
   run() {
+    this.startCallbacks.forEach(fn => fn());
     this.setupAndRunTests(this.testFiles, this.srcFiles);
-    if (this.argv.watch) {
-      this.libs.chokidar.watch(this.argv.watchGlob, { ignoreInitial: true })
-        .on('change', f => this.onWatch(path.resolve(f)))
-        .on('add', f => this.onWatchAdd(path.resolve(f)))
-        .on('unlink', f => this.onWatchUnlink(path.resolve(f)));
-    }
   }
 
   autoDetectDebug() {
@@ -308,7 +253,7 @@ class Runner extends EventEmitter {
   }
 
   exit(code) {
-    process.exit(code);
+    process.exitCode = code;
   }
 }
 
@@ -338,27 +283,35 @@ const node = {
     return yargs
       .options(options)
       .config('config', configure)
-      .coerce('babel', utils.coerceBabel)
-      .coerce('nyc', (opt) => {
-        if (opt.babel) {
-          opt.sourceMap = false;
-          opt.instrumenter = './lib/instrumenters/noop';
-        }
-        return opt;
-      });
+      .coerce('babel', utils.coerceBabel);
   },
   handler(argv) {
     const runner = new node.Runner(argv);
+    argv.__isNodeRunner = true;
     if (argv.presetEnv) {
-      require(argv.presetEnv)(runner);
+      require('@after-work.js/preset-plugin')(runner);
+    }
+    let skipInitialInteractive = false;
+    if (argv.watch && !argv.interactive) {
+      skipInitialInteractive = true;
+      argv.interactive = true;
+    }
+    if (argv.interactive) {
+      require('@after-work.js/interactive-plugin')(runner);
+    }
+    if (argv.watch) {
+      require('@after-work.js/watch-plugin')(runner);
     }
     runner
       .autoDetectDebug()
-      .setupKeyPress()
       .setTestFiles()
       .setSrcFiles()
-      .require()
-      .run();
+      .require();
+    if (!skipInitialInteractive && argv.interactive) {
+      runner.emit('interactive');
+      return runner;
+    }
+    runner.run();
     return runner;
   },
 };

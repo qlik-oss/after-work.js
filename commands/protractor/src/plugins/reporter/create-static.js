@@ -3,9 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 
-let template = fs.readFileSync(path.resolve(__dirname, 'templates/main.handlebars'), {
-  encoding: 'utf8',
-});
+let template = fs.readFileSync(
+  path.resolve(__dirname, 'templates/main.handlebars'),
+  {
+    encoding: 'utf8',
+  },
+);
 template = Handlebars.compile(template);
 
 function getDurationObj(durationInMilliseconds) {
@@ -19,9 +22,9 @@ function getDurationObj(durationInMilliseconds) {
   };
 }
 
-Handlebars.registerHelper('addLocalCSS', cssPath => (fs.readFileSync(path.resolve(__dirname, cssPath), {
+Handlebars.registerHelper('addLocalCSS', cssPath => fs.readFileSync(path.resolve(__dirname, cssPath), {
   encoding: 'utf8',
-})));
+}));
 
 Handlebars.registerHelper('formatSummaryDuration', (context) => {
   const dur = getDurationObj(context);
@@ -32,9 +35,9 @@ Handlebars.registerHelper('formatSummaryDuration', (context) => {
       }
       return `${dur.sec}.${dur.ms}`;
     }
-    return `${dur.min}:${dur.sec < 10 ? (`0${dur.sec}`) : dur.sec}`;
+    return `${dur.min}:${dur.sec < 10 ? `0${dur.sec}` : dur.sec}`;
   }
-  return `${dur.hrs}:${dur.min < 10 ? (`0${dur.min}`) : dur.min}`;
+  return `${dur.hrs}:${dur.min < 10 ? `0${dur.min}` : dur.min}`;
 });
 
 Handlebars.registerHelper('getSummaryDurationUnits', (context) => {
@@ -60,24 +63,23 @@ Handlebars.registerHelper('formatDuration', (context) => {
       }
       return `${dur.sec}.${dur.ms} s`;
     }
-    return `${dur.min}:${dur.sec < 10 ? (`0${dur.sec}`) : dur.sec}.${dur.ms} m`;
+    return `${dur.min}:${dur.sec < 10 ? `0${dur.sec}` : dur.sec}.${dur.ms} m`;
   }
-  return `${dur.hrs}:${dur.min < 10 ? (`0${dur.min}`) : dur.min}:${dur.sec < 10 ? (`0${dur.sec}`) : dur.sec}.${dur.ms} h`;
+  return `${dur.hrs}:${dur.min < 10 ? `0${dur.min}` : dur.min}:${
+    dur.sec < 10 ? `0${dur.sec}` : dur.sec
+  }.${dur.ms} h`;
 });
 
 Handlebars.registerHelper('dateFormat', (context, format) => moment(context).format(format));
 
 const report = {
   generate(jsonFileName) {
-    return new Promise((resolve) => {
-      const data = JSON.parse(fs.readFileSync(jsonFileName), {
-        encoding: 'utf8',
-      });
-      const filename = jsonFileName.replace('.json', '.html');
-      const html = template(data);
-      fs.writeFileSync(path.resolve(__dirname, filename), html);
-      resolve();
+    const data = JSON.parse(fs.readFileSync(jsonFileName), {
+      encoding: 'utf8',
     });
+    const filename = jsonFileName.replace('.json', '.html');
+    const html = template(data);
+    fs.writeFileSync(path.resolve(__dirname, filename), html);
   },
 };
 

@@ -1,0 +1,33 @@
+{
+  "name": "@after-work.js/interactive-plugin",
+  "version": "5.1.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Interactive plugin",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme",
+  "dependencies": {
+    "@after-work.js/utils": "5.1.1",
+    "globby": "9.0.0",
+    "inquirer": "6.2.0",
+    "inquirer-checkbox-plus-prompt": "1.0.1",
+    "import-cwd": "2.1.0",
+    "fuzzy": "0.1.3"
+  },
+  "files": [
+    "/src"
+  ]
+}
