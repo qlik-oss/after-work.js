@@ -13,7 +13,7 @@ describe('FancyButton', () => {
     );
     const [{ default: FancyDiv }] = aw.mock(
       [
-        ['**/react/src/button.jsx', '() => (<div>ggggg</div>)'],
+        ['**/react/src/button.jsx', () => () => <div>ggggg</div>],
         ['**/muppet', () => {}],
       ],
       ['../src/fancy-button'],
