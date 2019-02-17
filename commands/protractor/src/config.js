@@ -55,17 +55,12 @@ const setReporterInfo = async (browser) => {
       .replace(/\..+/, ''),
   };
   browser.reporterInfo.artifactsPath = currentConfig.artifactsPath;
-  browser.reporterInfo.browserName = currentConfig.capabilities.browserName.replace(
-    / /g,
-    '-',
-  );
+  const browserName = currentConfig.capabilities.browserName.replace(/ /g, '-');
+  browser.reporterInfo.browserName = browserName;
   const cap = await browser.getCapabilities();
   browser.reporterInfo.browserVersion = cap.get('version');
-  browser.reporterInfo.platform = cap
-    .get('platform')
-    .replace(/ /g, '-')
-    .toLowerCase();
-
+  const platform = browserName === 'internet-explorer' ? 'WINDOwS' : cap.get('platform');
+  browser.reporterInfo.platform = platform.replace(/ /g, '-').toLowerCase();
   browser.reporterInfo.reportName = `${
     browser.reporterInfo.browserName
   }-report-${browser.reporterInfo.startTime}_${Math.floor(
@@ -404,10 +399,9 @@ if (argv.seleniumServerJar) {
 }
 
 if (argv.glob.length) {
-  const specs = utils.filter(
-    argv.filter.protractor.files,
-    globby.sync(argv.glob),
-  ).map(p => path.resolve(p));
+  const specs = utils
+    .filter(argv.filter.protractor.files, globby.sync(argv.glob))
+    .map(p => path.resolve(p));
   argv.specs = specs;
 }
 
