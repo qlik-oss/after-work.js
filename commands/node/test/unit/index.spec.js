@@ -219,15 +219,16 @@ describe('Node command', () => {
       });
     });
 
-    // it('should build', () => {
-    //   const options = sandbox.stub().returnsThis();
-    //   const config = sandbox.stub().returnsThis();
-    //   const coerce = sandbox.stub().returnsThis();
-    //   const yargs = { options, config, coerce };
-    //   builder(yargs);
-    //   expect(options).to.have.been.calledWithExactly(cmdOpts);
-    //   expect(config).to.have.been.calledWithExactly('config', configure);
-    // });
+    it('should build', () => {
+      const options = sandbox.stub().returnsThis();
+      const config = sandbox.stub().returnsThis();
+      const coerce = sandbox.stub().returnsThis();
+      const middleware = sandbox.stub().returnsThis();
+      const yargs = { options, config, coerce, middleware };
+      builder(yargs);
+      expect(options).to.have.been.calledWithExactly(cmdOpts);
+      expect(config).to.have.been.calledWithExactly('config', configure);
+    });
 
     it.skip('should call the runner functions', () => {
       const origRunner = cmd.Runner;
