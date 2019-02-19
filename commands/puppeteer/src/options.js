@@ -1,6 +1,7 @@
 const {
   packages,
   DEFAULT_TEST_EXT_PATTERN,
+  DEFAULT_SRC_EXT_PATTERN,
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
@@ -37,7 +38,7 @@ module.exports = {
     type: 'array',
     alias: 'glob',
   },
-  ext: {
+  testExt: {
     description: 'Test file extensions glob pattern',
     default: DEFAULT_TEST_EXT_PATTERN,
     type: 'string',

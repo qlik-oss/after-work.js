@@ -19,13 +19,15 @@ let removeCompileHook = () => {};
 let removeLoadHook = () => {};
 
 function compileHook(argv, code, filename, virtualMock = false) {
-  if (!argv.babel.enable) {
-    return code;
-  }
   const matchedMocks = new Set(aw.usedMocks.values());
   if (matchedMocks.has(filename)) {
     virtualMock = true;
   }
+
+  if (!argv.babel.enable) {
+    return code;
+  }
+
   const sourceRoot = path.dirname(filename);
   const { babel, options } = argv.babel;
   const opts = new babel.OptionManager().init({
@@ -81,7 +83,6 @@ function hookedLoader(options, request, parent, isMain) {
   } catch (err) {
     filename = request;
   }
-
   // 1. Explicit mocks in modules e.g aw.mock(...)
   // 2. Global config mocks from aw.config.js
   for (const [key, [value, injectReact = false]] of aw.mocks) {

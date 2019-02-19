@@ -18,7 +18,7 @@ function getBabelOpts(filename, argv) {
     babelPluginIstanbul,
   } = argv.babel;
   const virtualMock = !!argv.virtualMock;
-  const addCoverage = virtualMock === false && isTestFile(filename) === false;
+  const addCoverage = virtualMock === false && isTestFile(filename, argv) === false;
   const usePlugins = addCoverage
     ? [...plugins, [babelPluginIstanbul, argv.nyc]]
     : plugins;
