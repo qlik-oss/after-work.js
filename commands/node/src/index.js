@@ -89,7 +89,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = this.findFiles(this.argv.glob);
+    this.testFiles = this.findFiles(this.argv.glob).filter(f => utils.isTestFile(f, this.argv));
     if (!this.testFiles.length) {
       console.error('No files found for:', this.argv.glob);
       if (!this.argv.interactive) {
@@ -100,10 +100,7 @@ class Runner extends EventEmitter {
   }
 
   setSrcFiles() {
-    this.srcFiles = utils.filter(
-      this.getFilter().files,
-      this.findFiles(this.argv.src),
-    );
+    this.srcFiles = this.findFiles(this.argv.src).filter(f => utils.isSrcFile(f, this.argv));
     return this;
   }
 
@@ -283,7 +280,12 @@ const node = {
     return yargs
       .options(options)
       .config('config', configure)
-      .coerce('babel', utils.coerceBabel);
+      .coerce('babel', utils.coerceBabel)
+      .middleware((mwargv) => {
+        if (!mwargv.babel.enable && mwargv.coverage) {
+          mwargv.nyc.hookRequire = true; // Enable nyc instrumenting on the fly
+        }
+      });
   },
   handler(argv) {
     const runner = new node.Runner(argv);

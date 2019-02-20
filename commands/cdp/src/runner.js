@@ -257,7 +257,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = this.findFiles(this.argv.glob);
+    this.testFiles = this.findFiles(this.argv.glob).filter(f => utils.isTestFile(f, this.argv));
     if (!this.testFiles.length) {
       this.log(
         `No files found for glob: ${this.argv.glob} with filter: ${

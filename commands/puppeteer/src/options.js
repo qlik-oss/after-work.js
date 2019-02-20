@@ -37,7 +37,7 @@ module.exports = {
     type: 'array',
     alias: 'glob',
   },
-  ext: {
+  testExt: {
     description: 'Test file extensions glob pattern',
     default: DEFAULT_TEST_EXT_PATTERN,
     type: 'string',

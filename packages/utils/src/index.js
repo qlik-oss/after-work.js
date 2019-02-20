@@ -153,12 +153,13 @@ const utils = {
       }
       opt.babel = core;
     }
-    if (typeof opt.babelPluginIstanbul === 'string') {
-      opt.babelPluginIstanbul = utils.safeGetModule(
-        opt.babelPluginIstanbul,
-      ).default;
+    if (opt.enable && typeof opt.babelPluginIstanbul === 'string') {
+      const babelPluginIstanbul = utils.safeGetModule(opt.babelPluginIstanbul);
+      opt.babelPluginIstanbul = babelPluginIstanbul
+        ? babelPluginIstanbul.default
+        : null;
     }
-    if (typeof opt.typescript === 'string') {
+    if (opt.enable && typeof opt.typescript === 'string') {
       opt.typescript = utils.safeGetModule(opt.typescript);
     }
     return opt;
@@ -259,8 +260,17 @@ const utils = {
     const base = path.basename(filePath);
     return minimatch(base, extPattern);
   },
-  isTestFile(filePath) {
-    return utils.isMatchingExtPattern(filePath, DEFAULT_TEST_EXT_PATTERN);
+  isTestFile(filePath, { testExt = DEFAULT_TEST_EXT_PATTERN }) {
+    return utils.isMatchingExtPattern(filePath, testExt);
+  },
+  isSrcFile(
+    filePath,
+    { testExt = DEFAULT_TEST_EXT_PATTERN, srcExt = DEFAULT_SRC_EXT_PATTERN },
+  ) {
+    return (
+      !utils.isTestFile(filePath, testExt)
+      && utils.isMatchingExtPattern(filePath, srcExt)
+    );
   },
 };
 
