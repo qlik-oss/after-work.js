@@ -1,7 +1,9 @@
 /* global page */
 describe('Puppeteer', () => {
   it('should say hello world', async () => {
-    await page.goto('http://localhost/examples/puppeteer/test//hello.fix.html');
+    await page.goto(
+      'http://localhost:9677/examples/puppeteer/test//hello.fix.html',
+    );
     const container = await page.$('#container');
     const txt = await (await container.getProperty('textContent')).jsonValue();
     expect(txt).to.equal('hello world');
@@ -9,7 +11,7 @@ describe('Puppeteer', () => {
   it('should be able to intercept', async () => {
     await page.setRequestInterception(true);
     page.on('request', (interceptedRequest) => {
-      if (/localhost\/my\/fancy\/api/.test(interceptedRequest.url())) {
+      if (/localhost:9677\/my\/fancy\/api/.test(interceptedRequest.url())) {
         interceptedRequest.respond({
           status: 200,
           contentType: 'text/plain',
@@ -19,7 +21,9 @@ describe('Puppeteer', () => {
       }
       interceptedRequest.continue();
     });
-    await page.goto('http://localhost/examples/puppeteer/test//hello.fix.html');
+    await page.goto(
+      'http://localhost:9677/examples/puppeteer/test//hello.fix.html',
+    );
     await page.click('#container');
     const container = await page.$('#container');
     const txt = await (await container.getProperty('textContent')).jsonValue();

@@ -16,7 +16,7 @@
     <script>
       window.getData = () => {
         const container = document.querySelector("#container");
-        fetch("http://localhost/my/fancy/api")
+        fetch("http://localhost:9677/my/fancy/api")
           .then(response => {
             response.text().then(txt => (container.innerHTML = txt));
           })
