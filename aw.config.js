@@ -2,7 +2,7 @@ const cmd = process.argv.slice(2).shift();
 
 module.exports = {
   coverage: true,
-  url: 'http://localhost:9676/examples/index.html',
+  url: 'http://localhost/examples/index.html',
   mocks: [
     ['**/*.{scss,less,css,html}'],
     ['./foobar-virtual.html', '"<div>hello world</div>"'],
@@ -62,4 +62,7 @@ module.exports = {
   'filter.puppeteer.files': ['**/examples/puppeteer/**'],
   'filter.protractor.files': ['**/examples/protractor/**'],
   artifactsPath: 'test/__artifacts__',
+  http: {
+    port: 80,
+  },
 };
