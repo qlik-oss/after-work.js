@@ -21,7 +21,7 @@
             response.text().then(txt => (container.innerHTML = txt));
           })
           .catch(err => {
-            document.querySelector("#container").innerHTML = err.toString();
+            container.innerHTML = err.toString();
           });
       };
     </script>
