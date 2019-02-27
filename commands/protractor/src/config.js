@@ -1,5 +1,5 @@
 /* global browser */
-const yargs = require('yargs');
+const yargs = require('yargs/yargs');
 const extend = require('extend');
 const path = require('path');
 const fs = require('fs');
@@ -359,7 +359,7 @@ const baseConfig = {
   ],
 };
 
-const { argv } = yargs
+const { argv } = yargs(process.argv.slice(2))
   .options(options)
   .config('config', (configPath) => {
     let foundConfig = {};
