@@ -25,7 +25,7 @@
     "import-cwd": "2.1.0",
     "nyc": "13.3.0",
     "test-exclude": "5.1.0",
-    "yargs": "12.0.5"
+    "yargs": "13.2.1"
   },
   "files": [
     "/src"
