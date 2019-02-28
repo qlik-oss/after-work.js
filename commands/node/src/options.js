@@ -140,7 +140,7 @@ module.exports = {
   },
   'mocha.timeout': {
     description: 'Timeout',
-    default: undefined,
+    default: 2000,
     type: 'number',
   },
   'nyc.hookRequire': {

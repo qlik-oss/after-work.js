@@ -44,7 +44,7 @@ Options:
   --mocha.bail                   Bail on fail?                                                 [boolean] [default: true]
   --mocha.ui                     Test interface                                                [string] [default: "bdd"]
   --mocha.timeout                Timeout                                                        [number] [default: 2000]
-  --mocha.useColors              Use colors                                                    [boolean] [default: true]
+  --mocha.color                  Use colors                                                    [boolean] [default: true]
   --mocha.reporter               Reporter                                                      [string] [default: "min"]
   --client.port                  Chrome port                                                    [number] [default: 9222]
   --chrome.launch                Launch Chrome?                                                [boolean] [default: true]

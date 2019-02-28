@@ -243,7 +243,7 @@ class Runner extends EventEmitter {
     const exv = process.execArgv.join();
     const debug = exv.includes('inspect') || exv.includes('debug');
     if (debug) {
-      this.argv.mocha.enableTimeouts = false;
+      this.argv.mocha.timeout = false;
       this.debugging = true;
     }
     return this;
