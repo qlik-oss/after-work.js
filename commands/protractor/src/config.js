@@ -343,7 +343,7 @@ const baseConfig = {
   mochaOpts: {
     ui: 'bdd',
     reporter: uiReport,
-    enableTimeouts: false,
+    timeout: false,
     reporterOptions: {
       html: true,
     },

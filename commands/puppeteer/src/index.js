@@ -39,7 +39,7 @@ class PuppetRunner extends Runner {
       this.server = createServer(this.argv);
     }
     if (this.argv.chrome.slowMo && this.argv.chrome.slowMo > 0) {
-      this.argv.mocha.enableTimeouts = false;
+      this.argv.mocha.timeout = false;
     }
 
     if (this.argv.launch) {

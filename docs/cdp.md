@@ -201,7 +201,7 @@ Check Mochas [**list**](https://mochajs.org/#reporters) for valid options.
 
 ---
 
-### --mocha.useColors
+### --mocha.color
 
  | Description           | Type    | Default |
  | --------------------- | ------- | ------- |
@@ -291,8 +291,8 @@ Check Mochas [**list**](https://mochajs.org/#reporters) for valid options.
 
 ### --nyc.reportDir
 
- | Description                              | Type   | Default   |
- | ---------------------------------------- | ------ | --------- |
+ | Description                              | Type   | Default    |
+ | ---------------------------------------- | ------ | ---------- |
  | Directory to output coverage reports in. | string | 'coverage' |
 
 ---

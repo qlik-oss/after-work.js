@@ -176,7 +176,7 @@ module.exports = {
     default: 2000,
     type: 'number',
   },
-  'mocha.useColors': {
+  'mocha.color': {
     description: 'Use colors in output',
     default: true,
     type: 'boolean',
