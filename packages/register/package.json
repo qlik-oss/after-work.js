@@ -25,9 +25,9 @@
     "find-cache-dir": "2.0.0",
     "import-cwd": "2.1.0",
     "minimatch": "3.0.4",
-    "pirates": "4.0.0",
+    "pirates": "4.0.1",
     "require-from-string": "2.0.2",
-    "source-map-support": "0.5.9"
+    "source-map-support": "0.5.10"
   },
   "files": [
     "/src"

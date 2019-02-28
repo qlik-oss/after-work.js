@@ -26,11 +26,11 @@
     "@after-work.js/register": "5.1.1",
     "@after-work.js/transform": "5.1.1",
     "@after-work.js/utils": "5.1.1",
-    "chokidar": "2.0.4",
+    "chokidar": "2.1.2",
     "globby": "9.0.0",
     "import-cwd": "2.1.0",
     "mocha": "5.2.0",
-    "nyc": "13.1.0"
+    "nyc": "13.3.0"
   },
   "files": [
     "/src"

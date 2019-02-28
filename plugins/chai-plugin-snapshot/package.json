@@ -22,7 +22,7 @@
   "dependencies": {
     "@after-work.js/transform": "5.1.1",
     "@after-work.js/utils": "5.1.1",
-    "jest-snapshot": "24.0.0"
+    "jest-snapshot": "24.1.0"
   },
   "files": [
     "/src"
