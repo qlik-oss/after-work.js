@@ -9,4 +9,5 @@ coverage/
 .chrome-profile
 .DS_Store
 lerna-debug.log
-__artifacts__
+test/__artifacts__/*
+!test/__artifacts__/baseline/
