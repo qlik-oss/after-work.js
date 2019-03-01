@@ -49,7 +49,11 @@ const utils = {
   errorJSON(err) {
     const res = {};
     Object.getOwnPropertyNames(err).forEach((key) => {
-      res[key] = err[key];
+      const val = err[key];
+      if (key === 'actual' && val.img) {
+        delete val.img;
+      }
+      res[key] = val;
     }, err);
 
     if (res && res.stack) {

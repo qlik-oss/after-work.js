@@ -44,10 +44,7 @@ const plugin = {
 
       if (input.getBuffer || (input.img && input.img.getBuffer)) {
         // Input is a Jimp object where instanceof doesn't validate to true
-        const fn = (resolve, reject) => (input.img ? input.img : input).getBuffer(
-          jimp.AUTO,
-          (e, b) => (e ? reject(e) : resolve(b)),
-        );
+        const fn = (resolve, reject) => (input.img ? input.img : input).getBuffer(jimp.AUTO, (e, b) => (e ? reject(e) : resolve(b)));
         return new Promise(fn).then(buffer => jimp.read(buffer));
       }
     }
@@ -102,41 +99,41 @@ const plugin = {
         : `${id}.png`;
       const basePath = isTakeImageOf ? meta.artifactsPath : artifactsPath;
 
-      const baselinePath = path.resolve(
-        basePath,
-        'baseline',
-        folder,
-        imageName,
-      );
-      const regressionPath = path.resolve(
+      const baseline = path.resolve(basePath, 'baseline', folder, imageName);
+      const regression = path.resolve(
         basePath,
         'regression',
         folder,
         imageName,
       );
-      const diffPath = path.resolve(basePath, 'diff', folder, imageName);
-
+      const diff = path.resolve(basePath, 'diff', folder, imageName);
+      const expected = JSON.stringify({
+        baseline,
+        diff,
+        regression,
+      });
+      const actual = {};
       const resolvedMeta = typeof meta === 'string' ? Buffer.from(meta, 'base64') : meta;
 
-      return plugin.fileExists(baselinePath).then((exists) => {
+      return plugin.fileExists(baseline).then((exists) => {
         if (!exists) {
-          mkdirp.sync(path.parse(baselinePath).dir);
+          mkdirp.sync(path.parse(baseline).dir);
 
           return Promise.resolve(plugin.toImage(resolvedMeta)).then(
-            baselineImg => plugin.writeImage(baselineImg, baselinePath).then(() => {
+            baselineImg => plugin.writeImage(baselineImg, baseline).then(() => {
               const errStr = `No baseline found! New baseline generated at ${path.join(
                 basePath,
                 'baseline',
                 folder,
                 imageName,
               )}`;
-              this.assert(false, errStr, errStr);
+              this.assert(false, errStr, errStr, expected, actual);
             }),
           );
         }
 
         return Promise.all([
-          plugin.toImage(baselinePath),
+          plugin.toImage(baseline),
           plugin.toImage(resolvedMeta),
         ]).then((images) => {
           const baselineImg = images[0];
@@ -149,12 +146,12 @@ const plugin = {
                 return comparison;
               }
 
-              mkdirp.sync(path.parse(regressionPath).dir);
-              mkdirp.sync(path.parse(diffPath).dir);
+              mkdirp.sync(path.parse(regression).dir);
+              mkdirp.sync(path.parse(diff).dir);
 
               return Promise.all([
-                plugin.writeImage(regressionImg, regressionPath),
-                plugin.writeImage(comparison.diffImg, diffPath),
+                plugin.writeImage(regressionImg, regression),
+                plugin.writeImage(comparison.diffImg, diff),
               ]).then(() => {
                 this.assert(
                   comparison.isEqual === true,
@@ -164,6 +161,8 @@ const plugin = {
                   `expected ${id} equality to be greater than ${tolerance}, but was ${
                     comparison.equality
                   }`,
+                  expected,
+                  actual,
                 );
                 return comparison;
               });
