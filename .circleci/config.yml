@@ -65,13 +65,10 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run:
-          name: Install nvm
+          name: Install node
           command: |
             export NVM_DIR="/opt/circleci/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-      - run:
-          name: Install node
-          command: |
             nvm install 8
             npm i yarn
             npx yarn
