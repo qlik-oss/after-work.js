@@ -22,6 +22,11 @@ jobs:
   build:
     docker:
       - image: circleci/node:10.9.0-browsers
+      - image: nginx:alpine
+        name: web-server
+        command: docker cp test/rendering/rendering.fix.html web-server/usr/share/nginx/html
+      - image: selenium/standalone-chrome:3.11.0
+        name: selenium
 
     working_directory: ~/after-work.js
 
@@ -58,13 +63,13 @@ jobs:
           name: Protractor multi browser
           command: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
 
-      - run:
-          name: Puppeteer
-          command: yarn test:puppeteer
-
       # - run:
-      #     name: Protractor rendering
-      #     command: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
+      #     name: Puppeteer
+      #     command: yarn test:puppeteer
+
+      - run:
+          name: Protractor rendering
+          command: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
 
       - save_cache: *save_yarn_cache
       - store_artifacts:
