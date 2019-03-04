@@ -27,7 +27,7 @@
     "@after-work.js/transform": "5.1.1",
     "@after-work.js/utils": "5.1.1",
     "chokidar": "2.1.2",
-    "globby": "9.0.0",
+    "globby": "9.1.0",
     "import-cwd": "2.1.0",
     "mocha": "6.0.2",
     "nyc": "13.3.0"
