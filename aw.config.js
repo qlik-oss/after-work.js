@@ -65,4 +65,5 @@ module.exports = {
   http: {
     port: 9677,
   },
+  specs: ['./examples/protractor/test/hello.spec.js'],
 };
