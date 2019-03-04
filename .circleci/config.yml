@@ -57,6 +57,7 @@ jobs:
       - run: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
       - store_artifacts:
           path: 'test/__artifacts__'
+
   test-protractor-rendering:
     working_directory: ~/after-work.js
     machine: true
@@ -64,10 +65,10 @@ jobs:
       - checkout
       - restore_cache: *restore_yarn_cache
       - run:
-        name: Install nvm
-        command: |
-          export NVM_DIR="/opt/circleci/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          name: Install nvm
+          command: |
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
       - run:
           name: Install node
           command: |
