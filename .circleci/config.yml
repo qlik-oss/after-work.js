@@ -72,7 +72,7 @@ jobs:
             nvm install 8
             npm i yarn
             npx yarn
-      - run: docker-compose -f examples/protractor/docker-compose.rendering.yml -p rendering up
+      - run: docker-compose -f examples/protractor/docker-compose.rendering.yml -p rendering up -d
       - run: npx aw protractor -c examples/protractor/aw.config.rendering.js
 
   test-puppeteer:
