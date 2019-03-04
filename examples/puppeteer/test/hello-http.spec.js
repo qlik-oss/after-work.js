@@ -2,13 +2,13 @@
 describe('Puppeteer', () => {
   it('should say hello world', async () => {
     await page.goto(
-      'http://localhost:9677/examples/puppeteer/test//hello.fix.html',
+      'http://localhost:9677/examples/puppeteer/test/hello.fix.html',
     );
     const container = await page.$('#container');
     const txt = await (await container.getProperty('textContent')).jsonValue();
     expect(txt).to.equal('hello world');
   });
-  it('should be able to intercept', async () => {
+  it.only('should be able to intercept', async () => {
     await page.setRequestInterception(true);
     page.on('request', (interceptedRequest) => {
       if (/localhost:9677\/my\/fancy\/api/.test(interceptedRequest.url())) {
@@ -22,7 +22,7 @@ describe('Puppeteer', () => {
       interceptedRequest.continue();
     });
     await page.goto(
-      'http://localhost:9677/examples/puppeteer/test//hello.fix.html',
+      'http://localhost:9677/examples/puppeteer/test/hello.fix.html',
     );
     await page.click('#container');
     const container = await page.$('#container');

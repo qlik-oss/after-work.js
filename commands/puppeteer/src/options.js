@@ -169,7 +169,7 @@ module.exports = {
   },
   'nyc.exclude': {
     description: 'Exclude glob',
-    default: ['**/coverage/**', '**/dist/**', '**/*.spec.{js,ts}'],
+    default: ['**'],
     type: 'array',
   },
   'nyc.sourceMap': {

@@ -18,7 +18,7 @@ aliases:
 jobs:
   build:
     docker:
-      - image: circleci/node:10.9.0-browsers
+      - image: circleci/node:10-stretch-browsers
       - image: selenium/standalone-chrome
 
     working_directory: ~/after-work.js
