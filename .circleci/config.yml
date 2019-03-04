@@ -19,7 +19,7 @@ aliases:
     at: ~/after-work.js
 
 jobs:
-  all:
+  build:
     docker:
       - image: circleci/node:10.9.0-browsers
 
