@@ -12,9 +12,6 @@ aliases:
     paths:
       - ~/.cache/yarn
     key: yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-  - &filter_master
-    branches:
-      only: master
   - &attach
     at: ~/after-work.js
 
@@ -22,6 +19,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:10.9.0-browsers
+      - image: selenium/standalone-chrome
 
     working_directory: ~/after-work.js
 
@@ -58,13 +56,13 @@ jobs:
           name: Protractor multi browser
           command: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
 
-      # - run:
-      #     name: Puppeteer
-      #     command: yarn test:puppeteer
+      - run:
+          name: Puppeteer
+          command: yarn test:puppeteer
 
-      # - run:
-      #     name: Protractor rendering
-      #     command: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
+      - run:
+          name: Protractor rendering
+          command: yarn test:protractor:rendering
 
       - save_cache: *save_yarn_cache
       - store_artifacts:

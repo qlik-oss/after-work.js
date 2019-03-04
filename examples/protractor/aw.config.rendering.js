@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = function initConfig() {
   return {
-    baseUrl: 'http://web-server/',
+    baseUrl: 'http://localhost:8080/',
     directConnect: false,
     seleniumAddress: 'http://localhost:4444/wd/hub',
     capabilities: {
@@ -22,5 +22,10 @@ module.exports = function initConfig() {
         version: 'next',
       },
     },
+    configureHttpServer: () => ({
+      http: {
+        port: 8080,
+      },
+    }),
   };
 };

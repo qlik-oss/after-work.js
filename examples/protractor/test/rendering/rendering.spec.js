@@ -1,6 +1,6 @@
 describe('Rendering', () => {
   it('should', async () => {
-    await browser.get('/rendering.fix.html');
+    await browser.get('/examples/protractor/test/rendering/rendering.fix.html');
     await browser.wait(
       protractor.ExpectedConditions.visibilityOf($('#container')),
       1000,
