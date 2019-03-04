@@ -17,7 +17,6 @@ module.exports = {
       '**/transform/src/index.js',
       '**/browser-shim.js',
       '**/commands/aw',
-      '**/commands/protractor/src/plugins/screenshoter/bbox.js',
       '**/examples/main.js',
       '**/examples/react/src/full-match.js',
     ],
@@ -66,4 +65,5 @@ module.exports = {
   http: {
     port: 9677,
   },
+  specs: ['./examples/protractor/test/hello.spec.js'],
 };

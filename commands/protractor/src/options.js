@@ -69,4 +69,8 @@ module.exports = {
     default: 'test/__artifacts__',
     type: 'string',
   },
+  'nyc.exclude': {
+    default: ['**'],
+    type: 'array',
+  },
 };
