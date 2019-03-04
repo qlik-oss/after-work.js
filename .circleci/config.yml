@@ -2,120 +2,70 @@ version: 2
 
 aliases:
   - &restore_yarn_cache
+    name: Restore yarn cache
     keys:
-      - v1-yarn-deps-{{ checksum "yarn.lock" }}
+      - yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - yarn-packages-{{ .Branch }}
+      - yarn-packages-
   - &save_yarn_cache
+    name: Save yarn cache
     paths:
       - ~/.cache/yarn
-    key: v1-yarn-deps-{{ checksum "yarn.lock" }}
-
-defaults: &defaults
-  working_directory: ~/after-work.js
-  docker:
-    - image: circleci/node:8-stretch-browsers
+    key: yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
+  - &filter_master
+    branches:
+      only: master
+  - &attach
+    at: ~/after-work.js
 
 jobs:
-  install:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache: *restore_yarn_cache
-      - run: yarn
-      - save_cache: *save_yarn_cache
-
-  lint:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache: *restore_yarn_cache
-      - run: yarn
-      - run: yarn lint
-
-  test-node:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache: *restore_yarn_cache
-      - run: yarn
-      - run: yarn test:node
-
-  test-chrome:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache: *restore_yarn_cache
-      - run: yarn
-      - run: yarn test:chrome
-
-  test-protractor:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache: *restore_yarn_cache
-      - run: yarn
-      - run: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
-      - run: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
-      - store_artifacts:
-          path: "test/__artifacts__"
-
-  test-protractor-rendering:
-    working_directory: ~/after-work.js
-    machine: true
-    steps:
-      - checkout
-      - restore_cache: *restore_yarn_cache
-      - run:
-          name: Install node
-          command: |
-            export NVM_DIR="/opt/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm install 8
-            npm i yarn
-            npx yarn
-      - run: docker-compose -f examples/protractor/docker-compose.rendering.yml -p rendering up -d
-      - run: npx aw protractor -c examples/protractor/aw.config.rendering.js
-
-  test-puppeteer:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache: *restore_yarn_cache
-      - run: yarn
-      - run: yarn test:puppeteer
-
-  test-node-coverage:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache: *restore_yarn_cache
-      - run: yarn
-      - run: yarn test:coveralls
-      - store_artifacts:
-          path: ./coverage
-
-workflows:
-  version: 2
   all:
-    jobs:
-      - install
-      - lint:
-          requires:
-            - install
-      - test-node:
-          requires:
-            - install
-      - test-chrome:
-          requires:
-            - install
-      - test-protractor:
-          requires:
-            - install
-      - test-protractor-rendering:
-          requires:
-            - install
-      - test-puppeteer:
-          requires:
-            - install
-      - test-node-coverage:
-          requires:
-            - install
+    docker:
+      - image: circleci/node:10.9.0-browsers
+
+    working_directory: ~/after-work.js
+
+    steps:
+      - checkout
+
+      - restore_cache: *restore_yarn_cache
+
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - run:
+          name: Lint
+          command: yarn run lint
+
+      - run:
+          name: Node unit tests
+          command: yarn test:node
+
+      - run:
+          name: Node unit tests with coverage
+          command: yarn test:coveralls
+
+      - run:
+          name: Chrome unit tests
+          command: yarn test:chrome
+
+      - run:
+          name: Protractor single browser
+          command: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
+
+      - run:
+          name: Protractor multi browser
+          command: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
+
+      - run:
+          name: Puppeteer
+          command: yarn test:puppeteer
+
+      # - run:
+      #     name: Protractor rendering
+      #     command: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
+
+      - save_cache: *save_yarn_cache
+      - store_artifacts:
+          path: 'test/__artifacts__'
