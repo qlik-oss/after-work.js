@@ -56,7 +56,7 @@ jobs:
       - run: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
       - run: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
       - store_artifacts:
-          path: 'test/__artifacts__'
+          path: "test/__artifacts__"
 
   test-protractor-rendering:
     working_directory: ~/after-work.js
@@ -72,9 +72,9 @@ jobs:
       - run:
           name: Install node
           command: |
-          nvm install 8
-          npm i yarn
-          npx yarn
+            nvm install 8
+            npm i yarn
+            npx yarn
       - run: docker-compose -f examples/protractor/docker-compose.rendering.yml -p rendering up
       - run: npx aw protractor -c examples/protractor/aw.config.rendering.js
 
