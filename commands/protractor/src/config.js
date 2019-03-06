@@ -9,7 +9,7 @@ const utils = require('@after-work.js/utils');
 const options = require('./options');
 const { getIPaddress, logSeleniumNodeInfo } = require('./utils');
 
-const { uiReport, reporter } = require('./plugins/reporter');
+const { uiReport, reporter, aggregate } = require('./plugins/reporter');
 
 const screenshoterPath = path.resolve(
   __dirname,
@@ -61,12 +61,16 @@ const setReporterInfo = async (browser) => {
   browser.reporterInfo.browserVersion = cap.get('version');
   const platform = browserName === 'internet-explorer' ? 'WINDOwS' : cap.get('platform');
   browser.reporterInfo.platform = platform.replace(/ /g, '-').toLowerCase();
-  browser.reporterInfo.reportName = `${
-    browser.reporterInfo.browserName
+  browser.reporterInfo.reportName = `${browser.reporterInfo.browserName}-${
+    process.env.AW_CURRENT_SESSION_TIMESTAMP
   }-report-${browser.reporterInfo.startTime}_${Math.floor(
     Math.random() * 10000000,
   )}`;
 };
+
+if (!process.env.AW_CURRENT_SESSION_TIMESTAMP) {
+  process.env.AW_CURRENT_SESSION_TIMESTAMP = +new Date();
+}
 
 const baseConfig = {
   // ---------------------------------------------------------------------------
@@ -293,7 +297,17 @@ const baseConfig = {
   // the WebDriver instance has been shut down. It is passed the exit code
   // (0 if the tests passed). This is called only once before the program
   // exits (after onCleanUp).
-  afterLaunch() {},
+  afterLaunch() {
+    const pattern = `${process.env.AW_CURRENT_ARTIFACTS_PATH}/*-${
+      process.env.AW_CURRENT_SESSION_TIMESTAMP
+    }-report-*.json`;
+    const reports = globby.sync(pattern);
+    aggregate(
+      `all-${process.env.AW_CURRENT_SESSION_TIMESTAMP}-reports`,
+      process.env.AW_CURRENT_ARTIFACTS_PATH,
+      reports,
+    );
+  },
 
   // The params object will be passed directly to the Protractor instance,
   // and can be accessed from your test as browser.params. It is an arbitrary
@@ -403,6 +417,10 @@ if (!argv.specs && argv.glob.length) {
     .filter(argv.filter.protractor.files, globby.sync(argv.glob))
     .map(p => path.resolve(p));
   argv.specs = specs;
+}
+
+if (!process.env.AW_CURRENT_ARTIFACTS_PATH) {
+  process.env.AW_CURRENT_ARTIFACTS_PATH = argv.artifactsPath;
 }
 
 module.exports = {

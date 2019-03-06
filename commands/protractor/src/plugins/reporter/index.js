@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const utils = require('./utils');
 const report = require('./create-static');
+const aggregate = require('./aggregate');
 
 const { Base } = mocha.reporters;
 
@@ -300,4 +301,5 @@ function uiReport(runner, options) {
 module.exports = {
   uiReport,
   reporter,
+  aggregate,
 };
