@@ -22,31 +22,19 @@ function reduceTestObject(accumulator, currentValue) {
   return accumulator;
 }
 
-module.exports = function aggregateReports(reportName, artifactsPath) {
-  const files = fs.readdirSync(artifactsPath);
-
-  const allTests = files.filter(name => path.extname(name) === '.json')
-    .map(name => path.resolve(artifactsPath, name))
-    .map(filepath => JSON.parse(fs.readFileSync(filepath, 'utf8')));
-
-  if (allTests.length === 0) {
+module.exports = function aggregateReports(reportName, artifactsPath, reports) {
+  if (reports.length <= 1) {
     return undefined;
   }
-
-  const sumTests = allTests.reduce(reduceTestObject);
+  const sumTests = reports
+    .map(r => JSON.parse(fs.readFileSync(r, 'utf8')))
+    .reduce(reduceTestObject);
 
   if (sumTests) {
+    console.error(sumTests);
     const fileName = path.resolve(artifactsPath, `${reportName}.json`);
-
-    return new Promise((resolve, reject) => {
-      fs.writeFile(fileName, JSON.stringify(sumTests, null, '\t'), (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    }).then(() => report.generate(fileName));
+    fs.writeFileSync(fileName, JSON.stringify(sumTests, null, '\t'));
+    report.generate(fileName);
   }
   return sumTests;
 };
