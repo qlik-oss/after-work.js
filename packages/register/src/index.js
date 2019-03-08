@@ -180,16 +180,10 @@ class AW {
     const [filename, , , c] = utils.getCurrentFilenameStackInfo(this.testFiles);
     const deps = utils.getAllDependencies(this.srcFiles, filename);
     deps.forEach(d => utils.safeDeleteCache(d));
-    const isTestLibFile = f => f.indexOf('node_modules') > -1
-      && (f.indexOf('sinon') > -1
-        || f.indexOf('chai') > -1
-        || f.indexOf('nise') > -1
-        || f.indexOf('react') > -1);
+    const excludeLibs = f => f.indexOf('node_modules') > -1;
     Object.keys(require.cache)
       .filter(
-        f => f !== filename
-          && this.testFiles.indexOf(f) === -1
-          && !isTestLibFile(f),
+        f => f !== filename && this.testFiles.indexOf(f) === -1 && !excludeLibs(f),
       )
       .forEach(f => utils.safeDeleteCache(f));
 
