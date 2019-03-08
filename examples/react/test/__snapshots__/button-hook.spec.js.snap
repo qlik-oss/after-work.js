@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`'renders' 1`] = `
+<div>
+  <p>
+    You clicked 
+    0
+     times
+  </p>
+  <button
+    onClick={[Function]}
+  >
+    Click me
+  </button>
+</div>
+`;

@@ -183,7 +183,8 @@ class AW {
     const isTestLibFile = f => f.indexOf('node_modules') > -1
       && (f.indexOf('sinon') > -1
         || f.indexOf('chai') > -1
-        || f.indexOf('nise') > -1);
+        || f.indexOf('nise') > -1
+        || f.indexOf('react') > -1);
     Object.keys(require.cache)
       .filter(
         f => f !== filename
