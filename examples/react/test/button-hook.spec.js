@@ -1,7 +1,6 @@
 /* global aw */
 import React from 'react';
 import renderer from 'react-test-renderer';
-import Button from '../src/button';
 
 describe('Button with hook', () => {
   it('renders', () => {
