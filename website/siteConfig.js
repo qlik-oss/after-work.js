@@ -1,4 +1,3 @@
-
 const siteConfig = {
   title: 'after-work.js',
   tagline: 'Testing, made simple',
@@ -29,9 +28,12 @@ const siteConfig = {
   },
   scripts: [
     'https://buttons.github.io/buttons.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
+    '/js/code-block-buttons.js',
   ],
   stylesheets: [
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+    '/css/code-block-buttons.css',
   ],
   repoUrl: 'https://github.com/qlik-oss/after-work.js',
   editUrl: 'https://github.com/qlik-oss/after-work.js/edit/master/docs/',

@@ -31,7 +31,6 @@ module.exports = function aggregateReports(reportName, artifactsPath, reports) {
     .reduce(reduceTestObject);
 
   if (sumTests) {
-    console.error(sumTests);
     const fileName = path.resolve(artifactsPath, `${reportName}.json`);
     fs.writeFileSync(fileName, JSON.stringify(sumTests, null, '\t'));
     report.generate(fileName);

@@ -7,7 +7,9 @@
   },
   "globals": {
     "sinon": true,
-    "expect": true
+    "expect": true,
+    "aw": true,
+    "page": true
   },
   "parserOptions": {
     "ecmaFeatures": {
@@ -25,18 +27,13 @@
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
+        "extensions": [".js", ".jsx"]
       }
     ],
     "react/prop-types": [
       1,
       {
-        "ignore": [
-          "children"
-        ]
+        "ignore": ["children"]
       }
     ],
     "react/prefer-stateless-function": 0,
@@ -56,7 +53,5 @@
     "no-new": 0,
     "import/no-unresolved": 0
   },
-  "extends": [
-    "airbnb"
-  ]
+  "extends": ["airbnb"]
 }

@@ -1,4 +1,3 @@
-/* global aw */
 import React from 'react';
 import renderer from 'react-test-renderer';
 
@@ -9,8 +8,9 @@ describe('Button with hook', () => {
     expect(tree1).toMatchSnapshot();
   });
   it('renders button hook', () => {
+    const span = <span>hook</span>;
     const [ButtonHook] = aw.mock(
-      [['**/react/src/button-hook.jsx', () => () => <span>hook</span>]],
+      [['**/react/src/button-hook.jsx', () => () => span]],
       ['../src/button-hook'],
     );
     const tree1 = renderer.create(<ButtonHook>span</ButtonHook>).toJSON();

@@ -1,4 +1,3 @@
-/* global page */
 describe('Puppeteer', () => {
   it('should say hello world', async () => {
     await page.goto(`file://${__dirname}/hello.fix.html`);
