@@ -1,3 +1,9 @@
+---
+id: webpack-dev-server-examples
+title: Webpack-dev-server
+---
+
+```javascript
 describe('Webpack dev server Puppeteer', () => {
   it('should say hello world', async () => {
     await page.goto('http://0.0.0.0:8080/examples/webpack-dev-server/');
@@ -6,3 +12,5 @@ describe('Webpack dev server Puppeteer', () => {
     expect(txt).to.equal('hello world');
   });
 });
+```
+

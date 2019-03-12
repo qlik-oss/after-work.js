@@ -1,21 +1,17 @@
-/* global aw */
-/* eslint import/no-unresolved: 0 */
-
 import React from 'react';
 import renderer from 'react-test-renderer';
 import FancyButton from '../src/fancy-button';
 
 describe('FancyButton', () => {
   it('renders fancy with button as span or div', () => {
+    const span = <span>hhhhh</span>;
     const [{ default: FancySpan }] = aw.mock(
-      [['**/react/src/button.jsx', () => () => <span>hhhhh</span>]],
+      [['**/react/src/button.jsx', () => () => span]],
       ['../src/fancy-button'],
     );
+    const ggggg = <div>ggggg</div>;
     const [{ default: FancyDiv }] = aw.mock(
-      [
-        ['**/react/src/button.jsx', () => () => <div>ggggg</div>],
-        ['**/muppet', () => {}],
-      ],
+      [['**/react/src/button.jsx', () => () => ggggg], ['**/muppet', () => {}]],
       ['../src/fancy-button'],
     );
     const tree1 = renderer.create(<FancySpan>span</FancySpan>).toJSON();

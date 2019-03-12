@@ -1,5 +1,3 @@
-/* eslint import/no-unresolved: 0 */
-
 import React from 'react';
 import renderer from 'react-test-renderer';
 import 'foo.scss';
