@@ -20,11 +20,17 @@ id: ${example.name}-examples
 title: ${example.name.charAt(0).toUpperCase() + example.name.slice(1)}
 ---\n\n`;
 
-  const files = globby.sync(`${example.p}/test/**/*.spec.{js,ts}`);
   const appendFile = (file) => {
     md += `\`\`\`javascript\n${fs.readFileSync(file, 'utf8')}\`\`\`\n\n`;
     md += `**[${file}](${baseUrl}/${file})**\n\n`;
   };
+
+  const fixtureFiles = globby.sync(`${example.p}/test/**/*.fix.html`);
+  for (const file of fixtureFiles) {
+    appendFile(file);
+  }
+
+  const files = globby.sync(`${example.p}/test/**/*.spec.{js,ts}`);
   for (const file of files) {
     appendFile(file);
   }

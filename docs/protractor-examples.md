@@ -4,6 +4,56 @@ title: Protractor
 ---
 
 ```javascript
+<html lang="en">
+
+<head>
+  <title>Test</title>
+  <meta charset="utf-8">
+  <base href="/">
+  <style>
+    #container {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    hello world
+  </div>
+</body>
+
+</html>
+```
+
+**[examples/protractor/test/hello.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/hello.fix.html)**
+
+```javascript
+<html lang="en">
+  <head>
+    <title>Test</title>
+    <meta charset="utf-8" />
+    <base href="/" />
+    <style>
+      #container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container" style="background: red">
+      hepp
+    </div>
+  </body>
+</html>
+```
+
+**[examples/protractor/test/rendering/rendering.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/rendering/rendering.fix.html)**
+
+```javascript
 describe('Protractor', () => {
   it('should say hello world', async () => {
     await browser.get('/examples/protractor/test/hello.fix.html');

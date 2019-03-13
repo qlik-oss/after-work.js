@@ -4,6 +4,40 @@ title: Puppeteer
 ---
 
 ```javascript
+<html lang="en">
+  <head>
+    <title>Test</title>
+    <meta charset="utf-8" />
+    <base href="/" />
+    <style>
+      #container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container" onclick="getData();">hello world</div>
+    <script>
+      window.getData = () => {
+        const container = document.querySelector("#container");
+        fetch("http://localhost:9677/my/fancy/api")
+          .then(response => {
+            response.text().then(txt => (container.innerHTML = txt));
+          })
+          .catch(err => {
+            container.innerHTML = err.toString();
+          });
+      };
+    </script>
+  </body>
+</html>
+```
+
+**[examples/puppeteer/test/hello.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/test/hello.fix.html)**
+
+```javascript
 describe('Puppeteer', () => {
   it('should say hello world', async () => {
     await page.goto(
