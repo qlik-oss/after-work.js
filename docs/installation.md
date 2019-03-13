@@ -24,5 +24,5 @@ npx aw -h
 If you only need the node runner:
 
 ```sh
-npm i -D @after-work.js/cli @after-work.js/node
+npm i -D @after-work.js/node-cli
 ```
