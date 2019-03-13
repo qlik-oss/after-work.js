@@ -21,9 +21,19 @@ title: ${example.name.charAt(0).toUpperCase() + example.name.slice(1)}
 ---\n\n`;
 
   const files = globby.sync(`${example.p}/test/**/*.spec.{js,ts}`);
-  for (const file of files) {
+  const appendFile = (file) => {
     md += `\`\`\`javascript\n${fs.readFileSync(file, 'utf8')}\`\`\`\n\n`;
     md += `**[${file}](${baseUrl}/${file})**\n\n`;
+  };
+  for (const file of files) {
+    appendFile(file);
+  }
+
+  if (example.name === 'protractor') {
+    const protractorConfigFiles = globby.sync(`${example.p}/aw.config.*.js`);
+    for (const file of protractorConfigFiles) {
+      appendFile(file);
+    }
   }
 
   fs.writeFileSync(
