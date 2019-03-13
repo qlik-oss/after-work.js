@@ -3,6 +3,8 @@ id: node-js-no-babel-examples
 title: Node-js-no-babel
 ---
 
+## Test
+
 ```javascript
 const getAzure = require('../src/');
 

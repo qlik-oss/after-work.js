@@ -3,86 +3,7 @@ id: protractor-examples
 title: Protractor
 ---
 
-```html
-<html lang="en">
-
-<head>
-  <title>Test</title>
-  <meta charset="utf-8">
-  <base href="/">
-  <style>
-    #container {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="container">
-    hello world
-  </div>
-</body>
-
-</html>
-```
-
-**[examples/protractor/test/hello.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/hello.fix.html)**
-
-```html
-<html lang="en">
-  <head>
-    <title>Test</title>
-    <meta charset="utf-8" />
-    <base href="/" />
-    <style>
-      #container {
-        width: 100%;
-        height: 100%;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div id="container" style="background: red">
-      hepp
-    </div>
-  </body>
-</html>
-```
-
-**[examples/protractor/test/rendering/rendering.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/rendering/rendering.fix.html)**
-
-```javascript
-describe('Protractor', () => {
-  it('should say hello world', async () => {
-    await browser.get('/examples/protractor/test/hello.fix.html');
-    const container = await element(by.id('container'));
-    const txt = await container.getText();
-    expect(txt).to.equal('hello world');
-  });
-});
-```
-
-**[examples/protractor/test/hello.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/hello.spec.js)**
-
-```javascript
-describe('Rendering', () => {
-  it('should', async () => {
-    await browser.get('/examples/protractor/test/rendering/rendering.fix.html');
-    await browser.wait(
-      protractor.ExpectedConditions.visibilityOf($('#container')),
-      1000,
-      'wh00t',
-    );
-    await expect(
-      await browser.takeImageOf({ selector: '#container' }),
-    ).to.matchImageOf('container');
-  });
-});
-```
-
-**[examples/protractor/test/rendering/rendering.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/rendering/rendering.spec.js)**
+## Config
 
 ```javascript
 const path = require('path');
@@ -122,6 +43,8 @@ module.exports = function initConfig() {
 
 **[examples/protractor/aw.config.multi.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/aw.config.multi.js)**
 
+## Config
+
 ```javascript
 const path = require('path');
 
@@ -156,4 +79,93 @@ module.exports = function initConfig() {
 ```
 
 **[examples/protractor/aw.config.rendering.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/aw.config.rendering.js)**
+
+## Fixture
+
+```html
+<html lang="en">
+
+<head>
+  <title>Test</title>
+  <meta charset="utf-8">
+  <base href="/">
+  <style>
+    #container {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    hello world
+  </div>
+</body>
+
+</html>
+```
+
+**[examples/protractor/test/hello.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/hello.fix.html)**
+
+## Fixture
+
+```html
+<html lang="en">
+  <head>
+    <title>Test</title>
+    <meta charset="utf-8" />
+    <base href="/" />
+    <style>
+      #container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container" style="background: red">
+      hepp
+    </div>
+  </body>
+</html>
+```
+
+**[examples/protractor/test/rendering/rendering.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/rendering/rendering.fix.html)**
+
+## Test
+
+```javascript
+describe('Protractor', () => {
+  it('should say hello world', async () => {
+    await browser.get('/examples/protractor/test/hello.fix.html');
+    const container = await element(by.id('container'));
+    const txt = await container.getText();
+    expect(txt).to.equal('hello world');
+  });
+});
+```
+
+**[examples/protractor/test/hello.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/hello.spec.js)**
+
+## Test
+
+```javascript
+describe('Rendering', () => {
+  it('should', async () => {
+    await browser.get('/examples/protractor/test/rendering/rendering.fix.html');
+    await browser.wait(
+      protractor.ExpectedConditions.visibilityOf($('#container')),
+      1000,
+      'wh00t',
+    );
+    await expect(
+      await browser.takeImageOf({ selector: '#container' }),
+    ).to.matchImageOf('container');
+  });
+});
+```
+
+**[examples/protractor/test/rendering/rendering.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/rendering/rendering.spec.js)**
 

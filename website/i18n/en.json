@@ -4,122 +4,36 @@
     "next": "Next",
     "previous": "Previous",
     "tagline": "Testing, made simple",
-    "docs": {
-      "chrome-options": {
-        "title": "Chrome"
-      },
-      "chrome": {
-        "title": "Chrome"
-      },
-      "chrome-esm-examples": {
-        "title": "Chrome-esm"
-      },
-      "chrome-js-examples": {
-        "title": "Chrome-js"
-      },
-      "chrome-ts-examples": {
-        "title": "Chrome-ts"
-      },
-      "development": {
-        "title": "Development"
-      },
-      "installation": {
-        "title": "Installation"
-      },
-      "node-js-examples": {
-        "title": "Node-js"
-      },
-      "node-js-no-babel-examples": {
-        "title": "Node-js-no-babel"
-      },
-      "node-options": {
-        "title": "Node"
-      },
-      "node-ts-examples": {
-        "title": "Node-ts"
-      },
-      "node": {
-        "title": "Node"
-      },
-      "protractor-examples": {
-        "title": "Protractor"
-      },
-      "protractor-options": {
-        "title": "Protractor"
-      },
-      "protractor": {
-        "title": "Protractor"
-      },
-      "puppeteer-examples": {
-        "title": "Puppeteer"
-      },
-      "puppeteer-options": {
-        "title": "Puppeteer"
-      },
-      "puppeteer": {
-        "title": "Puppeteer"
-      },
-      "react-examples": {
-        "title": "React"
-      },
-      "requirements": {
-        "title": "Requirements"
-      },
-      "strategy": {
-        "title": "strategy"
-      },
-      "webpack-dev-server-examples": {
-        "title": "Webpack-dev-server"
-      },
-      "version-4.3.2-cdp": {
-        "title": "Cdp"
-      },
-      "version-4.3.2-installation": {
-        "title": "Installation"
-      },
-      "version-4.3.2-node": {
-        "title": "Node"
-      },
-      "version-4.3.2-protractor": {
-        "title": "Protractor"
-      },
-      "version-4.3.2-requirements": {
-        "title": "Requirements"
-      },
-      "version-5.0.0-cdp": {
-        "title": "Chrome"
-      },
-      "version-5.0.0-development": {
-        "title": "Development"
-      },
-      "version-5.0.0-installation": {
-        "title": "Installation"
-      },
-      "version-5.0.0-node": {
-        "title": "Node"
-      },
-      "version-5.0.0-protractor": {
-        "title": "Protractor"
-      },
-      "version-5.0.0-puppeteer": {
-        "title": "Puppeteer"
-      },
-      "version-5.0.0-requirements": {
-        "title": "Requirements"
-      }
-    },
-    "links": {
-      "Blog": "Blog",
-      "Docs": "Docs",
-      "": ""
-    },
-    "categories": {
-      "Getting started": "Getting started",
-      "Commands": "Commands",
-      "Command line options": "Command line options",
-      "Examples": "Examples",
-      "Contributing": "Contributing"
-    }
+    "chrome-options": "Chrome",
+    "chrome": "Chrome",
+    "chrome-esm-examples": "Chrome-esm",
+    "chrome-js-examples": "Chrome-js",
+    "chrome-ts-examples": "Chrome-ts",
+    "development": "Development",
+    "installation": "Installation",
+    "node-js-examples": "Node-js",
+    "node-js-no-babel-examples": "Node-js-no-babel",
+    "node-options": "Node",
+    "node-ts-examples": "Node-ts",
+    "node": "Node",
+    "protractor-examples": "Protractor",
+    "protractor-options": "Protractor",
+    "protractor": "Protractor",
+    "puppeteer-examples": "Puppeteer",
+    "puppeteer-options": "Puppeteer",
+    "puppeteer": "Puppeteer",
+    "react-examples": "React",
+    "requirements": "Requirements",
+    "strategy": "strategy",
+    "webpack-dev-server-examples": "Webpack-dev-server",
+    "Blog": "Blog",
+    "Docs": "Docs",
+    "": "",
+    "Getting started": "Getting started",
+    "Commands": "Commands",
+    "Command line options": "Command line options",
+    "Examples": "Examples",
+    "Contributing": "Contributing"
   },
   "pages-strings": {
     "Help Translate|recruit community translators for your project": "Help Translate",

@@ -20,26 +20,25 @@ id: ${example.name}-examples
 title: ${example.name.charAt(0).toUpperCase() + example.name.slice(1)}
 ---\n\n`;
 
-  const appendFile = (file, lang = 'javascript') => {
+  const appendFile = (header, file, lang = 'javascript') => {
+    md += `## ${header}\n\n`;
     md += `\`\`\`${lang}\n${fs.readFileSync(file, 'utf8')}\`\`\`\n\n`;
     md += `**[${file}](${baseUrl}/${file})**\n\n`;
   };
 
+  const configFiles = globby.sync(`${example.p}/aw.config*.js`);
+  for (const file of configFiles) {
+    appendFile('Config', file);
+  }
+
   const fixtureFiles = globby.sync(`${example.p}/test/**/*.fix.html`);
   for (const file of fixtureFiles) {
-    appendFile(file, 'html');
+    appendFile('Fixture', file, 'html');
   }
 
   const files = globby.sync(`${example.p}/test/**/*.spec.{js,ts}`);
   for (const file of files) {
-    appendFile(file);
-  }
-
-  if (example.name === 'protractor') {
-    const protractorConfigFiles = globby.sync(`${example.p}/aw.config.*.js`);
-    for (const file of protractorConfigFiles) {
-      appendFile(file);
-    }
+    appendFile('Test', file);
   }
 
   fs.writeFileSync(

@@ -3,6 +3,22 @@ id: puppeteer-examples
 title: Puppeteer
 ---
 
+## Config
+
+```javascript
+module.exports = {
+  httpServer: true,
+  http: {
+    port: 9677,
+  },
+  test: ['examples/puppeteer/test/**/*.spec.js'],
+};
+```
+
+**[examples/puppeteer/aw.config.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/aw.config.js)**
+
+## Fixture
+
 ```html
 <html lang="en">
   <head>
@@ -36,6 +52,8 @@ title: Puppeteer
 ```
 
 **[examples/puppeteer/test/hello.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/test/hello.fix.html)**
+
+## Test
 
 ```javascript
 describe('Puppeteer', () => {
@@ -72,6 +90,8 @@ describe('Puppeteer', () => {
 ```
 
 **[examples/puppeteer/test/hello-http.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/test/hello-http.spec.js)**
+
+## Test
 
 ```javascript
 describe('Puppeteer', () => {
