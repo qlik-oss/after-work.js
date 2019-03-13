@@ -14,6 +14,8 @@ describe('Protractor', () => {
 });
 ```
 
+**[examples/protractor/test/hello.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/hello.spec.js)**
+
 ```javascript
 describe('Rendering', () => {
   it('should', async () => {
@@ -29,4 +31,6 @@ describe('Rendering', () => {
   });
 });
 ```
+
+**[examples/protractor/test/rendering/rendering.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/rendering/rendering.spec.js)**
 

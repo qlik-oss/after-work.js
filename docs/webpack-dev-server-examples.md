@@ -14,3 +14,5 @@ describe('Webpack dev server Puppeteer', () => {
 });
 ```
 
+**[examples/webpack-dev-server/test/hello.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/webpack-dev-server/test/hello.spec.js)**
+

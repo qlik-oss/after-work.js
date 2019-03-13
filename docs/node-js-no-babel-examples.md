@@ -13,3 +13,5 @@ describe('Azure', () => {
 });
 ```
 
+**[examples/node-js-no-babel/test/index.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/node-js-no-babel/test/index.spec.js)**
+

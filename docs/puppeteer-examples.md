@@ -37,6 +37,8 @@ describe('Puppeteer', () => {
 });
 ```
 
+**[examples/puppeteer/test/hello-http.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/test/hello-http.spec.js)**
+
 ```javascript
 describe('Puppeteer', () => {
   it('should say hello world', async () => {
@@ -47,4 +49,6 @@ describe('Puppeteer', () => {
   });
 });
 ```
+
+**[examples/puppeteer/test/hello.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/test/hello.spec.js)**
 

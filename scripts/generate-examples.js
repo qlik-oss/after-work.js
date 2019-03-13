@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const globby = require('globby');
 
+const baseUrl = 'https://github.com/qlik-oss/after-work.js/tree/master';
+
 const examplePaths = globby.sync('examples/*', {
   expandDirectories: false,
   onlyDirectories: true,
@@ -21,6 +23,7 @@ title: ${example.name.charAt(0).toUpperCase() + example.name.slice(1)}
   const files = globby.sync(`${example.p}/test/**/*.spec.{js,ts}`);
   for (const file of files) {
     md += `\`\`\`javascript\n${fs.readFileSync(file, 'utf8')}\`\`\`\n\n`;
+    md += `**[${file}](${baseUrl}/${file})**\n\n`;
   }
 
   fs.writeFileSync(
@@ -28,6 +31,4 @@ title: ${example.name.charAt(0).toUpperCase() + example.name.slice(1)}
     md,
     'utf8',
   );
-  // console.error(example.name);
-  // console.error(md);
 }

@@ -14,3 +14,5 @@ describe('A', () => {
 });
 ```
 
+**[examples/chrome-esm/test/a.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/chrome-esm/test/a.spec.js)**
+

@@ -13,6 +13,8 @@ describe('chrome-js A', () => {
 });
 ```
 
+**[examples/chrome-js/test/a.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/chrome-js/test/a.spec.js)**
+
 ```javascript
 import { expect } from 'chai';
 import getB from '../src/b';
@@ -23,6 +25,8 @@ describe('chrome-js B', () => {
   });
 });
 ```
+
+**[examples/chrome-js/test/b.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/chrome-js/test/b.spec.js)**
 
 ```javascript
 import c from '../src/c';
@@ -55,4 +59,6 @@ describe('chrome-js C', () => {
   });
 });
 ```
+
+**[examples/chrome-js/test/c.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/chrome-js/test/c.spec.js)**
 

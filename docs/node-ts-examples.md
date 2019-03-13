@@ -15,3 +15,5 @@ describe('Dummy', () => {
 });
 ```
 
+**[examples/node-ts/test/dummy.spec.ts](https://github.com/qlik-oss/after-work.js/tree/master/examples/node-ts/test/dummy.spec.ts)**
+
