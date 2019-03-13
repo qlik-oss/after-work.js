@@ -1,5 +1,3 @@
-/* global aw */
-
 const path = require('path');
 const fs = require('fs');
 const { addHook } = require('pirates');
