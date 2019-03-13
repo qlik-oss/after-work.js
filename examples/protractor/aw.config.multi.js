@@ -21,7 +21,6 @@ module.exports = function initConfig() {
       },
     ],
     specs: [path.resolve(__dirname, 'test/hello.spec.js')],
-    'filter.protractor.files': ['**/examples/protractor/**'],
     artifactsPath: 'test/__artifacts__',
     // Protractor mochaOpts
     mochaOpts: {
