@@ -3,7 +3,7 @@ id: protractor-examples
 title: Protractor
 ---
 
-```javascript
+```html
 <html lang="en">
 
 <head>
@@ -29,7 +29,7 @@ title: Protractor
 
 **[examples/protractor/test/hello.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/protractor/test/hello.fix.html)**
 
-```javascript
+```html
 <html lang="en">
   <head>
     <title>Test</title>

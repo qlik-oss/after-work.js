@@ -3,7 +3,7 @@ id: puppeteer-examples
 title: Puppeteer
 ---
 
-```javascript
+```html
 <html lang="en">
   <head>
     <title>Test</title>
