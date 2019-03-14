@@ -2,10 +2,9 @@
 environment:
   matrix:
     - nodejs_version: "LTS"
-    - nodejs_version: "Current"
 
 cache:
- - "%LOCALAPPDATA%\\Yarn"
+  - "%LOCALAPPDATA%\\Yarn"
 
 # Install scripts. (runs after repo cloning)
 install:
@@ -28,7 +27,9 @@ test_script:
   - npm run test:node
   - npm run test:chrome
   - npm run test:protractor -- --chromeDriver /Tools/WebDriver/chromedriver.exe
+  - npm run test:protractor:multi -- --chromeDriver /Tools/WebDriver/chromedriver.exe
+  - npm run test:protractor:rendering -- --chromeDriver /Tools/WebDriver/chromedriver.exe
   - npm run test:puppeteer
 
 # Don't actually build.
-build: off
+build: "off"
