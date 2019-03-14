@@ -28,7 +28,6 @@ test_script:
   - npm run test:chrome
   - npm run test:protractor -- --chromeDriver /Tools/WebDriver/chromedriver.exe
   - npm run test:protractor:multi -- --chromeDriver /Tools/WebDriver/chromedriver.exe
-  - npm run test:protractor:rendering -- --chromeDriver /Tools/WebDriver/chromedriver.exe
   - npm run test:puppeteer
 
 # Don't actually build.
