@@ -10,7 +10,7 @@
     "test:protractor": "aw protractor -c aw.config.js",
     "test:protractor:multi": "aw protractor -c examples/protractor/aw.config.multi.js",
     "test:protractor:rendering": "aw protractor -c examples/protractor/aw.config.rendering.js",
-    "test:puppeteer": "aw puppeteer -c aw.config.js --httpServer --no-coverage",
+    "test:puppeteer": "aw puppeteer -c aw.config.js --httpServer",
     "test:coveralls": "aw -c aw.config.js --coverage && cat coverage/lcov.info | coveralls",
     "lint": "lerna run lint"
   },

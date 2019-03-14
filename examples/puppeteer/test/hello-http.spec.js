@@ -7,7 +7,7 @@ describe('Puppeteer', () => {
     const txt = await (await container.getProperty('textContent')).jsonValue();
     expect(txt).to.equal('hello world');
   });
-  it.only('should be able to intercept', async () => {
+  it('should be able to intercept', async () => {
     await page.setRequestInterception(true);
     page.on('request', (interceptedRequest) => {
       if (/localhost:9677\/my\/fancy\/api/.test(interceptedRequest.url())) {

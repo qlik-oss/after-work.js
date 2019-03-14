@@ -3,6 +3,8 @@ id: webpack-dev-server-examples
 title: Webpack-dev-server
 ---
 
+## Test
+
 ```javascript
 describe('Webpack dev server Puppeteer', () => {
   it('should say hello world', async () => {
@@ -13,4 +15,6 @@ describe('Webpack dev server Puppeteer', () => {
   });
 });
 ```
+
+**[examples/webpack-dev-server/test/hello.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/webpack-dev-server/test/hello.spec.js)**
 

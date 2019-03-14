@@ -17,10 +17,11 @@ Add files, remove files as you go and change your tests to rapidly build up a te
 Built-in mocking. You can mock globally via the [**mocks**](#mocks) option or locally by using:
 
 ```javascript
+const span = <span>my span</span>;
 const [{ default: FancyButton }] = aw.mock(
   [
     // Mock components
-    ['**/react/src/button.js', '() => (<span>hhhhh</span>)']
+    ['**/react/src/button.js', () => () => span]
   ],
   // Require components
   ['../src/fancy-button']

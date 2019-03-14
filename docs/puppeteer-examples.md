@@ -3,6 +3,58 @@ id: puppeteer-examples
 title: Puppeteer
 ---
 
+## Config
+
+```javascript
+module.exports = {
+  httpServer: true,
+  http: {
+    port: 9677,
+  },
+  test: ['examples/puppeteer/test/**/*.spec.js'],
+};
+```
+
+**[examples/puppeteer/aw.config.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/aw.config.js)**
+
+## Fixture
+
+```html
+<html lang="en">
+  <head>
+    <title>Test</title>
+    <meta charset="utf-8" />
+    <base href="/" />
+    <style>
+      #container {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container" onclick="getData();">hello world</div>
+    <script>
+      window.getData = () => {
+        const container = document.querySelector("#container");
+        fetch("http://localhost:9677/my/fancy/api")
+          .then(response => {
+            response.text().then(txt => (container.innerHTML = txt));
+          })
+          .catch(err => {
+            container.innerHTML = err.toString();
+          });
+      };
+    </script>
+  </body>
+</html>
+```
+
+**[examples/puppeteer/test/hello.fix.html](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/test/hello.fix.html)**
+
+## Test
+
 ```javascript
 describe('Puppeteer', () => {
   it('should say hello world', async () => {
@@ -13,7 +65,7 @@ describe('Puppeteer', () => {
     const txt = await (await container.getProperty('textContent')).jsonValue();
     expect(txt).to.equal('hello world');
   });
-  it.only('should be able to intercept', async () => {
+  it('should be able to intercept', async () => {
     await page.setRequestInterception(true);
     page.on('request', (interceptedRequest) => {
       if (/localhost:9677\/my\/fancy\/api/.test(interceptedRequest.url())) {
@@ -37,6 +89,10 @@ describe('Puppeteer', () => {
 });
 ```
 
+**[examples/puppeteer/test/hello-http.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/test/hello-http.spec.js)**
+
+## Test
+
 ```javascript
 describe('Puppeteer', () => {
   it('should say hello world', async () => {
@@ -47,4 +103,6 @@ describe('Puppeteer', () => {
   });
 });
 ```
+
+**[examples/puppeteer/test/hello.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/puppeteer/test/hello.spec.js)**
 

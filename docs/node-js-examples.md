@@ -3,6 +3,8 @@ id: node-js-examples
 title: Node-js
 ---
 
+## Test
+
 ```javascript
 import virtual from './foobar-virtual.html';
 import template from './foobar.html';
@@ -17,4 +19,6 @@ describe('html', () => {
   });
 });
 ```
+
+**[examples/node-js/test/html.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/node-js/test/html.spec.js)**
 

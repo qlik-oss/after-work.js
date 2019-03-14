@@ -3,5 +3,5 @@
 ## From the project root run
 
 ```shell
-npx aw puppeteer -c examples/puppeteer/aw.config.js
+npx aw puppeteer -c aw.config.js
 ```

@@ -3,6 +3,8 @@ id: react-examples
 title: React
 ---
 
+## Test
+
 ```javascript
 import React from 'react';
 import renderer from 'react-test-renderer';
@@ -24,6 +26,10 @@ describe('Button with hook', () => {
   });
 });
 ```
+
+**[examples/react/test/button-hook.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/react/test/button-hook.spec.js)**
+
+## Test
 
 ```javascript
 import React from 'react';
@@ -48,6 +54,10 @@ describe('button', () => {
   });
 });
 ```
+
+**[examples/react/test/button.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/react/test/button.spec.js)**
+
+## Test
 
 ```javascript
 import React from 'react';
@@ -74,6 +84,10 @@ describe('context', () => {
   });
 });
 ```
+
+**[examples/react/test/context.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/react/test/context.spec.js)**
+
+## Test
 
 ```javascript
 import React from 'react';
@@ -125,6 +139,10 @@ describe('FancyButton', () => {
 });
 ```
 
+**[examples/react/test/fancy-button.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/react/test/fancy-button.spec.js)**
+
+## Test
+
 ```javascript
 describe('Full match', () => {
   it('can mock', () => {
@@ -136,4 +154,6 @@ describe('Full match', () => {
   });
 });
 ```
+
+**[examples/react/test/test-full-match.spec.js](https://github.com/qlik-oss/after-work.js/tree/master/examples/react/test/test-full-match.spec.js)**
 

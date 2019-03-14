@@ -27,31 +27,31 @@ module.exports = function initConfig(baseConfig) {
       browserName: 'chrome',
       unexpectedAlertBehaviour: 'accept',
       chromeOptions: {
-        args: ['--disable-infobars'],
-      },
+        args: ['--disable-infobars']
+      }
     },
     mochaOpts: {
-      bail: true,
+      bail: true
     },
     multiCapabilities: [],
-    specs: [
-      path.resolve(__dirname, './**/*.spec.js'),
-    ],
-    beforeLaunch() { },
+    specs: [path.resolve(__dirname, './**/*.spec.js')],
+    beforeLaunch() {},
     onComplete() {
-      return browser.manage().logs().get('browser').then((browserLog) => {
-        console.log(`log: ${util.inspect(browserLog)}`);
-      });
+      return browser
+        .manage()
+        .logs()
+        .get('browser')
+        .then(browserLog => {
+          console.log(`log: ${util.inspect(browserLog)}`);
+        });
     },
     configureHttpServer() {
       return {
         http: {
-          rewrite: {
-            '/fixtures/(.*)': 'packages/foo/test/integration/$1',
-          }
+          port: 8080
         }
       };
-    },
+    }
   };
   return extend(true, baseConfig, config);
 };
@@ -61,7 +61,7 @@ module.exports = function initConfig(baseConfig) {
 
 There are two Protractor plugins developed and bundled together with after-work.js:
 
-* **Screenshooter**: enables you to take a screenshot of an element and compare it to a saved baseline using an expect statement
+- **Screenshooter**: enables you to take a screenshot of an element and compare it to a saved baseline using an expect statement
 
 ```js
 it('should match baseline', async () => {
@@ -69,4 +69,4 @@ it('should match baseline', async () => {
 });
 ```
 
-* **Custom Reporter**: a mocha reporter that saves the test results into JSON. A HTML report is generated after the test is completed with the ability to show the different states of a rendering (Screenshooter) test.
+- **Custom Reporter**: a mocha reporter that saves the test results into JSON. A HTML report is generated after the test is completed with the ability to show the different states of a rendering (Screenshooter) test.
