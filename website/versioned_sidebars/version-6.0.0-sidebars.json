@@ -1,0 +1,35 @@
+{
+  "version-6.0.0-docs": {
+    "Getting started": [
+      "version-6.0.0-requirements",
+      "version-6.0.0-installation"
+    ],
+    "Commands": [
+      "version-6.0.0-node",
+      "version-6.0.0-chrome",
+      "version-6.0.0-protractor",
+      "version-6.0.0-puppeteer"
+    ],
+    "Command line options": [
+      "version-6.0.0-node-options",
+      "version-6.0.0-chrome-options",
+      "version-6.0.0-protractor-options",
+      "version-6.0.0-puppeteer-options"
+    ],
+    "Examples": [
+      "version-6.0.0-react-examples",
+      "version-6.0.0-node-js-examples",
+      "version-6.0.0-node-js-no-babel-examples",
+      "version-6.0.0-node-ts-examples",
+      "version-6.0.0-chrome-esm-examples",
+      "version-6.0.0-chrome-js-examples",
+      "version-6.0.0-chrome-ts-examples",
+      "version-6.0.0-protractor-examples",
+      "version-6.0.0-puppeteer-examples",
+      "version-6.0.0-webpack-dev-server-examples"
+    ],
+    "Contributing": [
+      "version-6.0.0-development"
+    ]
+  }
+}
