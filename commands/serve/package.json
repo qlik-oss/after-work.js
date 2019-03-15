@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/serve",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "publishConfig": {
     "access": "public"
   },
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/server": "6.0.0"
+    "@after-work.js/server": "6.0.1"
   },
   "files": [
     "/src"
