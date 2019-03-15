@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/interactive-plugin",
-  "version": "5.1.1",
+  "version": "6.0.0",
   "publishConfig": {
     "access": "public"
   },
@@ -20,12 +20,12 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/utils": "5.1.1",
+    "@after-work.js/utils": "6.0.0",
+    "fuzzy": "0.1.3",
     "globby": "9.1.0",
-    "inquirer": "6.2.2",
-    "inquirer-checkbox-plus-prompt": "1.0.1",
     "import-cwd": "2.1.0",
-    "fuzzy": "0.1.3"
+    "inquirer": "6.2.2",
+    "inquirer-checkbox-plus-prompt": "1.0.1"
   },
   "files": [
     "/src"

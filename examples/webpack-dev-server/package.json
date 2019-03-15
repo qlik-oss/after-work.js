@@ -1,7 +1,7 @@
 {
   "name": "@after-work.js/example-webpack-dev-server",
   "private": true,
-  "version": "5.1.1",
+  "version": "6.0.0",
   "description": "Webpack dev server example",
   "scripts": {},
   "repository": {
@@ -15,11 +15,11 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
+    "@after-work.js/transform-middleware": "6.0.0",
     "@babel/core": "7.3.4",
     "@babel/preset-env": "7.3.4",
     "@babel/preset-react": "7.0.0",
     "babel-loader": "8.0.4",
-    "@after-work.js/transform-middleware": "5.1.1",
     "html-webpack-plugin": "3.2.0",
     "react": "16.8.4",
     "react-dom": "16.8.4"
