@@ -17,6 +17,6 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
     "@after-work.js/cli": "6.0.0",
-    "@after-work.js/node": "5.1.1"
+    "@after-work.js/node": "6.0.0"
   }
 }
