@@ -218,7 +218,7 @@ class Runner extends EventEmitter {
       this.logLine('Loading', file);
     });
     this.nyc = new NYC(this.argv.nyc);
-    this.argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
+    this.argv.shouldInstrument = f => !utils.isTestFile(f, this.argv) && this.nyc.exclude.shouldInstrument(f);
     try {
       this.deleteCoverage()
         .setup(testFiles, srcFiles)
