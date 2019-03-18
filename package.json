@@ -32,7 +32,7 @@
     "@types/mocha": "5.2.6",
     "babel-plugin-istanbul": "5.1.1",
     "coveralls": "3.0.3",
-    "eslint": "5.15.1",
+    "eslint": "5.15.3",
     "eslint-config-airbnb": "17.1.0",
     "eslint-plugin-import": "2.16.0",
     "eslint-plugin-jsx-a11y": "6.2.1",
@@ -45,7 +45,7 @@
     "typescript": "3.3.3333",
     "yargs": "13.2.2",
     "webpack": "4.29.6",
-    "webpack-cli": "3.2.3",
+    "webpack-cli": "3.3.0",
     "webpack-dev-server": "3.2.1"
   },
   "workspaces": [
