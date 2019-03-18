@@ -26,7 +26,7 @@ packagesPath.forEach((root) => {
   packagesMap.set(name, root);
 });
 
-const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,ts}';
+const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,jsx,ts,tsx}';
 const DEFAULT_TEST_GLOB_PATTERN = `**/${DEFAULT_TEST_EXT_PATTERN}`;
 
 const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts}';
