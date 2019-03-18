@@ -58,7 +58,7 @@ jobs:
 
       - run:
           name: Puppeteer
-          command: yarn test:puppeteer
+          command: yarn test:puppeteer --chrome.args "'--single-process'"
 
       - run:
           name: Protractor rendering
