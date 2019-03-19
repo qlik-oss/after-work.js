@@ -6,9 +6,6 @@ const importCwd = require('import-cwd');
 const utils = require('@after-work.js/utils');
 const options = require('./options');
 const Runner = require('./runner');
-// process.on('unhandledRejection', (err) => {
-//   console.error(`Promise Rejection:${err}`);
-// });
 
 const cdp = {
   Runner,
@@ -16,6 +13,7 @@ const cdp = {
   desc: 'Run tests with cdp (chrome devtools protocol)',
   builder(yargs) {
     return yargs
+      .middleware(utils.addDefaults)
       .options(options)
       .config('config', (configPath) => {
         if (configPath === null) {

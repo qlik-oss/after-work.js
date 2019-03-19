@@ -93,6 +93,7 @@ const puppet = {
   desc: 'Run tests with puppeteer',
   builder(yargs) {
     return yargs
+      .middleware(utils.addDefaults)
       .options(options)
       .config('config', configure)
       .coerce('babel', utils.coerceBabel);

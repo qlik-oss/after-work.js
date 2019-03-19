@@ -278,6 +278,7 @@ const node = {
   desc: 'Run tests in node',
   builder(yargs) {
     return yargs
+      .middleware(utils.addDefaults)
       .options(options)
       .config('config', configure)
       .coerce('babel', utils.coerceBabel)
