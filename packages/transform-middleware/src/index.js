@@ -3,8 +3,8 @@ const testExclude = require('test-exclude');
 const { transformFile } = require('@after-work.js/transform');
 const {
   coerceBabel,
-  DEFAULT_SRC_EXCLUDE_PATTERN,
   DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
+  getInstrumentExcludePattern,
 } = require('@after-work.js/utils');
 
 module.exports = function transformFiles(userArgv) {
@@ -26,7 +26,7 @@ module.exports = function transformFiles(userArgv) {
     babel,
     nyc: {
       include: [],
-      exclude: DEFAULT_SRC_EXCLUDE_PATTERN,
+      exclude: getInstrumentExcludePattern(userArgv),
       tempDirectory: './coverage/.nyc_output',
       reporter: ['lcov', 'text-summary'],
       reportDir: 'coverage',

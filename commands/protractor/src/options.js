@@ -15,7 +15,7 @@ module.exports = {
     description: 'Glob pattern',
     type: 'array',
     default: [],
-    alias: ['glob'],
+    alias: 'glob',
   },
   coverage: {
     description: 'Generate coverage',
