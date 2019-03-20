@@ -1,8 +1,11 @@
 const {
   packages,
   DEFAULT_TEST_EXT_PATTERN,
+  TEST_GLOB,
+  SRC_GLOB,
   DEFAULT_SRC_EXT_PATTERN,
   DEFAULT_SRC_EXCLUDE_PATTERN,
+  WATCH_GLOB,
 } = require('@after-work.js/utils');
 
 module.exports = {
@@ -32,7 +35,7 @@ module.exports = {
   },
   test: {
     description: 'Glob pattern',
-    default: [],
+    default: TEST_GLOB,
     type: 'array',
     alias: 'glob',
   },
@@ -43,7 +46,7 @@ module.exports = {
   },
   src: {
     description: 'Glob pattern for all source files',
-    default: [],
+    default: SRC_GLOB,
     type: 'array',
     hidden: true,
   },
@@ -61,9 +64,10 @@ module.exports = {
   },
   watchGlob: {
     description: 'Watch glob',
-    default: [],
+    default: WATCH_GLOB,
     type: 'array',
     alias: 'wg',
+    coerce: opt => [...opt, ...WATCH_GLOB],
   },
   coverage: {
     description: 'Generate coverage?',

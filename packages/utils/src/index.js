@@ -36,7 +36,8 @@ const DEFAULT_SRC_EXCLUDE_PATTERN = [
   DEFAULT_TEST_EXT_PATTERN,
   '**/*.config.*',
 ];
-const getDefaultSrcExcludePattern = DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
+
+const DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN = DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
   (acc, curr) => [...acc, `!**/${curr}/**`, `!./${curr}/**`],
   [],
 );
@@ -136,7 +137,6 @@ const utils = {
   addDefaults,
   getPackages,
   getInstrumentExcludePattern,
-  getDefaultSrcExcludePattern,
   packagesPath,
   workspaces,
   lernaPackages,
@@ -148,6 +148,7 @@ const utils = {
   DEFAULT_SRC_EXT_PATTERN,
   DEFAULT_SRC_GLOB_PATTERN,
   DEFAULT_SRC_EXCLUDE_PATTERN,
+  DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN,
   DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
   DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
   isSourceMap(f) {
