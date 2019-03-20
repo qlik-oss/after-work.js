@@ -66,6 +66,7 @@ const DEFAULT_TRANSFORM_EXCLUDE_PATTERN = [
   '**/node_modules/**',
   './node_modules/**',
   '**/__*__/**',
+  '**/mocks/**',
   '**/scripts/**',
   '**/dist/**',
   '**/docs/**',
@@ -79,6 +80,7 @@ const DEFAULT_TRANSFORM_EXCLUDE_PATTERN = [
 ];
 const DEFAULT_INSTRUMENT_EXCLUDE_PATTERN = [
   ...DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
+  '**/test/**',
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_TEST_GLOB_PATTERN,
 ];
@@ -98,6 +100,7 @@ const getInstrumentExcludePattern = ({
   ...DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
   `**/${DEFAULT_CONFIGS}`,
   DEFAULT_CONFIGS,
+  '**/test/**',
   `**/${testExt}`,
   testExt,
 ];
