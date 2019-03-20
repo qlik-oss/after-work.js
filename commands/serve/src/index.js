@@ -18,16 +18,6 @@ const server = {
           default: 9000,
           type: 'number',
         },
-        'http.root': {
-          description: 'Serve root(s)',
-          default: ['./'],
-          type: 'array',
-        },
-        'http.rewrite': {
-          description: 'Rewrite url(s)',
-          default: {},
-          type: 'object',
-        },
       })
       .config('config', (configPath) => {
         if (configPath === null) {

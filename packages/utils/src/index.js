@@ -36,6 +36,10 @@ const DEFAULT_SRC_EXCLUDE_PATTERN = [
   DEFAULT_TEST_EXT_PATTERN,
   '**/*.config.*',
 ];
+const getDefaultSrcExcludePattern = DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
+  (acc, curr) => [...acc, `!**/${curr}/**`, `!./${curr}/**`],
+  [],
+);
 
 const getTestGlob = ({ testExt }) => [
   ...(packagesPath.length
@@ -44,6 +48,7 @@ const getTestGlob = ({ testExt }) => [
   '!**/node_modules/**',
   '!./node_modules/**',
 ];
+const TEST_GLOB = getTestGlob({ testExt: DEFAULT_TEST_EXT_PATTERN });
 
 const getSrcGlob = ({ srcExt }) => [
   ...(packagesPath.length
@@ -52,6 +57,9 @@ const getSrcGlob = ({ srcExt }) => [
   '!**/node_modules/**',
   '!./node_modules/**',
 ];
+const SRC_GLOB = getSrcGlob({ srcExt: DEFAULT_SRC_EXT_PATTERN });
+
+const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 const DEFAULT_TRANSFORM_EXCLUDE_PATTERN = [
   '**/node_modules/**',
@@ -94,16 +102,17 @@ const getInstrumentExcludePattern = ({
 ];
 
 const addDefaults = (argv) => {
-  if (!argv.glob.length) {
+  // Re-evaluate if it's the default values e.g `testExt` or `srcExt` could be changed
+  if (argv.glob === TEST_GLOB) {
     argv.glob = getTestGlob(argv);
   }
-  if (!argv.src.length) {
+  if (argv.src === SRC_GLOB) {
     argv.src = getSrcGlob(argv);
   }
-  if (!argv.watchGlob.length) {
+  if (argv.watchGlob === WATCH_GLOB) {
     argv.watchGlob = [...argv.glob, ...argv.src];
   }
-  if (!argv.nyc.exclude.length) {
+  if (argv.nyc.exclude === DEFAULT_INSTRUMENT_EXCLUDE_PATTERN) {
     argv.nyc.exclude = getInstrumentExcludePattern(argv);
   }
 };
@@ -127,9 +136,13 @@ const utils = {
   addDefaults,
   getPackages,
   getInstrumentExcludePattern,
+  getDefaultSrcExcludePattern,
   packagesPath,
   workspaces,
   lernaPackages,
+  TEST_GLOB,
+  SRC_GLOB,
+  WATCH_GLOB,
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_TEST_GLOB_PATTERN,
   DEFAULT_SRC_EXT_PATTERN,

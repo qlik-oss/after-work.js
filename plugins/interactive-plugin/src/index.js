@@ -6,7 +6,7 @@ const {
   getPackages,
   workspaces,
   lernaPackages,
-  DEFAULT_SRC_EXCLUDE_PATTERN,
+  getDefaultSrcExcludePattern,
   createDebug,
 } = utils;
 
@@ -69,10 +69,7 @@ const onInteractive = async (runner) => {
           `${p}/**/${runner.argv.srcExt}`,
           '!**/node_modules/**',
           '!./node_modules/**',
-          ...DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
-            (acc, curr) => [...acc, `!**/${curr}/**`, `!./${curr}/**`],
-            [],
-          ),
+          ...getDefaultSrcExcludePattern(),
         ]),
       ];
     });
