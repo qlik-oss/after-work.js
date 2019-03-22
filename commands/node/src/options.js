@@ -178,6 +178,11 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  'nyc.instrumenter': {
+    description: 'Sets which instrumenter to use',
+    default: './lib/instrumenters/noop',
+    type: 'string',
+  },
   'nyc.tempDirectory': {
     description: 'Directory to output raw coverage information to',
     default: './coverage/.nyc_output',

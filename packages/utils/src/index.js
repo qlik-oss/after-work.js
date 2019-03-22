@@ -53,8 +53,8 @@ const TEST_GLOB = getTestGlob({ testExt: DEFAULT_TEST_EXT_PATTERN });
 
 const getSrcGlob = ({ srcExt }) => [
   ...(packagesPath.length
-    ? packagesPath.map(p => `${p}/**/${srcExt}`)
-    : [`**/${srcExt}`]),
+    ? packagesPath.map(p => `${p}/src/**/${srcExt}`)
+    : [`src/**/${srcExt}`]),
   '!**/node_modules/**',
   '!./node_modules/**',
 ];
@@ -65,8 +65,6 @@ const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 const DEFAULT_TRANSFORM_EXCLUDE_PATTERN = [
   '**/node_modules/**',
   './node_modules/**',
-  '**/__*__/**',
-  '**/mocks/**',
   '**/scripts/**',
   '**/dist/**',
   '**/docs/**',
@@ -81,6 +79,9 @@ const DEFAULT_TRANSFORM_EXCLUDE_PATTERN = [
 const DEFAULT_INSTRUMENT_EXCLUDE_PATTERN = [
   ...DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
   '**/test/**',
+  '**/__tests__/**',
+  '**/mocks/**',
+  '**/__mocks__/**',
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_TEST_GLOB_PATTERN,
 ];
@@ -98,9 +99,12 @@ const getInstrumentExcludePattern = ({
   testExt = DEFAULT_TEST_EXT_PATTERN,
 }) => [
   ...DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
+  '**/test/**',
+  '**/__tests__/**',
+  '**/mocks/**',
+  '**/__mocks__/**',
   `**/${DEFAULT_CONFIGS}`,
   DEFAULT_CONFIGS,
-  '**/test/**',
   `**/${testExt}`,
   testExt,
 ];
