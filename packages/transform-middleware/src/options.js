@@ -51,7 +51,7 @@ module.exports = {
     hidden: true,
   },
   srcExt: {
-    description: 'Test file extensions glob pattern',
+    description: 'Source file extensions glob pattern',
     default: DEFAULT_SRC_EXT_PATTERN,
     type: 'string',
     hidden: true,
