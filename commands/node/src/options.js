@@ -1,11 +1,11 @@
 const {
   packages,
-  DEFAULT_TEST_EXT_PATTERN,
-  DEFAULT_SRC_EXT_PATTERN,
-  DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
+  DEFAULT_SRC_EXT_PATTERN,
+  DEFAULT_TEST_EXT_PATTERN,
+  DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
 } = require('@after-work.js/utils');
 
 module.exports = {
@@ -50,7 +50,7 @@ module.exports = {
     type: 'array',
   },
   srcExt: {
-    description: 'Test file extensions glob pattern',
+    description: 'Source file extensions glob pattern',
     default: DEFAULT_SRC_EXT_PATTERN,
     type: 'string',
   },
@@ -177,6 +177,11 @@ module.exports = {
     description: 'Sets if NYC should handle source maps.',
     default: false,
     type: 'boolean',
+  },
+  'nyc.instrumenter': {
+    description: 'Sets which instrumenter to use',
+    default: './lib/instrumenters/noop',
+    type: 'string',
   },
   'nyc.tempDirectory': {
     description: 'Directory to output raw coverage information to',

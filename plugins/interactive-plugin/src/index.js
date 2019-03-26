@@ -3,13 +3,10 @@ const prompt = require('./prompt');
 const promptMenu = require('./prompt-menu');
 
 const {
-  packages,
-  packagesMap,
+  getPackages,
   workspaces,
   lernaPackages,
-  DEFAULT_TEST_GLOB_PATTERN,
-  DEFAULT_SRC_GLOB_PATTERN,
-  DEFAULT_SRC_EXCLUDE_PATTERN,
+  DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN,
   createDebug,
 } = utils;
 
@@ -37,6 +34,7 @@ const onInteractive = async (runner) => {
 
   if (interactive === 'workspaces' || interactive === 'scopes') {
     const message = interactive === 'workspaces' ? 'Which workspaces?' : 'Which scopes';
+    const { packagesMap, packages } = getPackages(runner.argv);
     const inputPackages = runner.argv.scope.length
       ? runner.argv.scope
       : packages;
@@ -60,7 +58,7 @@ const onInteractive = async (runner) => {
       test = [
         ...test,
         ...runner.findFiles([
-          `${p}/${DEFAULT_TEST_GLOB_PATTERN}`,
+          `${p}/**/${runner.argv.testExt}`,
           '!**/node_modules/**',
           '!./node_modules/**',
         ]),
@@ -68,13 +66,10 @@ const onInteractive = async (runner) => {
       src = [
         ...src,
         ...runner.findFiles([
-          `${p}/${DEFAULT_SRC_GLOB_PATTERN}`,
+          `${p}/**/${runner.argv.srcExt}`,
           '!**/node_modules/**',
           '!./node_modules/**',
-          ...DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
-            (acc, curr) => [...acc, `!**/${curr}/**`, `!./${curr}/**`],
-            [],
-          ),
+          ...DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN,
         ]),
       ];
     });

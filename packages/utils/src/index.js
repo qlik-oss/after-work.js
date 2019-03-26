@@ -18,13 +18,6 @@ const lernaPackages = ((lerna && lerna.packages) || [])
   .map(findPkgs)
   .reduce(reducePkgs, []);
 const packagesPath = [...workspaces, ...lernaPackages];
-let packages = [];
-const packagesMap = new Map();
-packagesPath.forEach((root) => {
-  const { name } = importCwd(`./${root}/package.json`);
-  packages = [...packages, name];
-  packagesMap.set(name, root);
-});
 
 const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,jsx,ts,tsx}';
 const DEFAULT_TEST_GLOB_PATTERN = `**/${DEFAULT_TEST_EXT_PATTERN}`;
@@ -43,26 +36,35 @@ const DEFAULT_SRC_EXCLUDE_PATTERN = [
   DEFAULT_TEST_EXT_PATTERN,
   '**/*.config.*',
 ];
-const TEST_GLOB = [
+
+const DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN = DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
+  (acc, curr) => [...acc, `!**/${curr}/**`, `!./${curr}/**`],
+  [],
+);
+
+const getTestGlob = ({ testExt }) => [
   ...(packagesPath.length
-    ? packagesPath.map(p => `${p}/${DEFAULT_TEST_GLOB_PATTERN}`)
-    : [DEFAULT_TEST_GLOB_PATTERN]),
+    ? packagesPath.map(p => `${p}/**/${testExt}`)
+    : [`**/${testExt}`]),
   '!**/node_modules/**',
   '!./node_modules/**',
 ];
-const SRC_GLOB = [
+const TEST_GLOB = getTestGlob({ testExt: DEFAULT_TEST_EXT_PATTERN });
+
+const getSrcGlob = ({ srcExt }) => [
   ...(packagesPath.length
-    ? packagesPath.map(p => `${p}/${DEFAULT_SRC_GLOB_PATTERN}`)
-    : [DEFAULT_SRC_GLOB_PATTERN]),
+    ? packagesPath.map(p => `${p}/src/**/${srcExt}`)
+    : [`src/**/${srcExt}`]),
   '!**/node_modules/**',
   '!./node_modules/**',
 ];
+const SRC_GLOB = getSrcGlob({ srcExt: DEFAULT_SRC_EXT_PATTERN });
+
 const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
 const DEFAULT_TRANSFORM_EXCLUDE_PATTERN = [
   '**/node_modules/**',
   './node_modules/**',
-  '**/__*__/**',
   '**/scripts/**',
   '**/dist/**',
   '**/docs/**',
@@ -76,23 +78,84 @@ const DEFAULT_TRANSFORM_EXCLUDE_PATTERN = [
 ];
 const DEFAULT_INSTRUMENT_EXCLUDE_PATTERN = [
   ...DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
+  '**/test/**',
+  '**/__tests__/**',
+  '**/mocks/**',
+  '**/__mocks__/**',
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_TEST_GLOB_PATTERN,
 ];
+const DEFAULT_CONFIGS = `{${[
+  'aw',
+  'ava',
+  'babel',
+  'jest',
+  'nyc',
+  'rollup',
+  'webpack',
+].join()}}.config.js`;
+
+const getInstrumentExcludePattern = ({
+  testExt = DEFAULT_TEST_EXT_PATTERN,
+}) => [
+  ...DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
+  '**/test/**',
+  '**/__tests__/**',
+  '**/mocks/**',
+  '**/__mocks__/**',
+  `**/${DEFAULT_CONFIGS}`,
+  DEFAULT_CONFIGS,
+  `**/${testExt}`,
+  testExt,
+];
+
+const addDefaults = (argv) => {
+  // Re-evaluate if it's the default values e.g `testExt` or `srcExt` could be changed
+  if (argv.glob === TEST_GLOB) {
+    argv.glob = getTestGlob(argv);
+  }
+  if (argv.src === SRC_GLOB) {
+    argv.src = getSrcGlob(argv);
+  }
+  if (argv.watchGlob === WATCH_GLOB) {
+    argv.watchGlob = [...argv.glob, ...argv.src];
+  }
+  if (argv.nyc.exclude === DEFAULT_INSTRUMENT_EXCLUDE_PATTERN) {
+    argv.nyc.exclude = getInstrumentExcludePattern(argv);
+  }
+};
+
+const getPackages = ({ testExt }) => {
+  const packagesMap = new Map();
+  let packages = [];
+
+  packagesPath.forEach((root) => {
+    const { name } = importCwd(`./${root}/package.json`);
+    const tests = globby.sync(`${root}/**/${testExt}`);
+    if (tests.length) {
+      packages = [...packages, name];
+    }
+    packagesMap.set(name, root);
+  });
+  return { packagesMap, packages };
+};
 
 const utils = {
-  packages,
+  addDefaults,
+  getPackages,
+  getInstrumentExcludePattern,
   packagesPath,
-  packagesMap,
   workspaces,
   lernaPackages,
-  DEFAULT_TEST_EXT_PATTERN,
-  DEFAULT_TEST_GLOB_PATTERN,
-  DEFAULT_SRC_GLOB_PATTERN,
-  DEFAULT_SRC_EXCLUDE_PATTERN,
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
+  DEFAULT_TEST_EXT_PATTERN,
+  DEFAULT_TEST_GLOB_PATTERN,
+  DEFAULT_SRC_EXT_PATTERN,
+  DEFAULT_SRC_GLOB_PATTERN,
+  DEFAULT_SRC_EXCLUDE_PATTERN,
+  DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN,
   DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
   DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
   isSourceMap(f) {

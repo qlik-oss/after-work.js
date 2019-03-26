@@ -1,5 +1,3 @@
-const { TEST_GLOB } = require('@after-work.js/utils');
-
 module.exports = {
   presetEnv: {
     description:
@@ -16,8 +14,8 @@ module.exports = {
   test: {
     description: 'Glob pattern',
     type: 'array',
-    default: TEST_GLOB,
-    alias: ['glob'],
+    default: [],
+    alias: 'glob',
   },
   coverage: {
     description: 'Generate coverage',
