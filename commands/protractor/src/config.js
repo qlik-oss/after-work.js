@@ -38,10 +38,9 @@ const setBaseUrl = async (browser) => {
 
 const setIgnoreSynchronization = async browser => browser.getProcessedConfig().then((currentConfig) => {
   if (typeof currentConfig.ignoreSynchronization !== 'undefined') {
-    browser.ignoreSynchronization = currentConfig.ignoreSynchronization;
-  } else {
-    browser.ignoreSynchronization = true;
+    return browser.waitForAngularEnabled(currentConfig.ignoreSynchronization);
   }
+  return browser.waitForAngularEnabled(false);
 });
 
 const setReporterInfo = async (browser) => {
