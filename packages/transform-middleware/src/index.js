@@ -14,9 +14,9 @@ module.exports = function transformFiles(userArgv) {
     ...(userArgv.babel || {}),
   });
   const transform = {
-    include: userArgv.include || [],
+    include: (userArgv.transform && userArgv.transform.include) || [],
     exclude: [
-      ...(userArgv.exclude || []),
+      ...((userArgv.transform && userArgv.transform.exclude) || []),
       ...DEFAULT_TRANSFORM_EXCLUDE_PATTERN,
     ],
   };
