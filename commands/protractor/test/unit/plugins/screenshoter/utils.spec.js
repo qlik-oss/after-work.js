@@ -162,5 +162,21 @@ describe('Screenshoter Utils', () => {
         });
         expect(result.browserName).to.equal('chrome');
       }));
+
+    it('should work with IE11 capabilities', async () => {
+      Capabilities.delete('platform');
+      Capabilities.set('platform', 'windows');
+      Capabilities.set('browserName', 'internet explorer');
+      const result = await utils.takeImageOf(browser, {});
+
+      expect(result.rect).to.deep.equal({
+        top: 100,
+        left: 200,
+        width: 200,
+        height: 100,
+      });
+      expect(result.browserName).to.equal('internet-explorer');
+      expect(result.platform).to.equal('windows');
+    });
   });
 });

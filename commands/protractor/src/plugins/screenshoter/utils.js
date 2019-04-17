@@ -50,16 +50,16 @@ const utils = {
           };
         }));
       })
-      .then(meta => this.getBrowserName(browser).then(caps => ({
-        img: meta.img,
-        rect: meta.rect,
-        browserName: caps.get('browserName').replace(' ', '-'),
-        artifactsPath: browser.reporterInfo.artifactsPath,
-        platform: caps
-          .get('platform')
-          .replace(/ /g, '-')
-          .toLowerCase(),
-      })));
+      .then(meta => this.getBrowserName(browser).then((caps) => {
+        const platform = caps.get('platform') || caps.get('platformName') || 'unknown';
+        return {
+          img: meta.img,
+          rect: meta.rect,
+          browserName: caps.get('browserName').replace(' ', '-'),
+          artifactsPath: browser.reporterInfo.artifactsPath,
+          platform: platform.replace(/ /g, '-').toLowerCase(),
+        };
+      }));
   },
 };
 
