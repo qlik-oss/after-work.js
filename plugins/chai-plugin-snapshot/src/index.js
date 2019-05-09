@@ -26,7 +26,8 @@ module.exports = function snapshot(runner) {
     let currentTestName = null;
     for (let i = lineno - 1; i >= 0; i -= 1) {
       const line = lines[i];
-      if (line.trimLeft().startsWith('it(')) {
+      const trimmed = line.trimLeft();
+      if (trimmed.startsWith('it(') || trimmed.startsWith('it.only(')) {
         [, currentTestName] = line.match(/it.*\((.*),/);
         break;
       }
