@@ -15,6 +15,21 @@
   display: block;
 }
 
+#footer {
+  background: #5d5d5d;
+  color: #fff;
+}
+
+#footer .qlikOpenSource {
+  margin: 1em auto;
+  width: 200px;
+  display: block;
+  opacity: 0.6;
+}
+
+#footer .qlikOpenSource:hover {
+  opacity: 0.9;
+}
 footer.nav-footer {
   background: #5d5d5d;
 }
@@ -113,6 +128,7 @@ footer .sitemap {
   transition: all 0.1s ease-out;
   position: relative;
   top: 0;
+  padding: 4px;
 }
 
 .card:hover {
@@ -139,4 +155,27 @@ footer .sitemap {
 .card .info {
   padding: 10px;
   text-align: left;
+}
+
+nav.toc .toggleNav {
+  background: transparent;
+}
+
+nav.toc .toggleNav ul li a {
+  color: #aaa;
+}
+
+nav.toc .toggleNav .navGroup.navGroupActive h3 {
+  background: none;
+  color: #666;
+}
+
+nav.toc .toggleNav .navGroup, nav.toc .toggleNav .navGroup.navGroupActive {
+  background: #fff;
+}
+
+@media only screen and (min-width: 1024px) {
+.onPageNav {
+  flex: 0 0 250px;
+}
 }

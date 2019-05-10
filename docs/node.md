@@ -12,54 +12,74 @@ npx aw -c ./path/to/aw.config.js -w --coverage
 and start testing. It will only rerun affected tests and generate coverage accordingly.
 Add files, remove files as you go and change your tests to rapidly build up a test coverage.
 
-## Best practice for coverage
-`after-work.js` will default to use babel and babel-plugin-istanbul for getting correct code coverage but these devDependecies has to be installed per repository. 
+## Mocking
 
-See [set up the project](https://github.com/istanbuljs/nyc#use-with-babel-plugin-istanbul-for-babel-support) with the `babel-plugin-istanbul`
+Built-in mocking. You can mock globally via the [**mocks**](#mocks) option or locally by using:
 
-.babelrc
-```
-{
-  "babel": {
-    "presets": ["env"],
-    "env": {
-      "test": {
-        "plugins": ["istanbul"]
-      }
-    }
-  }
-}
+```javascript
+const span = <span>my span</span>;
+const [{ default: FancyButton }] = aw.mock(
+  [
+    // Mock components
+    ['**/react/src/button.js', () => () => span]
+  ],
+  // Require components
+  ['../src/fancy-button']
+);
 ```
 
-```shell
-Options:
-  --version            Show version number                                                                     [boolean]
-  --config, -c         Path to JSON config file                                                 [string] [default: null]
-  --glob               Glob pattern                                             [array] [default: ["test/**/*.spec.js"]]
-  --src                Glob pattern for all source files                              [array] [default: ["src/**/*.js"]]
-  --require            Require path                                                                [array] [default: []]
-  --watch, -w          Watch changes                                                          [boolean] [default: false]
-  --watchGlob, --wg    Watch glob                                 [array] [default: ["src/**/*.js","test/**/*.spec.js"]]
-  --coverage           Generate coverage                                                      [boolean] [default: false]
-  --exit               Force its own process to exit once it was finished executing all tests [boolean] [default: false]
-  --mocha.reporter     Which reporter to use                                                                    [string]
-  --mocha.bail         Bail on fail?                                                           [boolean] [default: true]
-  --mocha.timeout      Timeout                                                                                  [number]
-  --nyc.require        Require path                                                                [array] [default: []]
-  --nyc.include        Include glob                                                                [array] [default: []]
-  --nyc.exclude        Exclude glob                                                [array] [default: ["**/coverage/**"]]
-  --nyc.sourceMap      Should nyc detect and handle source maps?                              [boolean] [default: false]
-  --nyc.babel          Sets up a preferred babel test environment
-                       e.g add `babel-register` to `nyc.require`
-                       `nyc.sourceMap=false`
-                       `nyc.instrument=./lib/instrumenters/noop`                               [boolean] [default: true]
-  --nyc.tempDirectory  Directory to output raw coverage information to      [string] [default: "./coverage/.nyc_output"]
-  --nyc.reporter       Coverage reporter(s) to use                            [array] [default: ["lcov","text-summary"]]
-  --nyc.reportDir      Directory to output coverage reports in                            [string] [default: "coverage"]
-  -h, --help           Show help                                                                               [boolean]
+Look at the React [example](https://github.com/qlik-oss/after-work.js/tree/master/examples/react) and especially [**here**](https://github.com/qlik-oss/after-work.js/blob/master/examples/react/test/fancy-button.spec.js) for more details.
+
+## Snapshot Testing
+
+We are using the awesome 📸 [**jest-snapshot**](https://github.com/facebook/jest/tree/master/packages/jest-snapshot) package.
+
+<details><summary>Example</summary>
+<p>
+
+```javascript
+import React from 'react';
+import renderer from 'react-test-renderer';
+import 'foo.scss';
+import 'bar.less';
+import 'baz.css';
+import Button from '../src/button';
+
+describe('button', () => {
+  it('renders correctly', () => {
+    const tree = renderer.create(<Button>Text</Button>).toJSON();
+    expect(tree).toMatchSnapshot();
+    const tree1 = renderer.create(<Button>Text1</Button>).toJSON();
+    expect(tree1).toMatchSnapshot();
+  });
+  it('renders fancy', () => {
+    const tree1 = renderer.create(<Button>fancy1</Button>).toJSON();
+    expect(tree1).toMatchSnapshot();
+  });
+});
 ```
 
-## Tests not finishing correctly?
-This is indicating that the tests aren’t cleaning up after themselves. This could be caused by a server still listening on a port or a setTimeout()/setInterval().
+</p>
+</details>
 
-It´s possible to force exit by adding the `--exit` options but this could hide flaws in the test, causing sequential test to give false positive or false negative results.
+## Screenshot testing
+
+When using the preset-env option. A screenshot assertion plugin is added to Chai. This allows comparisons of images.
+
+<details><summary>Example</summary>
+<p>
+
+```javascript
+describe('screenshot', () => {
+  it('image should be equal', async () => {
+    const img = Promise.resolve('<base64-encoded-image>'); //  Promise that resolves to Buffer or a base64 encoded image
+    await expect(img).to.matchImageOf('<name-of-my-img-on-disk>', {
+      artifactsPath: 'tests/__artifacts__',
+      tolerance: 0.002
+    });
+  });
+});
+```
+
+</p>
+</details>

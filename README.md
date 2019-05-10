@@ -1,6 +1,7 @@
-![after-work.js](aw.png)
+![after-work.js](packages/server/aw.png)
 
 [![CircleCI](https://circleci.com/gh/qlik-oss/after-work.js.svg?style=shield)](https://circleci.com/gh/qlik-oss/after-work.js)
+[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![Coverage Status](https://coveralls.io/repos/github/qlik-oss/after-work.js/badge.svg?branch=master)](https://coveralls.io/github/qlik-oss/after-work.js?branch=master)
 
 `after-work.js` is an unified test framework highly configurable through cli and configuration files allowing tests to be executed in the desired context.
@@ -18,6 +19,7 @@
 * [puppeteer](https://github.com/GoogleChrome/puppeteer) (High-level Headless Chrome Node API - experimental): puppeteer
 
 ## Introduction
+
 `after-work.js` aims to be a tool that facilitates the testing while development or restructuring code.
 Designed for test and provide fast feedback on changed code and added testcases.
 
@@ -29,34 +31,45 @@ To configure `after-work.js` you need to start with an analyse of the code.
 ## Get started
 
 ### Installation
+
 Install the module using npm:
+
 ```sh
-npm install --save-dev after-work.js
+npm install --save-dev @after-work.js/aw
 ```
 
 ### CLI entrypoint
+
 `after-work.js` is CLI and consists of a command together with appropriate options
 Help is always available with the `--help, -h` option
-```
-aw <command>
 
-Commands:
-  aw node        Run tests in node                                                         [default]
-  aw protractor  Run protractor                                                      [aliases: ptor]
-  aw cdp         Run tests with cdp (chrome devtools protocol)                     [aliases: chrome]
-  aw serve       Serve files
-  aw puppeteer   Run tests with puppeteer                                          [aliases: puppet]
+```sh
+npx aw -h
+npx aw chrome -h
+npx aw protractor -h
+npx aw serve -h
+npx aw puppeteer -h
 ```
+
+ | Command    | Description                                     | Alias  | Default | Experimental |
+ | ---------- | ----------------------------------------------- | ------ | :-----: | :----------: |
+ | node       | Run tests in node.                              |        | x       |              |
+ | cdp        | Run tests in Chrome (chrome devtools protocol). | chrome |         |              |
+ | protractor | Run tests with Protractor.                      | ptor   |         |              |
+ | serve      | Serve files.                                    |        |         |              |
+ | puppeteer  | Run tests with Puppeteer.                       | puppet |         | x            |
+
+---
 
 All commands support passing a config file for all options.
 
-```shell
+```sh
 npx aw -c ./path/to/aw.config.js
 ```
 
 However, passing an option from command line will override the config file option.
 
-```shell
+```sh
 npx aw -c ./path/to/aw.config.js --glob /path/that/overrides/glob/in/config/file
 ```
 
@@ -68,19 +81,13 @@ This will only run the current active file. And you don't have to worry about yo
 since `after-work.js` will automatically detect running a debugger and set the appropriate options accordingly.
 
 ## Included Tools
+
 The following tools are bundled into after-work.js:
+
 * [Mocha](https://mochajs.org/): an extensible testing framework for TDD or BDD.
 * [Chai](http://chaijs.com/): an assertion library used together with a JavaScript testing framework.
 * [Sinon](http://sinonjs.org/): a framework for standalone test spies, stubs and mocks for JavaScript.
 * [Nyc](https://istanbul.js.org/): the Istanbul command line interface
-
-## Examples
-* [Node](./examples/node/README.md)
-
-Browser
-* [ES2015](./examples/es2015/README.md)
-* [Requirejs](./examples/requirejs/README.md)
-* [Typescript](./examples/typescript/README.md)
 
 ## Contributing
 

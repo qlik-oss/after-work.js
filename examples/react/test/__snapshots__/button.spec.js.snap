@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`'renders correctly' 1`] = `
+<button>
+  Text
+</button>
+`;
+
+exports[`'renders correctly' 2`] = `
+<button>
+  Text1
+</button>
+`;
+
+exports[`'renders fancy' 1`] = `
+<button>
+  fancy1
+</button>
+`;

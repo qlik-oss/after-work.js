@@ -35,29 +35,7 @@ If the change is minor, you can submit a Pull Request directly without creating 
 
 ## Developing
 
-Begin by installing all dependencies:
-
-```sh
-$ npm install
-```
-
-Building the project:
-
-```sh
-$ npm run build
-```
-
-Running unit and component tests:
-
-```sh
-$ npm run test
-```
-
-Linting files:
-
-```sh
-$ npm run lint
-```
+[Developing instructions](../docs/development.md).
 
 ## <a name="git"></a> Git Guidelines
 

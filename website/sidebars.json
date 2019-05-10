@@ -1,13 +1,25 @@
 {
   "docs": {
-    "Getting started": [
-      "requirements",
-      "installation"
+    "Getting started": ["requirements", "installation"],
+    "Commands": ["node", "chrome", "protractor", "puppeteer"],
+    "Command line options": [
+      "node-options",
+      "chrome-options",
+      "protractor-options",
+      "puppeteer-options"
     ],
-    "Commands": [
-      "node",
-      "cdp",
-      "protractor"
-    ]
+    "Examples": [
+      "react-examples",
+      "node-js-examples",
+      "node-js-no-babel-examples",
+      "node-ts-examples",
+      "chrome-esm-examples",
+      "chrome-js-examples",
+      "chrome-ts-examples",
+      "protractor-examples",
+      "puppeteer-examples",
+      "webpack-dev-server-examples"
+    ],
+    "Contributing": ["development"]
   }
 }

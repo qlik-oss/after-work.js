@@ -1,0 +1,20 @@
+{
+  "name": "@after-work.js/example-node-js-no-babel",
+  "private": true,
+  "version": "6.0.3",
+  "description": "Node example with javascript and not using babel",
+  "scripts": {
+    "lint": "eslint src test",
+    "test": "npx aw --test test/**/*.spec.js --babel.enable false"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme"
+}

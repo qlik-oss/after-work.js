@@ -1,0 +1,34 @@
+# Test against the latest version of this Node.js version
+environment:
+  matrix:
+    - nodejs_version: "LTS"
+
+cache:
+  - "%LOCALAPPDATA%\\Yarn"
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Install latest chrome
+  # - choco install googlechrome --ignore-checksums
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # Output useful info for debugging.
+  - node --version
+  - yarn --version
+  # Workaround for https://github.com/appveyor/ci/issues/2420
+  - set "PATH=%PATH%;C:\Program Files\Git\mingw64\libexec\git-core"
+  # install modules
+  - yarn
+
+# Post-install test scripts.
+test_script:
+  - npm run lint
+  # run tests
+  - npm run test:node
+  - npm run test:chrome
+  - npm run test:protractor -- --chromeDriver /Tools/WebDriver/chromedriver.exe
+  - npm run test:protractor:multi -- --chromeDriver /Tools/WebDriver/chromedriver.exe
+  - npm run test:puppeteer
+
+# Don't actually build.
+build: "off"

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`'renders custom consumer' 1`] = `
+<button
+  onClick={[Function]}
+  type="submit"
+>
+  Custom Consumer Test FOO
+</button>
+`;

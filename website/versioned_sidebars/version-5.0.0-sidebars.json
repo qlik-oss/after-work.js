@@ -1,0 +1,17 @@
+{
+  "version-5.0.0-docs": {
+    "Getting started": [
+      "version-5.0.0-requirements",
+      "version-5.0.0-installation"
+    ],
+    "Commands": [
+      "version-5.0.0-node",
+      "version-5.0.0-cdp",
+      "version-5.0.0-protractor",
+      "version-5.0.0-puppeteer"
+    ],
+    "Contributing": [
+      "version-5.0.0-development"
+    ]
+  }
+}

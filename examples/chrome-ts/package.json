@@ -1,0 +1,18 @@
+{
+  "name": "@after-work.js/example-chrome-ts",
+  "private": true,
+  "version": "6.0.3",
+  "description": "Typescript",
+  "main": "src/index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/qlik-oss/after-work.js.git"
+  },
+  "author": "QlikTech International AB",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qlik-oss/after-work.js/issues"
+  },
+  "homepage": "https://github.com/qlik-oss/after-work.js#readme"
+}

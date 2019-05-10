@@ -1,0 +1,12 @@
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+
+# space indentation
+[*.*]
+indent_style = space
+indent_size = 2
+
+# ignore final new line for html
+[*.html]
+insert_final_newline = false

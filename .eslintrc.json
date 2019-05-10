@@ -1,26 +1,57 @@
 {
+  "root": true,
   "env": {
     "node": true,
     "mocha": true,
-    "protractor": true,
-    "phantomjs": true
+    "protractor": true
   },
   "globals": {
     "sinon": true,
-    "expect": true
+    "expect": true,
+    "aw": true,
+    "page": true
   },
   "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
     "sourceType": "module"
   },
   "rules": {
+    "import/no-extraneous-dependencies": [
+      2,
+      {
+        "devDependencies": true
+      }
+    ],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ],
+    "react/prop-types": [
+      1,
+      {
+        "ignore": ["children"]
+      }
+    ],
+    "react/prefer-stateless-function": 0,
+    "no-restricted-syntax": 0,
+    "global-require": 0,
+    "import/no-dynamic-require": 0,
+    "no-unused-expressions": 0,
+    "no-underscore-dangle": 0,
+    "class-methods-use-this": 0,
+    "prefer-const": ["error", { "destructuring": "all" }],
+    "max-len": 0,
     "no-param-reassign": 0,
-    "comma-dangle": ["error", {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always-multiline",
-        "exports": "always-multiline",
-        "functions": "never"
-    }]
+    "no-console": 0,
+    "no-bitwise": 0,
+    "radix": 0,
+    "no-plusplus": 0,
+    "no-new": 0,
+    "import/no-unresolved": 0
   },
-  "extends": "airbnb-base"
+  "extends": ["airbnb"]
 }

@@ -8,3 +8,6 @@ coverage/
 .vscode
 .chrome-profile
 .DS_Store
+lerna-debug.log
+test/__artifacts__/*
+!test/__artifacts__/baseline/

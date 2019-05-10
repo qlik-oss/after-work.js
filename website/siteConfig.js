@@ -1,4 +1,3 @@
-
 const siteConfig = {
   title: 'after-work.js',
   tagline: 'Testing, made simple',
@@ -9,9 +8,8 @@ const siteConfig = {
   // cname: 'aw.com',
   organizationName: 'qlik-oss',
   headerLinks: [
+    { blog: true, label: 'Blog' },
     { doc: 'installation', label: 'Docs' },
-    // { doc: 'tutorial', label: 'Tutorial' },
-    // { page: 'examples', label: 'Examples' },
     { search: true },
     { href: 'https://github.com/qlik-oss/after-work.js', label: '\uf09b' },
   ],
@@ -19,7 +17,6 @@ const siteConfig = {
   disableHeaderTitle: true,
   footerIcon: 'img/aw.svg',
   ogImage: 'img/aw.svg',
-  // gaTrackingId: '',
   favicon: 'img/aw.png',
   colors: {
     primaryColor: '#333',
@@ -31,10 +28,12 @@ const siteConfig = {
   },
   scripts: [
     'https://buttons.github.io/buttons.js',
-    // `${baseUrl}js/landing.js`
+    'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js',
+    '/js/code-block-buttons.js',
   ],
   stylesheets: [
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+    '/css/code-block-buttons.css',
   ],
   repoUrl: 'https://github.com/qlik-oss/after-work.js',
   editUrl: 'https://github.com/qlik-oss/after-work.js/edit/master/docs/',
@@ -45,6 +44,11 @@ const siteConfig = {
       hitsPerPage: 7,
     },
   },
+  scrollToTop: true,
+  scrollToTopOptions: {
+    zIndex: 100,
+  },
+  onPageNav: 'separate',
 };
 
 module.exports = siteConfig;

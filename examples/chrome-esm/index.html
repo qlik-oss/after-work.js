@@ -1,0 +1,39 @@
+<!doctype>
+<html>
+
+<head>
+  <title>Test</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <script src="/node_modules/mocha/mocha.js"></script>
+  <script src="/node_modules/chai/chai.js"></script>
+  <script>
+    window.expect = chai.expect;
+  </script>
+  <script type="module">
+    function loadFromScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = false;
+        script.type = 'module';
+        script.onload = () => {
+          resolve();
+        };
+        script.onerror = (e) => {
+          reject(e);
+        };
+        script.src = src;
+        document.documentElement.appendChild(script);
+      });
+    }
+    (async () => {
+      await Promise.all(window.awFiles.map(f => loadFromScript(f)));
+      mocha.run();
+    })();
+  </script>
+</body>
+
+</html>

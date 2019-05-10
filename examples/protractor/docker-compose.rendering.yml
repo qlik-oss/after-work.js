@@ -1,0 +1,9 @@
+version: '3'
+services:
+  selenium:
+    image: selenium/standalone-chrome
+    container_name: selenium
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - 4444:4444

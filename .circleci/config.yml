@@ -1,49 +1,69 @@
 version: 2
 
-jobs:
-  install:
-    docker:
-      - image: circleci/node:8.9.4
-    working_directory: ~/after-work.js
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install dependencies 
-          command: npm i
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
-      - persist_to_workspace:
-          root: ~/after-work.js
-          paths:
-            - .
+aliases:
+  - &restore_yarn_cache
+    name: Restore yarn cache
+    keys:
+      - yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - yarn-packages-{{ .Branch }}
+      - yarn-packages-
+  - &save_yarn_cache
+    name: Save yarn cache
+    paths:
+      - ~/.cache/yarn
+    key: yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
+  - &attach
+    at: ~/after-work.js
 
+jobs:
   build:
     docker:
-      - image: circleci/node:8.9.4
-    working_directory: ~/after-work.js
-    steps:
-      - attach_workspace:
-          at: ~/after-work.js
-      - run:
-          name: Run ESLint
-          command:
-            npm run lint
-      - run:
-          name: Run unit and component tests
-          command:
-            npm run test:coveralls
-      - store_artifacts:
-          path: ./coverage
+      - image: circleci/node:10-stretch-browsers
+      - image: selenium/standalone-chrome
 
-workflows:
-  version: 2
-  build-all:
-    jobs:
-      - install
-      - build:
-          requires:
-            - install
+    working_directory: ~/after-work.js
+
+    steps:
+      - checkout
+
+      - restore_cache: *restore_yarn_cache
+
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - run:
+          name: Lint
+          command: yarn run lint
+
+      - run:
+          name: Node unit tests
+          command: yarn test:node
+
+      - run:
+          name: Node unit tests with coverage
+          command: yarn test:coveralls
+
+      - run:
+          name: Chrome unit tests
+          command: yarn test:chrome
+
+      - run:
+          name: Protractor single browser
+          command: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
+
+      - run:
+          name: Protractor multi browser
+          command: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
+
+      - run:
+          name: Puppeteer
+          command: yarn test:puppeteer --chrome.args "'--single-process'"
+
+      - run:
+          name: Protractor rendering
+          command: yarn test:protractor:rendering
+
+      - save_cache: *save_yarn_cache
+      - store_artifacts:
+          path: 'test/__artifacts__'
