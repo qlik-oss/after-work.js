@@ -259,23 +259,14 @@ const utils = {
     if (require.cache[f]) {
       delete require.cache[f];
     }
-    if (require.cache[f] && require.cache[f].parent) {
-      let i = require.cache[f].parent.children.length;
-      while (i--) {
-        if (require.cache[f].parent.children[i].id === f) {
-          require.cache[f].parent.children.splice(i, 1);
-        }
-      }
-    }
   },
   safeRequireCache(f) {
     try {
       require(f);
       return require.cache[f];
-    } catch (_) {
-      // console.error(_)
-    }
-    return { children: [] };
+      // eslint-disable-next-line no-empty
+    } catch (_) {}
+    return undefined;
   },
   matchDependency(found, testName) {
     let use = found;
@@ -300,6 +291,9 @@ const utils = {
       .split('.')
       .shift();
     const mod = this.safeRequireCache(file);
+    if (typeof mod === 'undefined') {
+      return [];
+    }
     const found = mod.children
       .filter(m => files.indexOf(m.id) !== -1)
       .map(m => m.id);

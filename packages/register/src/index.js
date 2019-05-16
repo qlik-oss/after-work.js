@@ -5,7 +5,6 @@ const sourceMapSupport = require('source-map-support');
 const {
   transformFile,
   getTransform,
-  deleteTransform,
 } = require('@after-work.js/transform');
 const minimatch = require('minimatch');
 const mod = require('module');
@@ -176,18 +175,17 @@ class AW {
     const injectReact = this.canInjectReact();
     mocks.forEach(([key, value]) => this.mocks.set(key, [value, injectReact]));
     const [filename, , , c] = utils.getCurrentFilenameStackInfo(this.testFiles);
-    const deps = utils.getAllDependencies(this.srcFiles, filename);
-    deps.forEach(d => utils.safeDeleteCache(d));
     const excludeLibs = f => f.indexOf('node_modules') > -1;
-    Object.keys(require.cache)
-      .filter(
-        f => f !== filename && this.testFiles.indexOf(f) === -1 && !excludeLibs(f),
-      )
-      .forEach(f => utils.safeDeleteCache(f));
-
     const mods = reqs.map((r) => {
       const p = require.resolve(path.resolve(path.dirname(filename), r));
-      return require(p);
+      const deps = utils
+        .getAllDependencies(this.srcFiles, p)
+        .filter(f => this.testFiles.indexOf(f) === -1 && !excludeLibs(f));
+      deps.forEach(d => utils.safeDeleteCache(d));
+      utils.safeDeleteCache(p);
+      const m = require(p);
+      deps.forEach(d => utils.safeDeleteCache(d));
+      return m;
     });
 
     const mocksKeys = [...this.mocks.keys()];
@@ -201,10 +199,6 @@ class AW {
       this.warn(warning);
     }
     this.mocks.clear();
-    deps.forEach((d) => {
-      utils.safeDeleteCache(d);
-      deleteTransform(d);
-    });
     return mods;
   }
 }
