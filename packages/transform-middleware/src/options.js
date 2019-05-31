@@ -1,5 +1,4 @@
 const {
-  packages,
   DEFAULT_TEST_EXT_PATTERN,
   TEST_GLOB,
   SRC_GLOB,
@@ -29,7 +28,6 @@ module.exports = {
   scope: {
     description: 'Scope to package',
     default: [],
-    choices: packages,
     type: 'array',
     alias: 's',
   },

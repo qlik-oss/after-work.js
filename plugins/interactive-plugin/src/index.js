@@ -34,10 +34,10 @@ const onInteractive = async (runner) => {
 
   if (interactive === 'workspaces' || interactive === 'scopes') {
     const message = interactive === 'workspaces' ? 'Which workspaces?' : 'Which scopes';
-    const { packagesMap, packages } = getPackages(runner.argv);
+    const packagesMap = getPackages(runner.argv);
     const inputPackages = runner.argv.scope.length
       ? runner.argv.scope
-      : packages;
+      : [...packagesMap.keys()];
     const filteredPackages = utils.filter(filter.packages, inputPackages);
     const promptPackages = require('./prompt-packages');
     const searchPackages = require('./search-packages');
@@ -54,11 +54,11 @@ const onInteractive = async (runner) => {
     test = [];
     src = [];
     pkgs.forEach((name) => {
-      const p = packagesMap.get(name);
+      const { testGlob, srcGlob } = packagesMap.get(name);
       test = [
         ...test,
         ...runner.findFiles([
-          `${p}/**/${runner.argv.testExt}`,
+          ...testGlob,
           '!**/node_modules/**',
           '!./node_modules/**',
         ]),
@@ -66,7 +66,7 @@ const onInteractive = async (runner) => {
       src = [
         ...src,
         ...runner.findFiles([
-          `${p}/**/${runner.argv.srcExt}`,
+          ...srcGlob,
           '!**/node_modules/**',
           '!./node_modules/**',
           ...DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN,

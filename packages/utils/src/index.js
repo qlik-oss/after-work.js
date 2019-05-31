@@ -22,7 +22,7 @@ const packagesPath = [...workspaces, ...lernaPackages];
 const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,jsx,ts,tsx}';
 const DEFAULT_TEST_GLOB_PATTERN = `**/${DEFAULT_TEST_EXT_PATTERN}`;
 
-const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts}';
+const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts,jsx,tsx}';
 const DEFAULT_SRC_GLOB_PATTERN = `**/${DEFAULT_SRC_EXT_PATTERN}`;
 const DEFAULT_SRC_EXCLUDE_PATTERN = [
   '**/coverage/**',
@@ -42,23 +42,55 @@ const DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN = DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
   [],
 );
 
-const getTestGlob = ({ testExt }) => [
-  ...(packagesPath.length
-    ? packagesPath.map(p => `${p}/**/${testExt}`)
-    : [`**/${testExt}`]),
-  '!**/node_modules/**',
-  '!./node_modules/**',
-];
-const TEST_GLOB = getTestGlob({ testExt: DEFAULT_TEST_EXT_PATTERN });
+const getPackages = ({ testExt, srcExt }) => {
+  const packagesMap = new Map();
 
-const getSrcGlob = ({ srcExt }) => [
-  ...(packagesPath.length
-    ? packagesPath.map(p => `${p}/src/**/${srcExt}`)
-    : [`src/**/${srcExt}`]),
-  '!**/node_modules/**',
-  '!./node_modules/**',
-];
-const SRC_GLOB = getSrcGlob({ srcExt: DEFAULT_SRC_EXT_PATTERN });
+  packagesPath.forEach((root) => {
+    const { name } = importCwd(`./${root}/package.json`);
+    const hasTests = globby.sync(`${root}/**/${testExt}`).length > 0;
+    const testGlob = [`${root}/**/${testExt}`];
+    const srcGlob = [`${root}/src/**/${srcExt}`];
+    packagesMap.set(name, {
+      root,
+      hasTests,
+      testGlob,
+      srcGlob,
+    });
+  });
+  return packagesMap;
+};
+
+const excludeGlob = ['!**/node_modules/**', '!./node_modules/**'];
+
+const getTestGlob = (argv) => {
+  const { testExt, scope } = argv;
+  const packagesMap = getPackages(argv);
+  let includeGlob = [`**/${testExt}`];
+  if (scope.length > 0) {
+    includeGlob = scope.reduce((acc, s) => {
+      const { testGlob } = packagesMap.get(s);
+      return [...acc, ...testGlob];
+    }, []);
+  }
+  return [...includeGlob, ...excludeGlob];
+};
+
+const TEST_GLOB = getTestGlob({ testExt: DEFAULT_TEST_EXT_PATTERN, scope: [] });
+
+const getSrcGlob = (argv) => {
+  const { srcExt, scope } = argv;
+  const packagesMap = getPackages(argv);
+  let includeGlob = [`src/**/${srcExt}`];
+  if (scope.length > 0) {
+    includeGlob = scope.reduce((acc, s) => {
+      const { srcGlob } = packagesMap.get(s);
+      return [...acc, ...srcGlob];
+    }, []);
+  }
+  return [...includeGlob, ...excludeGlob];
+};
+
+const SRC_GLOB = getSrcGlob({ srcExt: DEFAULT_SRC_EXT_PATTERN, scope: [] });
 
 const WATCH_GLOB = [...TEST_GLOB, ...SRC_GLOB];
 
@@ -120,24 +152,10 @@ const addDefaults = (argv) => {
   if (argv.watchGlob === WATCH_GLOB) {
     argv.watchGlob = [...argv.glob, ...argv.src];
   }
-  if (argv.nyc.exclude === DEFAULT_INSTRUMENT_EXCLUDE_PATTERN) {
-    argv.nyc.exclude = getInstrumentExcludePattern(argv);
-  }
-};
-
-const getPackages = ({ testExt }) => {
-  const packagesMap = new Map();
-  let packages = [];
-
-  packagesPath.forEach((root) => {
-    const { name } = importCwd(`./${root}/package.json`);
-    const tests = globby.sync(`${root}/**/${testExt}`);
-    if (tests.length) {
-      packages = [...packages, name];
-    }
-    packagesMap.set(name, root);
-  });
-  return { packagesMap, packages };
+  argv.nyc.exclude = [
+    ...argv.nyc.exclude,
+    ...getInstrumentExcludePattern(argv),
+  ];
 };
 
 const utils = {
