@@ -66,8 +66,9 @@ const getTestGlob = (argv) => {
   const { testExt, scope } = argv;
   const packagesMap = getPackages(argv);
   let includeGlob = [`**/${testExt}`];
-  if (scope.length > 0) {
-    includeGlob = scope.reduce((acc, s) => {
+  const pkgs = scope.length > 0 ? scope : [...packagesMap.keys()];
+  if (pkgs.length > 0) {
+    includeGlob = pkgs.reduce((acc, s) => {
       const { testGlob } = packagesMap.get(s);
       return [...acc, ...testGlob];
     }, []);
@@ -81,8 +82,9 @@ const getSrcGlob = (argv) => {
   const { srcExt, scope } = argv;
   const packagesMap = getPackages(argv);
   let includeGlob = [`src/**/${srcExt}`];
-  if (scope.length > 0) {
-    includeGlob = scope.reduce((acc, s) => {
+  const pkgs = scope.length > 0 ? scope : [...packagesMap.keys()];
+  if (pkgs.length > 0) {
+    includeGlob = pkgs.reduce((acc, s) => {
       const { srcGlob } = packagesMap.get(s);
       return [...acc, ...srcGlob];
     }, []);

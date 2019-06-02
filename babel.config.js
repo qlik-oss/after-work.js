@@ -5,27 +5,29 @@ module.exports = (api) => {
     case 'chrome':
       return {
         presets: [
-          ['@babel/preset-env', {
-            targets: {
-              browsers: ['last 2 versions', 'safari >= 7'],
+          [
+            '@babel/preset-env',
+            {
+              targets: {
+                browsers: ['last 2 versions', 'safari >= 7'],
+              },
+              modules: 'amd',
             },
-            modules: 'amd',
-          }],
+          ],
         ],
-        ignore: [
-          '**/ignore.js',
-        ],
+        ignore: ['**/ignore.js'],
       };
     default:
       return {
         presets: [
-          ['@babel/preset-env', {
-            targets: { node: 'current' },
-          }],
+          [
+            '@babel/preset-env',
+            {
+              targets: { node: 'current' },
+            },
+          ],
         ],
-        plugins: [
-          '@babel/plugin-transform-react-jsx',
-        ],
+        plugins: ['@babel/plugin-transform-react-jsx'],
       };
   }
 };
