@@ -1,5 +1,4 @@
 const {
-  packages,
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
@@ -30,7 +29,6 @@ module.exports = {
   scope: {
     description: 'Scope to package',
     default: [],
-    choices: packages,
     type: 'array',
     alias: 's',
   },

@@ -59,7 +59,7 @@ const setReporterInfo = async (browser) => {
   browser.reporterInfo.browserName = browserName;
   const cap = await browser.getCapabilities();
   browser.reporterInfo.browserVersion = cap.get('version');
-  const platform = browserName === 'internet-explorer' ? 'WINDOwS' : cap.get('platform');
+  const platform = cap.get('platform') || cap.get('platformName') || 'unknown';
   browser.reporterInfo.platform = platform.replace(/ /g, '-').toLowerCase();
   browser.reporterInfo.reportName = `${browser.reporterInfo.browserName}-${
     process.env.AW_CURRENT_SESSION_TIMESTAMP

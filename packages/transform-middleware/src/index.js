@@ -51,6 +51,7 @@ module.exports = function transformFiles(userArgv) {
     if (shouldInstrument || shouldTransform) {
       const file = transformFile(url, argv);
       if (file) {
+        res.set('Content-Type', 'text/javascript');
         res.send(file);
         return;
       }

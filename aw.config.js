@@ -57,7 +57,10 @@ module.exports = {
     '!**/examples/webpack-dev-server/**',
   ],
   'filter.chrome.packages': ['@after-work.js/example-chrome-*'],
-  'filter.chrome.files': ['**/examples/chrome-*/**'],
+  'filter.chrome.files': [
+    '**/examples/chrome-*/**',
+    '!**/examples/chrome-esm/**',
+  ],
   'filter.puppeteer.packages': ['@after-work.js/example-puppeteer'],
   'filter.puppeteer.files': ['**/examples/puppeteer/**'],
   'filter.protractor.files': ['**/examples/protractor/**'],
@@ -66,4 +69,7 @@ module.exports = {
     port: 9677,
   },
   specs: ['./examples/protractor/test/hello.spec.js'],
+  transform: {
+    exclude: ['**/chrome-esm/**'],
+  },
 };
