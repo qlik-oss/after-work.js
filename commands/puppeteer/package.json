@@ -28,7 +28,7 @@
     "@after-work.js/utils": "6.0.5",
     "@after-work.js/watch-plugin": "6.0.5",
     "chrome-launcher": "0.10.5",
-    "import-cwd": "2.1.0",
+    "import-cwd": "3.0.0",
     "puppeteer-core": "1.13.0"
   },
   "files": [

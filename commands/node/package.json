@@ -28,7 +28,7 @@
     "@after-work.js/watch-plugin": "6.0.5",
     "chokidar": "3.0.1",
     "globby": "9.1.0",
-    "import-cwd": "2.1.0",
+    "import-cwd": "3.0.0",
     "mocha": "6.0.2",
     "nyc": "13.3.0"
   },

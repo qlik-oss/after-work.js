@@ -24,7 +24,7 @@
     "@after-work.js/utils": "6.0.5",
     "express": "4.16.4",
     "http-proxy-middleware": "0.19.1",
-    "import-cwd": "2.1.0",
+    "import-cwd": "3.0.0",
     "serve-favicon": "2.5.0",
     "test-exclude": "5.1.0"
   },

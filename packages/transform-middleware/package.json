@@ -22,7 +22,7 @@
   "dependencies": {
     "@after-work.js/transform": "6.0.5",
     "@after-work.js/utils": "6.0.5",
-    "import-cwd": "2.1.0",
+    "import-cwd": "3.0.0",
     "nyc": "13.3.0",
     "test-exclude": "5.1.0",
     "yargs": "13.2.2"
