@@ -28,7 +28,7 @@
     "globby": "9.1.0",
     "handlebars": "4.1.2",
     "highlight.js": "9.15.6",
-    "import-cwd": "2.1.0",
+    "import-cwd": "3.0.0",
     "jimp": "0.6.0",
     "mkdirp": "0.5.1",
     "mocha": "6.0.2",

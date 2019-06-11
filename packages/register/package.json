@@ -23,7 +23,7 @@
     "@after-work.js/transform": "6.0.5",
     "@after-work.js/utils": "6.0.5",
     "find-cache-dir": "2.1.0",
-    "import-cwd": "2.1.0",
+    "import-cwd": "3.0.0",
     "minimatch": "3.0.4",
     "pirates": "4.0.1",
     "require-from-string": "2.0.2",
