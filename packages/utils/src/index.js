@@ -160,6 +160,18 @@ const addDefaults = (argv) => {
   ];
 };
 
+const safeGetModule = (name) => {
+  let found = importCwd.silent(name);
+  if (!found) {
+    try {
+      found = require(name);
+    } catch (err) {
+      found = null;
+    }
+  }
+  return found;
+};
+
 const utils = {
   addDefaults,
   getPackages,
@@ -220,24 +232,13 @@ const utils = {
       `${prefix} ${msg.length > 60 ? '...' : ''}${msg.slice(-59)}`,
     );
   },
-  safeGetModule(name) {
-    let found = importCwd.silent(name);
-    if (!found) {
-      try {
-        found = require(name);
-      } catch (err) {
-        found = null;
-      }
-    }
-    return found;
-  },
   coerceBabel(opt) {
     if (opt.enable && opt.core && typeof opt.core === 'string') {
       opt.babel = importCwd(opt.core);
     } else if (opt.enable && !opt.core) {
-      let core = utils.safeGetModule('@babel/core');
+      let core = safeGetModule('@babel/core');
       if (!core) {
-        core = utils.safeGetModule('babel-core');
+        core = safeGetModule('babel-core');
         if (!core) {
           throw new Error('Can not get babel core module');
         }
@@ -245,13 +246,13 @@ const utils = {
       opt.babel = core;
     }
     if (opt.enable && typeof opt.babelPluginIstanbul === 'string') {
-      const babelPluginIstanbul = utils.safeGetModule(opt.babelPluginIstanbul);
+      const babelPluginIstanbul = safeGetModule(opt.babelPluginIstanbul);
       opt.babelPluginIstanbul = babelPluginIstanbul
         ? babelPluginIstanbul.default
         : null;
     }
     if (opt.enable && typeof opt.typescript === 'string') {
-      opt.typescript = utils.safeGetModule(opt.typescript);
+      opt.typescript = safeGetModule(opt.typescript);
     }
     return opt;
   },
