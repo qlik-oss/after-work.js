@@ -1,4 +1,16 @@
-const { safeGetModule } = require('@after-work.js/utils');
+const importCwd = require('import-cwd');
+
+const safeGetModule = (name) => {
+  let found = importCwd.silent(name);
+  if (!found) {
+    try {
+      found = require(name);
+    } catch (err) {
+      found = null;
+    }
+  }
+  return found;
+};
 
 module.exports = (runner) => {
   const sinon = safeGetModule('sinon');
