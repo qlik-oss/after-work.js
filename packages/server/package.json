@@ -22,11 +22,11 @@
   "dependencies": {
     "@after-work.js/transform-middleware": "6.0.5",
     "@after-work.js/utils": "6.0.5",
-    "express": "4.16.4",
+    "express": "4.17.1",
     "http-proxy-middleware": "0.19.1",
     "import-cwd": "3.0.0",
     "serve-favicon": "2.5.0",
-    "test-exclude": "5.1.0"
+    "test-exclude": "5.2.3"
   },
   "files": [
     "/src",

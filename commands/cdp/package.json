@@ -25,16 +25,16 @@
     "@after-work.js/transform": "6.0.5",
     "@after-work.js/utils": "6.0.5",
     "@after-work.js/watch-plugin": "6.0.5",
-    "chokidar": "3.0.1",
-    "chrome-launcher": "0.10.5",
-    "chrome-remote-interface": "0.27.1",
+    "chokidar": "3.0.2",
+    "chrome-launcher": "0.11.2",
+    "chrome-remote-interface": "0.27.2",
     "chrome-unmirror": "0.1.0",
-    "globby": "9.1.0",
+    "globby": "9.2.0",
     "import-cwd": "3.0.0",
     "nyc": "14.1.1",
     "precinct": "5.3.1",
-    "source-map-support": "0.5.11",
-    "test-exclude": "5.1.0"
+    "source-map-support": "0.5.13",
+    "test-exclude": "5.2.3"
   },
   "files": [
     "/src"

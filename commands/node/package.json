@@ -26,10 +26,10 @@
     "@after-work.js/transform": "6.0.5",
     "@after-work.js/utils": "6.0.5",
     "@after-work.js/watch-plugin": "6.0.5",
-    "chokidar": "3.0.1",
-    "globby": "9.1.0",
+    "chokidar": "3.0.2",
+    "globby": "9.2.0",
     "import-cwd": "3.0.0",
-    "mocha": "6.0.2",
+    "mocha": "6.2.0",
     "nyc": "14.1.1"
   },
   "files": [

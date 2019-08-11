@@ -31,10 +31,10 @@
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
     "import-cwd": "3.0.0",
-    "sinon": "7.3.0",
+    "sinon": "7.4.1",
     "sinon-chai": "3.3.0",
-    "source-map-support": "0.5.11",
-    "yargs": "13.2.2"
+    "source-map-support": "0.5.13",
+    "yargs": "13.3.0"
   },
   "devDependencies": {
     "@after-work.js/cdp": "6.0.5",
