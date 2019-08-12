@@ -1,4 +1,3 @@
-/* global browser */
 const utils = require('./utils');
 
 const screenshoter = {
