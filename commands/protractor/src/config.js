@@ -1,4 +1,3 @@
-/* global browser */
 const yargs = require('yargs/yargs');
 const extend = require('extend');
 const path = require('path');
