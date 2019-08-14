@@ -1,6 +1,6 @@
 const importCwd = require('import-cwd');
 
-const safeGetModule = (name) => {
+const safeGetModule = name => {
   let found = importCwd.silent(name);
   if (!found) {
     try {
@@ -12,7 +12,7 @@ const safeGetModule = (name) => {
   return found;
 };
 
-module.exports = (runner) => {
+module.exports = runner => {
   const sinon = safeGetModule('sinon');
   const chai = safeGetModule('chai');
   const sinonChai = safeGetModule('sinon-chai');

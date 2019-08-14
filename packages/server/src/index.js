@@ -12,11 +12,11 @@ module.exports = function createServer(options) {
   app.use('/', express.static(process.cwd()));
   const websocketProxies = applyProxies(app, options.proxy);
   middleware(app, express);
-  const server = app.listen(argv.http.port, '0.0.0.0', (err) => {
+  const server = app.listen(argv.http.port, '0.0.0.0', err => {
     if (err) {
       throw err;
     }
   });
-  websocketProxies.forEach((wsProxy) => server.on('upgrade', wsProxy.upgrade));
+  websocketProxies.forEach(wsProxy => server.on('upgrade', wsProxy.upgrade));
   return server;
 };

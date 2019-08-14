@@ -48,7 +48,7 @@ const utils = {
   },
   errorJSON(err) {
     const res = {};
-    Object.getOwnPropertyNames(err).forEach((key) => {
+    Object.getOwnPropertyNames(err).forEach(key => {
       const val = err[key];
       if (key === 'actual' && val.img) {
         delete val.img;
@@ -117,7 +117,7 @@ const utils = {
       path.resolve(browser.reporterInfo.artifactsPath, 'screenshots'),
     );
 
-    return browser.takeScreenshot().then((png) => {
+    return browser.takeScreenshot().then(png => {
       fs.writeFileSync(screenshot, png, { encoding: 'base64' });
     });
   },

@@ -9,7 +9,7 @@ describe('Puppeteer', () => {
   });
   it('should be able to intercept', async () => {
     await page.setRequestInterception(true);
-    page.on('request', (interceptedRequest) => {
+    page.on('request', interceptedRequest => {
       if (/localhost:9677\/my\/fancy\/api/.test(interceptedRequest.url())) {
         interceptedRequest.respond({
           status: 200,

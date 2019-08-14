@@ -22,7 +22,7 @@
   "dependencies": {
     "@after-work.js/utils": "6.0.5",
     "chokidar": "3.0.2",
-    "globby": "9.2.0"
+    "globby": "10.0.1"
   },
   "files": [
     "/src"

@@ -150,7 +150,7 @@ class AW {
       const globalMocksKeys = [...this.globalMocks.keys()];
       const usedGlobalMocksKeys = [...this.usedGlobalMocks.keys()];
       const unusedGlobalMocksKeys = globalMocksKeys.filter(
-        (k) => !usedGlobalMocksKeys.includes(k),
+        k => !usedGlobalMocksKeys.includes(k),
       );
       for (const key of unusedGlobalMocksKeys) {
         const [value] = this.globalMocks.get(key);
@@ -175,22 +175,22 @@ class AW {
     const injectReact = this.canInjectReact();
     mocks.forEach(([key, value]) => this.mocks.set(key, [value, injectReact]));
     const [filename, , , c] = utils.getCurrentFilenameStackInfo(this.testFiles);
-    const excludeLibs = (f) => f.indexOf('node_modules') > -1;
-    const mods = reqs.map((r) => {
+    const excludeLibs = f => f.indexOf('node_modules') > -1;
+    const mods = reqs.map(r => {
       const p = require.resolve(path.resolve(path.dirname(filename), r));
       const deps = utils
         .getAllDependencies(this.srcFiles, p)
-        .filter((f) => this.testFiles.indexOf(f) === -1 && !excludeLibs(f));
-      deps.forEach((d) => utils.safeDeleteCache(d));
+        .filter(f => this.testFiles.indexOf(f) === -1 && !excludeLibs(f));
+      deps.forEach(d => utils.safeDeleteCache(d));
       utils.safeDeleteCache(p);
       const m = require(p);
-      deps.forEach((d) => utils.safeDeleteCache(d));
+      deps.forEach(d => utils.safeDeleteCache(d));
       return m;
     });
 
     const mocksKeys = [...this.mocks.keys()];
     const usedMocksKeys = [...this.usedMocks.keys()];
-    const unusedMocksKeys = mocksKeys.filter((k) => !usedMocksKeys.includes(k));
+    const unusedMocksKeys = mocksKeys.filter(k => !usedMocksKeys.includes(k));
     for (const key of unusedMocksKeys) {
       const [value] = this.mocks.get(key);
       const warning = () => console.error(

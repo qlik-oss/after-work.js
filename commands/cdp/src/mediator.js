@@ -18,7 +18,7 @@ class Mediator {
 
   emit(event, data) {
     const callbacks = this.events.get(event) || [];
-    callbacks.forEach((cb) => cb(data));
+    callbacks.forEach(cb => cb(data));
   }
 
   on(event, callback) {

@@ -18,8 +18,8 @@ class Runner extends EventEmitter {
     super();
     this.argv = argv;
     this.nyc = new NYC(argv.nyc);
-    argv.shouldInstrument = (f) => this.nyc.exclude.shouldInstrument(f);
-    argv.shouldTransform = (f) => argv.transform.testExclude.shouldInstrument(f);
+    argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
+    argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
     this.mediator = new Mediator();
     this.chromeLauncher = chromeLauncher;
     this.ended = false;
@@ -49,7 +49,7 @@ class Runner extends EventEmitter {
       const expression = `Mocha.reporters.Base.window.width = ${columns};`;
       this.client.Runtime.evaluate({ expression });
     });
-    this.mediator.on('started', (tests) => {
+    this.mediator.on('started', tests => {
       this.started = true;
       if (this.argv.coverage) {
         this.nyc.reset();
@@ -62,7 +62,7 @@ class Runner extends EventEmitter {
       }
     });
 
-    this.mediator.on('ended', (stats) => {
+    this.mediator.on('ended', stats => {
       this.log('Runner ended\n');
       this.started = false;
       this.ended = true;
@@ -72,7 +72,7 @@ class Runner extends EventEmitter {
   }
 
   pipeOut(Runtime) {
-    Runtime.exceptionThrown((exception) => {
+    Runtime.exceptionThrown(exception => {
       this.log('[chrome-exception]', exception);
       this.exit(1);
     });
@@ -88,19 +88,19 @@ class Runner extends EventEmitter {
       if (!(type in console)) {
         type = 'log';
       }
-      const data = args.map((arg) => (arg.type === 'string' ? arg.value : unmirror(arg)));
+      const data = args.map(arg => (arg.type === 'string' ? arg.value : unmirror(arg)));
       console[type](...data);
     });
   }
 
   pipeNetwork(Network) {
-    Network.requestWillBeSent((info) => {
+    Network.requestWillBeSent(info => {
       this.requests.set(info.requestId, info.request);
       if (!this.started && info.request.url.match(/^(file|http(s?)):\/\//)) {
         utils.writeLine('Loading', info.request.url);
       }
     });
-    Network.loadingFailed((info) => {
+    Network.loadingFailed(info => {
       const { errorText } = info;
       const { url, method } = this.requests.get(info.requestId);
       const msg = JSON.stringify({ url, method, errorText });
@@ -242,13 +242,13 @@ class Runner extends EventEmitter {
   }
 
   relativeBaseUrlFiles(files) {
-    return files.map((file) => this.relativeBaseUrlFile(file));
+    return files.map(file => this.relativeBaseUrlFile(file));
   }
 
   findFiles(glob) {
     return utils.filter(
       this.getFilter().files,
-      globby.sync(glob).map((f) => path.resolve(f)),
+      globby.sync(glob).map(f => path.resolve(f)),
     );
   }
 
@@ -257,7 +257,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = this.findFiles(this.argv.glob).filter((f) => utils.isTestFile(f, this.argv));
+    this.testFiles = this.findFiles(this.argv.glob).filter(f => utils.isTestFile(f, this.argv));
     if (!this.testFiles.length) {
       this.log(
         `No files found for glob: ${this.argv.glob} with filter: ${

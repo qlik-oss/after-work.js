@@ -8,7 +8,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 
 yargs.usage('aw <command>');
 
-const tryAddCommand = (m) => {
+const tryAddCommand = m => {
   let cmd = null;
   try {
     // First try local (enables running aw from src)

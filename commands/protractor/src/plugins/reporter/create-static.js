@@ -22,11 +22,11 @@ function getDurationObj(durationInMilliseconds) {
   };
 }
 
-Handlebars.registerHelper('addLocalCSS', (cssPath) => fs.readFileSync(path.resolve(__dirname, cssPath), {
+Handlebars.registerHelper('addLocalCSS', cssPath => fs.readFileSync(path.resolve(__dirname, cssPath), {
   encoding: 'utf8',
 }));
 
-Handlebars.registerHelper('formatSummaryDuration', (context) => {
+Handlebars.registerHelper('formatSummaryDuration', context => {
   const dur = getDurationObj(context);
   if (dur.hrs < 1) {
     if (dur.min < 1) {
@@ -40,7 +40,7 @@ Handlebars.registerHelper('formatSummaryDuration', (context) => {
   return `${dur.hrs}:${dur.min < 10 ? `0${dur.min}` : dur.min}`;
 });
 
-Handlebars.registerHelper('getSummaryDurationUnits', (context) => {
+Handlebars.registerHelper('getSummaryDurationUnits', context => {
   const dur = getDurationObj(context);
   if (dur.hrs < 1) {
     if (dur.min < 1) {
@@ -54,7 +54,7 @@ Handlebars.registerHelper('getSummaryDurationUnits', (context) => {
   return 'h';
 });
 
-Handlebars.registerHelper('formatDuration', (context) => {
+Handlebars.registerHelper('formatDuration', context => {
   const dur = getDurationObj(context);
   if (dur.hrs < 1) {
     if (dur.min < 1) {

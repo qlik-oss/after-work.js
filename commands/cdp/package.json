@@ -29,7 +29,7 @@
     "chrome-launcher": "0.11.2",
     "chrome-remote-interface": "0.27.2",
     "chrome-unmirror": "0.1.0",
-    "globby": "9.2.0",
+    "globby": "10.0.1",
     "import-cwd": "3.0.0",
     "nyc": "14.1.1",
     "precinct": "5.3.1",

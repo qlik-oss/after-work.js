@@ -14,7 +14,7 @@ const debug = createDebug('interactive');
 let test = [];
 let src = [];
 
-const onInteractive = async (runner) => {
+const onInteractive = async runner => {
   const filter = runner.getFilter();
 
   const interactive = await promptMenu({
@@ -53,7 +53,7 @@ const onInteractive = async (runner) => {
     }
     test = [];
     src = [];
-    pkgs.forEach((name) => {
+    pkgs.forEach(name => {
       const { testGlob, srcGlob } = packagesMap.get(name);
       test = [
         ...test,

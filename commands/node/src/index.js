@@ -44,8 +44,8 @@ class Runner extends EventEmitter {
     deleteTransform(testFile);
     const mod = utils.safeRequireCache(testFile);
     const found = mod.children
-      .filter((m) => this.srcFiles.indexOf(m.id) !== -1)
-      .map((m) => m.id);
+      .filter(m => this.srcFiles.indexOf(m.id) !== -1)
+      .map(m => m.id);
     const use = utils.matchDependency(found, testName);
     return use;
   }
@@ -55,9 +55,9 @@ class Runner extends EventEmitter {
       .basename(srcFile)
       .split('.')
       .shift();
-    const found = this.testFiles.filter((f) => {
+    const found = this.testFiles.filter(f => {
       const mod = utils.safeRequireCache(f);
-      return mod.children.filter((m) => m.id === srcFile).length !== 0;
+      return mod.children.filter(m => m.id === srcFile).length !== 0;
     });
     const use = utils.matchDependency(found, srcName);
     return use;
@@ -80,7 +80,7 @@ class Runner extends EventEmitter {
   findFiles(glob) {
     return utils.filter(
       this.getFilter().files,
-      globby.sync(glob).map((f) => path.resolve(f)),
+      globby.sync(glob).map(f => path.resolve(f)),
     );
   }
 
@@ -89,7 +89,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = this.findFiles(this.argv.glob).filter((f) => utils.isTestFile(f, this.argv));
+    this.testFiles = this.findFiles(this.argv.glob).filter(f => utils.isTestFile(f, this.argv));
     if (!this.testFiles.length) {
       console.error('No files found for:', this.argv.glob);
       if (!this.argv.interactive) {
@@ -100,7 +100,7 @@ class Runner extends EventEmitter {
   }
 
   setSrcFiles() {
-    this.srcFiles = this.findFiles(this.argv.src).filter((f) => utils.isSrcFile(f, this.argv));
+    this.srcFiles = this.findFiles(this.argv.src).filter(f => utils.isSrcFile(f, this.argv));
     return this;
   }
 
@@ -109,7 +109,7 @@ class Runner extends EventEmitter {
       this.register();
     }
     const importCwd = require('import-cwd');
-    this.argv.require.forEach((m) => importCwd(m));
+    this.argv.require.forEach(m => importCwd(m));
     return this;
   }
 
@@ -122,7 +122,7 @@ class Runner extends EventEmitter {
     if (!this.isRunning) {
       return;
     }
-    this.finishedCallbacks.forEach((fn) => fn());
+    this.finishedCallbacks.forEach(fn => fn());
     this.isRunning = false;
     if (failures === 0 && this.argv.coverage) {
       this.nyc.writeCoverageFile();
@@ -131,7 +131,7 @@ class Runner extends EventEmitter {
 
     if (this.argv.warnings && this.warnings.length) {
       console.error('\u001b[33mwarnings:\u001b[0m');
-      this.warnings.forEach((w) => {
+      this.warnings.forEach(w => {
         console.error('');
         w();
       });
@@ -164,7 +164,7 @@ class Runner extends EventEmitter {
   runTests() {
     this.isRunning = true;
     this.warnings = [];
-    this.mochaRunner = this.mocha.run((failures) => this.onFinished(failures));
+    this.mochaRunner = this.mocha.run(failures => this.onFinished(failures));
     this.mochaRunner.once('start', () => utils.clearLine());
   }
 
@@ -174,15 +174,15 @@ class Runner extends EventEmitter {
         this.argv,
         this.srcFiles,
         this.testFiles,
-        (fn) => this.warnings.push(fn),
-        (fn) => this.startCallbacks.push(fn),
-        (fn) => this.finishedCallbacks.push(fn),
+        fn => this.warnings.push(fn),
+        fn => this.startCallbacks.push(fn),
+        fn => this.finishedCallbacks.push(fn),
       );
     }
   }
 
   setup(testFiles, srcFiles) {
-    srcFiles.forEach((f) => this.safeDeleteCache(f));
+    srcFiles.forEach(f => this.safeDeleteCache(f));
     if (this.argv.coverage) {
       this.nyc.reset();
       if (!this.isWrapped) {
@@ -191,12 +191,12 @@ class Runner extends EventEmitter {
         this.register();
       }
     }
-    testFiles.forEach((f) => {
+    testFiles.forEach(f => {
       this.safeDeleteCache(f);
       this.mocha.addFile(f);
     });
     if (this.argv.coverage) {
-      srcFiles.forEach((f) => {
+      srcFiles.forEach(f => {
         if (!this.argv.shouldInstrument(f)) {
           return;
         }
@@ -218,7 +218,7 @@ class Runner extends EventEmitter {
       this.logLine('Loading', file);
     });
     this.nyc = new NYC(this.argv.nyc);
-    this.argv.shouldInstrument = (f) => !utils.isTestFile(f, this.argv) && this.nyc.exclude.shouldInstrument(f);
+    this.argv.shouldInstrument = f => !utils.isTestFile(f, this.argv) && this.nyc.exclude.shouldInstrument(f);
     try {
       this.deleteCoverage()
         .setup(testFiles, srcFiles)
@@ -235,7 +235,7 @@ class Runner extends EventEmitter {
   }
 
   run() {
-    this.startCallbacks.forEach((fn) => fn());
+    this.startCallbacks.forEach(fn => fn());
     this.setupAndRunTests(this.testFiles, this.srcFiles);
   }
 
@@ -254,7 +254,7 @@ class Runner extends EventEmitter {
   }
 }
 
-const configure = (configPath) => {
+const configure = configPath => {
   if (configPath === null) {
     return {};
   }
@@ -282,7 +282,7 @@ const node = {
       .options(options)
       .config('config', configure)
       .coerce('babel', utils.coerceBabel)
-      .middleware((mwargv) => {
+      .middleware(mwargv => {
         if (!mwargv.babel.enable && mwargv.coverage) {
           mwargv.nyc.hookRequire = true; // Enable nyc instrumenting on the fly
         }

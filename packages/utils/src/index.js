@@ -10,8 +10,8 @@ const minimatch = require('minimatch');
 const isCI = !!process.env.CI;
 
 const pkg = importCwd('./package.json');
-const findPkgs = (g) => globby.sync(`${g}/package.json`);
-const reducePkgs = (acc, curr) => acc.concat(curr.map((c) => c.slice(0, -13)));
+const findPkgs = g => globby.sync(`${g}/package.json`);
+const reducePkgs = (acc, curr) => acc.concat(curr.map(c => c.slice(0, -13)));
 const lerna = importCwd.silent('./lerna.json');
 const workspaces = (pkg.workspaces || []).map(findPkgs).reduce(reducePkgs, []);
 const lernaPackages = ((lerna && lerna.packages) || [])
@@ -45,7 +45,7 @@ const DEFAULT_NEGATED_SRC_EXCLUDE_PATTERN = DEFAULT_SRC_EXCLUDE_PATTERN.reduce(
 const getPackages = ({ testExt, srcExt }) => {
   const packagesMap = new Map();
 
-  packagesPath.forEach((root) => {
+  packagesPath.forEach(root => {
     const { name } = importCwd(`./${root}/package.json`);
     const hasTests = globby.sync(`${root}/**/${testExt}`).length > 0;
     const testGlob = [`${root}/**/${testExt}`];
@@ -62,7 +62,7 @@ const getPackages = ({ testExt, srcExt }) => {
 
 const excludeGlob = ['!**/node_modules/**', '!./node_modules/**'];
 
-const getTestGlob = (argv) => {
+const getTestGlob = argv => {
   const { testExt, scope } = argv;
   const packagesMap = getPackages(argv);
   let includeGlob = [`**/${testExt}`];
@@ -78,7 +78,7 @@ const getTestGlob = (argv) => {
 
 const TEST_GLOB = getTestGlob({ testExt: DEFAULT_TEST_EXT_PATTERN, scope: [] });
 
-const getSrcGlob = (argv) => {
+const getSrcGlob = argv => {
   const { srcExt, scope } = argv;
   const packagesMap = getPackages(argv);
   let includeGlob = [`src/**/${srcExt}`];
@@ -143,7 +143,7 @@ const getInstrumentExcludePattern = ({
   testExt,
 ];
 
-const addDefaults = (argv) => {
+const addDefaults = argv => {
   // Re-evaluate if it's the default values e.g `testExt` or `srcExt` could be changed
   if (argv.glob === TEST_GLOB) {
     argv.glob = getTestGlob(argv);
@@ -160,7 +160,7 @@ const addDefaults = (argv) => {
   ];
 };
 
-const safeGetModule = (name) => {
+const safeGetModule = name => {
   let found = importCwd.silent(name);
   if (!found) {
     try {
@@ -261,9 +261,9 @@ const utils = {
     const s = new Error().stack
       .split('\n')
       .slice(1)
-      .map((c) => c.split(/\(([^)]+)\)/)[1])
-      .filter((c) => c !== undefined)
-      .map((c) => {
+      .map(c => c.split(/\(([^)]+)\)/)[1])
+      .filter(c => c !== undefined)
+      .map(c => {
         const parts = c.split(':');
         const columnno = parts.pop();
         const lineno = parts.pop();
@@ -293,7 +293,7 @@ const utils = {
     let use = found;
     if (found.length > 1) {
       const matchName = found.filter(
-        (id) => path
+        id => path
           .basename(id)
           .split('.')
           .shift() === testName,
@@ -316,16 +316,16 @@ const utils = {
       return [];
     }
     const found = mod.children
-      .filter((m) => files.indexOf(m.id) !== -1)
-      .map((m) => m.id);
+      .filter(m => files.indexOf(m.id) !== -1)
+      .map(m => m.id);
     return this.matchDependency(found, name);
   },
   getAllDependencies(files, file) {
     let all = [];
     const deps = this.getDependencies(files, file);
-    const walk = (currentDeps) => {
+    const walk = currentDeps => {
       all = all.concat(currentDeps);
-      currentDeps.forEach((d) => {
+      currentDeps.forEach(d => {
         const childDeps = this.getDependencies(files, d);
         walk(childDeps, files, d);
       });
@@ -338,7 +338,7 @@ const utils = {
   },
   filter(arr, initialValue) {
     return arr.reduce(
-      (acc, curr) => acc.filter((file) => minimatch(file, curr)),
+      (acc, curr) => acc.filter(file => minimatch(file, curr)),
       initialValue,
     );
   },

@@ -19,7 +19,7 @@ const server = {
           type: 'number',
         },
       })
-      .config('config', (configPath) => {
+      .config('config', configPath => {
         if (configPath === null) {
           return {};
         }
