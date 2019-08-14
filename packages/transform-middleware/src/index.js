@@ -36,8 +36,8 @@ module.exports = function transformFiles(userArgv) {
   };
   const nyc = new NYC(argv.nyc);
   const transformExclude = testExclude(argv.transform);
-  argv.shouldInstrument = f => argv.coverage && nyc.exclude.shouldInstrument(f);
-  argv.shouldTransform = f => transformExclude.shouldInstrument(f);
+  argv.shouldInstrument = (f) => argv.coverage && nyc.exclude.shouldInstrument(f);
+  argv.shouldTransform = (f) => transformExclude.shouldInstrument(f);
 
   return (req, res, next) => {
     let url = req.path;

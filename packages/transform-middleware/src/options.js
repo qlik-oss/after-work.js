@@ -65,7 +65,7 @@ module.exports = {
     default: WATCH_GLOB,
     type: 'array',
     alias: 'wg',
-    coerce: opt => [...opt, ...WATCH_GLOB],
+    coerce: (opt) => [...opt, ...WATCH_GLOB],
   },
   coverage: {
     description: 'Generate coverage?',

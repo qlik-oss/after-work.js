@@ -2,8 +2,8 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 
 describe('context', () => {
-  const mock = context => aw.mock(
-    [['**/src/context.js', () => props => props.children(context)]],
+  const mock = (context) => aw.mock(
+    [['**/src/context.js', () => (props) => props.children(context)]],
     ['../src/consumer'],
   );
 

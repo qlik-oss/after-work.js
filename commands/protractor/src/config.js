@@ -19,7 +19,7 @@ const setOnPrepareGlobals = () => {
   global.EC = protractor.ExpectedConditions;
 };
 
-const setLogSeleniumNodeInfo = browser => browser.getProcessedConfig().then((argv) => {
+const setLogSeleniumNodeInfo = (browser) => browser.getProcessedConfig().then((argv) => {
   if (argv.logSeleniumInfo) {
     logSeleniumNodeInfo(argv);
   }
@@ -35,7 +35,7 @@ const setBaseUrl = async (browser) => {
   }
 };
 
-const setIgnoreSynchronization = async browser => browser.getProcessedConfig().then((currentConfig) => {
+const setIgnoreSynchronization = async (browser) => browser.getProcessedConfig().then((currentConfig) => {
   if (typeof currentConfig.ignoreSynchronization !== 'undefined') {
     browser.ignoreSynchronization = currentConfig.ignoreSynchronization;
   } else {
@@ -388,11 +388,11 @@ const { argv } = yargs(process.argv.slice(2))
     }
     return config;
   })
-  .coerce('specs', a => globby.sync(a).map(p => path.resolve(p)))
+  .coerce('specs', (a) => globby.sync(a).map((p) => path.resolve(p)))
   .coerce('babel', utils.coerceBabel);
 
 argv.shouldInstrument = () => false;
-argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
+argv.shouldTransform = (f) => argv.transform.testExclude.shouldInstrument(f);
 if (argv.presetEnv) {
   require('@after-work.js/preset-plugin')();
 }
@@ -414,7 +414,7 @@ if (argv.seleniumServerJar) {
 if (!argv.specs && argv.glob.length) {
   const specs = utils
     .filter(argv.filter.protractor.files, globby.sync(argv.glob))
-    .map(p => path.resolve(p));
+    .map((p) => path.resolve(p));
   argv.specs = specs;
 }
 

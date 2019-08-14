@@ -29,9 +29,9 @@ const server = {
         let config = {};
         const foundConfig = require(configPath);
         if (typeof foundConfig === 'function') {
-          config = Object.assign({}, foundConfig());
+          config = { ...foundConfig() };
         } else {
-          config = Object.assign({}, foundConfig);
+          config = { ...foundConfig };
         }
         return config;
       });

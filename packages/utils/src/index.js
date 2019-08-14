@@ -10,8 +10,8 @@ const minimatch = require('minimatch');
 const isCI = !!process.env.CI;
 
 const pkg = importCwd('./package.json');
-const findPkgs = g => globby.sync(`${g}/package.json`);
-const reducePkgs = (acc, curr) => acc.concat(curr.map(c => c.slice(0, -13)));
+const findPkgs = (g) => globby.sync(`${g}/package.json`);
+const reducePkgs = (acc, curr) => acc.concat(curr.map((c) => c.slice(0, -13)));
 const lerna = importCwd.silent('./lerna.json');
 const workspaces = (pkg.workspaces || []).map(findPkgs).reduce(reducePkgs, []);
 const lernaPackages = ((lerna && lerna.packages) || [])
@@ -261,8 +261,8 @@ const utils = {
     const s = new Error().stack
       .split('\n')
       .slice(1)
-      .map(c => c.split(/\(([^)]+)\)/)[1])
-      .filter(c => c !== undefined)
+      .map((c) => c.split(/\(([^)]+)\)/)[1])
+      .filter((c) => c !== undefined)
       .map((c) => {
         const parts = c.split(':');
         const columnno = parts.pop();
@@ -293,7 +293,7 @@ const utils = {
     let use = found;
     if (found.length > 1) {
       const matchName = found.filter(
-        id => path
+        (id) => path
           .basename(id)
           .split('.')
           .shift() === testName,
@@ -316,8 +316,8 @@ const utils = {
       return [];
     }
     const found = mod.children
-      .filter(m => files.indexOf(m.id) !== -1)
-      .map(m => m.id);
+      .filter((m) => files.indexOf(m.id) !== -1)
+      .map((m) => m.id);
     return this.matchDependency(found, name);
   },
   getAllDependencies(files, file) {
@@ -338,7 +338,7 @@ const utils = {
   },
   filter(arr, initialValue) {
     return arr.reduce(
-      (acc, curr) => acc.filter(file => minimatch(file, curr)),
+      (acc, curr) => acc.filter((file) => minimatch(file, curr)),
       initialValue,
     );
   },

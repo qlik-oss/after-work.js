@@ -13,7 +13,7 @@ const getProxyMiddleware = (proxyConfig) => {
   return null;
 };
 
-const normalize = options => Object.keys(options).map((context) => {
+const normalize = (options) => Object.keys(options).map((context) => {
   let proxyOptions;
   const correctedContext = context.replace(/^\*$/, '**').replace(/\/\*$/, '');
   if (typeof options.proxy[context] === 'string') {
@@ -22,7 +22,7 @@ const normalize = options => Object.keys(options).map((context) => {
       target: options.proxy[context],
     };
   } else {
-    proxyOptions = Object.assign({}, options.proxy[context]);
+    proxyOptions = { ...options.proxy[context] };
     proxyOptions.context = correctedContext;
   }
   proxyOptions.logLevel = proxyOptions.logLevel || 'warn';

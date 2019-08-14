@@ -22,7 +22,7 @@ function getDurationObj(durationInMilliseconds) {
   };
 }
 
-Handlebars.registerHelper('addLocalCSS', cssPath => fs.readFileSync(path.resolve(__dirname, cssPath), {
+Handlebars.registerHelper('addLocalCSS', (cssPath) => fs.readFileSync(path.resolve(__dirname, cssPath), {
   encoding: 'utf8',
 }));
 
