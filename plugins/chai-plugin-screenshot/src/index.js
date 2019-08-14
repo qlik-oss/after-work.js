@@ -45,7 +45,7 @@ const plugin = {
       if (input.getBuffer || (input.img && input.img.getBuffer)) {
         // Input is a Jimp object where instanceof doesn't validate to true
         const fn = (resolve, reject) => (input.img ? input.img : input).getBuffer(jimp.AUTO, (e, b) => (e ? reject(e) : resolve(b)));
-        return new Promise(fn).then(buffer => jimp.read(buffer));
+        return new Promise(fn).then((buffer) => jimp.read(buffer));
       }
     }
 
@@ -59,7 +59,7 @@ const plugin = {
   },
   fileExists(filePath) {
     return new Promise((resolve) => {
-      fs.lstat(filePath, err => resolve(!err));
+      fs.lstat(filePath, (err) => resolve(!err));
     });
   },
   writeImage(img, filePath) {
@@ -120,7 +120,7 @@ const plugin = {
           mkdirp.sync(path.parse(baseline).dir);
 
           return Promise.resolve(plugin.toImage(resolvedMeta)).then(
-            baselineImg => plugin.writeImage(baselineImg, baseline).then(() => {
+            (baselineImg) => plugin.writeImage(baselineImg, baseline).then(() => {
               const errStr = `No baseline found! New baseline generated at ${path.join(
                 basePath,
                 'baseline',

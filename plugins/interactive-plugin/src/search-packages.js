@@ -5,7 +5,7 @@ const searchPackages = (input, inputPackages) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const fuzzyResult = fuzzy.filter(input, inputPackages);
-      const val = fuzzyResult.map(el => el.original);
+      const val = fuzzyResult.map((el) => el.original);
       resolve(val);
     });
   });

@@ -19,7 +19,7 @@ const utils = {
     });
   },
   removeFiles(...files) {
-    return Promise.all(files.map(file => this.removeFile(file)));
+    return Promise.all(files.map((file) => this.removeFile(file)));
   },
   takeImageOf(
     browser,
@@ -38,7 +38,7 @@ const utils = {
         rect.top += offsetY;
         rect.width += offsetWidth;
         rect.height += offsetHeight;
-        return browser.takeScreenshot().then(base64 => jimp.read(Buffer.from(base64, 'base64')).then((img) => {
+        return browser.takeScreenshot().then((base64) => jimp.read(Buffer.from(base64, 'base64')).then((img) => {
           // eslint-disable-line no-buffer-constructor
           if (rect.ratio > 1) {
             img.scale(1 / rect.ratio);
@@ -50,7 +50,7 @@ const utils = {
           };
         }));
       })
-      .then(meta => this.getBrowserName(browser).then((caps) => {
+      .then((meta) => this.getBrowserName(browser).then((caps) => {
         const platform = caps.get('platform') || caps.get('platformName') || 'unknown';
         return {
           img: meta.img,

@@ -5,7 +5,7 @@ const searchTestFiles = (input, inputTestFiles) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const fuzzyResult = fuzzy.filter(input, inputTestFiles);
-      const val = fuzzyResult.map(el => el.original);
+      const val = fuzzyResult.map((el) => el.original);
       resolve(val);
     });
   });

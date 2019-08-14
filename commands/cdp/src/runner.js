@@ -18,8 +18,8 @@ class Runner extends EventEmitter {
     super();
     this.argv = argv;
     this.nyc = new NYC(argv.nyc);
-    argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
-    argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
+    argv.shouldInstrument = (f) => this.nyc.exclude.shouldInstrument(f);
+    argv.shouldTransform = (f) => argv.transform.testExclude.shouldInstrument(f);
     this.mediator = new Mediator();
     this.chromeLauncher = chromeLauncher;
     this.ended = false;
@@ -88,7 +88,7 @@ class Runner extends EventEmitter {
       if (!(type in console)) {
         type = 'log';
       }
-      const data = args.map(arg => (arg.type === 'string' ? arg.value : unmirror(arg)));
+      const data = args.map((arg) => (arg.type === 'string' ? arg.value : unmirror(arg)));
       console[type](...data);
     });
   }
@@ -242,13 +242,13 @@ class Runner extends EventEmitter {
   }
 
   relativeBaseUrlFiles(files) {
-    return files.map(file => this.relativeBaseUrlFile(file));
+    return files.map((file) => this.relativeBaseUrlFile(file));
   }
 
   findFiles(glob) {
     return utils.filter(
       this.getFilter().files,
-      globby.sync(glob).map(f => path.resolve(f)),
+      globby.sync(glob).map((f) => path.resolve(f)),
     );
   }
 
@@ -257,7 +257,7 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = this.findFiles(this.argv.glob).filter(f => utils.isTestFile(f, this.argv));
+    this.testFiles = this.findFiles(this.argv.glob).filter((f) => utils.isTestFile(f, this.argv));
     if (!this.testFiles.length) {
       this.log(
         `No files found for glob: ${this.argv.glob} with filter: ${

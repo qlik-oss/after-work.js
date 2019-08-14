@@ -8,7 +8,7 @@ const nodeOptions = require('@after-work.js/node/src/options');
 const utils = require('@after-work.js/utils');
 const puppetOptions = require('./options');
 
-const options = Object.assign({}, nodeOptions, puppetOptions);
+const options = { ...nodeOptions, ...puppetOptions };
 
 class PuppetRunner extends Runner {
   constructor(puppeteer, argv, libs) {

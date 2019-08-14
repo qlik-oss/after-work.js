@@ -17,6 +17,6 @@ module.exports = function createServer(options) {
       throw err;
     }
   });
-  websocketProxies.forEach(wsProxy => server.on('upgrade', wsProxy.upgrade));
+  websocketProxies.forEach((wsProxy) => server.on('upgrade', wsProxy.upgrade));
   return server;
 };
