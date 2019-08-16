@@ -184,7 +184,7 @@ function uiReport(runner, options) {
       new mocha.reporters.XUnit(runner, options);
     }
   }
-  runner.on('pass', (test) => {
+  runner.on('pass', test => {
     console.log(
       '\u001b[32m √ PASSED: %s ( %sms )\u001b[0m',
       test.fullTitle(),
@@ -194,7 +194,7 @@ function uiReport(runner, options) {
     passes++;
   });
 
-  runner.on('pending', (test) => {
+  runner.on('pending', test => {
     tests.push(test);
     pending++;
   });
@@ -227,13 +227,13 @@ function uiReport(runner, options) {
         .manage()
         .logs()
         .get('browser')
-        .then((browserLog) => {
+        .then(browserLog => {
           if (browserLog && browserLog.length) {
             console.log(
               '\u001b[91m     %s\u001b[0m',
               'Errors reported in the chrome console - see log for more information',
             );
-            browserLog.forEach((log) => {
+            browserLog.forEach(log => {
               if (log.level.value_ >= 1000) {
                 test.consoleEntries.push(log.message);
               }

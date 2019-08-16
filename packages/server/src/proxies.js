@@ -1,6 +1,6 @@
 const httpProxyMiddleware = require('http-proxy-middleware');
 
-const getProxyMiddleware = (proxyConfig) => {
+const getProxyMiddleware = proxyConfig => {
   if (typeof proxyConfig.logLevel === 'undefined') {
     proxyConfig.logLevel = 'error';
   }
@@ -13,7 +13,7 @@ const getProxyMiddleware = (proxyConfig) => {
   return null;
 };
 
-const normalize = (options) => Object.keys(options).map((context) => {
+const normalize = options => Object.keys(options).map(context => {
   let proxyOptions;
   const correctedContext = context.replace(/^\*$/, '**').replace(/\/\*$/, '');
   if (typeof options.proxy[context] === 'string') {
@@ -32,7 +32,7 @@ const normalize = (options) => Object.keys(options).map((context) => {
 const applyProxies = (app, options = []) => {
   const websocketProxies = [];
   const proxy = !Array.isArray(options) ? normalize(options) : options;
-  proxy.forEach((proxyConfigOrCallback) => {
+  proxy.forEach(proxyConfigOrCallback => {
     let proxyConfig;
     let proxyMiddleware;
 

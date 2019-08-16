@@ -27,7 +27,7 @@ module.exports = function aggregateReports(reportName, artifactsPath, reports) {
     return undefined;
   }
   const sumTests = reports
-    .map((r) => JSON.parse(fs.readFileSync(r, 'utf8')))
+    .map(r => JSON.parse(fs.readFileSync(r, 'utf8')))
     .reduce(reduceTestObject);
 
   if (sumTests) {

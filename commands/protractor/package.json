@@ -25,7 +25,7 @@
     "@after-work.js/server": "6.0.5",
     "@after-work.js/utils": "6.0.5",
     "extend": "3.0.2",
-    "globby": "9.2.0",
+    "globby": "10.0.1",
     "handlebars": "4.1.2",
     "highlight.js": "9.15.9",
     "import-cwd": "3.0.0",

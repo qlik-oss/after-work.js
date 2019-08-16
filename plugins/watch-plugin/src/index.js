@@ -40,13 +40,13 @@ const onWatch = (runner, f) => {
   }
 };
 
-module.exports = (runner) => {
+module.exports = runner => {
   const paths = globby.sync(runner.argv.watchGlob);
   chokidar
     .watch(paths, {
       ignoreInitial: true,
     })
-    .on('change', (f) => onWatch(runner, path.resolve(f)))
-    .on('add', (f) => onWatchAdd(runner, path.resolve(f)))
-    .on('unlink', (f) => onWatchUnlink(runner, path.resolve(f)));
+    .on('change', f => onWatch(runner, path.resolve(f)))
+    .on('add', f => onWatchAdd(runner, path.resolve(f)))
+    .on('unlink', f => onWatchUnlink(runner, path.resolve(f)));
 };

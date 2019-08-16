@@ -7,7 +7,7 @@ const {
 const { getTransform } = require('@after-work.js/transform');
 const utils = require('@after-work.js/utils');
 
-const getSourceContent = (filename) => {
+const getSourceContent = filename => {
   const { map } = getTransform(filename) || {};
   if (map) {
     return map.sourcesContent[0];

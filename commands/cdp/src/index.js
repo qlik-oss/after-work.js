@@ -15,7 +15,7 @@ const cdp = {
     return yargs
       .middleware(utils.addDefaults)
       .options(options)
-      .config('config', (configPath) => {
+      .config('config', configPath => {
         if (configPath === null) {
           return {};
         }
@@ -32,7 +32,7 @@ const cdp = {
         return config;
       })
       .coerce('babel', utils.coerceBabel)
-      .coerce('transform', (opt) => {
+      .coerce('transform', opt => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.testExclude = testExclude({ include: opt.include, exclude });
         // eslint-disable-next-line prefer-object-spread
@@ -42,7 +42,7 @@ const cdp = {
         ).compilerOptions;
         return opt;
       })
-      .coerce('chrome', (opt) => {
+      .coerce('chrome', opt => {
         if (opt.devtools) {
           opt.chromeFlags = ['--auto-open-devtools-for-tabs'];
           opt.launch = true;

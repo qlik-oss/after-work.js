@@ -18,6 +18,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "arrow-parens": [2, "as-needed"],
     "import/no-extraneous-dependencies": [
       2,
       {

@@ -32,7 +32,7 @@ module.exports = {
     });
   },
   logSeleniumNodeInfo(config) {
-    browser.getSession().then((session) => {
+    browser.getSession().then(session => {
       const sessionId = session.getId();
       console.log(`WebDriverSessionID: ${sessionId}`);
 
@@ -42,10 +42,10 @@ module.exports = {
 
       const url = config.seleniumAddress.replace('wd/hub', `grid/api/testsession?session=${sessionId}`);
 
-      http.get(url, (res) => {
+      http.get(url, res => {
         let result = '';
         res.setEncoding('utf8');
-        res.on('data', (chunk) => {
+        res.on('data', chunk => {
           result += chunk;
         });
         res.on('end', () => {
@@ -70,7 +70,7 @@ module.exports = {
             console.log(`Grid Extra Video: ${browser.params.grid.extraVideo}`);
           }
         });
-      }).on('error', (e) => {
+      }).on('error', e => {
         console.error(e);
       });
     });

@@ -32,7 +32,7 @@
       delete win.Mocha;
       win.Mocha = m;
 
-      m.process.nextTick = (cb) => cb();
+      m.process.nextTick = cb => cb();
       m.process.stdout._write = (chunks, encoding, cb) => {
         const output = chunks.toString ? chunks.toString() : chunks;
         console.info(output);
@@ -53,7 +53,7 @@
 
     console.format = function (f) {
       if (typeof f !== 'string') {
-        return Array.prototype.map.call(arguments, (arg) => {
+        return Array.prototype.map.call(arguments, arg => {
           try {
             return JSON.stringify(arg);
           } catch (_) {
@@ -64,7 +64,7 @@
       let i = 1,
         args = arguments,
         len = args.length,
-        str = String(f).replace(/%[sdj%]/g, (x) => {
+        str = String(f).replace(/%[sdj%]/g, x => {
           if (x === '%%') return '%';
           if (i >= len) return x;
           switch (x) {

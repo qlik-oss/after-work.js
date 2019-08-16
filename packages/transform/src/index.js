@@ -123,8 +123,8 @@ function transformFile(filename, argv, content = null) {
   return transform.code;
 }
 
-const getTransform = (filename) => fileCache.getSync(filename, { ignoreCacheInvalidation: true });
-const deleteTransform = (filename) => fileCache.transform.delete(filename);
+const getTransform = filename => fileCache.getSync(filename, { ignoreCacheInvalidation: true });
+const deleteTransform = filename => fileCache.transform.delete(filename);
 const safeSaveCache = () => fileCache.saveSync();
 
 module.exports = {

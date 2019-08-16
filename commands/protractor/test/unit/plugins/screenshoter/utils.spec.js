@@ -122,7 +122,7 @@ describe('Screenshoter Utils', () => {
       sandbox.stub(jimp, 'read').returns(Promise.resolve({ crop }));
     });
 
-    it('should resolve if it was possible to take an image with selector', () => utils.takeImageOf(browser, { selector: 'my-selector' }).then((result) => {
+    it('should resolve if it was possible to take an image with selector', () => utils.takeImageOf(browser, { selector: 'my-selector' }).then(result => {
       expect(crop).to.have.been.calledWith(200, 100, 200, 100);
       expect(result.rect).to.deep.equal({
         top: 100,
@@ -133,7 +133,7 @@ describe('Screenshoter Utils', () => {
       expect(result.browserName).to.equal('chrome');
     }));
 
-    it('should resolve if it was possible to take an image with default selector', () => utils.takeImageOf(browser, {}).then((result) => {
+    it('should resolve if it was possible to take an image with default selector', () => utils.takeImageOf(browser, {}).then(result => {
       expect(result.rect).to.deep.equal({
         top: 100,
         left: 200,
@@ -152,7 +152,7 @@ describe('Screenshoter Utils', () => {
         offsetWidth: 5,
         offsetHeight: 5,
       })
-      .then((result) => {
+      .then(result => {
         expect(crop).to.have.been.calledWith(195, 95, 205, 105);
         expect(result.rect).to.deep.equal({
           top: 95,
