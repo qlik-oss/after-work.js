@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/node",
-  "version": "6.0.5",
+  "version": "6.0.6",
   "publishConfig": {
     "access": "public"
   },
@@ -20,12 +20,12 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/interactive-plugin": "6.0.5",
-    "@after-work.js/preset-plugin": "6.0.5",
-    "@after-work.js/register": "6.0.5",
-    "@after-work.js/transform": "6.0.5",
-    "@after-work.js/utils": "6.0.5",
-    "@after-work.js/watch-plugin": "6.0.5",
+    "@after-work.js/interactive-plugin": "6.0.6",
+    "@after-work.js/preset-plugin": "6.0.6",
+    "@after-work.js/register": "6.0.6",
+    "@after-work.js/transform": "6.0.6",
+    "@after-work.js/utils": "6.0.6",
+    "@after-work.js/watch-plugin": "6.0.6",
     "chokidar": "3.0.2",
     "globby": "10.0.1",
     "import-cwd": "3.0.0",
