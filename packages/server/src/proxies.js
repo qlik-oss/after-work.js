@@ -22,7 +22,7 @@ const normalize = options => Object.keys(options).map(context => {
       target: options.proxy[context],
     };
   } else {
-    proxyOptions = { ...options.proxy[context] };
+    proxyOptions = Object.assign({}, options.proxy[context]);
     proxyOptions.context = correctedContext;
   }
   proxyOptions.logLevel = proxyOptions.logLevel || 'warn';

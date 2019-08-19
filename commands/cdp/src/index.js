@@ -25,9 +25,9 @@ const cdp = {
         let config = {};
         const foundConfig = require(configPath);
         if (typeof foundConfig === 'function') {
-          config = { ...foundConfig() };
+          config = Object.assign({}, foundConfig());
         } else {
-          config = { ...foundConfig };
+          config = Object.assign({}, foundConfig);
         }
         return config;
       })
@@ -35,7 +35,6 @@ const cdp = {
       .coerce('transform', opt => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.testExclude = testExclude({ include: opt.include, exclude });
-        // eslint-disable-next-line prefer-object-spread
         opt.typescript.compilerOptions = Object.assign(
           { compilerOptions: {} },
           importCwd.silent(path.resolve(opt.typescript.config)),

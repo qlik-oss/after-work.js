@@ -109,7 +109,7 @@ function transformFile(filename, argv, content = null) {
       argv,
     );
     content = tsContent;
-    babelOpts = { ...babelOpts, ...tsBabelOpts };
+    babelOpts = Object.assign({}, babelOpts, tsBabelOpts);
   }
   babelOpts.ast = false;
   const { babel } = argv.babel;

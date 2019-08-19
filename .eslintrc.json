@@ -53,7 +53,8 @@
     "no-plusplus": 0,
     "no-new": 0,
     "import/no-unresolved": 0,
-    "max-classes-per-file": 0
+    "max-classes-per-file": 0,
+    "prefer-object-spread": 0
   },
   "extends": ["airbnb"]
 }
