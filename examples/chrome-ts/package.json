@@ -1,7 +1,7 @@
 {
   "name": "@after-work.js/example-chrome-ts",
   "private": true,
-  "version": "6.0.6",
+  "version": "6.0.7",
   "description": "Typescript",
   "main": "src/index.js",
   "scripts": {},
