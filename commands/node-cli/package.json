@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/node-cli",
-  "version": "6.0.7",
+  "version": "6.0.8",
   "publishConfig": {
     "access": "public"
   },
@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/cli": "6.0.7",
-    "@after-work.js/node": "6.0.7"
+    "@after-work.js/cli": "6.0.8",
+    "@after-work.js/node": "6.0.8"
   }
 }
