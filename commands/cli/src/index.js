@@ -17,7 +17,7 @@ const tryAddCommand = m => {
     // Try installed
     cmd = importCwd.silent(m);
   }
-  if (cmd !== null) {
+  if (cmd) {
     yargs.command(cmd);
   }
 };
