@@ -27,7 +27,7 @@
     "extend": "3.0.2",
     "globby": "10.0.1",
     "handlebars": "4.1.2",
-    "highlight.js": "9.15.9",
+    "highlight.js": "9.15.10",
     "import-cwd": "3.0.0",
     "jimp": "0.6.4",
     "mkdirp": "0.5.1",
