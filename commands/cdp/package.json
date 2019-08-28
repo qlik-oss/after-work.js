@@ -27,7 +27,7 @@
     "@after-work.js/watch-plugin": "6.0.8",
     "chokidar": "3.0.2",
     "chrome-launcher": "0.11.2",
-    "chrome-remote-interface": "0.27.2",
+    "chrome-remote-interface": "0.28.0",
     "chrome-unmirror": "0.1.0",
     "globby": "10.0.1",
     "import-cwd": "3.0.0",
