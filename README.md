@@ -92,3 +92,12 @@ The following tools are bundled into after-work.js:
 ## Contributing
 
 Please follow the instructions in [CONTRIBUTING.md](.github/CONTRIBUTING.md).
+
+## Publish to npm
+
+1. `npx lerna version --exact --no-push --no-git-tag-version --force-publish`
+2. Update all `@after-work.js/*` dependencies in the root package.json to match the new version
+3. `git commit -m "chore(release): publish vX.Y.Z"`
+4. `git tag -a vX.Y.Z -m "vX.Y.Z"`
+5. `npx lerna publish from-git`
+6. `git push --follow-tags`
