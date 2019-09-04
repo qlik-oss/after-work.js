@@ -23,7 +23,7 @@
     "@after-work.js/transform-middleware": "6.0.8",
     "@after-work.js/utils": "6.0.8",
     "express": "4.17.1",
-    "http-proxy-middleware": "0.19.1",
+    "http-proxy-middleware": "0.20.0",
     "import-cwd": "3.0.0",
     "serve-favicon": "2.5.0",
     "test-exclude": "5.2.3"
