@@ -148,12 +148,16 @@ const addDefaults = argv => {
   if (argv.glob === TEST_GLOB) {
     argv.glob = getTestGlob(argv);
   }
+  argv.glob = argv.glob.map(g => g.replace(/\\/g, '/'));
   if (argv.src === SRC_GLOB) {
     argv.src = getSrcGlob(argv);
   }
+  argv.src = argv.src.map(g => g.replace(/\\/g, '/'));
   if (argv.watchGlob === WATCH_GLOB) {
     argv.watchGlob = [...argv.glob, ...argv.src];
   }
+  argv.watchGlob = argv.watchGlob.map(g => g.replace(/\\/g, '/'));
+
   argv.nyc.exclude = [
     ...argv.nyc.exclude,
     ...getInstrumentExcludePattern(argv),
