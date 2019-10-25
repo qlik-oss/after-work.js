@@ -2,6 +2,7 @@ const {
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
+  DEFAULT_EXT,
   DEFAULT_SRC_EXT_PATTERN,
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
@@ -159,6 +160,11 @@ module.exports = {
   'nyc.require': {
     description: 'Require path',
     default: [],
+    type: 'array',
+  },
+  'nyc.extension': {
+    description: 'Include extensions',
+    default: DEFAULT_EXT,
     type: 'array',
   },
   'nyc.include': {

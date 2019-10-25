@@ -19,10 +19,12 @@ const lernaPackages = ((lerna && lerna.packages) || [])
   .reduce(reducePkgs, []);
 const packagesPath = [...workspaces, ...lernaPackages];
 
-const DEFAULT_TEST_EXT_PATTERN = '*.{spec,test}.{js,jsx,ts,tsx}';
+const DEFAULT_EXT = ['js', 'ts', 'jsx', 'tsx'];
+
+const DEFAULT_TEST_EXT_PATTERN = `*.{spec,test}.{${DEFAULT_EXT.join(',')}}`;
 const DEFAULT_TEST_GLOB_PATTERN = `**/${DEFAULT_TEST_EXT_PATTERN}`;
 
-const DEFAULT_SRC_EXT_PATTERN = '*.{js,ts,jsx,tsx}';
+const DEFAULT_SRC_EXT_PATTERN = `*.{${DEFAULT_EXT.join(',')}}`;
 const DEFAULT_SRC_GLOB_PATTERN = `**/${DEFAULT_SRC_EXT_PATTERN}`;
 const DEFAULT_SRC_EXCLUDE_PATTERN = [
   '**/coverage/**',
@@ -186,6 +188,7 @@ const utils = {
   TEST_GLOB,
   SRC_GLOB,
   WATCH_GLOB,
+  DEFAULT_EXT,
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_TEST_GLOB_PATTERN,
   DEFAULT_SRC_EXT_PATTERN,
