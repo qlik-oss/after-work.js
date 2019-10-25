@@ -145,9 +145,7 @@ class Runner extends EventEmitter {
       snapshotState.save();
       if (uncheckedCount && !this.argv.updateSnapshot) {
         console.error(
-          `\u001b[33mObsolete snapshot:\u001b[0m \u001b[31m${currentTestName}\u001b[0m \u001b[33m\n\u001b[90mat (${
-            snapshotState._snapshotPath
-          })\u001b[0m`,
+          `\u001b[33mObsolete snapshot:\u001b[0m \u001b[31m${currentTestName}\u001b[0m \u001b[33m\n\u001b[90mat (${snapshotState._snapshotPath})\u001b[0m`,
         );
       }
     });
