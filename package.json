@@ -19,12 +19,12 @@
     "url": "ssh://git@github.com:qlik-oss/after-work.js.git"
   },
   "devDependencies": {
-    "@after-work.js/cdp": "6.0.9",
-    "@after-work.js/cli": "6.0.9",
-    "@after-work.js/node": "6.0.9",
-    "@after-work.js/protractor": "6.0.9",
-    "@after-work.js/puppeteer": "6.0.9",
-    "@after-work.js/serve": "6.0.9",
+    "@after-work.js/cdp": "6.0.10",
+    "@after-work.js/cli": "6.0.10",
+    "@after-work.js/node": "6.0.10",
+    "@after-work.js/protractor": "6.0.10",
+    "@after-work.js/puppeteer": "6.0.10",
+    "@after-work.js/serve": "6.0.10",
     "@babel/core": "7.5.5",
     "@babel/plugin-transform-react-jsx": "7.3.0",
     "@babel/preset-env": "7.5.5",
