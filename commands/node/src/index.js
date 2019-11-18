@@ -283,6 +283,7 @@ const node = {
       .middleware(mwargv => {
         if (!mwargv.babel.enable && mwargv.coverage) {
           mwargv.nyc.hookRequire = true; // Enable nyc instrumenting on the fly
+          mwargv.nyc.instrumenter = './lib/instrumenters/istanbul';
         }
       });
   },
