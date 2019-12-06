@@ -55,12 +55,25 @@ class Runner extends EventEmitter {
       .basename(srcFile)
       .split('.')
       .shift();
-    const found = this.testFiles.filter(f => {
+    let found = this.testFiles.filter(f => {
       const mod = utils.safeRequireCache(f);
       return mod.children.filter(m => m.id === srcFile).length !== 0;
     });
-    const use = utils.matchDependency(found, srcName);
-    return use;
+    if (found.length) {
+      return utils.matchDependency(found, srcName);
+    }
+    found = this.testFiles.filter(f => {
+      const testName = path
+        .basename(f)
+        .split('.')
+        .shift();
+      if (srcName[0] === srcName[0].toUpperCase()) {
+        // Might be react Component
+        return testName === `${srcName[0].toLowerCase()}${srcName.slice(1)}`;
+      }
+      return testName === srcName;
+    });
+    return found;
   }
 
   getSrcFilesFromTestFiles(testFiles) {
