@@ -67,11 +67,7 @@ class Runner extends EventEmitter {
         .basename(f)
         .split('.')
         .shift();
-      if (srcName[0] === srcName[0].toUpperCase()) {
-        // Might be react Component
-        return testName === `${srcName[0].toLowerCase()}${srcName.slice(1)}`;
-      }
-      return testName === srcName;
+      return testName.toLowerCase() === srcName.toLowerCase();
     });
     return found;
   }
