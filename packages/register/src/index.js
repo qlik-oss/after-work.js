@@ -227,6 +227,7 @@ module.exports = function register(
     '.js',
     '.ts',
     '.jsx',
+    '.tsx',
     '.scss',
     '.less',
     '.css',
