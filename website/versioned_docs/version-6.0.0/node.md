@@ -31,6 +31,53 @@ const [{ default: FancyButton }] = aw.mock(
 
 Look at the React [example](https://github.com/qlik-oss/after-work.js/tree/master/examples/react) and especially [**here**](https://github.com/qlik-oss/after-work.js/blob/master/examples/react/test/fancy-button.spec.js) for more details.
 
+> If you are using `coverage` ensure you are only calling `aw.mock` in module scope or in a `before` function. If not, it will be instrumented multiple times and the last instrumentation wins, which will lead to incorrect coverage results. For example:
+
+```javascript
+import foo from 'foo';
+
+const span = <span>my span</span>;
+
+// Module scope 👍
+const [{ default: FancyButton }] = aw.mock(
+  [
+    // Mock components
+    [require.resolve('../src/fancy-button.js'), () => () => span]
+  ],
+  // Require components
+  ['../src/fancy-button']
+);
+
+describe(() => {
+  it('should calculate correct coverage', () => {});
+});
+```
+
+or
+
+```javascript
+import foo from 'foo';
+
+const span = <span>my span</span>;
+
+describe(() => {
+  let FancyButton;
+  before(() => {
+    // In before 👍
+    const [{ default: FancyButton }] = aw.mock(
+    [
+      // Mock components
+      [require.resolve('../src/fancy-button.js'), () => () => span]
+    ],
+    // Require components
+    ['../src/fancy-button']
+);
+
+  });
+  it('should calculate correct coverage', () => {});
+});
+```
+
 ## Snapshot Testing
 
 We are using the awesome 📸 [**jest-snapshot**](https://github.com/facebook/jest/tree/master/packages/jest-snapshot) package.
