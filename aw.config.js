@@ -6,8 +6,7 @@ module.exports = {
   mocks: [
     ['**/*.{scss,less,css,html}'],
     ['./foobar-virtual.html', '"<div>hello world</div>"'],
-    ['mocked-special', './examples/react/test/button-mock.js'],
-    ['bar', () => {}],
+    ['mocked-special', './examples/react/test/internal-aw-tests/button-mock.js'],
   ],
   nyc: {
     exclude: [
