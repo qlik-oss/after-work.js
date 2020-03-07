@@ -5,7 +5,7 @@ import 'bar.less';
 import 'baz.css';
 import 'mocked-special';
 
-import Button from '../src/button';
+import Button from '../../src/button';
 
 describe('button', () => {
   it('renders correctly', () => {

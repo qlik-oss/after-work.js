@@ -28,7 +28,7 @@ const [{ default: FancyButton }] = aw.mock(
 );
 ```
 
-Look at the React [example](https://github.com/qlik-oss/after-work.js/tree/master/examples/react) and especially [**here**](https://github.com/qlik-oss/after-work.js/blob/master/examples/react/test/fancy-button.spec.js) for more details.
+Look at the React [example](https://github.com/qlik-oss/after-work.js/tree/master/examples/react) for more details.
 
 > If you are using `coverage` ensure you are only calling `aw.mock` in module scope or in a `before` function. If not, it will be instrumented multiple times and the last instrumentation wins, which will lead to incorrect coverage results. For example:
 

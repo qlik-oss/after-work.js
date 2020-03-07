@@ -171,6 +171,15 @@ class AW {
     return true;
   }
 
+  /**
+   * Mock
+   * @entry
+   * @param {Array<Array<string,function|filename,string>>} mocks
+   * @param {string[]} reqs
+   * @returns {Module[]}
+   * @example
+   *
+   */
   mock(mocks, reqs) {
     const injectReact = this.canInjectReact();
     mocks.forEach(([key, value]) => this.mocks.set(key, [value, injectReact]));

@@ -2,15 +2,22 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 
 describe('context', () => {
-  const mock = context => aw.mock(
-    [['**/src/context.js', () => props => props.children(context)]],
-    ['../src/consumer'],
-  );
+  let sandbox;
+  let action;
+  let MyConsumerComponent;
+  let hello;
+
+  before(() => {
+    sandbox = sinon.createSandbox();
+    action = sandbox.spy();
+    hello = 'Custom Consumer Test FOO';
+    [{ default: MyConsumerComponent }] = aw.mock(
+      [[require.resolve('../src/context.js'), () => props => props.children({ hello, action })]],
+      ['../src/consumer'],
+    );
+  });
 
   it('renders custom consumer', () => {
-    const action = sinon.spy();
-    const hello = 'Custom Consumer Test FOO';
-    const [{ default: MyConsumerComponent }] = mock({ hello, action });
     const component = renderer.create(<MyConsumerComponent />);
     const { root } = component;
     const button = root.findByType('button');

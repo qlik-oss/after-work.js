@@ -1,11 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`'renders button hook' 1`] = `
-<span>
-  hook
-</span>
-`;
-
 exports[`'renders' 1`] = `
 <div>
   <p>
