@@ -1,4 +1,4 @@
-declare const aw: {
+declare var aw: {
   /**
    *
    * @param mocks - define mocks by key value pair where key supports glob pattern and value either a function that returns the mocked module or a string.
@@ -25,3 +25,4 @@ declare const aw: {
     reqs: string[],
   ): NodeModule[];
 };
+
