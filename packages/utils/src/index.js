@@ -62,7 +62,7 @@ const getPackages = ({ testExt, srcExt }) => {
   return packagesMap;
 };
 
-const excludeGlob = ['!**/node_modules/**', '!./node_modules/**'];
+const excludeGlob = ['!**/node_modules/**', '!./node_modules/**', '!**/*.d.ts', '!./*.d.ts'];
 
 const getTestGlob = argv => {
   const { testExt, scope } = argv;
