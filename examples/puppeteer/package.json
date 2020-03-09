@@ -1,7 +1,7 @@
 {
   "name": "@after-work.js/example-puppeteer",
   "private": true,
-  "version": "6.0.12",
+  "version": "6.0.13",
   "description": "Puppeteer example",
   "main": "src/index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/puppeteer",
-  "version": "6.0.12",
+  "version": "6.0.13",
   "publishConfig": {
     "access": "public"
   },
@@ -20,13 +20,13 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/interactive-plugin": "6.0.12",
-    "@after-work.js/node": "6.0.12",
-    "@after-work.js/preset-plugin": "6.0.12",
-    "@after-work.js/register": "6.0.12",
-    "@after-work.js/server": "6.0.12",
-    "@after-work.js/utils": "6.0.12",
-    "@after-work.js/watch-plugin": "6.0.12",
+    "@after-work.js/interactive-plugin": "6.0.13",
+    "@after-work.js/node": "6.0.13",
+    "@after-work.js/preset-plugin": "6.0.13",
+    "@after-work.js/register": "6.0.13",
+    "@after-work.js/server": "6.0.13",
+    "@after-work.js/utils": "6.0.13",
+    "@after-work.js/watch-plugin": "6.0.13",
     "chrome-launcher": "0.13.0",
     "import-cwd": "3.0.0",
     "puppeteer-core": "1.20.0"
