@@ -21,7 +21,7 @@
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
     "@after-work.js/utils": "6.0.13",
-    "find-cache-dir": "3.3.0",
+    "find-cache-dir": "3.3.1",
     "import-cwd": "3.0.0"
   },
   "files": [
