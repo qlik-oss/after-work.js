@@ -34,7 +34,7 @@
     "sinon": "9.0.1",
     "sinon-chai": "3.5.0",
     "source-map-support": "0.5.16",
-    "yargs": "14.2.3"
+    "yargs": "15.3.1"
   },
   "devDependencies": {
     "@after-work.js/cdp": "6.0.13",
