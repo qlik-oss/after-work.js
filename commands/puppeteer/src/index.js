@@ -1,7 +1,11 @@
 /* eslint global-require: 0, import/no-dynamic-require: 0, object-curly-newline: 0, class-methods-use-this: 0, max-len: 0 */
+const path = require('path');
+const util = require('util');
+const mkdirp = require('mkdirp');
 const importCwd = require('import-cwd');
 const chromeFinder = require('chrome-launcher/dist/chrome-finder');
 const { getPlatform } = require('chrome-launcher/dist/utils');
+const terminalImage = require('terminal-image');
 const createServer = require('@after-work.js/server');
 const { Runner, configure } = require('@after-work.js/node/src/');
 const nodeOptions = require('@after-work.js/node/src/options');
@@ -10,10 +14,16 @@ const puppetOptions = require('./options');
 
 const options = Object.assign({}, nodeOptions, puppetOptions);
 
+const getSafeFileName = title => {
+  const fileName = title.replace(/[^a-z0-9().]/gi, '_').toLowerCase();
+  return util.format('%s-%s-%s.png', fileName, 'chrome', +new Date());
+};
+
 class PuppetRunner extends Runner {
   constructor(puppeteer, argv, libs) {
     super(argv, libs);
     this.puppeteer = puppeteer;
+    this.screenshots = [];
   }
 
   static async getChromeExecutablePath(stable) {
@@ -57,8 +67,51 @@ class PuppetRunner extends Runner {
     }
   }
 
+  runTests() {
+    super.runTests();
+    this.mochaRunner.on('fail', (test, err) => {
+      const screenshotsPath = `${this.argv.artifactsPath}/screenshots`;
+      mkdirp.sync(screenshotsPath);
+      const filePath = path.resolve(
+        screenshotsPath,
+        getSafeFileName(test.fullTitle()),
+      );
+      const screenshot = {
+        title: test.fullTitle(),
+        buffer: page.screenshot({
+          path: filePath,
+          fullPage: true,
+          err,
+        }),
+        filePath,
+      };
+      this.screenshots.push(screenshot);
+    });
+  }
+
+  async handleScreenshots() {
+    if (this.screenshots.length) {
+      console.error('\u001b[31mscreenshots:\u001b[0m');
+      console.error('');
+    }
+    await Promise.all(
+      this.screenshots.map(async screenshot => {
+        const buffer = await screenshot.buffer;
+        console.error(`  ${screenshot.title}`);
+        console.error(`  \u001b[90m${path.relative(process.cwd(), screenshot.filePath)}\u001b[0m`);
+        console.error('');
+        if (this.argv.screenshotsStderr) {
+          console.error(await terminalImage.buffer(buffer));
+          console.error('');
+        }
+      }),
+    );
+    this.screenshots.length = 0;
+  }
+
   closeBrowser() {
     (async () => {
+      await this.handleScreenshots();
       await this.browser.close();
     })();
   }
@@ -96,7 +149,8 @@ const puppet = {
       .middleware(utils.addDefaults)
       .options(options)
       .config('config', configure)
-      .coerce('babel', utils.coerceBabel);
+      .coerce('babel', utils.coerceBabel)
+      .coerce('artifactsPath', p => path.resolve(process.cwd(), p));
   },
   handler(argv) {
     (async function launchAndRun() {
@@ -113,6 +167,7 @@ const puppet = {
         }
       }
       const runner = new PuppetRunner(puppeteer, argv);
+
       if (argv.presetEnv) {
         require('@after-work.js/preset-plugin')(runner);
       }
@@ -122,7 +177,10 @@ const puppet = {
         argv.interactive = true;
       }
       if (argv.interactive) {
-        require('@after-work.js/interactive-plugin')(runner);
+        const onWatchEnd = async () => {
+          await runner.handleScreenshots();
+        };
+        require('@after-work.js/interactive-plugin')(runner, onWatchEnd);
       }
       if (argv.watch) {
         require('@after-work.js/watch-plugin')(runner);
