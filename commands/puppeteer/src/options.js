@@ -226,4 +226,14 @@ module.exports = {
     default: false,
     type: 'boolean',
   },
+  screenshotsStderr: {
+    description: 'Log screenshot of failing test in stderr',
+    default: false,
+    type: 'boolean',
+  },
+  artifactsPath: {
+    description: 'Base path to artifacts like screenshots',
+    default: 'test/__artifacts__',
+    type: 'string',
+  },
 };

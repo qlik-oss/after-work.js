@@ -110,7 +110,10 @@ const onInteractive = async runner => {
   }
 };
 
-module.exports = function interactivePlugin(runner) {
-  runner.on('watchEnd', () => onInteractive(runner));
+module.exports = function interactivePlugin(runner, onWatchEnd = async () => {}) {
+  runner.on('watchEnd', async () => {
+    await onWatchEnd();
+    onInteractive(runner);
+  });
   runner.on('interactive', () => onInteractive(runner));
 };

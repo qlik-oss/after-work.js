@@ -4,15 +4,20 @@
     <meta charset="utf-8" />
     <base href="/" />
     <style>
-      #container {
+      #parent {
+        display: flex;
         width: 100%;
         height: 100%;
+        align-items: center;
+        justify-content: center;
       }
     </style>
   </head>
 
   <body>
-    <div id="container" onclick="getData();">hello world</div>
+    <div id="parent">
+      <div id="container" onclick="getData();">hello world</div>
+    </div>
     <script>
       window.getData = () => {
         const container = document.querySelector("#container");
