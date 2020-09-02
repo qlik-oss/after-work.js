@@ -18,7 +18,7 @@ aliases:
 jobs:
   build:
     docker:
-      - image: circleci/node:10-stretch-browsers
+      - image: circleci/node:12-stretch-browsers
       - image: selenium/standalone-chrome
 
     working_directory: ~/after-work.js
@@ -66,4 +66,4 @@ jobs:
 
       - save_cache: *save_yarn_cache
       - store_artifacts:
-          path: 'test/__artifacts__'
+          path: "test/__artifacts__"
