@@ -141,6 +141,7 @@ describe('Node command', () => {
       sandbox.stub(runner, 'deleteCoverage').returnsThis();
       sandbox.stub(runner, 'setup').returnsThis();
       sandbox.stub(runner, 'runTests').returnsThis();
+      runner.argv = { nyc: {} };
       runner.mochaRunner = mochaRunner;
       runner.setupBabel = sandbox.stub();
       runner.setupAndRunTests([], []);
@@ -160,6 +161,7 @@ describe('Node command', () => {
       const del = sandbox.stub(runner, 'deleteCoverage').returnsThis();
       const set = sandbox.stub(runner, 'setup').returnsThis();
       const run = sandbox.stub(runner, 'runTests').returnsThis();
+      runner.argv = { nyc: {} };
       runner.mochaRunner = mochaRunner;
       runner.setupBabel = sandbox.stub();
       runner.setupAndRunTests([], []);
