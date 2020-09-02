@@ -1,5 +1,5 @@
 const NYC = require('nyc');
-const testExclude = require('test-exclude');
+const TestExclude = require('test-exclude');
 const { transformFile } = require('@after-work.js/transform');
 const {
   coerceBabel,
@@ -36,7 +36,7 @@ module.exports = function transformFiles(userArgv) {
     transform,
   };
   const nyc = new NYC(argv.nyc);
-  const transformExclude = testExclude(argv.transform);
+  const transformExclude = new TestExclude(argv.transform);
   argv.shouldInstrument = f => argv.coverage && nyc.exclude.shouldInstrument(f);
   argv.shouldTransform = f => transformExclude.shouldInstrument(f);
 
