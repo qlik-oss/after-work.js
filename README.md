@@ -10,7 +10,7 @@
 
 ### Default runner
 
-* [node](./docs/node.md#node): Node.js >= 8.9.4
+* [node](./docs/node.md#node): Node.js >= 12.x
 
 ### Context dependent
 
