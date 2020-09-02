@@ -22,7 +22,7 @@
   "dependencies": {
     "@after-work.js/utils": "6.0.13",
     "fuzzy": "0.1.3",
-    "globby": "10.0.2",
+    "globby": "11.0.1",
     "import-cwd": "3.0.0",
     "inquirer": "7.3.3",
     "inquirer-checkbox-plus-prompt": "1.0.1"
