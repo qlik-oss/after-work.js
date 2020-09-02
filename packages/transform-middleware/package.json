@@ -24,7 +24,7 @@
     "@after-work.js/utils": "6.0.13",
     "import-cwd": "3.0.0",
     "nyc": "14.1.1",
-    "test-exclude": "5.2.3",
+    "test-exclude": "6.0.0",
     "yargs": "15.4.1"
   },
   "files": [
