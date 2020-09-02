@@ -1,7 +1,7 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, no-underscore-dangle: 0 */
 const fs = require('fs');
 const path = require('path');
-const testExclude = require('test-exclude');
+const TestExclude = require('test-exclude');
 const importCwd = require('import-cwd');
 const utils = require('@after-work.js/utils');
 const options = require('./options');
@@ -34,7 +34,7 @@ const cdp = {
       .coerce('babel', utils.coerceBabel)
       .coerce('transform', opt => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
-        opt.testExclude = testExclude({ include: opt.include, exclude });
+        opt.testExclude = new TestExclude({ include: opt.include, exclude });
         opt.typescript.compilerOptions = Object.assign(
           { compilerOptions: {} },
           importCwd.silent(path.resolve(opt.typescript.config)),

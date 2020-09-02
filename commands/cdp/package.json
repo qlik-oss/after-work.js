@@ -34,7 +34,7 @@
     "nyc": "14.1.1",
     "precinct": "5.3.1",
     "source-map-support": "0.5.19",
-    "test-exclude": "5.2.3"
+    "test-exclude": "6.0.0"
   },
   "files": [
     "/src"
