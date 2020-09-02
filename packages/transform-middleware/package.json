@@ -23,7 +23,7 @@
     "@after-work.js/transform": "6.0.13",
     "@after-work.js/utils": "6.0.13",
     "import-cwd": "3.0.0",
-    "nyc": "14.1.1",
+    "nyc": "15.1.0",
     "test-exclude": "6.0.0",
     "yargs": "15.4.1"
   },
