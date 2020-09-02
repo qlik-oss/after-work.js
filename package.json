@@ -42,7 +42,7 @@
     "markdown-table": "2.0.0",
     "protractor": "5.4.4",
     "requirejs": "2.3.6",
-    "typescript": "3.9.7",
+    "typescript": "4.0.2",
     "webdriver-manager": "^12.1.7",
     "webpack": "4.44.1",
     "webpack-cli": "3.3.12",
