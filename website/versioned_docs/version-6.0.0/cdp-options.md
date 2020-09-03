@@ -206,7 +206,7 @@ original_id: chrome-options
 
 ---
 
-### --mocha.useColors
+### --mocha.color
 
 | Description          | Type    | Default |
 | :------------------- | :------ | :------ |
@@ -341,4 +341,3 @@ original_id: chrome-options
 | Filter files for Chrome runner | array | **      |
 
 ---
-

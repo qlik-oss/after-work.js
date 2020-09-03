@@ -29,7 +29,7 @@
     "chokidar": "3.4.2",
     "globby": "11.0.1",
     "import-cwd": "3.0.0",
-    "mocha": "7.2.0",
+    "mocha": "8.1.1",
     "nyc": "15.1.0"
   },
   "files": [
