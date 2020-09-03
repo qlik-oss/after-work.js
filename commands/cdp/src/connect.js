@@ -24,10 +24,10 @@ module.exports = async function connect(argv, files, presetEnv, debugging) {
   const client = await CDP(argv.client);
   const { DOM, DOMStorage, Console, Network, Page, Runtime } = client;
 
-  const { bail, useColors, reporter, ui, timeout } = argv.mocha;
+  const { bail, color, reporter, ui, timeout } = argv.mocha;
   const injectMochaOptions = `window.mochaOptions = ${JSON.stringify({
     bail,
-    useColors,
+    color,
     reporter,
     ui,
     timeout,

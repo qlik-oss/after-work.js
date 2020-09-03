@@ -205,7 +205,7 @@ title: Chrome
 
 ---
 
-### --mocha.useColors
+### --mocha.color
 
 | Description          | Type    | Default |
 | :------------------- | :------ | :------ |
@@ -340,4 +340,3 @@ title: Chrome
 | Filter files for Chrome runner | array | **      |
 
 ---
-
