@@ -5,6 +5,9 @@ on: [push]
 jobs:
   linux:
     runs-on: ubuntu-latest
+    services:
+      selenium:
+        image: selenium/standalone-chrome
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -26,8 +29,6 @@ jobs:
       #     github-token: ${{ secrets.GITHUB_TOKEN }}
       # - name: Chrome unit tests
       #   run: yarn test:chrome
-      - name: Run chromedriver
-        run:  nohup $CHROMEWEBDRIVER/chromedriver --url-base=/wd/hub /dev/null 2>&1 &
       - name: Protractor single browser
         run: yarn test:protractor --chromeDriver $CHROMEWEBDRIVER/chromedriver
       - name: Protractor multi browser
