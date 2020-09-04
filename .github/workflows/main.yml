@@ -27,7 +27,7 @@ jobs:
       # - name: Chrome unit tests
       #   run: yarn test:chrome
       - name: Update webdriver
-        run: webdriver-manager update
+        run: yarn webdriver-manager update
       - name: Protractor single browser
         run: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
       - name: Protractor multi browser
