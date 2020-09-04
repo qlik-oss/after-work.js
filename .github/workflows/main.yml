@@ -26,12 +26,10 @@ jobs:
       #     github-token: ${{ secrets.GITHUB_TOKEN }}
       # - name: Chrome unit tests
       #   run: yarn test:chrome
-      - name: Update webdriver
-        run: yarn webdriver-manager update
       - name: Protractor single browser
-        run: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
+        run: yarn test:protractor
       - name: Protractor multi browser
-        run: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
+        run: yarn test:protractor:multi
       - name: Puppeteer
         run: yarn test:puppeteer --chrome.args "'--single-process'"
       - name: Protractor rendering
