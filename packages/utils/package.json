@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/utils",
-  "version": "6.0.13",
+  "version": "7.0.0-alpha.0",
   "publishConfig": {
     "access": "public"
   },

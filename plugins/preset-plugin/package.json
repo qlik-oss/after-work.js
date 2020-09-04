@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/preset-plugin",
-  "version": "6.0.13",
+  "version": "7.0.0-alpha.0",
   "publishConfig": {
     "access": "public"
   },
@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/chai-plugin-screenshot": "6.0.13",
-    "@after-work.js/chai-plugin-snapshot": "6.0.13",
-    "@after-work.js/interactive-plugin": "6.0.13",
-    "@after-work.js/utils": "6.0.13",
+    "@after-work.js/chai-plugin-screenshot": "7.0.0-alpha.0",
+    "@after-work.js/chai-plugin-snapshot": "7.0.0-alpha.0",
+    "@after-work.js/interactive-plugin": "7.0.0-alpha.0",
+    "@after-work.js/utils": "7.0.0-alpha.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
