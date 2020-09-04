@@ -1,3 +1,3 @@
-import bar from '@foo/bar';
+import bar from "@foo/bar";
 
 export default bar;

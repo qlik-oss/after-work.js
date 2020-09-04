@@ -6,8 +6,8 @@ const promptPackages = async ({
 }) => {
   const { pkgs } = await prompt([
     {
-      type: 'checkbox-plus',
-      name: 'pkgs',
+      type: "checkbox-plus",
+      name: "pkgs",
       message,
       source: (_, input) => searchPackages(input, filteredPackages),
       pageSize: 4,

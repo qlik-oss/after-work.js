@@ -1,7 +1,7 @@
 /* eslint object-curly-newline: 0, max-len: 0 */
-const fs = require('fs');
-const path = require('path');
-const CDP = require('chrome-remote-interface');
+const fs = require("fs");
+const path = require("path");
+const CDP = require("chrome-remote-interface");
 
 const injectMediator = `
 (function (win) {
@@ -17,7 +17,7 @@ const injectMediator = `
 `;
 
 function getContent(filePath) {
-  return fs.readFileSync(filePath, 'utf-8');
+  return fs.readFileSync(filePath, "utf-8");
 }
 
 module.exports = async function connect(argv, files, presetEnv, debugging) {
@@ -34,7 +34,7 @@ module.exports = async function connect(argv, files, presetEnv, debugging) {
   })}`;
   const injectAwFiles = `window.awFiles = ${JSON.stringify(files)}`;
   const injectAwDevtools = `window.awDevtools = ${JSON.stringify(
-    argv.chrome.devtools,
+    argv.chrome.devtools
   )}`;
   const injectAwDebugging = `window.awDebugging = ${JSON.stringify(debugging)}`;
 
@@ -47,13 +47,13 @@ module.exports = async function connect(argv, files, presetEnv, debugging) {
     Console.enable(),
   ]);
   const sourceMapSupport = `${path.dirname(
-    require.resolve('source-map-support'),
+    require.resolve("source-map-support")
   )}/browser-source-map-support.js`;
   await Page.addScriptToEvaluateOnNewDocument({
     source: `${getContent(sourceMapSupport)};`,
   });
   await Page.addScriptToEvaluateOnNewDocument({
-    source: 'sourceMapSupport.install();',
+    source: "sourceMapSupport.install();",
   });
   await Page.addScriptToEvaluateOnNewDocument({ source: injectMediator });
   await Page.addScriptToEvaluateOnNewDocument({
@@ -67,23 +67,23 @@ module.exports = async function connect(argv, files, presetEnv, debugging) {
     source: injectAwDebugging,
   });
   await Page.addScriptToEvaluateOnNewDocument({
-    source: getContent(path.join(__dirname, 'browser-shim.js')),
+    source: getContent(path.join(__dirname, "browser-shim.js")),
   });
   if (presetEnv) {
     await Page.addScriptToEvaluateOnNewDocument({
-      source: getContent(require.resolve('chai/chai')),
+      source: getContent(require.resolve("chai/chai")),
     });
     await Page.addScriptToEvaluateOnNewDocument({
-      source: 'expect = chai.expect;',
+      source: "expect = chai.expect;",
     });
     await Page.addScriptToEvaluateOnNewDocument({
-      source: getContent(require.resolve('chai-subset/lib/chai-subset')),
+      source: getContent(require.resolve("chai-subset/lib/chai-subset")),
     });
     await Page.addScriptToEvaluateOnNewDocument({
-      source: getContent(require.resolve('sinon-chai/lib/sinon-chai')),
+      source: getContent(require.resolve("sinon-chai/lib/sinon-chai")),
     });
     await Page.addScriptToEvaluateOnNewDocument({
-      source: getContent(require.resolve('sinon/pkg/sinon')),
+      source: getContent(require.resolve("sinon/pkg/sinon")),
     });
   }
   return client;

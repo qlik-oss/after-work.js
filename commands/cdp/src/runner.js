@@ -1,25 +1,26 @@
 /* eslint no-console: 0, class-methods-use-this: 0, no-restricted-syntax: 0 */
-const EventEmitter = require('events');
-const path = require('path');
-const fs = require('fs');
-const chromeLauncher = require('chrome-launcher');
-const unmirror = require('chrome-unmirror');
-const globby = require('globby');
-const precinct = require('precinct');
-const createServer = require('@after-work.js/server');
-const NYC = require('nyc');
-const utils = require('@after-work.js/utils');
-const { deleteTransform } = require('@after-work.js/transform');
-const Mediator = require('./mediator');
-const connect = require('./connect');
+const EventEmitter = require("events");
+const path = require("path");
+const fs = require("fs");
+const chromeLauncher = require("chrome-launcher");
+const unmirror = require("chrome-unmirror");
+const globby = require("globby");
+const precinct = require("precinct");
+const createServer = require("@after-work.js/server");
+const NYC = require("nyc");
+const utils = require("@after-work.js/utils");
+const { deleteTransform } = require("@after-work.js/transform");
+const Mediator = require("./mediator");
+const connect = require("./connect");
 
 class Runner extends EventEmitter {
   constructor(argv) {
     super();
     this.argv = argv;
     this.nyc = new NYC(argv.nyc);
-    argv.shouldInstrument = f => this.nyc.exclude.shouldInstrument(f);
-    argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
+    argv.shouldInstrument = (f) => this.nyc.exclude.shouldInstrument(f);
+    argv.shouldTransform = (f) =>
+      argv.transform.testExclude.shouldInstrument(f);
     this.mediator = new Mediator();
     this.chromeLauncher = chromeLauncher;
     this.ended = false;
@@ -41,29 +42,30 @@ class Runner extends EventEmitter {
   }
 
   bind() {
-    this.mediator.on('width', () => {
+    this.mediator.on("width", () => {
       if (!this.client) {
         return;
       }
-      const columns = (parseInt(process.env.COLUMNS || process.stdout.columns) * 0.75) | 0;
+      const columns =
+        (parseInt(process.env.COLUMNS || process.stdout.columns) * 0.75) | 0;
       const expression = `Mocha.reporters.Base.window.width = ${columns};`;
       this.client.Runtime.evaluate({ expression });
     });
-    this.mediator.on('started', tests => {
+    this.mediator.on("started", (tests) => {
       this.started = true;
       if (this.argv.coverage) {
         this.nyc.reset();
       }
       utils.clearLine();
-      this.log('Runner started\n');
+      this.log("Runner started\n");
 
       if (tests === 0) {
-        this.log('mocha.run() was called with no tests');
+        this.log("mocha.run() was called with no tests");
       }
     });
 
-    this.mediator.on('ended', stats => {
-      this.log('Runner ended\n');
+    this.mediator.on("ended", (stats) => {
+      this.log("Runner ended\n");
       this.started = false;
       this.ended = true;
       this.isRunning = false;
@@ -72,40 +74,42 @@ class Runner extends EventEmitter {
   }
 
   pipeOut(Runtime) {
-    Runtime.exceptionThrown(exception => {
-      this.log('[chrome-exception]', exception);
+    Runtime.exceptionThrown((exception) => {
+      this.log("[chrome-exception]", exception);
       this.exit(1);
     });
 
     Runtime.consoleAPICalled(({ type, args }) => {
-      if (type === 'info') {
+      if (type === "info") {
         process.stdout.write(args.shift().value);
         return;
       }
-      if (type === 'warning') {
-        type = 'warn';
+      if (type === "warning") {
+        type = "warn";
       }
       if (!(type in console)) {
-        type = 'log';
+        type = "log";
       }
-      const data = args.map(arg => (arg.type === 'string' ? arg.value : unmirror(arg)));
+      const data = args.map((arg) =>
+        arg.type === "string" ? arg.value : unmirror(arg)
+      );
       console[type](...data);
     });
   }
 
   pipeNetwork(Network) {
-    Network.requestWillBeSent(info => {
+    Network.requestWillBeSent((info) => {
       this.requests.set(info.requestId, info.request);
       if (!this.started && info.request.url.match(/^(file|http(s?)):\/\//)) {
-        utils.writeLine('Loading', info.request.url);
+        utils.writeLine("Loading", info.request.url);
       }
     });
-    Network.loadingFailed(info => {
+    Network.loadingFailed((info) => {
       const { errorText } = info;
       const { url, method } = this.requests.get(info.requestId);
       const msg = JSON.stringify({ url, method, errorText });
-      this.log('Resource Failed to Load:', msg);
-      this.mediator.emit('resourceFailed', msg);
+      this.log("Resource Failed to Load:", msg);
+      this.mediator.emit("resourceFailed", msg);
       this.loadError = true;
     });
   }
@@ -125,10 +129,10 @@ class Runner extends EventEmitter {
       this.argv,
       awFiles,
       this.argv.presetEnv,
-      this.debugging,
+      this.debugging
     );
     if (!this.client) {
-      this.log('CDP Client could not connect');
+      this.log("CDP Client could not connect");
       return;
     }
     const { DOMStorage, Runtime, Network } = this.client;
@@ -140,7 +144,7 @@ class Runner extends EventEmitter {
 
   async navigate() {
     if (!this.argv.url) {
-      this.log('`options.url` must be specified to run tests');
+      this.log("`options.url` must be specified to run tests");
       this.exit(1);
       return;
     }
@@ -160,7 +164,7 @@ class Runner extends EventEmitter {
       return cached;
     }
     const rf = utils.ensureFilePath(f);
-    const deps = precinct(fs.readFileSync(rf, 'utf8'), {
+    const deps = precinct(fs.readFileSync(rf, "utf8"), {
       amd: { skipLazyLoaded: true },
     });
     this.depMap.set(f, deps);
@@ -182,10 +186,7 @@ class Runner extends EventEmitter {
     if (cache) {
       return cache;
     }
-    const srcName = path
-      .basename(file)
-      .split('.')
-      .shift();
+    const srcName = path.basename(file).split(".").shift();
     for (const testFile of this.testFiles) {
       const deps = this.getDependencies(testFile);
       const found = this.matchDependencyName(srcName, deps);
@@ -216,7 +217,7 @@ class Runner extends EventEmitter {
   getTestFilesFromSrcFiles(srcFiles) {
     return srcFiles.reduce(
       (acc, curr) => [...acc, ...this.getMatchedTestDependency(curr)],
-      [],
+      []
     );
   }
 
@@ -226,7 +227,7 @@ class Runner extends EventEmitter {
 
   autoDetectDebug() {
     const exv = process.execArgv.join();
-    const debug = exv.includes('inspect') || exv.includes('debug');
+    const debug = exv.includes("inspect") || exv.includes("debug");
     if (debug || this.argv.chrome.devtools) {
       this.argv.mocha.timeout = 0;
       this.debugging = true;
@@ -237,18 +238,18 @@ class Runner extends EventEmitter {
   relativeBaseUrlFile(file) {
     return path
       .relative(path.dirname(this.argv.url), path.resolve(file))
-      .replace(/\\/g, '/')
-      .replace(/.ts$/, '.js');
+      .replace(/\\/g, "/")
+      .replace(/.ts$/, ".js");
   }
 
   relativeBaseUrlFiles(files) {
-    return files.map(file => this.relativeBaseUrlFile(file));
+    return files.map((file) => this.relativeBaseUrlFile(file));
   }
 
   findFiles(glob) {
     return utils.filter(
       this.getFilter().files,
-      globby.sync(glob).map(f => path.resolve(f)),
+      globby.sync(glob).map((f) => path.resolve(f))
     );
   }
 
@@ -257,12 +258,14 @@ class Runner extends EventEmitter {
   }
 
   setTestFiles() {
-    this.testFiles = this.findFiles(this.argv.glob).filter(f => utils.isTestFile(f, this.argv));
+    this.testFiles = this.findFiles(this.argv.glob).filter((f) =>
+      utils.isTestFile(f, this.argv)
+    );
     if (!this.testFiles.length) {
       this.log(
         `No files found for glob: ${this.argv.glob} with filter: ${
           this.getFilter().files
-        }`,
+        }`
       );
       this.exit(1);
     }
@@ -299,7 +302,7 @@ class Runner extends EventEmitter {
     const {
       result: { value },
     } = await this.client.Runtime.evaluate({
-      expression: 'window.__coverage__',
+      expression: "window.__coverage__",
       returnByValue: true,
     });
     return value;
@@ -312,12 +315,12 @@ class Runner extends EventEmitter {
         fs.writeFileSync(
           path.resolve(this.nyc.tempDirectory(), `${Date.now()}.json`),
           JSON.stringify(coverage, null, 2),
-          'utf8',
+          "utf8"
         );
         this.nyc.report();
       }
       if (this.argv.watch) {
-        this.emit('watchEnd');
+        this.emit("watchEnd");
         return;
       }
       if (this.client) {

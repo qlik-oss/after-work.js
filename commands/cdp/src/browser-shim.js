@@ -4,14 +4,14 @@
     const origRun = m.run.bind(m);
 
     m.run = () => {
-      win.awMediator.emit('started', m.suite.suites.length);
+      win.awMediator.emit("started", m.suite.suites.length);
       m.runner = origRun(() => {
-        setTimeout(() => win.awMediator.emit('ended', m.runner.stats), 0);
+        setTimeout(() => win.awMediator.emit("ended", m.runner.stats), 0);
       });
       return m.runner;
     };
   }
-  Object.defineProperty(win, 'mocha', {
+  Object.defineProperty(win, "mocha", {
     get() {
       return undefined;
     },
@@ -24,7 +24,7 @@
     configurable: true,
   });
 
-  Object.defineProperty(win, 'Mocha', {
+  Object.defineProperty(win, "Mocha", {
     get() {
       return undefined;
     },
@@ -32,14 +32,14 @@
       delete win.Mocha;
       win.Mocha = m;
 
-      m.process.nextTick = cb => cb();
+      m.process.nextTick = (cb) => cb();
       m.process.stdout._write = (chunks, encoding, cb) => {
         const output = chunks.toString ? chunks.toString() : chunks;
         console.info(output);
         m.process.nextTick(cb);
       };
 
-      win.awMediator.emit('width');
+      win.awMediator.emit("width");
     },
     configurable: true,
   });
@@ -52,29 +52,33 @@
     const origLog = console.log;
 
     console.format = function (f) {
-      if (typeof f !== 'string') {
-        return Array.prototype.map.call(arguments, arg => {
-          try {
-            return JSON.stringify(arg);
-          } catch (_) {
-            return '[Circular]';
-          }
-        }).join(' ');
+      if (typeof f !== "string") {
+        return Array.prototype.map
+          .call(arguments, (arg) => {
+            try {
+              return JSON.stringify(arg);
+            } catch (_) {
+              return "[Circular]";
+            }
+          })
+          .join(" ");
       }
       let i = 1,
         args = arguments,
         len = args.length,
-        str = String(f).replace(/%[sdj%]/g, x => {
-          if (x === '%%') return '%';
+        str = String(f).replace(/%[sdj%]/g, (x) => {
+          if (x === "%%") return "%";
           if (i >= len) return x;
           switch (x) {
-            case '%s': return String(args[i++]);
-            case '%d': return Number(args[i++]);
-            case '%j':
+            case "%s":
+              return String(args[i++]);
+            case "%d":
+              return Number(args[i++]);
+            case "%j":
               try {
                 return JSON.stringify(args[i++]);
               } catch (_) {
-                return '[Circular]';
+                return "[Circular]";
               }
             default:
               return x;
@@ -82,7 +86,7 @@
         }),
         x;
       for (x = args[i]; i < len; x = args[++i]) {
-        if (x === null || typeof x !== 'object') {
+        if (x === null || typeof x !== "object") {
           str += ` ${x}`;
         } else {
           str += ` ${JSON.stringify(x)}`;
@@ -99,4 +103,4 @@
       origLog.call(console, console.format(...arguments));
     };
   }
-}(window));
+})(window);

@@ -1,56 +1,59 @@
-const path = require('path');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-const util = require('util');
-const Highlight = require('highlight.js');
+const path = require("path");
+const fs = require("fs");
+const mkdirp = require("mkdirp");
+const util = require("util");
+const Highlight = require("highlight.js");
 
 Highlight.configure({
-  tabReplace: '    ',
+  tabReplace: "    ",
   useBR: true,
-  languages: ['javascript'],
+  languages: ["javascript"],
 });
 
 const utils = {
   getRepoInfo({ name, version, description } = {}) {
     const packageJSON = JSON.parse(
-      fs.readFileSync(path.resolve(process.cwd(), 'package.json'), {
-        encoding: 'utf8',
-      }),
+      fs.readFileSync(path.resolve(process.cwd(), "package.json"), {
+        encoding: "utf8",
+      })
     );
     const repoInfo = {};
 
-    repoInfo.name = packageJSON.name
-      || name
-      || 'No repository name found (please add to package.json)';
-    repoInfo.description = packageJSON.description
-      || description
-      || 'No repository description found (please add to package.json)';
-    repoInfo.version = packageJSON.version
-      || version
-      || 'No repository version found (please add to package.json)';
+    repoInfo.name =
+      packageJSON.name ||
+      name ||
+      "No repository name found (please add to package.json)";
+    repoInfo.description =
+      packageJSON.description ||
+      description ||
+      "No repository description found (please add to package.json)";
+    repoInfo.version =
+      packageJSON.version ||
+      version ||
+      "No repository version found (please add to package.json)";
 
     return repoInfo;
   },
   cleanCode(str) {
     str = str
-      .replace(/\r\n?|[\n\u2028\u2029]/g, '\n')
-      .replace(/^\uFEFF/, '')
-      .replace(/^function *\(.*\) *{|\(.*\) *=> *{?/, '')
-      .replace(/\s+\}$/, '');
+      .replace(/\r\n?|[\n\u2028\u2029]/g, "\n")
+      .replace(/^\uFEFF/, "")
+      .replace(/^function *\(.*\) *{|\(.*\) *=> *{?/, "")
+      .replace(/\s+\}$/, "");
 
     const spaces = str.match(/^\n?( *)/)[1].length;
     const tabs = str.match(/^\n?(\t*)/)[1].length;
-    const re = new RegExp(`^\n?${tabs ? '\t' : ' '}{${tabs || spaces}}`, 'gm');
+    const re = new RegExp(`^\n?${tabs ? "\t" : " "}{${tabs || spaces}}`, "gm");
 
-    str = str.replace(re, '');
-    str = str.replace(/^\s+|\s+$/g, '');
+    str = str.replace(re, "");
+    str = str.replace(/^\s+|\s+$/g, "");
     return str;
   },
   errorJSON(err) {
     const res = {};
-    Object.getOwnPropertyNames(err).forEach(key => {
+    Object.getOwnPropertyNames(err).forEach((key) => {
       const val = err[key];
-      if (key === 'actual' && val.img) {
+      if (key === "actual" && val.img) {
         delete val.img;
       }
       res[key] = val;
@@ -79,15 +82,15 @@ const utils = {
     return {
       title: test.title,
       fullTitle: test.fullTitle(),
-      state: test.state || 'skipped',
-      passed: test.state === 'passed',
-      failed: test.state === 'failed',
+      state: test.state || "skipped",
+      passed: test.state === "passed",
+      failed: test.state === "failed",
       pending: test.pending,
       code: code || body,
       timedOut: test.timedOut,
       duration: test.duration,
       file: test.file,
-      screenshot: test.screenshot || '',
+      screenshot: test.screenshot || "",
       err: this.errorJSON(test.err || {}),
       consoleEntries: test.consoleEntries || [],
     };
@@ -96,29 +99,29 @@ const utils = {
     mkdirp.sync(path.resolve(artifactsPath));
   },
   safeFileName(title) {
-    return title.replace(/[^a-z0-9().]/gi, '_').toLowerCase();
+    return title.replace(/[^a-z0-9().]/gi, "_").toLowerCase();
   },
   screenshotName(title, browserName, startTime) {
     const safeFileName = this.safeFileName(title);
-    return util.format('%s-%s-%s.png', safeFileName, browserName, startTime);
+    return util.format("%s-%s-%s.png", safeFileName, browserName, startTime);
   },
   saveScreenshot(browser, title) {
     const screenshot = path.resolve(
       browser.reporterInfo.artifactsPath,
-      'screenshots',
+      "screenshots",
       this.screenshotName(
         title,
         browser.reporterInfo.browserName,
-        browser.reporterInfo.startTime,
-      ),
+        browser.reporterInfo.startTime
+      )
     );
 
     mkdirp.sync(
-      path.resolve(browser.reporterInfo.artifactsPath, 'screenshots'),
+      path.resolve(browser.reporterInfo.artifactsPath, "screenshots")
     );
 
-    return browser.takeScreenshot().then(png => {
-      fs.writeFileSync(screenshot, png, { encoding: 'base64' });
+    return browser.takeScreenshot().then((png) => {
+      fs.writeFileSync(screenshot, png, { encoding: "base64" });
     });
   },
 };

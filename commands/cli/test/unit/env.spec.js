@@ -1,19 +1,20 @@
-describe('Environment', () => {
-  describe('chai extensions', () => {
-    it('chai-subset should be used', () => {
+describe("Environment", () => {
+  describe("chai extensions", () => {
+    it("chai-subset should be used", () => {
       const obj = {
-        a: 'b',
+        a: "b",
         c: {
-          foo: 'bar',
+          foo: "bar",
         },
       };
       expect(obj).to.containSubset({
         c: {
-          foo: 'bar',
+          foo: "bar",
         },
       });
     });
 
-    it('chai-as-promised should be used', () => expect(Promise.resolve(1 + 1)).to.eventually.equal(2));
+    it("chai-as-promised should be used", () =>
+      expect(Promise.resolve(1 + 1)).to.eventually.equal(2));
   });
 });

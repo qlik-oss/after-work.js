@@ -5,9 +5,9 @@ const promptTestFiles = async ({
 }) => {
   const { testFiles } = await prompt([
     {
-      type: 'checkbox-plus',
-      name: 'testFiles',
-      message: 'Which test files?',
+      type: "checkbox-plus",
+      name: "testFiles",
+      message: "Which test files?",
       source: (_, input) => searchTestFiles(input, filteredTestFiles),
       pageSize: 4,
       highlight: true,

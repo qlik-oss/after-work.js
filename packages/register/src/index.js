@@ -1,15 +1,12 @@
-const path = require('path');
-const fs = require('fs');
-const { addHook } = require('pirates');
-const sourceMapSupport = require('source-map-support');
-const {
-  transformFile,
-  getTransform,
-} = require('@after-work.js/transform');
-const minimatch = require('minimatch');
-const mod = require('module');
-const requireFromString = require('require-from-string');
-const utils = require('@after-work.js/utils');
+const path = require("path");
+const fs = require("fs");
+const { addHook } = require("pirates");
+const sourceMapSupport = require("source-map-support");
+const { transformFile, getTransform } = require("@after-work.js/transform");
+const minimatch = require("minimatch");
+const mod = require("module");
+const requireFromString = require("require-from-string");
+const utils = require("@after-work.js/utils");
 
 const originLoader = mod._load;
 let removeCompileHook = () => {};
@@ -51,11 +48,11 @@ function compileHook(argv, code, filename, virtualMock = false) {
 function compile(value, filename, options, injectReact) {
   let src;
   if (fs.existsSync(value)) {
-    src = fs.readFileSync(value, 'utf8');
+    src = fs.readFileSync(value, "utf8");
     filename = value;
   } else {
     src = `${
-      injectReact ? 'import React from "react";\n' : ''
+      injectReact ? 'import React from "react";\n' : ""
     }export default ${value}`;
   }
   src = compileHook(options, src, filename, true);
@@ -63,11 +60,11 @@ function compile(value, filename, options, injectReact) {
 }
 
 function compileMock(options, filename, value, injectReact) {
-  if (typeof value === 'function') {
+  if (typeof value === "function") {
     return value();
   }
   if (value === undefined && fs.existsSync(filename)) {
-    const src = fs.readFileSync(filename, 'utf8');
+    const src = fs.readFileSync(filename, "utf8");
     value = `${JSON.stringify(src)}`;
   }
   return compile(value, filename, options, injectReact);
@@ -84,7 +81,7 @@ function hookedLoader(options, request, parent, isMain) {
   // 2. Global config mocks from aw.config.js
   for (const [key, [value, injectReact = false]] of aw.mocks) {
     // Try full match first exclude relative
-    if (request && request.length && request[0] !== '.' && request === key) {
+    if (request && request.length && request[0] !== "." && request === key) {
       aw.usedMocks.set(key, filename);
       return compileMock(options, filename, value, injectReact);
     }
@@ -117,7 +114,7 @@ function installSourceMapSupport() {
   }
   sourceMapSupport.install({
     handleUncaughtExceptions: false,
-    environment: 'node',
+    environment: "node",
     retrieveSourceMap(filename) {
       const { map } = getTransform(filename) || {};
       if (map) {
@@ -150,13 +147,14 @@ class AW {
       const globalMocksKeys = [...this.globalMocks.keys()];
       const usedGlobalMocksKeys = [...this.usedGlobalMocks.keys()];
       const unusedGlobalMocksKeys = globalMocksKeys.filter(
-        k => !usedGlobalMocksKeys.includes(k),
+        (k) => !usedGlobalMocksKeys.includes(k)
       );
       for (const key of unusedGlobalMocksKeys) {
         const [value] = this.globalMocks.get(key);
-        const warning = () => console.error(
-          `\u001b[33mCouldn't match global mock with pattern:\u001b[0m \u001b[31m${key}\u001b[0m \u001b[33mand value:\u001b[0m \u001b[34m${value}\u001b[0m\n\u001b[90mat (Check your config file)\u001b[0m`,
-        );
+        const warning = () =>
+          console.error(
+            `\u001b[33mCouldn't match global mock with pattern:\u001b[0m \u001b[31m${key}\u001b[0m \u001b[33mand value:\u001b[0m \u001b[34m${value}\u001b[0m\n\u001b[90mat (Check your config file)\u001b[0m`
+          );
         this.warn(warning);
       }
     });
@@ -164,7 +162,7 @@ class AW {
 
   canInjectReact() {
     try {
-      require.resolve('react');
+      require.resolve("react");
     } catch (_) {
       return false;
     }
@@ -184,27 +182,28 @@ class AW {
     const injectReact = this.canInjectReact();
     mocks.forEach(([key, value]) => this.mocks.set(key, [value, injectReact]));
     const [filename, , , c] = utils.getCurrentFilenameStackInfo(this.testFiles);
-    const excludeLibs = f => f.indexOf('node_modules') > -1;
-    const mods = reqs.map(r => {
+    const excludeLibs = (f) => f.indexOf("node_modules") > -1;
+    const mods = reqs.map((r) => {
       const p = require.resolve(path.resolve(path.dirname(filename), r));
       const deps = utils
         .getAllDependencies(this.srcFiles, p)
-        .filter(f => this.testFiles.indexOf(f) === -1 && !excludeLibs(f));
-      deps.forEach(d => utils.safeDeleteCache(d));
+        .filter((f) => this.testFiles.indexOf(f) === -1 && !excludeLibs(f));
+      deps.forEach((d) => utils.safeDeleteCache(d));
       utils.safeDeleteCache(p);
       const m = require(p);
-      deps.forEach(d => utils.safeDeleteCache(d));
+      deps.forEach((d) => utils.safeDeleteCache(d));
       return m;
     });
 
     const mocksKeys = [...this.mocks.keys()];
     const usedMocksKeys = [...this.usedMocks.keys()];
-    const unusedMocksKeys = mocksKeys.filter(k => !usedMocksKeys.includes(k));
+    const unusedMocksKeys = mocksKeys.filter((k) => !usedMocksKeys.includes(k));
     for (const key of unusedMocksKeys) {
       const [value] = this.mocks.get(key);
-      const warning = () => console.error(
-        `\u001b[33mCouldn't match local mock with pattern:\u001b[0m \u001b[31m${key}\u001b[0m \u001b[33mand value:\u001b[0m \u001b[34m${value}\u001b[0m\n\u001b[90mat (${c})\u001b[0m`,
-      );
+      const warning = () =>
+        console.error(
+          `\u001b[33mCouldn't match local mock with pattern:\u001b[0m \u001b[31m${key}\u001b[0m \u001b[33mand value:\u001b[0m \u001b[34m${value}\u001b[0m\n\u001b[90mat (${c})\u001b[0m`
+        );
       this.warn(warning);
     }
     this.mocks.clear();
@@ -218,7 +217,7 @@ module.exports = function register(
   testFiles,
   warn = () => {},
   onStart = () => {},
-  onFinished = () => {},
+  onFinished = () => {}
 ) {
   global.aw = new AW(
     srcFiles,
@@ -226,21 +225,21 @@ module.exports = function register(
     warn,
     onStart,
     onFinished,
-    options.mocks,
+    options.mocks
   );
   installSourceMapSupport();
   removeCompileHook();
   removeLoadHook();
   const exts = [
     ...new Set(options.extensions || []),
-    '.js',
-    '.ts',
-    '.jsx',
-    '.tsx',
-    '.scss',
-    '.less',
-    '.css',
-    '.html',
+    ".js",
+    ".ts",
+    ".jsx",
+    ".tsx",
+    ".scss",
+    ".less",
+    ".css",
+    ".html",
   ];
   removeCompileHook = addHook(compileHook.bind(null, options), { exts });
   removeLoadHook = addLoadHook(options);

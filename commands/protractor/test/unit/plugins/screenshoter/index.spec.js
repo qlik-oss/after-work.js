@@ -1,6 +1,6 @@
-const plugin = require('../../../../src/plugins/screenshoter/index');
+const plugin = require("../../../../src/plugins/screenshoter/index");
 
-describe('Screenshoter Index', () => {
+describe("Screenshoter Index", () => {
   let sandbox;
 
   beforeEach(() => {
@@ -22,7 +22,7 @@ describe('Screenshoter Index', () => {
     sandbox.restore();
   });
 
-  it('should setup the screenshoter plugin', () => {
+  it("should setup the screenshoter plugin", () => {
     expect(plugin.setup).not.to.throw();
   });
 });

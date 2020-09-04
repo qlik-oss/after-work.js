@@ -1,3 +1,3 @@
-import './ignore';
+import "./ignore";
 
-export default () => 'a';
+export default () => "a";

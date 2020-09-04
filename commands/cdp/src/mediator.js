@@ -5,10 +5,10 @@ class Mediator {
 
   bind(DOMStorage) {
     DOMStorage.domStorageItemUpdated(({ key, newValue }) => {
-      if (key !== 'aw') {
+      if (key !== "aw") {
         return;
       }
-      if (newValue === '') {
+      if (newValue === "") {
         return;
       }
       const event = JSON.parse(newValue);
@@ -18,7 +18,7 @@ class Mediator {
 
   emit(event, data) {
     const callbacks = this.events.get(event) || [];
-    callbacks.forEach(cb => cb(data));
+    callbacks.forEach((cb) => cb(data));
   }
 
   on(event, callback) {

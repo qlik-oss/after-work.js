@@ -1,7 +1,7 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
+import React from "react";
+import renderer from "react-test-renderer";
 
-describe('context', () => {
+describe("context", () => {
   let sandbox;
   let action;
   let MyConsumerComponent;
@@ -10,17 +10,22 @@ describe('context', () => {
   before(() => {
     sandbox = sinon.createSandbox();
     action = sandbox.spy();
-    hello = 'Custom Consumer Test FOO';
+    hello = "Custom Consumer Test FOO";
     [{ default: MyConsumerComponent }] = aw.mock(
-      [[require.resolve('../src/context.js'), () => props => props.children({ hello, action })]],
-      ['../src/consumer'],
+      [
+        [
+          require.resolve("../src/context.js"),
+          () => (props) => props.children({ hello, action }),
+        ],
+      ],
+      ["../src/consumer"]
     );
   });
 
-  it('renders custom consumer', () => {
+  it("renders custom consumer", () => {
     const component = renderer.create(<MyConsumerComponent />);
     const { root } = component;
-    const button = root.findByType('button');
+    const button = root.findByType("button");
     button.props.onClick();
 
     expect(component.toJSON()).toMatchSnapshot();
