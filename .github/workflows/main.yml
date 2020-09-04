@@ -27,9 +27,9 @@ jobs:
       # - name: Chrome unit tests
       #   run: yarn test:chrome
       - name: Protractor single browser
-        run: yarn test:protractor
+        run: yarn test:protractor --chromeDriver $CHROMEWEBDRIVER
       - name: Protractor multi browser
-        run: yarn test:protractor:multi
+        run: yarn test:protractor:multi --chromeDriver $CHROMEWEBDRIVER
       - name: Puppeteer
         run: yarn test:puppeteer --chrome.args "'--single-process'"
       - name: Protractor rendering
