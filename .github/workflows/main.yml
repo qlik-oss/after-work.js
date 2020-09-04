@@ -1,0 +1,40 @@
+name: ci
+
+on: [push]
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - uses: bahmutov/npm-install@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+      # - name: Lint
+      #   run: yarn lint
+      # - name: Node unit tests
+      #   run: yarn test:node
+      # - name: Node unit tests with coverage
+      #   run: yarn test:coveralls
+      # - name: Coveralls
+      #   uses: coverallsapp/github-action@master
+      #   env:
+      #     COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Chrome unit tests
+      #   run: yarn test:chrome
+      - name: Protractor single browser
+        run: yarn test:protractor --chromeDriver /usr/local/bin/chromedriver
+      - name: Protractor multi browser
+        run: yarn test:protractor:multi --chromeDriver /usr/local/bin/chromedriver
+      - name: Puppeteer
+        run: yarn test:puppeteer --chrome.args "'--single-process'"
+      - name: Protractor rendering
+        run: yarn test:protractor:rendering
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test-artifacts
+          path: test/__artifacts__
