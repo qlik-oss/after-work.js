@@ -3,5 +3,5 @@ module.exports = {
   http: {
     port: 9677,
   },
-  test: ['examples/puppeteer/test/**/*.spec.js'],
+  test: ["examples/puppeteer/test/**/*.spec.js"],
 };

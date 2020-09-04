@@ -1,6 +1,6 @@
 const c = {
   foo() {
-    return 'bar';
+    return "bar";
   },
 };
 

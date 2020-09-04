@@ -1,10 +1,10 @@
-const path = require('path');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-const jimp = require('jimp');
-const plugin = require('../src');
+const path = require("path");
+const fs = require("fs");
+const mkdirp = require("mkdirp");
+const jimp = require("jimp");
+const plugin = require("../src");
 
-describe('chai-plugin-screenshot', () => {
+describe("chai-plugin-screenshot", () => {
   let sandbox;
 
   beforeEach(() => {
@@ -15,48 +15,52 @@ describe('chai-plugin-screenshot', () => {
     sandbox.restore();
   });
 
-  describe('fileExists', () => {
-    it('should return true if file exists', () => {
-      sandbox.stub(fs, 'lstat').callsArgWith(1, false);
-      return expect(plugin.fileExists('foo')).to.eventually.equal(true);
+  describe("fileExists", () => {
+    it("should return true if file exists", () => {
+      sandbox.stub(fs, "lstat").callsArgWith(1, false);
+      return expect(plugin.fileExists("foo")).to.eventually.equal(true);
     });
 
     it("should return false if file doesn't exist", () => {
-      sandbox.stub(fs, 'lstat').callsArgWith(1, true);
-      return expect(plugin.fileExists('foo')).to.eventually.equal(false);
+      sandbox.stub(fs, "lstat").callsArgWith(1, true);
+      return expect(plugin.fileExists("foo")).to.eventually.equal(false);
     });
   });
 
-  describe('writeImage', () => {
+  describe("writeImage", () => {
     let img;
 
     beforeEach(() => {
       img = { write: sandbox.stub() };
     });
 
-    it('should write an image to a file', () => {
+    it("should write an image to a file", () => {
       img.write.callsArgWith(1);
-      return expect(plugin.writeImage(img, 'foo')).to.eventually.be.fulfilled.and.be.an('undefined');
+      return expect(
+        plugin.writeImage(img, "foo")
+      ).to.eventually.be.fulfilled.and.be.an("undefined");
     });
 
     it("should reject if image file couldn't be created", () => {
-      img.write.callsArgWith(1, 'error');
-      return expect(plugin.writeImage(img, 'foo')).to.eventually.be.rejectedWith('error');
+      img.write.callsArgWith(1, "error");
+      return expect(
+        plugin.writeImage(img, "foo")
+      ).to.eventually.be.rejectedWith("error");
     });
   });
 
-  describe('compare', () => {
+  describe("compare", () => {
     let jimpRead;
     let jimpDistance;
     let jimpDiff;
 
     beforeEach(() => {
-      jimpRead = sandbox.stub(jimp, 'read');
-      jimpDistance = sandbox.stub(jimp, 'distance');
-      jimpDiff = sandbox.stub(jimp, 'diff');
+      jimpRead = sandbox.stub(jimp, "read");
+      jimpDistance = sandbox.stub(jimp, "distance");
+      jimpDiff = sandbox.stub(jimp, "diff");
     });
 
-    it('should be equal if the tolerance is met', () => {
+    it("should be equal if the tolerance is met", () => {
       const distance = 0;
       const diffImg = {};
       const percent = 0;
@@ -64,7 +68,9 @@ describe('chai-plugin-screenshot', () => {
       jimpDistance.returns(distance);
       jimpDiff.returns({ image: diffImg, percent });
 
-      return expect(plugin.compare('baseline', 'regression', 0)).to.eventually.be.fulfilled.and.deep.equal({
+      return expect(
+        plugin.compare("baseline", "regression", 0)
+      ).to.eventually.be.fulfilled.and.deep.equal({
         diffImg,
         isEqual: true,
         equality: `distance: ${distance}, percent: ${percent}`,
@@ -79,7 +85,9 @@ describe('chai-plugin-screenshot', () => {
       jimpDistance.returns(distance);
       jimpDiff.returns({ image: diffImg, percent });
 
-      return expect(plugin.compare('baseline', 'regression', 0)).to.eventually.be.fulfilled.and.deep.equal({
+      return expect(
+        plugin.compare("baseline", "regression", 0)
+      ).to.eventually.be.fulfilled.and.deep.equal({
         diffImg,
         isEqual: false,
         equality: `distance: ${distance}, percent: ${percent}`,
@@ -87,19 +95,19 @@ describe('chai-plugin-screenshot', () => {
     });
   });
 
-  describe('toImage', () => {
+  describe("toImage", () => {
     let jimpRead;
 
     beforeEach(() => {
-      jimpRead = sandbox.stub(jimp, 'read').returns(Promise.resolve());
+      jimpRead = sandbox.stub(jimp, "read").returns(Promise.resolve());
     });
 
-    it('should create an image from a string', () => {
-      plugin.toImage('myBase64String');
-      expect(jimpRead).to.have.been.calledWithExactly('myBase64String');
+    it("should create an image from a string", () => {
+      plugin.toImage("myBase64String");
+      expect(jimpRead).to.have.been.calledWithExactly("myBase64String");
     });
 
-    it('should create an image from a instance of Jimp', () => {
+    it("should create an image from a instance of Jimp", () => {
       const img = new jimp(256, 256, () => {});
       plugin.toImage(img).then((out) => {
         expect(out).to.equal(img);
@@ -110,7 +118,7 @@ describe('chai-plugin-screenshot', () => {
       });
     });
 
-    it('should create an image from a corrupt instance of Jimp', () => {
+    it("should create an image from a corrupt instance of Jimp", () => {
       const img = { getBuffer: sandbox.spy() };
       plugin.toImage(img).then(() => {
         expect(img.getBuffer.callCount).to.equal(1);
@@ -125,14 +133,14 @@ describe('chai-plugin-screenshot', () => {
       });
     });
 
-    it('should create an image from a Buffer', () => {
-      const input = Buffer.from('');
+    it("should create an image from a Buffer", () => {
+      const input = Buffer.from("");
       plugin.toImage(input).then(() => {
         expect(jimpRead).to.have.been.calledWithExactly(input);
       });
     });
 
-    it('should reject unsupported types', () => {
+    it("should reject unsupported types", () => {
       return Promise.all([
         expect(plugin.toImage()).to.eventually.be.rejectedWith(TypeError),
         expect(plugin.toImage({})).to.eventually.be.rejectedWith(TypeError),
@@ -142,7 +150,7 @@ describe('chai-plugin-screenshot', () => {
     });
   });
 
-  describe('matchImageOf', () => {
+  describe("matchImageOf", () => {
     let chaiCtx;
     let matchImageOf;
     let fileExists;
@@ -150,29 +158,35 @@ describe('chai-plugin-screenshot', () => {
     let compare;
     let toImage;
     let mkdir;
-    const baselinePath = 'artifacts/baseline/';
+    const baselinePath = "artifacts/baseline/";
     const baseline = `${baselinePath}id-windows-nt-chrome.png`;
-    const regressionPath = 'artifacts/regression/';
+    const regressionPath = "artifacts/regression/";
     const regression = `${regressionPath}id-windows-nt-chrome.png`;
-    const diffPath = 'artifacts/diff/';
+    const diffPath = "artifacts/diff/";
     const diff = `${diffPath}id-windows-nt-chrome.png`;
     const img = {};
 
     beforeEach(() => {
-      sandbox.stub(path, 'resolve').callsFake((...args) => args.join('/').replace('//', '/'));
-      fileExists = sandbox.stub(plugin, 'fileExists');
-      writeImage = sandbox.stub(plugin, 'writeImage');
-      compare = sandbox.stub(plugin, 'compare');
-      toImage = sandbox.stub(plugin, 'toImage');
+      sandbox
+        .stub(path, "resolve")
+        .callsFake((...args) => args.join("/").replace("//", "/"));
+      fileExists = sandbox.stub(plugin, "fileExists");
+      writeImage = sandbox.stub(plugin, "writeImage");
+      compare = sandbox.stub(plugin, "compare");
+      toImage = sandbox.stub(plugin, "toImage");
       chaiCtx = {
-        _obj: Promise.resolve({ // takeImageOf context
-          img, browserName: 'chrome', artifactsPath: 'artifacts', platform: 'windows-nt',
+        _obj: Promise.resolve({
+          // takeImageOf context
+          img,
+          browserName: "chrome",
+          artifactsPath: "artifacts",
+          platform: "windows-nt",
         }),
         assert: sinon.stub(),
       };
       matchImageOf = plugin.matchImageOf.bind(chaiCtx);
-      sandbox.stub(process, 'cwd').returns('foo');
-      mkdir = sandbox.stub(mkdirp, 'sync');
+      sandbox.stub(process, "cwd").returns("foo");
+      mkdir = sandbox.stub(mkdirp, "sync");
 
       toImage.returns(Promise.resolve(img));
     });
@@ -180,64 +194,78 @@ describe('chai-plugin-screenshot', () => {
     it("should write baseline if it's not existing", () => {
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
-      return matchImageOf('id').then(() => {
+      return matchImageOf("id").then(() => {
         expect(writeImage).to.have.been.calledWith({}, baseline);
       });
     });
 
-    it('should compare and resolve if considered equal to baseline', () => {
+    it("should compare and resolve if considered equal to baseline", () => {
       fileExists.returns(Promise.resolve(true));
       writeImage.returns(Promise.resolve());
       compare.returns(Promise.resolve({ equality: 0, isEqual: true }));
-      return matchImageOf('id').then((comparison) => {
+      return matchImageOf("id").then((comparison) => {
         expect(comparison).to.deep.equal({ equality: 0, isEqual: true });
       });
     });
 
-    it('should reject if not considered equal to baseline', () => {
+    it("should reject if not considered equal to baseline", () => {
       const diffImg = {};
       fileExists.returns(Promise.resolve(true));
       writeImage.returns(Promise.resolve());
       compare.returns(Promise.resolve({ isEqual: false, diffImg }));
-      return matchImageOf('id').then(() => {
+      return matchImageOf("id").then(() => {
         expect(writeImage.callCount).to.equal(2);
-        expect(writeImage.firstCall).to.have.been.calledWithExactly(img, regression);
-        expect(writeImage.secondCall).to.have.been.calledWithExactly(diffImg, diff);
+        expect(writeImage.firstCall).to.have.been.calledWithExactly(
+          img,
+          regression
+        );
+        expect(writeImage.secondCall).to.have.been.calledWithExactly(
+          diffImg,
+          diff
+        );
       });
     });
 
-    it('should create the default baseline folders', () => {
+    it("should create the default baseline folders", () => {
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
-      return matchImageOf('id').then(() => {
+      return matchImageOf("id").then(() => {
         expect(mkdir.callCount).to.equal(1);
-        expect(mkdir.firstCall).to.have.been.calledWithExactly('artifacts/baseline');
+        expect(mkdir.firstCall).to.have.been.calledWithExactly(
+          "artifacts/baseline"
+        );
       });
     });
 
-    it('should create the default regression and diff folders', () => {
+    it("should create the default regression and diff folders", () => {
       fileExists.returns(Promise.resolve(true));
       writeImage.returns(Promise.resolve());
       compare.returns(Promise.resolve({ equality: 0, isEqual: false }));
 
-      return matchImageOf('id').then(() => {
+      return matchImageOf("id").then(() => {
         expect(mkdir.callCount).to.equal(2);
-        expect(mkdir.firstCall).to.have.been.calledWithExactly('artifacts/regression');
-        expect(mkdir.secondCall).to.have.been.calledWithExactly('artifacts/diff');
+        expect(mkdir.firstCall).to.have.been.calledWithExactly(
+          "artifacts/regression"
+        );
+        expect(mkdir.secondCall).to.have.been.calledWithExactly(
+          "artifacts/diff"
+        );
       });
     });
 
-    it('should create the baseline folders from parameter string', () => {
-      const folder = 'foo/bar';
+    it("should create the baseline folders from parameter string", () => {
+      const folder = "foo/bar";
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
-      return matchImageOf('id', folder).then(() => {
+      return matchImageOf("id", folder).then(() => {
         expect(mkdir.callCount).to.equal(1);
-        expect(mkdir.firstCall).to.have.been.calledWithExactly(baselinePath + folder);
+        expect(mkdir.firstCall).to.have.been.calledWithExactly(
+          baselinePath + folder
+        );
       });
     });
 
-    it('should create the baseline folders from options object', () => {
+    it("should create the baseline folders from options object", () => {
       chaiCtx = {
         _obj: Promise.resolve({}), // Change context something else than takeImageOf
         assert: sinon.stub(),
@@ -246,9 +274,14 @@ describe('chai-plugin-screenshot', () => {
 
       fileExists.returns(Promise.resolve(false));
       writeImage.returns(Promise.resolve());
-      return matchImageOf('id', { artifactsPath: 'testing', folder: 'test' }).then(() => {
+      return matchImageOf("id", {
+        artifactsPath: "testing",
+        folder: "test",
+      }).then(() => {
         expect(mkdir.callCount).to.equal(1);
-        expect(mkdir.firstCall).to.have.been.calledWithExactly('testing/baseline/test');
+        expect(mkdir.firstCall).to.have.been.calledWithExactly(
+          "testing/baseline/test"
+        );
       });
     });
   });

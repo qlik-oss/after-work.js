@@ -4,12 +4,12 @@
 
  For a more generic reporter checkout the work of Adam Gruber (https://github.com/adamgruber)
  */
-const mocha = require('mocha');
-const fs = require('fs');
-const path = require('path');
-const utils = require('./utils');
-const report = require('./create-static');
-const aggregate = require('./aggregate');
+const mocha = require("mocha");
+const fs = require("fs");
+const path = require("path");
+const utils = require("./utils");
+const report = require("./create-static");
+const aggregate = require("./aggregate");
 
 const { Base } = mocha.reporters;
 
@@ -160,7 +160,7 @@ const reporter = {
    *
    * @type {string}
    */
-  name: 'reporter',
+  name: "reporter",
 };
 
 function uiReport(runner, options) {
@@ -179,27 +179,27 @@ function uiReport(runner, options) {
     if (reporterOptions.xunit) {
       reporterOptions.output = path.resolve(
         browser.reporterInfo.artifactsPath,
-        `${browser.reporterInfo.reportName}.xml`,
+        `${browser.reporterInfo.reportName}.xml`
       );
       new mocha.reporters.XUnit(runner, options);
     }
   }
-  runner.on('pass', test => {
+  runner.on("pass", (test) => {
     console.log(
-      '\u001b[32m √ PASSED: %s ( %sms )\u001b[0m',
+      "\u001b[32m √ PASSED: %s ( %sms )\u001b[0m",
       test.fullTitle(),
-      test.duration,
+      test.duration
     );
     tests.push(test);
     passes++;
   });
 
-  runner.on('pending', test => {
+  runner.on("pending", (test) => {
     tests.push(test);
     pending++;
   });
 
-  runner.on('fail', (test, err) => {
+  runner.on("fail", (test, err) => {
     try {
       err.expected = JSON.parse(err.expected);
     } catch (e) {
@@ -208,32 +208,32 @@ function uiReport(runner, options) {
     test.consoleEntries = [];
     if (Array.isArray(config.__waitForPromises)) {
       config.__waitForPromises.push(
-        utils.saveScreenshot(browser, test.fullTitle()),
+        utils.saveScreenshot(browser, test.fullTitle())
       );
     }
 
     console.log(
-      '\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n'
-        + '\u001b[33m     %s\u001b[0m\n'
-        + '\u001b[34m     %s\u001b[0m',
+      "\u001b[31m X FAILED: %s ( %sms )\u001b[0m\n" +
+        "\u001b[33m     %s\u001b[0m\n" +
+        "\u001b[34m     %s\u001b[0m",
       test.fullTitle(),
       test.duration,
       err.message,
-      test.file,
+      test.file
     );
 
-    if (browser.reporterInfo.browserName === 'chrome') {
+    if (browser.reporterInfo.browserName === "chrome") {
       browser
         .manage()
         .logs()
-        .get('browser')
-        .then(browserLog => {
+        .get("browser")
+        .then((browserLog) => {
           if (browserLog && browserLog.length) {
             console.log(
-              '\u001b[91m     %s\u001b[0m',
-              'Errors reported in the chrome console - see log for more information',
+              "\u001b[91m     %s\u001b[0m",
+              "Errors reported in the chrome console - see log for more information"
             );
-            browserLog.forEach(log => {
+            browserLog.forEach((log) => {
               if (log.level.value_ >= 1000) {
                 test.consoleEntries.push(log.message);
               }
@@ -245,13 +245,13 @@ function uiReport(runner, options) {
     test.screenshot = `screenshots/${utils.screenshotName(
       test.fullTitle(),
       browser.reporterInfo.browserName,
-      browser.reporterInfo.startTime,
+      browser.reporterInfo.startTime
     )}`;
     tests.push(test);
     failures++;
   });
 
-  runner.once('end', function onEnd() {
+  runner.once("end", function onEnd() {
     const repoInfo = utils.getRepoInfo(reporterOptions);
     const cleanTests = tests.map(utils.cleanTest.bind(utils));
 
@@ -279,19 +279,19 @@ function uiReport(runner, options) {
     runner.testResults = obj;
 
     console.log(
-      '\u001b[35m Σ SUMMARY: %s testcases runned. \u001b[32m%s passed, \u001b[36m%s pending, \u001b[31m%s failed\u001b[0m',
+      "\u001b[35m Σ SUMMARY: %s testcases runned. \u001b[32m%s passed, \u001b[36m%s pending, \u001b[31m%s failed\u001b[0m",
       obj.stats.tests,
       obj.stats.passes,
       obj.stats.pending,
-      obj.stats.failures,
+      obj.stats.failures
     );
 
     const fileName = path.resolve(
       browser.reporterInfo.artifactsPath,
-      `${browser.reporterInfo.reportName}.json`,
+      `${browser.reporterInfo.reportName}.json`
     );
     utils.createArtifactsFolder(browser.reporterInfo.artifactsPath);
-    fs.writeFileSync(fileName, JSON.stringify(obj, null, '\t'));
+    fs.writeFileSync(fileName, JSON.stringify(obj, null, "\t"));
     if (reporterOptions.html !== false) {
       report.generate(fileName);
     }

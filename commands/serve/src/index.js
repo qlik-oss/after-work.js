@@ -1,25 +1,25 @@
 /* eslint global-require: 0, import/no-dynamic-require: 0 */
-const fs = require('fs');
+const fs = require("fs");
 
 const server = {
-  command: ['serve'],
-  desc: 'Serve files',
+  command: ["serve"],
+  desc: "Serve files",
   builder(yargs) {
     return yargs
       .options({
         config: {
-          description: 'Path to config file',
-          type: 'string',
+          description: "Path to config file",
+          type: "string",
           default: null,
-          alias: 'c',
+          alias: "c",
         },
-        'http.port': {
-          description: 'Listen on this port',
+        "http.port": {
+          description: "Listen on this port",
           default: 9000,
-          type: 'number',
+          type: "number",
         },
       })
-      .config('config', configPath => {
+      .config("config", (configPath) => {
         if (configPath === null) {
           return {};
         }
@@ -28,7 +28,7 @@ const server = {
         }
         let config = {};
         const foundConfig = require(configPath);
-        if (typeof foundConfig === 'function') {
+        if (typeof foundConfig === "function") {
           config = Object.assign({}, foundConfig());
         } else {
           config = Object.assign({}, foundConfig);
@@ -37,7 +37,7 @@ const server = {
       });
   },
   handler(argv) {
-    const createServer = require('@after-work.js/server');
+    const createServer = require("@after-work.js/server");
     createServer(argv);
   },
 };

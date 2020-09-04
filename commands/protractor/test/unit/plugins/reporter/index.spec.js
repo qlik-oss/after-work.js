@@ -1,35 +1,35 @@
-const fs = require('fs');
-const mocha = require('mocha');
-const mkdirp = require('mkdirp');
-const uiReport = require('../../../../src/plugins/reporter');
-const utils = require('../../../../src/plugins/reporter/utils');
+const fs = require("fs");
+const mocha = require("mocha");
+const mkdirp = require("mkdirp");
+const uiReport = require("../../../../src/plugins/reporter");
+const utils = require("../../../../src/plugins/reporter/utils");
 
-describe.skip('Reporter index', () => {
+describe.skip("Reporter index", () => {
   let sandbox;
   const Capabilities = new Map();
-  Capabilities.set('browserName', 'chrome');
-  Capabilities.set('version', '62.0.3202.75');
-  Capabilities.set('platform', 'Linux');
+  Capabilities.set("browserName", "chrome");
+  Capabilities.set("version", "62.0.3202.75");
+  Capabilities.set("platform", "Linux");
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
-    sandbox.stub(fs, 'writeFileSync');
-    sandbox.stub(mocha.reporters, 'XUnit');
-    sandbox.stub(mkdirp, 'sync');
-    sandbox.stub(utils, 'getRepoInfo').returns({
-      name: 'name',
-      description: 'description',
-      version: 'x.y.z',
+    sandbox.stub(fs, "writeFileSync");
+    sandbox.stub(mocha.reporters, "XUnit");
+    sandbox.stub(mkdirp, "sync");
+    sandbox.stub(utils, "getRepoInfo").returns({
+      name: "name",
+      description: "description",
+      version: "x.y.z",
     });
     global.browser = {
       getProcessedConfig: sandbox
         .stub()
         .returns(
-          Promise.resolve({ browserName: 'chrome', __waitForPromises: [] }),
+          Promise.resolve({ browserName: "chrome", __waitForPromises: [] })
         ),
       getCapabilities: sandbox.stub().returns(Promise.resolve(Capabilities)),
       reporterInfo: {
-        artifactsPath: 'artifactsPath',
+        artifactsPath: "artifactsPath",
       },
     };
   });
@@ -39,7 +39,7 @@ describe.skip('Reporter index', () => {
     sandbox.restore();
   });
 
-  describe('UI reporter', () => {
+  describe("UI reporter", () => {
     let runner;
     let options;
 
@@ -53,29 +53,29 @@ describe.skip('Reporter index', () => {
           xunit: true,
         },
       };
-      sandbox.stub(utils, 'saveScreenshot').returns(Promise.resolve());
+      sandbox.stub(utils, "saveScreenshot").returns(Promise.resolve());
     });
 
-    it('should call pass correctly', () => {
+    it("should call pass correctly", () => {
       const test = {
-        fullTitle: sandbox.stub().returns('Title'),
-        duration: sandbox.stub().returns('Duration'),
+        fullTitle: sandbox.stub().returns("Title"),
+        duration: sandbox.stub().returns("Duration"),
         slow: () => {},
       };
-      const log = sandbox.stub(console, 'log');
+      const log = sandbox.stub(console, "log");
       // runner.on.withArgs( "pass" ).callsArgOnWith( 1, {}, test );
-      runner.on.withArgs('pass').callsArgWith(1, test);
+      runner.on.withArgs("pass").callsArgWith(1, test);
       uiReport.call(uiReport, runner, options);
-      expect(runner.on).to.be.calledWith('pass', sinon.match.func);
-      expect(console.log).to.be.calledWith(sinon.match(' √ PASSED:'));
+      expect(runner.on).to.be.calledWith("pass", sinon.match.func);
+      expect(console.log).to.be.calledWith(sinon.match(" √ PASSED:"));
       log.restore();
     });
 
-    it('should call pending correctly', () => {
+    it("should call pending correctly", () => {
       const test = null;
-      runner.on.withArgs('pending').callsArgWith(1, test);
+      runner.on.withArgs("pending").callsArgWith(1, test);
       uiReport.call(uiReport, runner, options);
-      expect(runner.on).to.be.calledWith('pending', sinon.match.func);
+      expect(runner.on).to.be.calledWith("pending", sinon.match.func);
     });
 
     // it('should call fail correctly', () => {

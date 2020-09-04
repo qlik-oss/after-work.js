@@ -1,6 +1,6 @@
-const dns = require('dns');
-const os = require('os');
-const http = require('http');
+const dns = require("dns");
+const os = require("os");
+const http = require("http");
 
 module.exports = {
   getFullQualifiedDNSName() {
@@ -32,47 +32,56 @@ module.exports = {
     });
   },
   logSeleniumNodeInfo(config) {
-    browser.getSession().then(session => {
+    browser.getSession().then((session) => {
       const sessionId = session.getId();
       console.log(`WebDriverSessionID: ${sessionId}`);
 
-      if (!config.seleniumAddress || config.seleniumAddress.trim() === '') {
+      if (!config.seleniumAddress || config.seleniumAddress.trim() === "") {
         return;
       }
 
-      const url = config.seleniumAddress.replace('wd/hub', `grid/api/testsession?session=${sessionId}`);
+      const url = config.seleniumAddress.replace(
+        "wd/hub",
+        `grid/api/testsession?session=${sessionId}`
+      );
 
-      http.get(url, res => {
-        let result = '';
-        res.setEncoding('utf8');
-        res.on('data', chunk => {
-          result += chunk;
-        });
-        res.on('end', () => {
-          if (res.statusCode >= 300) {
-            result = result[0].errorText;
-            if (result) {
-              console.error(result);
+      http
+        .get(url, (res) => {
+          let result = "";
+          res.setEncoding("utf8");
+          res.on("data", (chunk) => {
+            result += chunk;
+          });
+          res.on("end", () => {
+            if (res.statusCode >= 300) {
+              result = result[0].errorText;
+              if (result) {
+                console.error(result);
+              }
+              return;
             }
-            return;
-          }
 
-          if (result.length > 0) {
-            result = JSON.parse(result);
-            const nodeUrl = result.proxyId.replace(/:\d+$/g, '');
-            browser.params.grid = {};
-            browser.params.grid.node = nodeUrl;
-            browser.params.grid.extraUrl = `${nodeUrl}:3000`;
-            browser.params.grid.extraVideo = `${nodeUrl}:3000/download_video/${sessionId}.mp4`;
+            if (result.length > 0) {
+              result = JSON.parse(result);
+              const nodeUrl = result.proxyId.replace(/:\d+$/g, "");
+              browser.params.grid = {};
+              browser.params.grid.node = nodeUrl;
+              browser.params.grid.extraUrl = `${nodeUrl}:3000`;
+              browser.params.grid.extraVideo = `${nodeUrl}:3000/download_video/${sessionId}.mp4`;
 
-            console.log(`Selenium Node Console: ${result.proxyId}/wd/hub/static/resource/hub.html`);
-            console.log(`Grid Extra Node: ${browser.params.grid.extraUrl}`);
-            console.log(`Grid Extra Video: ${browser.params.grid.extraVideo}`);
-          }
+              console.log(
+                `Selenium Node Console: ${result.proxyId}/wd/hub/static/resource/hub.html`
+              );
+              console.log(`Grid Extra Node: ${browser.params.grid.extraUrl}`);
+              console.log(
+                `Grid Extra Video: ${browser.params.grid.extraVideo}`
+              );
+            }
+          });
+        })
+        .on("error", (e) => {
+          console.error(e);
         });
-      }).on('error', e => {
-        console.error(e);
-      });
     });
   },
 };

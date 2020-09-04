@@ -5,264 +5,264 @@ const {
   DEFAULT_SRC_EXT_PATTERN,
   DEFAULT_SRC_EXCLUDE_PATTERN,
   WATCH_GLOB,
-} = require('@after-work.js/utils');
+} = require("@after-work.js/utils");
 
 module.exports = {
   presetEnv: {
     description:
-      'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai subset',
+      "Preset the test environment with Sinon, Chai, Sinon-Chai, Chai subset",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
   config: {
-    description: 'Path to config file',
-    type: 'string',
+    description: "Path to config file",
+    type: "string",
     default: null,
-    alias: 'c',
+    alias: "c",
   },
   url: {
-    description: 'Url to html file',
-    type: 'string',
+    description: "Url to html file",
+    type: "string",
     default: null,
   },
   scope: {
-    description: 'Scope to package',
+    description: "Scope to package",
     default: [],
-    type: 'array',
-    alias: 's',
+    type: "array",
+    alias: "s",
   },
   test: {
-    description: 'Glob pattern',
+    description: "Glob pattern",
     default: TEST_GLOB,
-    type: 'array',
-    alias: 'glob',
+    type: "array",
+    alias: "glob",
   },
   testExt: {
-    description: 'Test file extensions glob pattern',
+    description: "Test file extensions glob pattern",
     default: DEFAULT_TEST_EXT_PATTERN,
-    type: 'string',
+    type: "string",
   },
   src: {
-    description: 'Glob pattern for all source files',
+    description: "Glob pattern for all source files",
     default: SRC_GLOB,
-    type: 'array',
+    type: "array",
     hidden: true,
   },
   srcExt: {
-    description: 'Source file extensions glob pattern',
+    description: "Source file extensions glob pattern",
     default: DEFAULT_SRC_EXT_PATTERN,
-    type: 'string',
+    type: "string",
     hidden: true,
   },
   watch: {
-    description: 'Watch changes',
+    description: "Watch changes",
     default: false,
-    type: 'boolean',
-    alias: 'w',
+    type: "boolean",
+    alias: "w",
   },
   watchGlob: {
-    description: 'Watch glob',
+    description: "Watch glob",
     default: WATCH_GLOB,
-    type: 'array',
-    alias: 'wg',
-    coerce: opt => [...opt, ...WATCH_GLOB],
+    type: "array",
+    alias: "wg",
+    coerce: (opt) => [...opt, ...WATCH_GLOB],
   },
   coverage: {
-    description: 'Generate coverage?',
+    description: "Generate coverage?",
     default: false,
-    type: 'boolean',
+    type: "boolean",
   },
   hookRequire: {
-    description: 'Hook require to be able to mock and transform files',
+    description: "Hook require to be able to mock and transform files",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
-  'babel.enable': {
-    description: 'Enable babel',
+  "babel.enable": {
+    description: "Enable babel",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
-  'babel.core': {
-    description: 'Path to babel core module',
-    default: '',
-    type: 'string',
+  "babel.core": {
+    description: "Path to babel core module",
+    default: "",
+    type: "string",
   },
-  'babel.babelPluginIstanbul': {
-    description: 'Path to babel plugin istanbul module',
-    default: 'babel-plugin-istanbul',
-    type: 'string',
+  "babel.babelPluginIstanbul": {
+    description: "Path to babel plugin istanbul module",
+    default: "babel-plugin-istanbul",
+    type: "string",
   },
-  'babel.options': {
-    description: 'Babel options',
+  "babel.options": {
+    description: "Babel options",
     default: {},
-    type: 'object',
+    type: "object",
   },
-  'babel.typescript': {
-    description: 'Path to typescript compiler module',
-    default: 'typescript',
-    type: 'string',
+  "babel.typescript": {
+    description: "Path to typescript compiler module",
+    default: "typescript",
+    type: "string",
   },
-  'transform.typescript.config': {
-    description: 'Typescript config file',
-    default: 'tsconfig.json',
-    type: 'string',
+  "transform.typescript.config": {
+    description: "Typescript config file",
+    default: "tsconfig.json",
+    type: "string",
   },
-  'transform.typescript.babelOptions': {
-    description: 'Typescript babel options',
+  "transform.typescript.babelOptions": {
+    description: "Typescript babel options",
     default: {},
-    type: 'object',
+    type: "object",
   },
-  'transform.include': {
-    description: 'Transform files with babel?',
+  "transform.include": {
+    description: "Transform files with babel?",
     default: [],
-    type: 'array',
+    type: "array",
   },
-  'transform.exclude': {
-    description: 'Exclude glob',
+  "transform.exclude": {
+    description: "Exclude glob",
     default: [],
-    type: 'array',
+    type: "array",
   },
-  'transform.defaultExclude': {
-    description: 'Default exclude glob',
+  "transform.defaultExclude": {
+    description: "Default exclude glob",
     default: [
-      '**/coverage/**',
-      '**/external/**',
-      '**/autogenerated/**',
-      '**/*.{html,css,json,txt,ttf,woff,svg,ico}',
-      '**/*require*.js',
-      '**/*sinon*.js',
-      '**/*chai*.js',
+      "**/coverage/**",
+      "**/external/**",
+      "**/autogenerated/**",
+      "**/*.{html,css,json,txt,ttf,woff,svg,ico}",
+      "**/*require*.js",
+      "**/*sinon*.js",
+      "**/*chai*.js",
     ],
-    type: 'array',
+    type: "array",
   },
-  'instrument.include': {
-    description: 'Instrument files with babel?',
+  "instrument.include": {
+    description: "Instrument files with babel?",
     default: [],
-    type: 'array',
+    type: "array",
   },
-  'instrument.exclude': {
-    description: 'Exclude glob',
+  "instrument.exclude": {
+    description: "Exclude glob",
     default: [],
-    type: 'array',
+    type: "array",
   },
-  'instrument.defaultExclude': {
-    description: 'Exclude glob',
+  "instrument.defaultExclude": {
+    description: "Exclude glob",
     default: [
-      '**/coverage/**',
-      '**/external/**',
-      '**/autogenerated/**',
-      '**/*.{html,css,json,txt,ttf,woff,svg}',
-      '**/*require*.js',
-      '**/*sinon*.js',
-      '**/*chai*.js',
-      '**/*.spec.{js,ts}',
+      "**/coverage/**",
+      "**/external/**",
+      "**/autogenerated/**",
+      "**/*.{html,css,json,txt,ttf,woff,svg}",
+      "**/*require*.js",
+      "**/*sinon*.js",
+      "**/*chai*.js",
+      "**/*.spec.{js,ts}",
     ],
-    type: 'array',
+    type: "array",
   },
-  'mocha.bail': {
-    description: 'Bails on failure',
+  "mocha.bail": {
+    description: "Bails on failure",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
-  'mocha.ui': {
-    description: 'Test interface',
-    default: 'bdd',
-    type: 'string',
+  "mocha.ui": {
+    description: "Test interface",
+    default: "bdd",
+    type: "string",
   },
-  'mocha.timeout': {
-    description: 'Timeout',
+  "mocha.timeout": {
+    description: "Timeout",
     default: 2000,
-    type: 'number',
+    type: "number",
   },
-  'mocha.color': {
-    description: 'Use colors in output',
+  "mocha.color": {
+    description: "Use colors in output",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
-  'mocha.reporter': {
-    description: 'Reporter',
-    default: 'min',
-    type: 'string',
+  "mocha.reporter": {
+    description: "Reporter",
+    default: "min",
+    type: "string",
   },
-  'client.port': {
-    description: 'Chrome port',
+  "client.port": {
+    description: "Chrome port",
     default: 9222,
-    type: 'number',
+    type: "number",
   },
-  'chrome.launch': {
-    description: 'Launch Chrome',
+  "chrome.launch": {
+    description: "Launch Chrome",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
-  'chrome.devtools': {
-    description: 'Open Chrome with dev tools',
+  "chrome.devtools": {
+    description: "Open Chrome with dev tools",
     default: false,
-    type: 'boolean',
+    type: "boolean",
   },
-  'chrome.port': {
-    description: 'Chrome port',
+  "chrome.port": {
+    description: "Chrome port",
     default: 9222,
-    type: 'number',
+    type: "number",
   },
-  'chrome.chromeFlags': {
-    description: 'Chrome flags',
-    default: ['--headless', '--disable-gpu', '--allow-file-access-from-files'],
-    type: 'array',
+  "chrome.chromeFlags": {
+    description: "Chrome flags",
+    default: ["--headless", "--disable-gpu", "--allow-file-access-from-files"],
+    type: "array",
   },
-  'http.port': {
-    description: 'Listen on this http port',
+  "http.port": {
+    description: "Listen on this http port",
     default: 9676,
-    type: 'number',
+    type: "number",
   },
-  'http.root': {
-    description: 'Root folders to serve',
-    default: ['./'],
-    type: 'array',
+  "http.root": {
+    description: "Root folders to serve",
+    default: ["./"],
+    type: "array",
   },
-  'http.rewrite': {
-    description: 'Rewrite url(s)',
+  "http.rewrite": {
+    description: "Rewrite url(s)",
     default: {},
-    type: 'object',
+    type: "object",
   },
-  'nyc.include': {
-    description: 'Include glob',
+  "nyc.include": {
+    description: "Include glob",
     default: [],
-    type: 'array',
+    type: "array",
   },
-  'nyc.exclude': {
-    description: 'Exclude glob',
+  "nyc.exclude": {
+    description: "Exclude glob",
     default: DEFAULT_SRC_EXCLUDE_PATTERN,
-    type: 'array',
+    type: "array",
   },
-  'nyc.tempDirectory': {
-    description: 'Directory to output raw coverage information to',
-    default: './coverage/.nyc_output',
-    type: 'string',
+  "nyc.tempDirectory": {
+    description: "Directory to output raw coverage information to",
+    default: "./coverage/.nyc_output",
+    type: "string",
   },
-  'nyc.reporter': {
-    description: 'Coverage reporter(s) to use',
-    default: ['lcov', 'text-summary'],
-    type: 'array',
+  "nyc.reporter": {
+    description: "Coverage reporter(s) to use",
+    default: ["lcov", "text-summary"],
+    type: "array",
   },
-  'nyc.reportDir': {
-    description: 'Directory to output coverage reports in',
-    default: 'coverage',
-    type: 'string',
+  "nyc.reportDir": {
+    description: "Directory to output coverage reports in",
+    default: "coverage",
+    type: "string",
   },
   interactive: {
-    description: 'Run in interactive mode',
+    description: "Run in interactive mode",
     default: false,
-    type: 'boolean',
-    alias: 'i',
+    type: "boolean",
+    alias: "i",
   },
-  'filter.chrome.packages': {
-    description: 'Filter packages for Chrome runner',
-    default: ['**'],
-    type: 'array',
+  "filter.chrome.packages": {
+    description: "Filter packages for Chrome runner",
+    default: ["**"],
+    type: "array",
   },
-  'filter.chrome.files': {
-    description: 'Filter files for Chrome runner',
-    default: ['**'],
-    type: 'array',
+  "filter.chrome.files": {
+    description: "Filter files for Chrome runner",
+    default: ["**"],
+    type: "array",
   },
 };

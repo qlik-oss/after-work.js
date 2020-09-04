@@ -1,17 +1,17 @@
-const path = require('path');
-const fs = require('fs');
-const jimp = require('jimp');
-const mkdirp = require('mkdirp');
+const path = require("path");
+const fs = require("fs");
+const jimp = require("jimp");
+const mkdirp = require("mkdirp");
 
 function resolveArgs(opts, t) {
   const type = typeof opts;
-  let folder = '';
-  let artifactsPath = '';
-  let tolerance = typeof t === 'number' ? t : 0.002;
+  let folder = "";
+  let artifactsPath = "";
+  let tolerance = typeof t === "number" ? t : 0.002;
 
-  if (type === 'string') {
+  if (type === "string") {
     folder = opts;
-  } else if (type === 'object') {
+  } else if (type === "object") {
     ({
       folder = folder,
       artifactsPath = artifactsPath,
@@ -29,9 +29,9 @@ function resolveArgs(opts, t) {
 const plugin = {
   toImage(input) {
     const type = typeof input;
-    const isObj = type === 'object' && input !== null;
+    const isObj = type === "object" && input !== null;
 
-    if (type === 'string') {
+    if (type === "string") {
       // If string assume it's a path
       return jimp.read(input);
     }
@@ -44,8 +44,11 @@ const plugin = {
 
       if (input.getBuffer || (input.img && input.img.getBuffer)) {
         // Input is a Jimp object where instanceof doesn't validate to true
-        const fn = (resolve, reject) => (input.img ? input.img : input).getBuffer(jimp.AUTO, (e, b) => (e ? reject(e) : resolve(b)));
-        return new Promise(fn).then(buffer => jimp.read(buffer));
+        const fn = (resolve, reject) =>
+          (input.img ? input.img : input).getBuffer(jimp.AUTO, (e, b) =>
+            e ? reject(e) : resolve(b)
+          );
+        return new Promise(fn).then((buffer) => jimp.read(buffer));
       }
     }
 
@@ -54,17 +57,17 @@ const plugin = {
     }
 
     return Promise.reject(
-      new TypeError(`Unable to create image. Unsupported type '${type}'.`),
+      new TypeError(`Unable to create image. Unsupported type '${type}'.`)
     );
   },
   fileExists(filePath) {
-    return new Promise(resolve => {
-      fs.lstat(filePath, err => resolve(!err));
+    return new Promise((resolve) => {
+      fs.lstat(filePath, (err) => resolve(!err));
     });
   },
   writeImage(img, filePath) {
     return new Promise((resolve, reject) => {
-      img.write(filePath, err => {
+      img.write(filePath, (err) => {
         if (err) {
           reject(err);
         } else {
@@ -91,57 +94,60 @@ const plugin = {
   matchImageOf(id, opts, t) {
     const { folder, artifactsPath, tolerance } = resolveArgs(opts, t);
     const promise = this._obj.then ? this._obj : Promise.resolve(this._obj);
-    return promise.then(meta => {
+    return promise.then((meta) => {
       // TODO takeImageOf is an after-work specific context. Should do a more generic solution.
-      const isTakeImageOf = typeof meta === 'object' && typeof meta.artifactsPath === 'string';
+      const isTakeImageOf =
+        typeof meta === "object" && typeof meta.artifactsPath === "string";
       const imageName = isTakeImageOf
         ? `${id}-${meta.platform}-${meta.browserName}.png`
         : `${id}.png`;
       const basePath = isTakeImageOf ? meta.artifactsPath : artifactsPath;
 
-      const baseline = path.resolve(basePath, 'baseline', folder, imageName);
+      const baseline = path.resolve(basePath, "baseline", folder, imageName);
       const regression = path.resolve(
         basePath,
-        'regression',
+        "regression",
         folder,
-        imageName,
+        imageName
       );
-      const diff = path.resolve(basePath, 'diff', folder, imageName);
+      const diff = path.resolve(basePath, "diff", folder, imageName);
       const expected = JSON.stringify({
         baseline,
         diff,
         regression,
       });
       const actual = {};
-      const resolvedMeta = typeof meta === 'string' ? Buffer.from(meta, 'base64') : meta;
+      const resolvedMeta =
+        typeof meta === "string" ? Buffer.from(meta, "base64") : meta;
 
-      return plugin.fileExists(baseline).then(exists => {
+      return plugin.fileExists(baseline).then((exists) => {
         if (!exists) {
           mkdirp.sync(path.parse(baseline).dir);
 
           return Promise.resolve(plugin.toImage(resolvedMeta)).then(
-            baselineImg => plugin.writeImage(baselineImg, baseline).then(() => {
-              const errStr = `No baseline found! New baseline generated at ${path.join(
-                basePath,
-                'baseline',
-                folder,
-                imageName,
-              )}`;
-              this.assert(false, errStr, errStr, expected, actual);
-            }),
+            (baselineImg) =>
+              plugin.writeImage(baselineImg, baseline).then(() => {
+                const errStr = `No baseline found! New baseline generated at ${path.join(
+                  basePath,
+                  "baseline",
+                  folder,
+                  imageName
+                )}`;
+                this.assert(false, errStr, errStr, expected, actual);
+              })
           );
         }
 
         return Promise.all([
           plugin.toImage(baseline),
           plugin.toImage(resolvedMeta),
-        ]).then(images => {
+        ]).then((images) => {
           const baselineImg = images[0];
           const regressionImg = images[1];
 
           return plugin
             .compare(baselineImg, regressionImg, tolerance)
-            .then(comparison => {
+            .then((comparison) => {
               if (comparison.isEqual) {
                 return comparison;
               }
@@ -155,14 +161,10 @@ const plugin = {
               ]).then(() => {
                 this.assert(
                   comparison.isEqual === true,
-                  `expected ${id} equality to be less than ${tolerance}, but was ${
-                    comparison.equality
-                  }`,
-                  `expected ${id} equality to be greater than ${tolerance}, but was ${
-                    comparison.equality
-                  }`,
+                  `expected ${id} equality to be less than ${tolerance}, but was ${comparison.equality}`,
+                  `expected ${id} equality to be greater than ${tolerance}, but was ${comparison.equality}`,
                   expected,
-                  actual,
+                  actual
                 );
                 return comparison;
               });

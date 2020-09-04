@@ -6,211 +6,211 @@ const {
   DEFAULT_SRC_EXT_PATTERN,
   DEFAULT_TEST_EXT_PATTERN,
   DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
-} = require('@after-work.js/utils');
+} = require("@after-work.js/utils");
 
 module.exports = {
   presetEnv: {
     description:
-      'Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset',
+      "Preset the test environment with Sinon, Chai, Sinon-Chai, Chai as promised and Chai subset",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
   require: {
-    description: 'Require path',
+    description: "Require path",
     default: [],
-    type: 'array',
+    type: "array",
   },
   scope: {
-    description: 'Scope to package',
+    description: "Scope to package",
     default: [],
-    type: 'array',
-    alias: 's',
+    type: "array",
+    alias: "s",
   },
   config: {
-    description: 'Path to config file',
-    type: 'string',
+    description: "Path to config file",
+    type: "string",
     default: null,
-    alias: 'c',
+    alias: "c",
   },
   test: {
-    description: 'Glob pattern',
+    description: "Glob pattern",
     default: TEST_GLOB,
-    type: 'array',
-    alias: 'glob',
+    type: "array",
+    alias: "glob",
   },
   testExt: {
-    description: 'Test file extensions glob pattern',
+    description: "Test file extensions glob pattern",
     default: DEFAULT_TEST_EXT_PATTERN,
-    type: 'string',
+    type: "string",
   },
   src: {
-    description: 'Glob pattern for all source files',
+    description: "Glob pattern for all source files",
     default: SRC_GLOB,
-    type: 'array',
+    type: "array",
   },
   srcExt: {
-    description: 'Source file extensions glob pattern',
+    description: "Source file extensions glob pattern",
     default: DEFAULT_SRC_EXT_PATTERN,
-    type: 'string',
+    type: "string",
   },
   watch: {
-    description: 'Watch changes',
+    description: "Watch changes",
     default: false,
-    type: 'boolean',
-    alias: 'w',
+    type: "boolean",
+    alias: "w",
   },
   watchGlob: {
-    description: 'Watch glob',
+    description: "Watch glob",
     default: WATCH_GLOB,
-    type: 'array',
-    alias: 'wg',
+    type: "array",
+    alias: "wg",
   },
   coverage: {
-    description: 'Generate coverage',
+    description: "Generate coverage",
     default: false,
-    type: 'boolean',
+    type: "boolean",
   },
   hookRequire: {
-    description: 'Hook require to be able to mock and transform files',
+    description: "Hook require to be able to mock and transform files",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
-  'babel.enable': {
-    description: 'Enable babel',
+  "babel.enable": {
+    description: "Enable babel",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
-  'babel.core': {
-    description: 'Path to babel core module',
-    default: '',
-    type: 'string',
+  "babel.core": {
+    description: "Path to babel core module",
+    default: "",
+    type: "string",
   },
-  'babel.babelPluginIstanbul': {
-    description: 'Path to babel plugin istanbul module',
-    default: 'babel-plugin-istanbul',
-    type: 'string',
+  "babel.babelPluginIstanbul": {
+    description: "Path to babel plugin istanbul module",
+    default: "babel-plugin-istanbul",
+    type: "string",
   },
-  'babel.options': {
-    description: 'Babel options',
+  "babel.options": {
+    description: "Babel options",
     default: {},
-    type: 'object',
+    type: "object",
   },
-  'babel.typescript': {
-    description: 'Path to typescript compiler module',
-    default: 'typescript',
-    type: 'string',
+  "babel.typescript": {
+    description: "Path to typescript compiler module",
+    default: "typescript",
+    type: "string",
   },
-  'filter.node.packages': {
-    description: 'Filter packages for Node runner',
-    default: ['**'],
-    type: 'array',
+  "filter.node.packages": {
+    description: "Filter packages for Node runner",
+    default: ["**"],
+    type: "array",
   },
-  'filter.node.files': {
-    description: 'Filter files for Node runner',
-    default: ['**'],
-    type: 'array',
+  "filter.node.files": {
+    description: "Filter files for Node runner",
+    default: ["**"],
+    type: "array",
   },
   exit: {
     description:
-      'Force its own process to exit once it was finished executing all tests',
+      "Force its own process to exit once it was finished executing all tests",
     default: false,
-    type: 'boolean',
+    type: "boolean",
   },
   updateSnapshot: {
-    description: 'Update snapshots',
+    description: "Update snapshots",
     default: false,
-    type: 'boolean',
-    alias: 'u',
+    type: "boolean",
+    alias: "u",
   },
   mocks: {
-    description: 'Automagically mock modules',
-    default: [['*.{scss,less,css}']],
-    type: 'array',
+    description: "Automagically mock modules",
+    default: [["*.{scss,less,css}"]],
+    type: "array",
   },
-  'mocha.reporter': {
-    description: 'Which reporter to use',
+  "mocha.reporter": {
+    description: "Which reporter to use",
     default: undefined,
-    type: 'string',
+    type: "string",
   },
-  'mocha.bail': {
-    description: 'Bails on failure',
+  "mocha.bail": {
+    description: "Bails on failure",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
-  'mocha.timeout': {
-    description: 'Timeout',
+  "mocha.timeout": {
+    description: "Timeout",
     default: 2000,
-    type: 'number',
+    type: "number",
   },
-  'nyc.hookRequire': {
-    description: 'Hook require',
+  "nyc.hookRequire": {
+    description: "Hook require",
     default: false,
-    type: 'boolean',
+    type: "boolean",
   },
-  'nyc.hookRunInContext': {
-    description: 'Hook require',
+  "nyc.hookRunInContext": {
+    description: "Hook require",
     default: false,
-    type: 'boolean',
+    type: "boolean",
   },
-  'nyc.hookRunInThisContext': {
-    description: 'Hook require',
+  "nyc.hookRunInThisContext": {
+    description: "Hook require",
     default: false,
-    type: 'boolean',
+    type: "boolean",
   },
-  'nyc.require': {
-    description: 'Require path',
+  "nyc.require": {
+    description: "Require path",
     default: [],
-    type: 'array',
+    type: "array",
   },
-  'nyc.extension': {
-    description: 'Include extensions',
+  "nyc.extension": {
+    description: "Include extensions",
     default: DEFAULT_EXT,
-    type: 'array',
+    type: "array",
   },
-  'nyc.include': {
-    description: 'Include glob',
+  "nyc.include": {
+    description: "Include glob",
     default: [],
-    type: 'array',
+    type: "array",
   },
-  'nyc.exclude': {
-    description: 'Exclude glob',
+  "nyc.exclude": {
+    description: "Exclude glob",
     default: DEFAULT_INSTRUMENT_EXCLUDE_PATTERN,
-    type: 'array',
+    type: "array",
   },
-  'nyc.sourceMap': {
-    description: 'Sets if NYC should handle source maps.',
+  "nyc.sourceMap": {
+    description: "Sets if NYC should handle source maps.",
     default: false,
-    type: 'boolean',
+    type: "boolean",
   },
-  'nyc.instrumenter': {
-    description: 'Sets which instrumenter to use',
-    default: './lib/instrumenters/noop',
-    type: 'string',
+  "nyc.instrumenter": {
+    description: "Sets which instrumenter to use",
+    default: "./lib/instrumenters/noop",
+    type: "string",
   },
-  'nyc.tempDirectory': {
-    description: 'Directory to output raw coverage information to',
-    default: './coverage/.nyc_output',
-    type: 'string',
+  "nyc.tempDirectory": {
+    description: "Directory to output raw coverage information to",
+    default: "./coverage/.nyc_output",
+    type: "string",
   },
-  'nyc.reporter': {
-    description: 'Coverage reporter(s) to use',
-    default: ['lcov', 'text-summary'],
-    type: 'array',
+  "nyc.reporter": {
+    description: "Coverage reporter(s) to use",
+    default: ["lcov", "text-summary"],
+    type: "array",
   },
-  'nyc.reportDir': {
-    description: 'Directory to output coverage reports in',
-    default: 'coverage',
-    type: 'string',
+  "nyc.reportDir": {
+    description: "Directory to output coverage reports in",
+    default: "coverage",
+    type: "string",
   },
   interactive: {
-    description: 'Run in interactive mode',
+    description: "Run in interactive mode",
     default: false,
-    type: 'boolean',
-    alias: 'i',
+    type: "boolean",
+    alias: "i",
   },
   warnings: {
-    description: 'Log mock warnings to stderr',
+    description: "Log mock warnings to stderr",
     default: true,
-    type: 'boolean',
+    type: "boolean",
   },
 };

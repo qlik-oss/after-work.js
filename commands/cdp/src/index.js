@@ -1,21 +1,21 @@
 /* eslint no-console: 0, max-len: 0, global-require: 0, import/no-dynamic-require: 0, no-underscore-dangle: 0 */
-const fs = require('fs');
-const path = require('path');
-const TestExclude = require('test-exclude');
-const importCwd = require('import-cwd');
-const utils = require('@after-work.js/utils');
-const options = require('./options');
-const Runner = require('./runner');
+const fs = require("fs");
+const path = require("path");
+const TestExclude = require("test-exclude");
+const importCwd = require("import-cwd");
+const utils = require("@after-work.js/utils");
+const options = require("./options");
+const Runner = require("./runner");
 
 const cdp = {
   Runner,
-  command: ['cdp', 'chrome'],
-  desc: 'Run tests with cdp (chrome devtools protocol)',
+  command: ["cdp", "chrome"],
+  desc: "Run tests with cdp (chrome devtools protocol)",
   builder(yargs) {
     return yargs
       .middleware(utils.addDefaults)
       .options(options)
-      .config('config', configPath => {
+      .config("config", (configPath) => {
         if (configPath === null) {
           return {};
         }
@@ -24,26 +24,26 @@ const cdp = {
         }
         let config = {};
         const foundConfig = require(configPath);
-        if (typeof foundConfig === 'function') {
+        if (typeof foundConfig === "function") {
           config = Object.assign({}, foundConfig());
         } else {
           config = Object.assign({}, foundConfig);
         }
         return config;
       })
-      .coerce('babel', utils.coerceBabel)
-      .coerce('transform', opt => {
+      .coerce("babel", utils.coerceBabel)
+      .coerce("transform", (opt) => {
         const exclude = [...new Set(opt.defaultExclude.concat(opt.exclude))];
         opt.testExclude = new TestExclude({ include: opt.include, exclude });
         opt.typescript.compilerOptions = Object.assign(
           { compilerOptions: {} },
-          importCwd.silent(path.resolve(opt.typescript.config)),
+          importCwd.silent(path.resolve(opt.typescript.config))
         ).compilerOptions;
         return opt;
       })
-      .coerce('chrome', opt => {
+      .coerce("chrome", (opt) => {
         if (opt.devtools) {
-          opt.chromeFlags = ['--auto-open-devtools-for-tabs'];
+          opt.chromeFlags = ["--auto-open-devtools-for-tabs"];
           opt.launch = true;
         }
         return opt;
@@ -57,17 +57,14 @@ const cdp = {
       argv.interactive = true;
     }
     if (argv.interactive) {
-      require('@after-work.js/interactive-plugin')(runner);
+      require("@after-work.js/interactive-plugin")(runner);
     }
     if (argv.watch) {
-      require('@after-work.js/watch-plugin')(runner);
+      require("@after-work.js/watch-plugin")(runner);
     }
-    runner
-      .autoDetectDebug()
-      .setTestFiles()
-      .maybeCreateServer();
+    runner.autoDetectDebug().setTestFiles().maybeCreateServer();
     if (!skipInitialInteractive && argv.interactive) {
-      runner.emit('interactive');
+      runner.emit("interactive");
       return runner;
     }
     runner.run();

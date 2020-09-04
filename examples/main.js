@@ -2,7 +2,7 @@
 (() => {
   requirejs.config({
     paths: {
-      chai: '/node_modules/chai/chai',
+      chai: "/node_modules/chai/chai",
     },
   });
   requirejs(window.awFiles, () => {

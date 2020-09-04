@@ -1,1 +1,1 @@
-module.exports = () => ({ glob: ['foo.js'] });
+module.exports = () => ({ glob: ["foo.js"] });

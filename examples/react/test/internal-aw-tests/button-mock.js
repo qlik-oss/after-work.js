@@ -1,4 +1,4 @@
-import React from 'react';
-import '../../../chrome-js/src/a';
+import React from "react";
+import "../../../chrome-js/src/a";
 
-export default () => (<span>file mock</span>);
+export default () => <span>file mock</span>;

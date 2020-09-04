@@ -1,25 +1,22 @@
 /* eslint class-methods-use-this: 0, no-restricted-syntax: 0, guard-for-in: 0, no-await-in-loop: 0, max-len: 0 */
 
-const path = require('path');
-const findCacheDir = require('find-cache-dir');
-const fs = require('fs');
-const zlib = require('zlib');
-const crypto = require('crypto');
+const path = require("path");
+const findCacheDir = require("find-cache-dir");
+const fs = require("fs");
+const zlib = require("zlib");
+const crypto = require("crypto");
 
 class FileCache {
   constructor() {
     this.cacheDir = findCacheDir({
-      name: '@after-work.js/transform',
+      name: "@after-work.js/transform",
       create: true,
     });
     this.transform = new Map();
   }
 
   getCacheFilename(filename) {
-    const hash = crypto
-      .createHash('md5')
-      .update(filename)
-      .digest('hex');
+    const hash = crypto.createHash("md5").update(filename).digest("hex");
     return path.join(this.cacheDir, `${hash}.json.gz`);
   }
 
@@ -28,10 +25,7 @@ class FileCache {
       filename,
       options,
     });
-    return crypto
-      .createHash('md5')
-      .update(data)
-      .digest('hex');
+    return crypto.createHash("md5").update(data).digest("hex");
   }
 
   getStringifiedValue(filename) {
@@ -41,9 +35,7 @@ class FileCache {
   }
 
   setSync(filename, transformItem, options) {
-    const {
-      virtualMock, babelOptions, instrument, transform,
-    } = options;
+    const { virtualMock, babelOptions, instrument, transform } = options;
     transformItem.hash = this.getCacheHash(filename, {
       ...babelOptions,
       ...instrument,
@@ -106,7 +98,7 @@ class FileCache {
     try {
       const str = this.getStringifiedValue(filename);
       const gz = zlib.gzipSync(str);
-      fs.writeFileSync(this.getCacheFilename(filename), gz, 'utf8');
+      fs.writeFileSync(this.getCacheFilename(filename), gz, "utf8");
     } catch (err) {
       console.error(err);
     }

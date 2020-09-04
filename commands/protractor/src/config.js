@@ -1,31 +1,32 @@
-const yargs = require('yargs/yargs');
-const extend = require('extend');
-const path = require('path');
-const fs = require('fs');
-const globby = require('globby');
-const createServer = require('@after-work.js/server');
-const utils = require('@after-work.js/utils');
-const options = require('./options');
-const { getIPaddress, logSeleniumNodeInfo } = require('./utils');
+const yargs = require("yargs/yargs");
+const extend = require("extend");
+const path = require("path");
+const fs = require("fs");
+const globby = require("globby");
+const createServer = require("@after-work.js/server");
+const utils = require("@after-work.js/utils");
+const options = require("./options");
+const { getIPaddress, logSeleniumNodeInfo } = require("./utils");
 
-const { uiReport, reporter, aggregate } = require('./plugins/reporter');
+const { uiReport, reporter, aggregate } = require("./plugins/reporter");
 
 const screenshoterPath = path.resolve(
   __dirname,
-  './plugins/screenshoter/index.js',
+  "./plugins/screenshoter/index.js"
 );
 
 const setOnPrepareGlobals = () => {
   global.EC = protractor.ExpectedConditions;
 };
 
-const setLogSeleniumNodeInfo = browser => browser.getProcessedConfig().then(argv => {
-  if (argv.logSeleniumInfo) {
-    logSeleniumNodeInfo(argv);
-  }
-});
+const setLogSeleniumNodeInfo = (browser) =>
+  browser.getProcessedConfig().then((argv) => {
+    if (argv.logSeleniumInfo) {
+      logSeleniumNodeInfo(argv);
+    }
+  });
 
-const setBaseUrl = async browser => {
+const setBaseUrl = async (browser) => {
   const currentConfig = await browser.getProcessedConfig();
   if (!currentConfig.baseUrl) {
     const ip = await getIPaddress();
@@ -35,35 +36,36 @@ const setBaseUrl = async browser => {
   }
 };
 
-const setIgnoreSynchronization = async browser => browser.getProcessedConfig().then(currentConfig => {
-  if (typeof currentConfig.ignoreSynchronization !== 'undefined') {
-    browser.ignoreSynchronization = currentConfig.ignoreSynchronization;
-  } else {
-    browser.ignoreSynchronization = true;
-  }
-});
+const setIgnoreSynchronization = async (browser) =>
+  browser.getProcessedConfig().then((currentConfig) => {
+    if (typeof currentConfig.ignoreSynchronization !== "undefined") {
+      browser.ignoreSynchronization = currentConfig.ignoreSynchronization;
+    } else {
+      browser.ignoreSynchronization = true;
+    }
+  });
 
-const setReporterInfo = async browser => {
+const setReporterInfo = async (browser) => {
   const currentConfig = await browser.getProcessedConfig();
   browser.reporterInfo = {
     mainTime: new Date(), // Unformated date used inside report
     startTime: new Date()
       .toISOString()
-      .replace(/T/, '_')
-      .replace(/:/g, '-')
-      .replace(/\..+/, ''),
+      .replace(/T/, "_")
+      .replace(/:/g, "-")
+      .replace(/\..+/, ""),
   };
   browser.reporterInfo.artifactsPath = currentConfig.artifactsPath;
-  const browserName = currentConfig.capabilities.browserName.replace(/ /g, '-');
+  const browserName = currentConfig.capabilities.browserName.replace(/ /g, "-");
   browser.reporterInfo.browserName = browserName;
   const cap = await browser.getCapabilities();
-  browser.reporterInfo.browserVersion = cap.get('version');
-  const platform = cap.get('platform') || cap.get('platformName') || 'unknown';
-  browser.reporterInfo.platform = platform.replace(/ /g, '-').toLowerCase();
+  browser.reporterInfo.browserVersion = cap.get("version");
+  const platform = cap.get("platform") || cap.get("platformName") || "unknown";
+  browser.reporterInfo.platform = platform.replace(/ /g, "-").toLowerCase();
   browser.reporterInfo.reportName = `${browser.reporterInfo.browserName}-${
     process.env.AW_CURRENT_SESSION_TIMESTAMP
   }-report-${browser.reporterInfo.startTime}_${Math.floor(
-    Math.random() * 10000000,
+    Math.random() * 10000000
   )}`;
 };
 
@@ -229,11 +231,11 @@ const baseConfig = {
   //
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: '', // This is set in `onPrepare`
+  baseUrl: "", // This is set in `onPrepare`
 
   // CSS Selector for the element housing the angular app - this defaults to
   // body, but is necessary if ng-app is on a descendant of <body>.
-  rootElement: 'body',
+  rootElement: "body",
 
   // The timeout in milliseconds for each script run on the browser. This should
   // be longer than the maximum time your application needs to stabilize between
@@ -297,14 +299,12 @@ const baseConfig = {
   // (0 if the tests passed). This is called only once before the program
   // exits (after onCleanUp).
   afterLaunch() {
-    const pattern = `${process.env.AW_CURRENT_ARTIFACTS_PATH}/*-${
-      process.env.AW_CURRENT_SESSION_TIMESTAMP
-    }-report-*.json`;
+    const pattern = `${process.env.AW_CURRENT_ARTIFACTS_PATH}/*-${process.env.AW_CURRENT_SESSION_TIMESTAMP}-report-*.json`;
     const reports = globby.sync(pattern);
     aggregate(
       `all-${process.env.AW_CURRENT_SESSION_TIMESTAMP}-reports`,
       process.env.AW_CURRENT_ARTIFACTS_PATH,
-      reports,
+      reports
     );
   },
 
@@ -348,13 +348,13 @@ const baseConfig = {
   // Jasmine and Jasmine2 are fully supported as test and assertion frameworks.
   // Mocha and Cucumber have limited support. You will need to include your
   // own assertion framework (such as Chai) if working with Mocha.
-  framework: 'mocha',
+  framework: "mocha",
 
   // Options to be passed to Mocha.
   //
   // See the full list at http://mochajs.org/
   mochaOpts: {
-    ui: 'bdd',
+    ui: "bdd",
     reporter: uiReport,
     timeout: false,
     reporterOptions: {
@@ -374,33 +374,35 @@ const baseConfig = {
 
 const { argv } = yargs(process.argv.slice(2))
   .options(options)
-  .config('config', configPath => {
+  .config("config", (configPath) => {
     let foundConfig = {};
     if (fs.existsSync(configPath)) {
       const p = path.resolve(process.cwd(), configPath);
       foundConfig = require(p);
     }
     let config = {};
-    if (typeof foundConfig === 'function') {
+    if (typeof foundConfig === "function") {
       config = extend(true, baseConfig, foundConfig(baseConfig));
     } else {
       config = extend(true, baseConfig, foundConfig);
     }
     return config;
   })
-  .coerce('specs', a => {
-    const s = a.map(b => path.relative(process.cwd(), path.resolve(b)).replace(/\\/g, '/'));
-    return globby.sync(s).map(p => path.resolve(p));
+  .coerce("specs", (a) => {
+    const s = a.map((b) =>
+      path.relative(process.cwd(), path.resolve(b)).replace(/\\/g, "/")
+    );
+    return globby.sync(s).map((p) => path.resolve(p));
   })
-  .coerce('babel', utils.coerceBabel);
+  .coerce("babel", utils.coerceBabel);
 
 argv.shouldInstrument = () => false;
-argv.shouldTransform = f => argv.transform.testExclude.shouldInstrument(f);
+argv.shouldTransform = (f) => argv.transform.testExclude.shouldInstrument(f);
 if (argv.presetEnv) {
-  require('@after-work.js/preset-plugin')();
+  require("@after-work.js/preset-plugin")();
 }
 if (argv.hookRequire) {
-  require('@after-work.js/register')(argv);
+  require("@after-work.js/register")(argv);
 }
 
 argv.require.map(require);
@@ -409,7 +411,7 @@ argv.require.map(require);
 if (argv.seleniumServerJar) {
   const jar = path.relative(
     __dirname,
-    path.resolve(process.cwd(), argv.seleniumServerJar),
+    path.resolve(process.cwd(), argv.seleniumServerJar)
   );
   argv.seleniumServerJar = jar;
 }
@@ -417,7 +419,7 @@ if (argv.seleniumServerJar) {
 if (!argv.specs && argv.glob.length) {
   const specs = utils
     .filter(argv.filter.protractor.files, globby.sync(argv.glob))
-    .map(p => path.resolve(p));
+    .map((p) => path.resolve(p));
   argv.specs = specs;
 }
 

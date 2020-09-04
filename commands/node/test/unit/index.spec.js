@@ -1,12 +1,12 @@
 /* eslint object-curly-newline: 0 */
-const globby = require('globby');
-const path = require('path');
-const cmd = require('../../src');
-const cmdOpts = require('../../src/options');
+const globby = require("globby");
+const path = require("path");
+const cmd = require("../../src");
+const cmdOpts = require("../../src/options");
 
 const { Runner, configure, builder, handler } = cmd;
 
-describe('Node command', () => {
+describe("Node command", () => {
   let sandbox;
 
   beforeEach(() => {
@@ -17,12 +17,12 @@ describe('Node command', () => {
     sandbox.restore();
   });
 
-  it('should export Runner', () => {
-    expect(Runner).to.be.a('function');
+  it("should export Runner", () => {
+    expect(Runner).to.be.a("function");
     expect(Runner).to.throw();
   });
 
-  it('should set members', () => {
+  it("should set members", () => {
     const argv = {};
     const runner = new Runner(argv);
     expect(runner.argv).to.equal(argv);
@@ -42,24 +42,24 @@ describe('Node command', () => {
   //   expect(runner.testFiles).to.eql([path.resolve('foo.js')]);
   // });
 
-  it('should exit if no files found', () => {
+  it("should exit if no files found", () => {
     const argv = { filter: { node: { files: [] } } };
     const runner = new Runner(argv);
-    sandbox.stub(globby, 'sync').returns([]);
-    sandbox.stub(console, 'error');
+    sandbox.stub(globby, "sync").returns([]);
+    sandbox.stub(console, "error");
     runner.setTestFiles();
     expect(process.exitCode).to.equal(1);
   });
 
-  it('should set srcFiles', () => {
+  it("should set srcFiles", () => {
     const argv = { filter: { node: { files: [] } } };
     const runner = new Runner(argv);
-    sandbox.stub(globby, 'sync').returns(['foo.js']);
+    sandbox.stub(globby, "sync").returns(["foo.js"]);
     runner.setSrcFiles();
-    expect(runner.srcFiles).to.eql([path.resolve('foo.js')]);
+    expect(runner.srcFiles).to.eql([path.resolve("foo.js")]);
   });
 
-  it('should delete coverage', () => {
+  it("should delete coverage", () => {
     const runner = new Runner({});
     const cov = global.__coverage__;
     runner.deleteCoverage();
@@ -67,8 +67,8 @@ describe('Node command', () => {
     global.__coverage__ = cov;
   });
 
-  describe('Run tests', () => {
-    it('should exit with correct exit code', () => {
+  describe("Run tests", () => {
+    it("should exit with correct exit code", () => {
       const runner = new Runner({});
       const run = sandbox.stub().returns({ once: sandbox.stub() });
       runner.mocha = { run };
@@ -76,7 +76,7 @@ describe('Node command', () => {
       expect(process.exitCode).to.equal(1);
     });
 
-    it('should write coverage file', () => {
+    it("should write coverage file", () => {
       const writeCoverageFile = sandbox.stub();
       const report = sandbox.stub();
       const runner = new Runner({ coverage: true });
@@ -87,8 +87,8 @@ describe('Node command', () => {
       expect(runner.nyc.report).to.have.been.calledWithExactly();
     });
 
-    describe('setup', () => {
-      it('should reset and wrap nyc', () => {
+    describe("setup", () => {
+      it("should reset and wrap nyc", () => {
         const reset = sandbox.stub();
         const wrap = sandbox.stub();
         const runner = new Runner({ coverage: true });
@@ -99,7 +99,7 @@ describe('Node command', () => {
         expect(wrap).to.have.been.calledWithExactly();
       });
 
-      it('should reset and not wrap nyc on consecutive run', () => {
+      it("should reset and not wrap nyc on consecutive run", () => {
         const reset = sandbox.stub();
         const wrap = sandbox.stub();
         const runner = new Runner({ coverage: true });
@@ -111,24 +111,24 @@ describe('Node command', () => {
         expect(wrap.callCount).to.equal(0);
       });
 
-      it('should add file to mocha', () => {
+      it("should add file to mocha", () => {
         const reset = sandbox.stub();
         const wrap = sandbox.stub();
         const addFile = sandbox.stub();
         const runner = new Runner({ coverage: true });
         runner.nyc = { reset, wrap };
         runner.mocha = { addFile };
-        const file = path.resolve('test/unit/node/index.spec.js');
+        const file = path.resolve("test/unit/node/index.spec.js");
         runner.setupBabel = sandbox.stub();
         runner.setup([file], []);
         expect(addFile).to.have.been.calledWithExactly(file);
       });
     });
 
-    it('should remove all listeners', () => {
+    it("should remove all listeners", () => {
       const procRemoveAllListeners = sandbox.stub(
         process,
-        'removeAllListeners',
+        "removeAllListeners"
       );
       const removeAllListeners = sandbox.stub();
       const mochaRunner = { removeAllListeners };
@@ -138,9 +138,9 @@ describe('Node command', () => {
         }
       }
       const runner = new Runner({}, { Mocha: Dummy, NYC: Dummy });
-      sandbox.stub(runner, 'deleteCoverage').returnsThis();
-      sandbox.stub(runner, 'setup').returnsThis();
-      sandbox.stub(runner, 'runTests').returnsThis();
+      sandbox.stub(runner, "deleteCoverage").returnsThis();
+      sandbox.stub(runner, "setup").returnsThis();
+      sandbox.stub(runner, "runTests").returnsThis();
       runner.argv = { nyc: {} };
       runner.mochaRunner = mochaRunner;
       runner.setupBabel = sandbox.stub();
@@ -149,8 +149,8 @@ describe('Node command', () => {
       expect(removeAllListeners).to.have.been.calledWithExactly();
     });
 
-    it('should setupAndRunTests', () => {
-      sandbox.stub(process, 'removeAllListeners');
+    it("should setupAndRunTests", () => {
+      sandbox.stub(process, "removeAllListeners");
       const mochaRunner = { removeAllListeners: sandbox.stub() };
       class Dummy {
         constructor() {
@@ -158,9 +158,9 @@ describe('Node command', () => {
         }
       }
       const runner = new Runner({}, { Mocha: Dummy, NYC: Dummy });
-      const del = sandbox.stub(runner, 'deleteCoverage').returnsThis();
-      const set = sandbox.stub(runner, 'setup').returnsThis();
-      const run = sandbox.stub(runner, 'runTests').returnsThis();
+      const del = sandbox.stub(runner, "deleteCoverage").returnsThis();
+      const set = sandbox.stub(runner, "setup").returnsThis();
+      const run = sandbox.stub(runner, "runTests").returnsThis();
       runner.argv = { nyc: {} };
       runner.mochaRunner = mochaRunner;
       runner.setupBabel = sandbox.stub();
@@ -169,17 +169,17 @@ describe('Node command', () => {
       expect(run).to.have.been.calledImmediatelyAfter(set);
     });
 
-    it('should run without watching', () => {
+    it("should run without watching", () => {
       const runner = new Runner({ watch: false });
       runner.setupAndRunTests = sandbox.stub();
-      const testFiles = ['foo.spec.js'];
-      const srcFiles = ['foo.js'];
+      const testFiles = ["foo.spec.js"];
+      const srcFiles = ["foo.js"];
       runner.testFiles = testFiles;
       runner.srcFiles = srcFiles;
       runner.run();
       expect(runner.setupAndRunTests).to.have.been.calledWithExactly(
         testFiles,
-        srcFiles,
+        srcFiles
       );
     });
 
@@ -199,29 +199,29 @@ describe('Node command', () => {
     //   expect(runner.onWatch).to.have.been.calledWithExactly(path.resolve('foo.js'));
     // });
 
-    describe('configure', () => {
-      it('should return empty object when no config option is passed', () => {
+    describe("configure", () => {
+      it("should return empty object when no config option is passed", () => {
         expect(configure(null)).to.eql({});
       });
 
-      it('should throw error if config not found', () => {
-        expect(configure.bind(null, 'foo.js')).to.throw();
+      it("should throw error if config not found", () => {
+        expect(configure.bind(null, "foo.js")).to.throw();
       });
 
-      it('should call function for passed config file', () => {
-        const configPath = path.resolve(__dirname, 'config-function.js');
-        expect(configure(configPath).glob).to.eql(['foo.js']);
+      it("should call function for passed config file", () => {
+        const configPath = path.resolve(__dirname, "config-function.js");
+        expect(configure(configPath).glob).to.eql(["foo.js"]);
       });
 
-      it('should apply passed config file', () => {
-        const configPath = path.resolve(__dirname, 'aw.config.js');
+      it("should apply passed config file", () => {
+        const configPath = path.resolve(__dirname, "aw.config.js");
         expect(configure(configPath).src).to.eql([
-          'src/**/!(browser-shim|cli|env)*.js',
+          "src/**/!(browser-shim|cli|env)*.js",
         ]);
       });
     });
 
-    it('should build', () => {
+    it("should build", () => {
       const options = sandbox.stub().returnsThis();
       const config = sandbox.stub().returnsThis();
       const coerce = sandbox.stub().returnsThis();
@@ -229,10 +229,10 @@ describe('Node command', () => {
       const yargs = { options, config, coerce, middleware };
       builder(yargs);
       expect(options).to.have.been.calledWithExactly(cmdOpts);
-      expect(config).to.have.been.calledWithExactly('config', configure);
+      expect(config).to.have.been.calledWithExactly("config", configure);
     });
 
-    it.skip('should call the runner functions', () => {
+    it.skip("should call the runner functions", () => {
       const origRunner = cmd.Runner;
       const autoDetectDebug = sandbox.stub().returnsThis();
       const setTestFiles = sandbox.stub().returnsThis();
@@ -249,7 +249,7 @@ describe('Node command', () => {
       handler({
         mocha: {},
         presetEnv: {
-          require: path.resolve(__dirname, './preset-env-dummy.js'),
+          require: path.resolve(__dirname, "./preset-env-dummy.js"),
           enable: false,
         },
       });

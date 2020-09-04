@@ -1,1 +1,1 @@
-module.exports = () => 'azure';
+module.exports = () => "azure";
