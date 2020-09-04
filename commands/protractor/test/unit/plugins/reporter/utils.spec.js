@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
-const utils = require('../../../../src//plugins/reporter/utils');
+const utils = require('../../../../src/plugins/reporter/utils');
 
 describe('Reporter Utils', () => {
   let sandbox;

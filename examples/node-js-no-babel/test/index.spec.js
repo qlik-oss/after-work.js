@@ -1,4 +1,4 @@
-const getAzure = require('../src/');
+const getAzure = require('../src');
 
 describe('Azure', () => {
   it('should work', () => {
