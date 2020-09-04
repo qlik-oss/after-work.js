@@ -29,6 +29,7 @@ jobs:
       #     github-token: ${{ secrets.GITHUB_TOKEN }}
       # - name: Chrome unit tests
       #   run: yarn test:chrome
+      - run: sudo apt-get install google-chrome-stable
       - name: Protractor single browser
         run: yarn test:protractor --chromeDriver $CHROMEWEBDRIVER/chromedriver
       - name: Protractor multi browser
