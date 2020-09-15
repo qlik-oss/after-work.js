@@ -9,11 +9,41 @@ const minimatch = require("minimatch");
 
 const isCI = !!process.env.CI;
 
+// Supports workspaces using nohoist
+// https://classic.yarnpkg.com/blog/2018/02/15/nohoist/
+const getYarnPackages = (workspaces) => {
+  // No workspaces
+  if (!workspaces) {
+    return [];
+  }
+
+  try {
+    // "workspaces": ["packages/*"],
+    if (Array.isArray(workspaces)) {
+      return workspaces;
+    }
+
+    // "workspaces": {
+    //   "packages": ["packages/*"],
+    // },
+    if (Array.isArray(workspaces.packages)) {
+      return workspaces.packages;
+    }
+  } catch (e) {
+    // Ignore, returns empty array below
+  }
+
+  // Invalid format
+  return [];
+};
+
 const pkg = importCwd("./package.json");
 const findPkgs = (g) => globby.sync(`${g}/package.json`);
 const reducePkgs = (acc, curr) => acc.concat(curr.map((c) => c.slice(0, -13)));
 const lerna = importCwd.silent("./lerna.json");
-const workspaces = (pkg.workspaces || []).map(findPkgs).reduce(reducePkgs, []);
+const workspaces = getYarnPackages(pkg.workspaces)
+  .map(findPkgs)
+  .reduce(reducePkgs, []);
 const lernaPackages = ((lerna && lerna.packages) || [])
   .map(findPkgs)
   .reduce(reducePkgs, []);
