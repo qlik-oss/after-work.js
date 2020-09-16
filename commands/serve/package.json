@@ -1,6 +1,6 @@
 {
   "name": "@after-work.js/serve",
-  "version": "7.0.0-alpha.0",
+  "version": "7.0.0-alpha.1",
   "publishConfig": {
     "access": "public"
   },
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/qlik-oss/after-work.js#readme",
   "dependencies": {
-    "@after-work.js/server": "7.0.0-alpha.0"
+    "@after-work.js/server": "7.0.0-alpha.1"
   },
   "files": [
     "/src"
