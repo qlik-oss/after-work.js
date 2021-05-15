@@ -41,7 +41,7 @@
     "eslint-plugin-react": "7.20.6",
     "globby": "11.0.1",
     "lerna": "3.22.1",
-    "markdown-table": "2.0.0",
+    "markdown-table": "3.0.0",
     "prettier": "2.1.1",
     "protractor": "7.0.0",
     "requirejs": "2.3.6",
