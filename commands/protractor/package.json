@@ -25,15 +25,15 @@
     "@after-work.js/server": "7.0.0-alpha.1",
     "@after-work.js/utils": "7.0.0-alpha.1",
     "extend": "3.0.2",
-    "globby": "11.0.1",
-    "handlebars": "4.7.6",
-    "highlight.js": "10.1.2",
+    "globby": "11.0.4",
+    "handlebars": "4.7.7",
+    "highlight.js": "10.7.3",
     "import-cwd": "3.0.0",
     "jimp": "0.16.1",
     "mkdirp": "1.0.4",
-    "mocha": "8.1.1",
-    "moment": "2.27.0",
-    "yargs": "16.0.3"
+    "mocha": "8.4.0",
+    "moment": "2.29.1",
+    "yargs": "16.2.0"
   },
   "files": [
     "/src"
