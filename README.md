@@ -6,6 +6,18 @@
 
 `after-work.js` is an unified test framework highly configurable through cli and configuration files allowing tests to be executed in the desired context.
 
+# Deprecated
+
+`after-work.js` is deprecated. Here are some alternatives:
+
+- Jest: <https://jestjs.io/>
+- Mocha: <https://mochajs.org/>
+- Ava: <https://github.com/avajs/ava>
+- Testing-library: <https://testing-library.com/>
+- Playwright: <https://playwright.dev/>
+- Puppeteer: <https://pptr.dev/>
+- Cypress: <https://www.cypress.io/>
+
 ## Requirements
 
 ### Default runner
