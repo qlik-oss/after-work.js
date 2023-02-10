@@ -10,12 +10,11 @@
 
 `after-work.js` is deprecated. Here are some alternatives:
 
+- Vitest: <https://vitest.dev/>
 - Jest: <https://jestjs.io/>
-- Mocha: <https://mochajs.org/>
 - Ava: <https://github.com/avajs/ava>
 - Testing-library: <https://testing-library.com/>
 - Playwright: <https://playwright.dev/>
-- Puppeteer: <https://pptr.dev/>
 - Cypress: <https://www.cypress.io/>
 
 ## Requirements
