@@ -22,7 +22,7 @@
   "dependencies": {
     "@after-work.js/transform": "7.0.0-alpha.1",
     "@after-work.js/utils": "7.0.0-alpha.1",
-    "find-cache-dir": "3.3.1",
+    "find-cache-dir": "4.0.0",
     "import-cwd": "3.0.0",
     "minimatch": "3.0.4",
     "pirates": "4.0.1",
