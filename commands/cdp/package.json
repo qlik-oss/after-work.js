@@ -32,7 +32,7 @@
     "globby": "11.0.1",
     "import-cwd": "3.0.0",
     "nyc": "15.1.0",
-    "precinct": "5.3.1",
+    "precinct": "9.2.1",
     "source-map-support": "0.5.19",
     "test-exclude": "6.0.0"
   },
