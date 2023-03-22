@@ -30,7 +30,7 @@
     "highlight.js": "10.1.2",
     "import-cwd": "3.0.0",
     "jimp": "0.16.1",
-    "mkdirp": "1.0.4",
+    "mkdirp": "2.1.6",
     "mocha": "8.1.1",
     "moment": "2.27.0",
     "yargs": "16.0.3"
