@@ -26,10 +26,10 @@
     "@after-work.js/transform": "7.0.0-alpha.1",
     "@after-work.js/utils": "7.0.0-alpha.1",
     "@after-work.js/watch-plugin": "7.0.0-alpha.1",
-    "chokidar": "3.4.2",
-    "globby": "11.0.1",
+    "chokidar": "3.6.0",
+    "globby": "11.1.0",
     "import-cwd": "3.0.0",
-    "mocha": "8.1.1",
+    "mocha": "8.4.0",
     "nyc": "15.1.0"
   },
   "files": [
