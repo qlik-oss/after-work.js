@@ -45,7 +45,7 @@
     "prettier": "2.1.1",
     "protractor": "7.0.0",
     "requirejs": "2.3.6",
-    "typescript": "4.0.2",
+    "typescript": "5.4.5",
     "webdriver-manager": "^12.1.7",
     "webpack": "4.44.1",
     "webpack-cli": "3.3.12",
