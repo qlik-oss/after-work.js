@@ -24,7 +24,7 @@
     "@after-work.js/chai-plugin-snapshot": "7.0.0-alpha.1",
     "@after-work.js/interactive-plugin": "7.0.0-alpha.1",
     "@after-work.js/utils": "7.0.0-alpha.1",
-    "chai": "4.2.0",
+    "chai": "5.1.1",
     "chai-as-promised": "7.1.1",
     "chai-subset": "1.6.0",
     "import-cwd": "3.0.0",
