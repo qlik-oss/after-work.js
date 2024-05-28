@@ -27,14 +27,14 @@
     "@after-work.js/chai-plugin-snapshot": "7.0.0-alpha.1",
     "@after-work.js/interactive-plugin": "7.0.0-alpha.1",
     "@after-work.js/utils": "7.0.0-alpha.1",
-    "chai": "4.2.0",
-    "chai-as-promised": "7.1.1",
+    "chai": "4.4.1",
+    "chai-as-promised": "7.1.2",
     "chai-subset": "1.6.0",
     "import-cwd": "3.0.0",
-    "sinon": "9.0.3",
-    "sinon-chai": "3.5.0",
-    "source-map-support": "0.5.19",
-    "yargs": "16.0.3"
+    "sinon": "9.2.4",
+    "sinon-chai": "3.7.0",
+    "source-map-support": "0.5.21",
+    "yargs": "16.2.0"
   },
   "devDependencies": {
     "@after-work.js/cdp": "7.0.0-alpha.1",
