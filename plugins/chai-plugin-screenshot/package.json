@@ -22,7 +22,7 @@
   "dependencies": {
     "@after-work.js/utils": "7.0.0-alpha.1",
     "jimp": "0.16.1",
-    "mkdirp": "1.0.4"
+    "mkdirp": "3.0.1"
   },
   "files": [
     "/src"
