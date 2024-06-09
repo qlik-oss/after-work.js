@@ -28,7 +28,7 @@
     "@after-work.js/interactive-plugin": "7.0.0-alpha.1",
     "@after-work.js/utils": "7.0.0-alpha.1",
     "chai": "4.2.0",
-    "chai-as-promised": "7.1.1",
+    "chai-as-promised": "8.0.0",
     "chai-subset": "1.6.0",
     "import-cwd": "3.0.0",
     "sinon": "9.0.3",
