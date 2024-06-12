@@ -27,7 +27,7 @@
     "@after-work.js/server": "7.0.0-alpha.1",
     "@after-work.js/utils": "7.0.0-alpha.1",
     "@after-work.js/watch-plugin": "7.0.0-alpha.1",
-    "chrome-launcher": "0.13.4",
+    "chrome-launcher": "1.1.2",
     "import-cwd": "3.0.0",
     "mkdirp": "0.5.5",
     "puppeteer-core": "5.2.1",
