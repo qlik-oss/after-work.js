@@ -29,7 +29,7 @@
     "handlebars": "4.7.6",
     "highlight.js": "10.1.2",
     "import-cwd": "3.0.0",
-    "jimp": "0.16.1",
+    "jimp": "1.6.0",
     "mkdirp": "1.0.4",
     "mocha": "8.1.1",
     "moment": "2.27.0",
