@@ -25,7 +25,7 @@
     "@after-work.js/transform": "7.0.0-alpha.1",
     "@after-work.js/utils": "7.0.0-alpha.1",
     "@after-work.js/watch-plugin": "7.0.0-alpha.1",
-    "chokidar": "3.4.2",
+    "chokidar": "4.0.1",
     "chrome-launcher": "0.13.4",
     "chrome-remote-interface": "0.28.2",
     "chrome-unmirror": "0.1.0",
