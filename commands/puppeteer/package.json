@@ -30,7 +30,7 @@
     "chrome-launcher": "0.13.4",
     "import-cwd": "3.0.0",
     "mkdirp": "0.5.5",
-    "puppeteer-core": "5.2.1",
+    "puppeteer-core": "23.5.3",
     "terminal-image": "1.2.1"
   },
   "files": [
